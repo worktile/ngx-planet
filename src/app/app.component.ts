@@ -15,17 +15,23 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.micro.registerApplication('app1', {
             routerPathPrefix: '/app1',
-            scripts: ['app1/assets/runtime.js', 'app1/assets/vendor.js', 'app1/assets/main.js']
+            selector: 'app1-root',
+            // prettier-ignore
+            scripts: [
+                // 'app1/assets/runtime.js',
+                'app1/assets/polyfills.js',
+                'app1/assets/main.js'
+            ]
         });
         this.micro.registerApplication('app2', {
             routerPathPrefix: '/app2',
+            selector: 'app2-root',
             scripts: []
         });
-        debugger;
-        this.micro.resetRouting({
-            url: location.pathname,
-            id: 1
-        });
+        // this.micro.resetRouting({
+        //     url: location.pathname,
+        //     id: 1
+        // });
         this.router.events.subscribe((event: any) => {
             if (event instanceof NavigationEnd) {
                 this.micro.resetRouting(event);
