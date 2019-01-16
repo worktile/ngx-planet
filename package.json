@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --port 8889",
     "serve:app1":"ng serve app1",
+    "serve:app2":"ng serve app2",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

@@ -19,14 +19,17 @@ export class AppComponent implements OnInit {
             // prettier-ignore
             scripts: [
                 // 'app1/assets/runtime.js',
-                'app1/assets/polyfills.js',
+                // 'app1/assets/polyfills.js',
                 'app1/assets/main.js'
             ]
         });
         this.micro.registerApplication('app2', {
             routerPathPrefix: '/app2',
             selector: 'app2-root',
-            scripts: []
+            // prettier-ignore
+            scripts: [
+                'app2/assets/main.js'
+            ]
         });
         // this.micro.resetRouting({
         //     url: location.pathname,
