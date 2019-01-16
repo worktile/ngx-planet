@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { NavigationEnd, RouterEvent, Router } from '@angular/router';
 import { AssetsLoader } from './loader';
 import { MicroHostApplication } from './host-application';
+import { GlobalEventDispatcher } from './global-event-dispatcher';
 
 export interface ApplicationOptions {
     selector: string;
@@ -29,8 +30,15 @@ export class MicroCoreService {
 
     private hostApp = new MicroHostApplication();
 
-    constructor(private assetsLoader: AssetsLoader, private ngZone: NgZone, private router: Router) {
+    constructor(
+        private assetsLoader: AssetsLoader,
+        private ngZone: NgZone,
+        private router: Router,
+        private globalEventDispatcher: GlobalEventDispatcher
+    ) {
+        this.hostApp.ngZone = ngZone;
         this.hostApp.router = router;
+        this.hostApp.globalEventDispatcher = globalEventDispatcher;
     }
 
     registerApplication(appName: string, options: ApplicationOptions) {

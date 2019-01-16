@@ -14,6 +14,7 @@ export class DashboardComponent {
     toAbout() {
         // (window as any).toAbout();
         // this.router.dispose();
-        this.hostApplication.router.navigateByUrl('/about');
+        this.hostApplication.navigateByUrl('/about');
+        // this.hostApplication.router.navigateByUrl('/about');
     }
 }

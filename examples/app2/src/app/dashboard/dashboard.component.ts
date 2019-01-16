@@ -12,6 +12,6 @@ export class DashboardComponent {
     constructor(private hostApplication: MicroHostApplication) {}
 
     toAbout() {
-        this.hostApplication.router.navigateByUrl('/about');
+        this.hostApplication.navigateByUrl('/about');
     }
 }
