@@ -9,9 +9,11 @@ import { MicroHostApplication } from '../../../../../packages/micro-core/src/lib
     `
 })
 export class DashboardComponent {
-    constructor(private hostApplication: MicroHostApplication) {}
+    constructor(private hostApplication: MicroHostApplication, private router: Router) {}
 
     toAbout() {
+        // (window as any).toAbout();
+        // this.router.dispose();
         this.hostApplication.router.navigateByUrl('/about');
     }
 }

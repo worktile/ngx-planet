@@ -60,7 +60,7 @@ export class MicroCoreService {
                 const appInstance = (window as any)[app.name];
                 this.currentApp = app;
                 if (appInstance && appInstance.app && appInstance.app.bootstrap) {
-                    const container = document.querySelector('app-load-app');
+                    const container = document.querySelector('#micro-app-container');
                     if (container) {
                         let appRootElement = container.querySelector(app.options.selector);
                         if (!appRootElement) {
@@ -80,10 +80,16 @@ export class MicroCoreService {
         if (appInstance) {
             appInstance.app.destroy();
         }
-        const container = document.querySelector('app-load-app');
+        const container = document.querySelector('#micro-app-container');
         const appRootElement = container.querySelector(app.options.selector);
         if (appRootElement) {
             container.removeChild(appRootElement);
+        }
+    }
+
+    destroyCurrentApplication() {
+        if (this.currentApp) {
+            this.destroyApplication(this.currentApp);
         }
     }
 

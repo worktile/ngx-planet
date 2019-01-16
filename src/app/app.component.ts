@@ -42,5 +42,12 @@ export class AppComponent implements OnInit {
                 // that.mooa.reRouter(event);
             }
         });
+
+        // (window as any).toAbout = () => {
+        //     this.micro.destroyCurrentApplication();
+        //     setTimeout(() => {
+        //         this.router.navigateByUrl('/about');
+        //     }, 2000);
+        // };
     }
 }

@@ -7,7 +7,7 @@ import { MicroCoreService } from '../../../packages/micro-core/src/public_api';
     styleUrls: ['./load-app.component.scss']
 })
 export class LoadAppComponent implements OnInit {
-    @HostBinding('class.thy-layout') isThyLayout = true;
+    @HostBinding('class.thy-layout1') isThyLayout = true;
 
     constructor(private micro: MicroCoreService) {}
 

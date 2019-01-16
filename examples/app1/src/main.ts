@@ -24,10 +24,10 @@ class MicroApp {
 
     destroy() {
         if (this.appModuleRef) {
-            // const router = this.appModuleRef.injector.get(Router);
-            // if (router) {
-            //     router.dispose();
-            // }
+            const router = this.appModuleRef.injector.get(Router);
+            if (router) {
+                router.dispose();
+            }
             this.appModuleRef.destroy();
             delete this.appModuleRef;
         }

@@ -15,37 +15,29 @@ const config = {
         extensions: ['.ts', '.js']
     },
     entry: {
-        main: path.resolve(projectRoot, './src/main.ts'),
-        polyfills: path.resolve(projectRoot, './src/polyfills.ts')
+        main: path.resolve(projectRoot, './src/lib/app3-lib.module.ts'),
     },
     output: {
         path: path.resolve(workspaceRoot, './dist'),
         filename: `[name].js`,
         libraryTarget: 'umd',
-        library: 'app2'
+        library: 'app3'
     },
     plugins: [
         new ngToolsWebpack.AngularCompilerPlugin({
-            tsConfigPath: path.resolve(projectRoot, './src/tsconfig.app.json'),
-            mainPath: path.resolve(projectRoot, './src/main.ts'),
-            hostReplacementPaths: {
-                './src/environments/environment.ts':
-                    './src/environments/environment.prod.ts'
-            },
+            tsConfigPath: path.resolve(projectRoot, './tsconfig.lib.json'),
+            // mainPath: path.resolve(projectRoot, './src/main.ts'),
+            // hostReplacementPaths: {
+            //     './src/environments/environment.ts':
+            //         './src/environments/environment.prod.ts'
+            // },
             sourceMap: true,
             compilerOptions: {}
         }),
-        new IndexHtmlWebpackPlugin({
-            input: path.resolve(__dirname, './src/index.html'),
-            output: path.basename('./src/index.html')
-            // baseHref: buildOptions.baseHref,
-            // entrypoints: generateEntryPoints(buildOptions),
-            // deployUrl: buildOptions.deployUrl,
-            // sri: buildOptions.subresourceIntegrity
-        }),
-        // new HtmlWebpackPlugin({
-        //     filename: 'src/index.html'
-        // })
+        // new IndexHtmlWebpackPlugin({
+        //     input: path.resolve(__dirname, './src/index.html'),
+        //     output: path.basename('./src/index.html')
+        // }),
         new ProgressPlugin()
     ],
     module: {

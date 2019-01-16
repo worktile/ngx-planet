@@ -5,6 +5,8 @@ import { Component, OnInit } from '@angular/core';
   template: `
     <p>
       app3-lib works!
+
+      hello
     </p>
   `,
   styles: []
