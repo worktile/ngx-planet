@@ -24,6 +24,12 @@
       ],
       "core/*": [
         "dist/core/*"
+      ],
+      "app3-lib": [
+        "dist/app3-lib"
+      ],
+      "app3-lib/*": [
+        "dist/app3-lib/*"
       ]
     }
   }

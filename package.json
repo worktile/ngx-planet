@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 8889",
-    "serve:app1":"ng serve app1",
-    "serve:app2":"ng serve app2",
+    "serve:app1": "ng serve app1",
+    "serve:app2": "ng serve app2",
     "build": "ng build",
+    "build:app3": "ng build app3-lib",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
