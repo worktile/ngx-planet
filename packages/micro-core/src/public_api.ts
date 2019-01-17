@@ -3,4 +3,6 @@
  */
 
 export * from './lib/micro-portal.service';
+export * from './lib/global-event-dispatcher';
+export * from './lib/host-application';
 export * from './module';

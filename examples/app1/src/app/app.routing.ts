@@ -1,6 +1,7 @@
-import { UserListComponent } from './users/user-list.component';
+import { UserListComponent } from './user/user-list.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Route } from '@angular/router';
+import { UserDetailComponent } from './user/detail/user-detail.component';
 
 export const routers: Route[] = [
     {
@@ -14,7 +15,13 @@ export const routers: Route[] = [
             },
             {
                 path: 'users',
-                component: UserListComponent
+                component: UserListComponent,
+                children: [
+                    {
+                        path: ':id',
+                        component: UserDetailComponent
+                    }
+                ]
             },
             {
                 path: 'dashboard',
@@ -23,4 +30,3 @@ export const routers: Route[] = [
         ]
     }
 ];
-

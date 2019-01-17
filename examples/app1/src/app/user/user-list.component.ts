@@ -3,9 +3,7 @@ import { GlobalEventDispatcher } from '../../../../../packages/micro-core/src/li
 
 @Component({
     selector: 'app-user-list',
-    template: `
-        This is user list page <button thyButton="primary" (click)="openADetail()">Open a Detail</button>
-    `
+    templateUrl: './user-list.component.html'
 })
 export class UserListComponent {
     constructor(private globalEventDispatcher: GlobalEventDispatcher) {}
