@@ -9,7 +9,12 @@ import { MicroPortalService } from '../../../packages/micro-core/src/public_api'
 export class HostContainerComponent implements OnInit {
     @HostBinding('class.thy-layout') isThyLayout = true;
 
-    constructor(private microPortal: MicroPortalService) {}
+    @HostBinding('class.loading')
+    get loading() {
+        return !this.microPortal || !this.microPortal.loadingDone;
+    }
+
+    constructor(public microPortal: MicroPortalService) {}
 
     ngOnInit() {}
 }

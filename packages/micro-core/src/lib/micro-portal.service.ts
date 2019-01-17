@@ -1,6 +1,6 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, ApplicationRef } from '@angular/core';
 import { NavigationEnd, RouterEvent, Router } from '@angular/router';
-import { AssetsLoader } from './loader';
+import { AssetsLoader } from './assets-loader';
 import { MicroHostApplication } from './host-application';
 import { GlobalEventDispatcher } from './global-event-dispatcher';
 import { getHTMLElement } from './helpers';
@@ -33,11 +33,14 @@ export class MicroPortalService {
 
     private hostApp = new MicroHostApplication();
 
+    public loadingDone: boolean;
+
     constructor(
         private assetsLoader: AssetsLoader,
         private ngZone: NgZone,
         private router: Router,
-        private globalEventDispatcher: GlobalEventDispatcher
+        private globalEventDispatcher: GlobalEventDispatcher,
+        private applicationRef: ApplicationRef
     ) {
         this.hostApp.ngZone = ngZone;
         this.hostApp.router = router;
@@ -70,6 +73,7 @@ export class MicroPortalService {
 
     bootstrapApp(app: ApplicationInfo) {
         this.ngZone.runOutsideAngular(() => {
+            this.loadingDone = false;
             this.loadApp(app).then(result => {
                 app.loaded = true;
                 const appInstance = (window as any)[app.name];
@@ -85,6 +89,7 @@ export class MicroPortalService {
                         }
                     }
                     appInstance.app.bootstrap(this.hostApp);
+                    this.loadingDone = true;
                 }
             });
         });
