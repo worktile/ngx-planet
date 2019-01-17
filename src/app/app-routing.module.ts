@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AboutComponent } from './about/about.component';
-import { LoadAppComponent } from './load-app/load-app.component';
+import { HostContainerComponent } from './host-container/host-container.component';
 
 const routes: Routes = [
     {
@@ -15,19 +15,23 @@ const routes: Routes = [
     },
     {
         path: 'app1',
-        component: LoadAppComponent
-    },
-    {
-        path: 'app1/:routeName',
-        component: LoadAppComponent
+        component: HostContainerComponent,
+        children: [
+            {
+                path: '**',
+                component: HostContainerComponent
+            }
+        ]
     },
     {
         path: 'app2',
-        component: LoadAppComponent
-    },
-    {
-        path: 'app2/:routeName',
-        component: LoadAppComponent
+        component: HostContainerComponent,
+        children: [
+            {
+                path: '**',
+                component: HostContainerComponent
+            }
+        ]
     }
 ];
 

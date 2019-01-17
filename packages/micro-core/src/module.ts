@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
-import { CoreComponent } from './lib/core.component';
 import { GlobalEventDispatcher } from './lib/global-event-dispatcher';
 
 @NgModule({
-    declarations: [CoreComponent],
+    declarations: [],
     imports: [],
     providers: [GlobalEventDispatcher],
-    exports: [CoreComponent]
+    exports: []
 })
 export class NgxMicroModule {}

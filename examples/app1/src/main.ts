@@ -1,4 +1,4 @@
-import { enableProdMode, NgModuleRef, Type } from '@angular/core';
+import { enableProdMode, NgModuleRef, Type, NgZone } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
@@ -23,6 +23,10 @@ class MicroApp {
             {
                 provide: GlobalEventDispatcher,
                 useValue: hostApp.globalEventDispatcher
+            },
+            {
+                provide: NgZone,
+                useValue: hostApp.ngZone
             }
         ])
             .bootstrapModule(AppModule)

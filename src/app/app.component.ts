@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
-import { MicroCoreService } from '../../packages/micro-core/src/public_api';
+import { MicroPortalService } from '../../packages/micro-core/src/public_api';
 import { Router, NavigationEnd } from '@angular/router';
 import { GlobalEventDispatcher } from '../../packages/micro-core/src/lib/global-event-dispatcher';
 import { ThyDialog } from 'ngx-tethys/dialog';
@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     title = 'ngx-micro-frontend';
 
     constructor(
-        private micro: MicroCoreService,
+        private microPortal: MicroPortalService,
         private router: Router,
         private globalEventDispatcher: GlobalEventDispatcher,
         private thyDialog: ThyDialog,
@@ -24,7 +24,8 @@ export class AppComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.micro.registerApplication('app1', {
+        this.microPortal.registerApplication('app1', {
+            host: 'app-host-container',
             routerPathPrefix: '/app1',
             selector: 'app1-root',
             // prettier-ignore
@@ -34,7 +35,8 @@ export class AppComponent implements OnInit {
                 'app1/assets/main.js'
             ]
         });
-        this.micro.registerApplication('app2', {
+        this.microPortal.registerApplication('app2', {
+            host: 'app-host-container',
             routerPathPrefix: '/app2',
             selector: 'app2-root',
             // prettier-ignore
@@ -45,18 +47,17 @@ export class AppComponent implements OnInit {
 
         this.router.events.subscribe((event: any) => {
             if (event instanceof NavigationEnd) {
-                this.micro.resetRouting(event);
+                this.microPortal.resetRouting(event);
                 // this.micro.registerApplication();
-                // that.mooa.reRouter(event);
             }
         });
 
         // (window as any).globalEventDispatcher = this.globalEventDispatcher;
         this.globalEventDispatcher.register('openADetail').subscribe(event => {
-            this.ngZone.run(() => {
-                this.thyDialog.open(ADetailComponent);
-                // this.applicationRef.tick();
-            });
+            this.thyDialog.open(ADetailComponent);
+            // this.ngZone.run(() => {
+            //     this.thyDialog.open(ADetailComponent);
+            // });
         });
     }
 }

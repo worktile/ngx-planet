@@ -3,8 +3,10 @@ import { NavigationEnd, RouterEvent, Router } from '@angular/router';
 import { AssetsLoader } from './loader';
 import { MicroHostApplication } from './host-application';
 import { GlobalEventDispatcher } from './global-event-dispatcher';
+import { getHTMLElement } from './helpers';
 
 export interface ApplicationOptions {
+    host: string | HTMLElement;
     selector: string;
     routerPathPrefix: string;
     stylePathPrefix?: string;
@@ -15,13 +17,14 @@ export interface ApplicationOptions {
 
 export interface ApplicationInfo {
     name: string;
+    loaded?: boolean;
     options: ApplicationOptions;
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class MicroCoreService {
+export class MicroPortalService {
     private apps: ApplicationInfo[] = [];
 
     private appsMap: { [key: string]: ApplicationOptions } = {};
@@ -53,6 +56,9 @@ export class MicroCoreService {
     }
 
     loadApp(app: ApplicationInfo) {
+        if (app.loaded) {
+            return Promise.resolve([]);
+        }
         let scripts = app.options.scripts;
         if (app.options.scriptPathPrefix) {
             scripts = scripts.map(script => {
@@ -65,10 +71,11 @@ export class MicroCoreService {
     bootstrapApp(app: ApplicationInfo) {
         this.ngZone.runOutsideAngular(() => {
             this.loadApp(app).then(result => {
+                app.loaded = true;
                 const appInstance = (window as any)[app.name];
                 this.currentApp = app;
                 if (appInstance && appInstance.app && appInstance.app.bootstrap) {
-                    const container = document.querySelector('#micro-app-container');
+                    const container = getHTMLElement(app.options.host);
                     if (container) {
                         let appRootElement = container.querySelector(app.options.selector);
                         if (!appRootElement) {
@@ -88,7 +95,7 @@ export class MicroCoreService {
         if (appInstance) {
             appInstance.app.destroy();
         }
-        const container = document.querySelector('#micro-app-container');
+        const container = getHTMLElement(app.options.host);
         const appRootElement = container.querySelector(app.options.selector);
         if (appRootElement) {
             container.removeChild(appRootElement);

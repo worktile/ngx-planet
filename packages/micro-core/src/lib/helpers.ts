@@ -12,3 +12,11 @@ export function hashCode(str: string) {
     }
     return hash;
 }
+
+export function getHTMLElement(selector: string | HTMLElement): HTMLElement {
+    if (selector instanceof HTMLElement) {
+        return selector;
+    } else {
+        return document.querySelector(selector);
+    }
+}
