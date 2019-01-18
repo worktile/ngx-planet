@@ -28,7 +28,7 @@ export interface ApplicationOptions {
 export interface ApplicationInfo {
     name: string;
     loaded?: boolean;
-    bootstrapped?: boolean;
+    // bootstrapped?: boolean;
     options: ApplicationOptions;
 }
 
