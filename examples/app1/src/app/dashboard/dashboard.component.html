@@ -1,3 +1,15 @@
-<h4>This is dashboard</h4>
-<a href="javascript:;" (click)="toAbout()">About</a>
-<div class="mt-2"><button thyButton="primary" (click)="openADetail()">Open a Detail</button></div>
+<h3>This is dashboard</h3>
+
+<div>
+    <h5>count: {{ counter.count }}</h5>
+    <div class="btn-pair">
+        <button thyButton="primary-square" (click)="counter.increase()">Increase</button>
+        <button thyButton="outline-primary-square" (click)="counter.decrease()">Decrease</button>
+        <button thyButton="primary-square" (click)="openADetail()">Open a Detail</button>
+    </div>
+</div>
+
+<div class="mt-2">
+    <a href="javascript:;" (click)="toHostAbout()">To Host About</a>
+    <a href="javascript:;" (click)="toAbout()">To About</a>
+</div>

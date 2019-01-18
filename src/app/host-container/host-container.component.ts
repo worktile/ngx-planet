@@ -7,7 +7,7 @@ import { MicroPortalService } from '../../../packages/micro-core/src/public_api'
     styleUrls: ['./host-container.component.scss']
 })
 export class HostContainerComponent implements OnInit {
-    @HostBinding('class.thy-layout') isThyLayout = true;
+    @HostBinding('class.thy-layout1') isThyLayout = true;
 
     @HostBinding('class.loading')
     get loading() {

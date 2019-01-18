@@ -1,9 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
-import { MicroPortalService } from '../../packages/micro-core/src/public_api';
+import { MicroPortalService, SwitchModes } from '../../packages/micro-core/src/public_api';
 import { Router, NavigationEnd } from '@angular/router';
 import { GlobalEventDispatcher } from '../../packages/micro-core/src/lib/global-event-dispatcher';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
+import { ThyConfirmService, ThyNotifyService } from 'ngx-tethys';
 
 @Component({
     selector: 'app-root',
@@ -20,14 +21,25 @@ export class AppComponent implements OnInit {
         private thyDialog: ThyDialog,
         private changeDetectorRef: ChangeDetectorRef,
         private applicationRef: ApplicationRef,
-        private ngZone: NgZone
+        private ngZone: NgZone,
+        private thyNotify: ThyNotifyService
     ) {}
 
     ngOnInit() {
+        this.microPortal.setOptions({
+            switchMode: SwitchModes.coexist,
+            errorHandler: error => {
+                this.thyNotify.error(`错误`, '加载资源失败');
+                this.applicationRef.tick();
+            }
+        });
+        const appHostContainerSelector = '#app-host-container';
+        const appHostContainerClass = 'thy-layout';
         this.microPortal.registerApplication('app1', {
-            host: 'app-host-container',
+            host: appHostContainerSelector,
+            hostClass: appHostContainerClass,
             routerPathPrefix: '/app1',
-            selector: 'app1-root',
+            selector: 'app1-root-container',
             // prettier-ignore
             scripts: [
                 // 'app1/assets/runtime.js',
@@ -36,9 +48,10 @@ export class AppComponent implements OnInit {
             ]
         });
         this.microPortal.registerApplication('app2', {
-            host: 'app-host-container',
+            host: appHostContainerSelector,
+            hostClass: appHostContainerClass,
             routerPathPrefix: '/app2',
-            selector: 'app2-root',
+            selector: 'app2-root-container',
             // prettier-ignore
             scripts: [
                 'app2/assets/main.js'
@@ -48,11 +61,9 @@ export class AppComponent implements OnInit {
         this.router.events.subscribe((event: any) => {
             if (event instanceof NavigationEnd) {
                 this.microPortal.resetRouting(event);
-                // this.micro.registerApplication();
             }
         });
 
-        // (window as any).globalEventDispatcher = this.globalEventDispatcher;
         this.globalEventDispatcher.register('openADetail').subscribe(event => {
             this.thyDialog.open(ADetailComponent);
             // this.ngZone.run(() => {

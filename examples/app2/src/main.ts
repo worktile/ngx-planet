@@ -1,16 +1,16 @@
-import { enableProdMode, NgModuleRef, Type } from '@angular/core';
+import { enableProdMode, NgModuleRef, Type, NgZone } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { Router } from '@angular/router';
-import { MicroHostApplication } from '../../../packages/micro-core/src/lib/host-application';
+import { IMicroApplication, MicroHostApplication } from '../../../packages/micro-core/src/public_api';
 
 if (environment.production) {
     enableProdMode();
 }
 
-class MicroApp {
+class MicroApp implements IMicroApplication {
     private appModuleRef: NgModuleRef<AppModule>;
 
     bootstrap(hostApp: MicroHostApplication) {
@@ -31,6 +31,14 @@ class MicroApp {
             this.appModuleRef.destroy();
             delete this.appModuleRef;
         }
+    }
+    resetRouting(): void {
+        const ngZone = this.appModuleRef.injector.get(NgZone);
+        const router = this.appModuleRef.injector.get(Router);
+        // router.navigateByUrl(location.pathname);
+        ngZone.run(() => {
+            router.navigateByUrl(location.pathname);
+        });
     }
 }
 export const app = new MicroApp();

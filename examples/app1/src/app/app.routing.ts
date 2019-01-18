@@ -2,16 +2,22 @@ import { UserListComponent } from './user/user-list.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Route } from '@angular/router';
 import { UserDetailComponent } from './user/detail/user-detail.component';
+import { EmptyComponent } from './empty/empty.component';
+import { AppComponent } from './app.component';
 
 export const routers: Route[] = [
     {
         path: 'app1',
-        // component: EmptyOutletComponent,
+        component: AppComponent,
         children: [
             {
                 path: '',
-                redirectTo: 'users',
+                redirectTo: 'dashboard',
                 pathMatch: 'full'
+            },
+            {
+                path: 'dashboard',
+                component: DashboardComponent
             },
             {
                 path: 'users',
@@ -22,11 +28,11 @@ export const routers: Route[] = [
                         component: UserDetailComponent
                     }
                 ]
-            },
-            {
-                path: 'dashboard',
-                component: DashboardComponent
             }
         ]
+    },
+    {
+        path: '**',
+        component: EmptyComponent
     }
 ];

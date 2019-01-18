@@ -6,12 +6,13 @@ import { environment } from './environments/environment';
 import { Router } from '@angular/router';
 import { MicroHostApplication } from '../../../packages/micro-core/src/lib/host-application';
 import { GlobalEventDispatcher } from '../../../packages/micro-core/src/lib/global-event-dispatcher';
+import { IMicroApplication } from '../../../packages/micro-core/src/lib/micro.class';
 
 if (environment.production) {
     enableProdMode();
 }
 
-class MicroApp {
+class MicroApp implements IMicroApplication {
     private appModuleRef: NgModuleRef<AppModule>;
 
     bootstrap(hostApp: MicroHostApplication) {
@@ -45,6 +46,14 @@ class MicroApp {
             this.appModuleRef.destroy();
             delete this.appModuleRef;
         }
+    }
+
+    resetRouting() {
+        const ngZone = this.appModuleRef.injector.get(NgZone);
+        const router = this.appModuleRef.injector.get(Router);
+        ngZone.run(() => {
+            router.navigateByUrl(location.pathname);
+        });
     }
 }
 export const app = new MicroApp();

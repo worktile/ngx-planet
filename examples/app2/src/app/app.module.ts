@@ -4,14 +4,15 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RouterModule, Route } from '@angular/router';
 import { ProjectListComponent } from './projects/project-list.component';
-import { App1ContainerComponent } from './container/container.component';
+import { AppRootComponent } from './root/root.component';
 import { NgxTethysModule } from 'ngx-tethys';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { EmptyComponent } from './empty/empty.component';
 
 const routers: Route[] = [
     {
         path: 'app2',
-        component: App1ContainerComponent,
+        component: AppRootComponent,
         children: [
             {
                 path: '',
@@ -27,11 +28,15 @@ const routers: Route[] = [
                 component: DashboardComponent
             }
         ]
+    },
+    {
+        path: '**',
+        component: EmptyComponent
     }
 ];
 
 @NgModule({
-    declarations: [AppComponent, App1ContainerComponent, ProjectListComponent, DashboardComponent],
+    declarations: [AppComponent, AppRootComponent, ProjectListComponent, DashboardComponent, EmptyComponent],
     imports: [BrowserModule, RouterModule.forRoot(routers), NgxTethysModule],
     providers: [],
     bootstrap: [AppComponent]

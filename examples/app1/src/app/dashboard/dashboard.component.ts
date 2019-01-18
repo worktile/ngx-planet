@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MicroHostApplication, GlobalEventDispatcher } from '../../../../../packages/micro-core/src/public_api';
+import { CounterService } from '../counter.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -10,6 +11,7 @@ export class DashboardComponent {
     constructor(
         private hostApplication: MicroHostApplication,
         private router: Router,
+        public counter: CounterService,
         private globalEventDispatcher: GlobalEventDispatcher
     ) {}
 
@@ -20,9 +22,13 @@ export class DashboardComponent {
         });
     }
 
-    toAbout() {
+    toHostAbout() {
         // this.router.dispose();
         this.hostApplication.navigateByUrl('/about');
         // this.hostApplication.router.navigateByUrl('/about');
+    }
+
+    toAbout() {
+        this.router.navigateByUrl('/about');
     }
 }
