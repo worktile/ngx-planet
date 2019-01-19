@@ -1,19 +1,25 @@
 import { Injectable, NgZone, ApplicationRef, Injector } from '@angular/core';
 import { NavigationEnd, RouterEvent, Router } from '@angular/router';
-import { AssetsLoader, AssetsLoadResult } from './assets-loader';
-import { MicroHostApplication } from './host-application';
-import { GlobalEventDispatcher } from './global-event-dispatcher';
-import { getHTMLElement, coerceArray } from './helpers';
+import { AssetsLoader, AssetsLoadResult } from './lib/assets-loader';
+import { MicroHostApplication } from './lib/host-application';
+import { GlobalEventDispatcher } from './lib/global-event-dispatcher';
+import { getHTMLElement, coerceArray } from './lib/helpers';
 import { of, Observable, BehaviorSubject, Subject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import { IMicroApplication, ApplicationInfo, ApplicationOptions, SwitchModes, MicroRouterEvent, MicroPlanetOptions } from './micro.class';
-
+import {
+    IMicroApplication,
+    ApplicationInfo,
+    ApplicationOptions,
+    SwitchModes,
+    MicroRouterEvent,
+    PlanetOptions
+} from './planet.class';
 
 @Injectable({
     providedIn: 'root'
 })
-export class MicroPlanet {
-    private options: MicroPlanetOptions;
+export class Planet {
+    private options: PlanetOptions;
 
     private apps: ApplicationInfo[] = [];
 
@@ -70,7 +76,7 @@ export class MicroPlanet {
         };
     }
 
-    setOptions(options: Partial<MicroPlanetOptions>) {
+    setOptions(options: Partial<PlanetOptions>) {
         this.options = {
             ...this.options,
             ...options
@@ -138,6 +144,7 @@ export class MicroPlanet {
                 },
                 error => {
                     this.options.errorHandler(error);
+                    this.applicationRef.tick();
                 }
             );
         });

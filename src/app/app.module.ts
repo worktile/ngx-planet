@@ -6,13 +6,13 @@ import { AppComponent } from './app.component';
 import { NgxTethysModule } from 'ngx-tethys';
 import { AboutComponent } from './about/about.component';
 import { HostContainerComponent } from './host-container/host-container.component';
-import { NgxMicroModule } from '../../packages/micro-core/src/public_api';
+import { NgxPlanetModule } from '../../packages/micro-core/src/public_api';
 import { ThyDialogModule } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
 
 @NgModule({
     declarations: [AppComponent, AboutComponent, HostContainerComponent, ADetailComponent],
-    imports: [BrowserModule, NgxTethysModule, ThyDialogModule, AppRoutingModule, NgxMicroModule],
+    imports: [BrowserModule, NgxTethysModule, ThyDialogModule, AppRoutingModule, NgxPlanetModule],
     providers: [],
     bootstrap: [AppComponent],
     entryComponents: [ADetailComponent]

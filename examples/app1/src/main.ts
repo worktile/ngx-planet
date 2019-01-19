@@ -6,7 +6,7 @@ import { environment } from './environments/environment';
 import { Router } from '@angular/router';
 import { MicroHostApplication } from '../../../packages/micro-core/src/lib/host-application';
 import { GlobalEventDispatcher } from '../../../packages/micro-core/src/lib/global-event-dispatcher';
-import { IMicroApplication, MicroRouterEvent } from '../../../packages/micro-core/src/lib/micro.class';
+import { IMicroApplication, MicroRouterEvent } from '../../../packages/micro-core/src/planet.class';
 
 if (environment.production) {
     enableProdMode();

@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
-import { MicroPlanet, SwitchModes } from '../../packages/micro-core/src/public_api';
+import { Planet, SwitchModes } from '../../packages/micro-core/src/public_api';
 import { Router, NavigationEnd } from '@angular/router';
 import { GlobalEventDispatcher } from '../../packages/micro-core/src/lib/global-event-dispatcher';
 import { ThyDialog } from 'ngx-tethys/dialog';
@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
     title = 'ngx-micro-frontend';
 
     constructor(
-        private microPlanet: MicroPlanet,
+        private planet: Planet,
         private router: Router,
         private globalEventDispatcher: GlobalEventDispatcher,
         private thyDialog: ThyDialog,
@@ -26,18 +26,17 @@ export class AppComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.microPlanet.setOptions({
+        this.planet.setOptions({
             switchMode: SwitchModes.coexist,
             errorHandler: error => {
                 this.thyNotify.error(`错误`, '加载资源失败');
-                this.applicationRef.tick();
             }
         });
 
         const appHostContainerSelector = '#app-host-container';
         const appHostContainerClass = 'thy-layout';
 
-        this.microPlanet.registerApplication('app1', {
+        this.planet.registerApplication('app1', {
             host: appHostContainerSelector,
             hostClass: appHostContainerClass,
             routerPathPrefix: '/app1',
@@ -49,7 +48,7 @@ export class AppComponent implements OnInit {
                 'app1/assets/main.js'
             ]
         });
-        this.microPlanet.registerApplication('app2', {
+        this.planet.registerApplication('app2', {
             host: appHostContainerSelector,
             hostClass: appHostContainerClass,
             routerPathPrefix: '/app2',
@@ -62,7 +61,7 @@ export class AppComponent implements OnInit {
 
         this.router.events.subscribe((event: any) => {
             if (event instanceof NavigationEnd) {
-                this.microPlanet.resetRouting(event);
+                this.planet.resetRouting(event);
             }
         });
 

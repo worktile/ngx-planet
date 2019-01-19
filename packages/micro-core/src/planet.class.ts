@@ -1,4 +1,4 @@
-import { MicroHostApplication } from './host-application';
+import { MicroHostApplication } from './lib/host-application';
 
 export interface IMicroApplication {
     bootstrap(app: MicroHostApplication): void;
@@ -6,7 +6,7 @@ export interface IMicroApplication {
     destroy(): void;
 }
 
-export interface MicroPlanetOptions {
+export interface PlanetOptions {
     preload?: boolean;
     switchMode?: SwitchModes;
     errorHandler: (error: Error) => void;
@@ -39,6 +39,10 @@ export interface ApplicationInfo {
     name: string;
     loaded?: boolean;
     options: ApplicationOptions;
+}
+
+export interface PlanetApplication extends ApplicationOptions {
+    loaded: boolean;
 }
 
 export enum SwitchModes {
