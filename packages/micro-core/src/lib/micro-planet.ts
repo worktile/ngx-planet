@@ -6,19 +6,14 @@ import { GlobalEventDispatcher } from './global-event-dispatcher';
 import { getHTMLElement, coerceArray } from './helpers';
 import { of, Observable, BehaviorSubject, Subject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import { IMicroApplication, ApplicationInfo, ApplicationOptions, SwitchModes } from './micro.class';
+import { IMicroApplication, ApplicationInfo, ApplicationOptions, SwitchModes, MicroRouterEvent, MicroPlanetOptions } from './micro.class';
 
-export interface MicroPortalOptions {
-    preload?: boolean;
-    switchMode?: SwitchModes;
-    errorHandler: (error: Error) => void;
-}
 
 @Injectable({
     providedIn: 'root'
 })
-export class MicroPortalService {
-    private options: MicroPortalOptions;
+export class MicroPlanet {
+    private options: MicroPlanetOptions;
 
     private apps: ApplicationInfo[] = [];
 
@@ -75,7 +70,7 @@ export class MicroPortalService {
         };
     }
 
-    setOptions(options: Partial<MicroPortalOptions>) {
+    setOptions(options: Partial<MicroPlanetOptions>) {
         this.options = {
             ...this.options,
             ...options
@@ -126,15 +121,14 @@ export class MicroPortalService {
         return null;
     }
 
-    loadAndBootstrapApp(appInfo: ApplicationInfo) {
+    loadAndBootstrapApp(appInfo: ApplicationInfo, event: MicroRouterEvent) {
         this.ngZone.runOutsideAngular(() => {
             this.loadingDone = false;
             this.currentApp = appInfo;
             if (appInfo.loaded && this.switchModeIsCoexist()) {
                 this.showApplication(appInfo);
                 const app = this.getMicroApplication(appInfo);
-                app.resetRouting();
-                return;
+                return app.onRouteChange(event);
             }
             this.loadApp(appInfo).subscribe(
                 result => {
@@ -161,13 +155,7 @@ export class MicroPortalService {
         }
     }
 
-    destroyCurrentApplication() {
-        if (this.currentApp) {
-            this.destroyApplication(this.currentApp);
-        }
-    }
-
-    resetRouting(event: RouterEvent) {
+    resetRouting(event: MicroRouterEvent) {
         const matchedApp = this.apps.find(app => {
             return event.url.includes(app.options.routerPathPrefix);
         });
@@ -177,7 +165,7 @@ export class MicroPortalService {
                 const app = this.getMicroApplication(this.currentApp);
                 if (app) {
                     this.hideApplication(this.currentApp);
-                    app.resetRouting();
+                    app.onRouteChange(event);
                 }
             } else {
                 this.destroyApplication(this.currentApp);
@@ -186,7 +174,7 @@ export class MicroPortalService {
         }
 
         if (matchedApp) {
-            this.loadAndBootstrapApp(matchedApp);
+            this.loadAndBootstrapApp(matchedApp, event);
         }
     }
 }

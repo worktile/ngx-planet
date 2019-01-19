@@ -2,19 +2,29 @@ import { MicroHostApplication } from './host-application';
 
 export interface IMicroApplication {
     bootstrap(app: MicroHostApplication): void;
-    resetRouting(): void;
+    onRouteChange(event: MicroRouterEvent): void;
     destroy(): void;
+}
+
+export interface MicroPlanetOptions {
+    preload?: boolean;
+    switchMode?: SwitchModes;
+    errorHandler: (error: Error) => void;
 }
 
 export interface ApplicationOptions {
     // 应用加载的宿主元素或者选择器
     host: string | HTMLElement;
-    // 宿主元素附加样式
-    hostClass?: string | string[];
     // 子应用的选择器
     selector: string;
     // 子应用路由前缀路径
     routerPathPrefix: string;
+    // 宿主元素附加样式
+    hostClass?: string | string[];
+    // 是否需要预加载
+    preload?: boolean;
+    // 切换应用的模式
+    switchMode?: SwitchModes;
     // 样式资源加载前缀
     stylePathPrefix?: string;
     // 样式资源文件
@@ -28,11 +38,14 @@ export interface ApplicationOptions {
 export interface ApplicationInfo {
     name: string;
     loaded?: boolean;
-    // bootstrapped?: boolean;
     options: ApplicationOptions;
 }
 
 export enum SwitchModes {
     default = 'default',
     coexist = 'coexist'
+}
+
+export interface MicroRouterEvent {
+    url: string;
 }

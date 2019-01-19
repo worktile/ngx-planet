@@ -4,7 +4,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { Router } from '@angular/router';
-import { IMicroApplication, MicroHostApplication } from '../../../packages/micro-core/src/public_api';
+import { IMicroApplication, MicroHostApplication, MicroRouterEvent } from '../../../packages/micro-core/src/public_api';
 
 if (environment.production) {
     enableProdMode();
@@ -32,12 +32,13 @@ class MicroApp implements IMicroApplication {
             delete this.appModuleRef;
         }
     }
-    resetRouting(): void {
+
+    onRouteChange(event: MicroRouterEvent): void {
         const ngZone = this.appModuleRef.injector.get(NgZone);
         const router = this.appModuleRef.injector.get(Router);
         // router.navigateByUrl(location.pathname);
         ngZone.run(() => {
-            router.navigateByUrl(location.pathname);
+            router.navigateByUrl(event.url);
         });
     }
 }

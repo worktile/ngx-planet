@@ -1,5 +1,5 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { MicroPortalService } from '../../../packages/micro-core/src/public_api';
+import { MicroPlanet } from '../../../packages/micro-core/src/public_api';
 
 @Component({
     selector: 'app-host-container',
@@ -11,10 +11,10 @@ export class HostContainerComponent implements OnInit {
 
     @HostBinding('class.loading')
     get loading() {
-        return !this.microPortal || !this.microPortal.loadingDone;
+        return !this.microPlanet || !this.microPlanet.loadingDone;
     }
 
-    constructor(public microPortal: MicroPortalService) {}
+    constructor(public microPlanet: MicroPlanet) {}
 
     ngOnInit() {}
 }

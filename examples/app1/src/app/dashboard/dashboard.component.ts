@@ -23,7 +23,6 @@ export class DashboardComponent {
     }
 
     toHostAbout() {
-        // this.router.dispose();
         this.hostApplication.navigateByUrl('/about');
         // this.hostApplication.router.navigateByUrl('/about');
     }

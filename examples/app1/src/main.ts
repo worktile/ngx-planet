@@ -6,7 +6,7 @@ import { environment } from './environments/environment';
 import { Router } from '@angular/router';
 import { MicroHostApplication } from '../../../packages/micro-core/src/lib/host-application';
 import { GlobalEventDispatcher } from '../../../packages/micro-core/src/lib/global-event-dispatcher';
-import { IMicroApplication } from '../../../packages/micro-core/src/lib/micro.class';
+import { IMicroApplication, MicroRouterEvent } from '../../../packages/micro-core/src/lib/micro.class';
 
 if (environment.production) {
     enableProdMode();
@@ -48,11 +48,11 @@ class MicroApp implements IMicroApplication {
         }
     }
 
-    resetRouting() {
+    onRouteChange(event: MicroRouterEvent) {
         const ngZone = this.appModuleRef.injector.get(NgZone);
         const router = this.appModuleRef.injector.get(Router);
         ngZone.run(() => {
-            router.navigateByUrl(location.pathname);
+            router.navigateByUrl(event.url);
         });
     }
 }
