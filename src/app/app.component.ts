@@ -36,23 +36,28 @@ export class AppComponent implements OnInit {
         const appHostContainerSelector = '#app-host-container';
         const appHostContainerClass = 'thy-layout';
 
-        this.planet.registerApplication('app1', {
+        this.planet.registerApplication({
+            name: 'app1',
             host: appHostContainerSelector,
             hostClass: appHostContainerClass,
             routerPathPrefix: '/app1',
             selector: 'app1-root-container',
+            scriptPathPrefix: 'app1/assets/',
+            preload: true,
             // prettier-ignore
             scripts: [
                 // 'app1/assets/runtime.js',
                 // 'app1/assets/polyfills.js',
-                'app1/assets/main.js'
+                'main.js'
             ]
         });
-        this.planet.registerApplication('app2', {
+        this.planet.registerApplication({
+            name: 'app2',
             host: appHostContainerSelector,
             hostClass: appHostContainerClass,
             routerPathPrefix: '/app2',
             selector: 'app2-root-container',
+            preload: true,
             // prettier-ignore
             scripts: [
                 'app2/assets/main.js'

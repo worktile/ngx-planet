@@ -6,9 +6,9 @@ import { Component } from '@angular/core';
 })
 export class EmptyComponent {}
 
-@Component({
-    selector: 'app1-root-container',
-    template: '<router-outlet></router-outlet>'
-})
-export class EmptyRouterOutletComponent {}
+// @Component({
+//     selector: 'app1-root-container',
+//     template: '<router-outlet></router-outlet>'
+// })
+// export class EmptyRouterOutletComponent {}
 

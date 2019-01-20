@@ -3,12 +3,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { Route } from '@angular/router';
 import { UserDetailComponent } from './user/detail/user-detail.component';
 import { EmptyComponent } from './empty/empty.component';
-import { AppComponent } from './app.component';
+import { AppRootComponent } from './root/root.component';
 
 export const routers: Route[] = [
     {
         path: 'app1',
-        component: AppComponent,
+        component: AppRootComponent,
         children: [
             {
                 path: '',

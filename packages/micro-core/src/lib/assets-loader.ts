@@ -35,7 +35,6 @@ export class AssetsLoader {
                 script.onreadystatechange = () => {
                     if (script.readyState === 'loaded' || script.readyState === 'complete') {
                         script.onreadystatechange = null;
-                        this.loadedSources.push(id);
                         observer.next({
                             src: src,
                             hashCode: id,
@@ -43,11 +42,11 @@ export class AssetsLoader {
                             status: 'Loaded'
                         });
                         observer.complete();
+                        this.loadedSources.push(id);
                     }
                 };
             } else {
                 // Others
-                this.loadedSources.push(id);
                 script.onload = () => {
                     observer.next({
                         src: src,
@@ -56,6 +55,7 @@ export class AssetsLoader {
                         status: 'Loaded'
                     });
                     observer.complete();
+                    this.loadedSources.push(id);
                 };
             }
             script.onerror = (error: any) => {
@@ -71,9 +71,64 @@ export class AssetsLoader {
         });
     }
 
+    loadStyle(src: string): Observable<AssetsLoadResult> {
+        const id = hashCode(src);
+        if (this.loadedSources.includes(id)) {
+            return of({
+                src: src,
+                hashCode: id,
+                loaded: true,
+                status: 'Loaded'
+            });
+        }
+        return Observable.create((observer: Observer<AssetsLoadResult>) => {
+            const head = document.getElementsByTagName('head')[0];
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = src;
+            link.media = 'all';
+            link.onload = () => {
+                observer.next({
+                    src: src,
+                    hashCode: id,
+                    loaded: true,
+                    status: 'Loaded'
+                });
+                observer.complete();
+                this.loadedSources.push(id);
+            };
+            link.onerror = error => {
+                observer.error({
+                    src: src,
+                    hashCode: id,
+                    loaded: true,
+                    status: 'Loaded',
+                    error: error
+                });
+                observer.complete();
+            };
+            head.appendChild(link);
+        });
+    }
+
     loadScripts(sources: string[]): Observable<AssetsLoadResult[]> {
-        return forkJoin(sources.map(src => {
-            return this.loadScript(src);
-        }));
+        return forkJoin(
+            sources.map(src => {
+                return this.loadScript(src);
+            })
+        );
+    }
+
+    loadStyles(sources: string[]): Observable<AssetsLoadResult[]> {
+        return forkJoin(
+            sources.map(src => {
+                return this.loadStyle(src);
+            })
+        );
+    }
+
+    loadScriptsAndStyles(scripts: string[], styles: string[]) {
+        return forkJoin(this.loadScripts(scripts), this.loadStyles(styles));
     }
 }

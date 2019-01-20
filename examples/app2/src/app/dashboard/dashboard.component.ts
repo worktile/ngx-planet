@@ -4,14 +4,16 @@ import { MicroHostApplication } from '../../../../../packages/micro-core/src/lib
 
 @Component({
     selector: 'app-dashboard',
-    template: `
-        This is dashboard <a href="javascript:;" (click)="toAbout()">About</a>
-    `
+    templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
     constructor(private hostApplication: MicroHostApplication) {}
 
     toAbout() {
         this.hostApplication.navigateByUrl('/about');
+    }
+
+    openApp1UserDetail() {
+        this.hostApplication.globalEventDispatcher.dispatch('openUserDetail', 1);
     }
 }

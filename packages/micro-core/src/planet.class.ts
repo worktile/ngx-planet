@@ -1,6 +1,6 @@
 import { MicroHostApplication } from './lib/host-application';
 
-export interface IMicroApplication {
+export interface IPlanetApplicationRef {
     bootstrap(app: MicroHostApplication): void;
     onRouteChange(event: MicroRouterEvent): void;
     destroy(): void;
@@ -12,7 +12,8 @@ export interface PlanetOptions {
     errorHandler: (error: Error) => void;
 }
 
-export interface ApplicationOptions {
+export interface PlanetApplication {
+    name: string;
     // 应用加载的宿主元素或者选择器
     host: string | HTMLElement;
     // 子应用的选择器
@@ -35,15 +36,6 @@ export interface ApplicationOptions {
     scripts?: string[];
 }
 
-export interface ApplicationInfo {
-    name: string;
-    loaded?: boolean;
-    options: ApplicationOptions;
-}
-
-export interface PlanetApplication extends ApplicationOptions {
-    loaded: boolean;
-}
 
 export enum SwitchModes {
     default = 'default',

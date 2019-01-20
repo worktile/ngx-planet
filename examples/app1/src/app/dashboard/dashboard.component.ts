@@ -16,10 +16,7 @@ export class DashboardComponent {
     ) {}
 
     openADetail() {
-        this.globalEventDispatcher.dispatch({
-            name: 'openADetail',
-            payload: null
-        });
+        this.globalEventDispatcher.dispatch('openADetail');
     }
 
     toHostAbout() {

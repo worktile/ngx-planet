@@ -4,17 +4,35 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { Router } from '@angular/router';
-import { IMicroApplication, MicroHostApplication, MicroRouterEvent } from '../../../packages/micro-core/src/public_api';
+import {
+    IPlanetApplicationRef,
+    MicroHostApplication,
+    MicroRouterEvent,
+    GlobalEventDispatcher
+} from '../../../packages/micro-core/src/public_api';
 
 if (environment.production) {
     enableProdMode();
 }
 
-class MicroApp implements IMicroApplication {
+class MicroApp implements IPlanetApplicationRef {
     private appModuleRef: NgModuleRef<AppModule>;
 
     bootstrap(hostApp: MicroHostApplication) {
-        platformBrowserDynamic([{ provide: MicroHostApplication, useValue: hostApp }])
+        platformBrowserDynamic([
+            {
+                provide: MicroHostApplication,
+                useValue: hostApp
+            },
+            {
+                provide: GlobalEventDispatcher,
+                useValue: hostApp.globalEventDispatcher
+            },
+            {
+                provide: NgZone,
+                useValue: hostApp.ngZone
+            }
+        ])
             .bootstrapModule(AppModule)
             .then(appModule => {
                 this.appModuleRef = appModule;

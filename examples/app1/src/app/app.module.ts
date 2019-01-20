@@ -8,12 +8,13 @@ import { NgxTethysModule } from 'ngx-tethys';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { routers } from './app.routing';
 import { UserDetailComponent } from './user/detail/user-detail.component';
-import { EmptyComponent, EmptyRouterOutletComponent } from './empty/empty.component';
+import { EmptyComponent } from './empty/empty.component';
+import { AppRootComponent } from './root/root.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        EmptyRouterOutletComponent,
+        AppRootComponent,
         UserListComponent,
         UserDetailComponent,
         DashboardComponent,
@@ -21,6 +22,7 @@ import { EmptyComponent, EmptyRouterOutletComponent } from './empty/empty.compon
     ],
     imports: [BrowserModule, RouterModule.forRoot(routers), NgxTethysModule],
     providers: [],
-    bootstrap: [EmptyRouterOutletComponent]
+    entryComponents: [UserDetailComponent],
+    bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -6,17 +6,21 @@ import { environment } from './environments/environment';
 import { Router } from '@angular/router';
 import { MicroHostApplication } from '../../../packages/micro-core/src/lib/host-application';
 import { GlobalEventDispatcher } from '../../../packages/micro-core/src/lib/global-event-dispatcher';
-import { IMicroApplication, MicroRouterEvent } from '../../../packages/micro-core/src/planet.class';
+import { IPlanetApplicationRef, MicroRouterEvent } from '../../../packages/micro-core/src/planet.class';
+
 
 if (environment.production) {
     enableProdMode();
 }
 
-class MicroApp implements IMicroApplication {
+// platform.mount(`app1`).then(()=>{
+
+// });
+class MicroApp implements IPlanetApplicationRef {
     private appModuleRef: NgModuleRef<AppModule>;
 
     bootstrap(hostApp: MicroHostApplication) {
-        platformBrowserDynamic([
+        return platformBrowserDynamic([
             {
                 provide: MicroHostApplication,
                 useValue: hostApp
@@ -32,7 +36,7 @@ class MicroApp implements IMicroApplication {
         ])
             .bootstrapModule(AppModule)
             .then(appModule => {
-                this.appModuleRef = appModule;
+                return this.appModuleRef = appModule;
             })
             .catch(error => console.error(error));
     }

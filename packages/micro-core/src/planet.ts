@@ -4,16 +4,14 @@ import { AssetsLoader, AssetsLoadResult } from './lib/assets-loader';
 import { MicroHostApplication } from './lib/host-application';
 import { GlobalEventDispatcher } from './lib/global-event-dispatcher';
 import { getHTMLElement, coerceArray } from './lib/helpers';
-import { of, Observable, BehaviorSubject, Subject } from 'rxjs';
+import { of, Observable, BehaviorSubject, Subject, Observer } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import {
-    IMicroApplication,
-    ApplicationInfo,
-    ApplicationOptions,
-    SwitchModes,
-    MicroRouterEvent,
-    PlanetOptions
-} from './planet.class';
+import { IPlanetApplicationRef, SwitchModes, MicroRouterEvent, PlanetOptions, PlanetApplication } from './planet.class';
+import { PlanetApplicationService } from './planet-application.service';
+
+interface InternalPlanetApplication extends PlanetApplication {
+    loaded?: boolean;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -21,36 +19,34 @@ import {
 export class Planet {
     private options: PlanetOptions;
 
-    private apps: ApplicationInfo[] = [];
-
-    private appsMap: { [key: string]: ApplicationOptions } = {};
-
-    private currentApp: ApplicationInfo;
+    private currentApp: InternalPlanetApplication;
 
     private hostApp = new MicroHostApplication();
 
+    private firstLoad = true;
+
     public loadingDone: boolean;
 
-    public appLoad$ = new Subject<ApplicationInfo>();
+    // public appLoad$ = new Subject<IPlanetApplicationRef>();
 
     private switchModeIsCoexist() {
         return this.options.switchMode === SwitchModes.coexist;
     }
 
-    private getMicroApplication(app: ApplicationInfo): IMicroApplication {
-        const appInstance = (window as any)[app.name] as { app: IMicroApplication };
+    private getPlanetApplicationRef(app: InternalPlanetApplication): IPlanetApplicationRef {
+        const appInstance = (window as any)[app.name] as { app: IPlanetApplicationRef };
         return appInstance && appInstance.app;
     }
 
-    private hideApplication(appInfo: ApplicationInfo) {
-        const appRootElement = document.querySelector(appInfo.options.selector);
+    private hideApplication(planetApp: InternalPlanetApplication) {
+        const appRootElement = document.querySelector(planetApp.selector);
         if (appRootElement) {
             appRootElement.setAttribute('style', 'display:none;');
         }
     }
 
-    private showApplication(appInfo: ApplicationInfo) {
-        const appRootElement = document.querySelector(appInfo.options.selector);
+    private showApplication(planetApp: InternalPlanetApplication) {
+        const appRootElement = document.querySelector(planetApp.selector);
         if (appRootElement) {
             appRootElement.setAttribute('style', '');
         }
@@ -61,7 +57,8 @@ export class Planet {
         private ngZone: NgZone,
         private router: Router,
         private globalEventDispatcher: GlobalEventDispatcher,
-        private applicationRef: ApplicationRef
+        private applicationRef: ApplicationRef,
+        private planetApplicationService: PlanetApplicationService
     ) {
         this.hostApp.ngZone = ngZone;
         this.hostApp.router = router;
@@ -83,96 +80,122 @@ export class Planet {
         };
     }
 
-    registerApplication(appName: string, options: ApplicationOptions) {
-        if (this.appsMap[appName]) {
-            throw new Error(`${appName} has be registered.`);
-        }
-        this.apps.push({
-            name: appName,
-            options: options
-        });
-        this.appsMap[appName] = options;
+    registerApplication(app: PlanetApplication) {
+        this.planetApplicationService.register(app);
     }
 
-    loadApp(app: ApplicationInfo): Observable<AssetsLoadResult[]> {
+    loadApp(app: InternalPlanetApplication): Observable<AssetsLoadResult[]> {
         if (app.loaded) {
             return of([]);
         }
-        let scripts = app.options.scripts;
-        if (app.options.scriptPathPrefix) {
+        let scripts = app.scripts;
+        if (app.scriptPathPrefix) {
             scripts = scripts.map(script => {
-                return `${app.options.scriptPathPrefix}/${script}`;
+                return `${app.scriptPathPrefix}/${script}`;
             });
         }
         return this.assetsLoader.loadScripts(scripts);
     }
 
-    bootstrapApp(appInfo: ApplicationInfo): IMicroApplication {
-        const app = this.getMicroApplication(appInfo);
-        if (app && app.bootstrap) {
-            const container = getHTMLElement(appInfo.options.host);
+    bootstrapApp(planetApp: InternalPlanetApplication): IPlanetApplicationRef {
+        const appRef = this.getPlanetApplicationRef(planetApp);
+        if (appRef && appRef.bootstrap) {
+            const container = getHTMLElement(planetApp.host);
             if (container) {
-                let appRootElement = container.querySelector(appInfo.options.selector);
+                let appRootElement = container.querySelector(planetApp.selector);
                 if (!appRootElement) {
-                    appRootElement = document.createElement(appInfo.options.selector);
-                    if (appInfo.options.hostClass) {
-                        appRootElement.classList.add(...coerceArray(appInfo.options.hostClass));
+                    appRootElement = document.createElement(planetApp.selector);
+                    if (planetApp.hostClass) {
+                        appRootElement.classList.add(...coerceArray(planetApp.hostClass));
                     }
                     container.appendChild(appRootElement);
                 }
             }
-            app.bootstrap(this.hostApp);
-            return app;
+            appRef.bootstrap(this.hostApp);
+            return appRef;
         }
         return null;
     }
 
-    loadAndBootstrapApp(appInfo: ApplicationInfo, event: MicroRouterEvent) {
-        this.ngZone.runOutsideAngular(() => {
-            this.loadingDone = false;
-            this.currentApp = appInfo;
-            if (appInfo.loaded && this.switchModeIsCoexist()) {
-                this.showApplication(appInfo);
-                const app = this.getMicroApplication(appInfo);
-                return app.onRouteChange(event);
-            }
-            this.loadApp(appInfo).subscribe(
-                result => {
-                    this.bootstrapApp(appInfo);
-                    appInfo.loaded = true;
-                    this.loadingDone = true;
-                },
-                error => {
-                    this.options.errorHandler(error);
-                    this.applicationRef.tick();
+    preloadAndBootstrapApp(planetApp: InternalPlanetApplication) {
+        return new Promise((resolve, reject) => {
+            this.ngZone.runOutsideAngular(() => {
+                if (planetApp.loaded) {
+                    return;
+                } else {
+                    this.loadApp(planetApp).subscribe(
+                        result => {
+                            this.bootstrapApp(planetApp);
+                            this.hideApplication(planetApp);
+                            planetApp.loaded = true;
+                            resolve();
+                        },
+                        error => {
+                            this.options.errorHandler(error);
+                            this.applicationRef.tick();
+                            reject(error);
+                        }
+                    );
                 }
-            );
+            });
         });
     }
 
-    destroyApplication(appInfo: ApplicationInfo) {
-        const app = this.getMicroApplication(appInfo);
-        if (app) {
-            app.destroy();
+    loadAndBootstrapApp(planetApp: InternalPlanetApplication, event?: MicroRouterEvent) {
+        return new Promise((resolve, reject) => {
+            this.ngZone.runOutsideAngular(() => {
+                this.loadingDone = false;
+                this.currentApp = planetApp;
+                if (planetApp.loaded) {
+                    if (this.switchModeIsCoexist()) {
+                        this.showApplication(planetApp);
+                        const appRef = this.getPlanetApplicationRef(planetApp);
+                        appRef.onRouteChange(event);
+                    } else {
+                        this.bootstrapApp(planetApp);
+                    }
+                    resolve();
+                } else {
+                    this.loadApp(planetApp).subscribe(
+                        result => {
+                            this.bootstrapApp(planetApp);
+                            planetApp.loaded = true;
+                            this.loadingDone = true;
+                            resolve();
+                        },
+                        error => {
+                            this.options.errorHandler(error);
+                            this.applicationRef.tick();
+                            reject(error);
+                        }
+                    );
+                }
+            });
+        });
+    }
+
+    destroyApplication(planetApp: InternalPlanetApplication) {
+        const appRef = this.getPlanetApplicationRef(planetApp);
+        if (appRef) {
+            appRef.destroy();
         }
-        const container = getHTMLElement(appInfo.options.host);
-        const appRootElement = container.querySelector(appInfo.options.selector);
+        const container = getHTMLElement(planetApp.host);
+        const appRootElement = container.querySelector(planetApp.selector);
         if (appRootElement) {
             container.removeChild(appRootElement);
         }
     }
 
     resetRouting(event: MicroRouterEvent) {
-        const matchedApp = this.apps.find(app => {
-            return event.url.includes(app.options.routerPathPrefix);
-        });
+        const matchedApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
+        const matchedApp = this.planetApplicationService.getAppByMatchedUrl(event.url);
 
         if (this.currentApp) {
             if (this.switchModeIsCoexist()) {
-                const app = this.getMicroApplication(this.currentApp);
-                if (app) {
+                const appRef = this.getPlanetApplicationRef(this.currentApp);
+                if (appRef) {
                     this.hideApplication(this.currentApp);
-                    app.onRouteChange(event);
+                    appRef.onRouteChange(event);
                 }
             } else {
                 this.destroyApplication(this.currentApp);
@@ -181,7 +204,25 @@ export class Planet {
         }
 
         if (matchedApp) {
-            this.loadAndBootstrapApp(matchedApp, event);
+            this.loadAndBootstrapApp(matchedApp, event).then(() => {
+                this.preloadApps(matchedApp);
+            });
+        } else {
+            this.preloadApps();
+        }
+    }
+
+    preloadApps(matchedApp?: InternalPlanetApplication) {
+        if (this.firstLoad) {
+            setTimeout(() => {
+                const toPreloadApps = this.planetApplicationService.getAppsToPreload(
+                    matchedApp ? [matchedApp.name] : null
+                );
+                toPreloadApps.forEach(preloadApp => {
+                    this.preloadAndBootstrapApp(preloadApp).then(() => {}, error => {});
+                });
+            });
+            this.firstLoad = true;
         }
     }
 }

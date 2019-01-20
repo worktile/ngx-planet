@@ -13,9 +13,10 @@ export class GlobalEventDispatcher {
 
     constructor(private ngZone: NgZone) {}
 
-    dispatch(event: GlobalDispatcherEvent) {
-        this.ngZone.run(() => {
-            this.subject$.next(event);
+    dispatch(name: string, payload?: any) {
+        this.subject$.next({
+            name: name,
+            payload: payload
         });
     }
 
@@ -30,7 +31,11 @@ export class GlobalEventDispatcher {
                         return event.payload;
                     })
                 )
-                .subscribe(observer);
+                .subscribe(payload => {
+                    this.ngZone.run(() => {
+                        observer.next(payload);
+                    });
+                });
             return () => {
                 subscription.unsubscribe();
             };

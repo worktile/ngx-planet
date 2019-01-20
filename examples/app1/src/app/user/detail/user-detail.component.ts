@@ -12,16 +12,9 @@ export class UserDetailComponent implements OnInit {
     constructor(private route: ActivatedRoute, private globalEventDispatcher: GlobalEventDispatcher) {}
 
     ngOnInit() {
-        this.route.paramMap.subscribe(params => {
-            const userId = params.get(`id`);
-            this.userId = userId;
-        });
-    }
-
-    openADetail() {
-        this.globalEventDispatcher.dispatch({
-            name: 'openADetail',
-            payload: null
-        });
+        // this.route.paramMap.subscribe(params => {
+        //     const userId = params.get(`id`);
+        //     this.userId = userId;
+        // });
     }
 }
