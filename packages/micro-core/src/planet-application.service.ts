@@ -2,6 +2,7 @@ import { PlanetApplication } from './planet.class';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { shareReplay, map } from 'rxjs/operators';
+import { coerceArray } from './lib/helpers';
 
 interface InternalPlanetApplication extends PlanetApplication {
     loaded?: boolean;
@@ -19,12 +20,15 @@ export class PlanetApplicationService {
 
     constructor(private http: HttpClient) {}
 
-    register(app: PlanetApplication) {
-        if (this.appsMap[app.name]) {
-            throw new Error(`${app.name} has be registered.`);
-        }
-        this.apps.push(app);
-        this.appsMap[app.name] = app;
+    register(appOrApps: PlanetApplication | PlanetApplication[]) {
+        const apps = coerceArray(appOrApps);
+        apps.forEach(app => {
+            if (this.appsMap[app.name]) {
+                throw new Error(`${app.name} has be registered.`);
+            }
+            this.apps.push(app);
+            this.appsMap[app.name] = app;
+        });
     }
 
     registerByUrl(url: string) {

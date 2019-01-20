@@ -16,7 +16,7 @@ const routers: Route[] = [
         children: [
             {
                 path: '',
-                redirectTo: 'projects',
+                redirectTo: 'dashboard',
                 pathMatch: 'full'
             },
             {

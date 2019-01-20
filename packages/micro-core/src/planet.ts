@@ -80,7 +80,7 @@ export class Planet {
         };
     }
 
-    registerApplication(app: PlanetApplication) {
+    registerApp(app: PlanetApplication | PlanetApplication[]) {
         this.planetApplicationService.register(app);
     }
 
