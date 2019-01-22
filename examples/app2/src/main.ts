@@ -10,7 +10,7 @@ import {
     PlanetRouterEvent,
     GlobalEventDispatcher,
     defineApplication
-} from '../../../packages/micro-core/src/public_api';
+} from '../../../packages/planet/src/public_api';
 
 if (environment.production) {
     enableProdMode();

@@ -1,5 +1,5 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { Planet } from '../../../packages/micro-core/src/public_api';
+import { Planet } from '../../../packages/planet/src/public_api';
 
 @Component({
     selector: 'app-host-container',

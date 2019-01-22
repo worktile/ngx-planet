@@ -4,9 +4,9 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { Router } from '@angular/router';
-import { PlanetPortalApplication, defineApplication } from '../../../packages/micro-core/src/public_api';
-import { GlobalEventDispatcher } from '../../../packages/micro-core/src/global-event-dispatcher';
-import { IPlanetApplicationRef, PlanetRouterEvent } from '../../../packages/micro-core/src/planet.class';
+import { PlanetPortalApplication, defineApplication } from '../../../packages/planet/src/public_api';
+import { GlobalEventDispatcher } from '../../../packages/planet/src/global-event-dispatcher';
+import { IPlanetApplicationRef, PlanetRouterEvent } from '../../../packages/planet/src/planet.class';
 
 if (environment.production) {
     enableProdMode();

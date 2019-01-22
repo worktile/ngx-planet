@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { PlanetPortalApplication } from '../../../../../packages/micro-core/src/public_api';
+import { PlanetPortalApplication } from '../../../../../packages/planet/src/public_api';
 
 @Component({
     selector: 'app-dashboard',

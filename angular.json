@@ -118,31 +118,31 @@
                 }
             }
         },
-        "micro-core": {
-            "root": "packages/micro-core",
-            "sourceRoot": "packages/micro-core/src",
+        "planet": {
+            "root": "packages/planet",
+            "sourceRoot": "packages/planet/src",
             "projectType": "library",
             "prefix": "lib",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-ng-packagr:build",
                     "options": {
-                        "tsConfig": "packages/micro-core/tsconfig.lib.json",
-                        "project": "packages/micro-core/ng-package.json"
+                        "tsConfig": "packages/planet/tsconfig.lib.json",
+                        "project": "packages/planet/ng-package.json"
                     }
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "main": "packages/micro-core/src/test.ts",
-                        "tsConfig": "packages/micro-core/tsconfig.spec.json",
-                        "karmaConfig": "packages/micro-core/karma.conf.js"
+                        "main": "packages/planet/src/test.ts",
+                        "tsConfig": "packages/planet/tsconfig.spec.json",
+                        "karmaConfig": "packages/planet/karma.conf.js"
                     }
                 },
                 "lint": {
                     "builder": "@angular-devkit/build-angular:tslint",
                     "options": {
-                        "tsConfig": ["packages/micro-core/tsconfig.lib.json", "packages/micro-core/tsconfig.spec.json"],
+                        "tsConfig": ["packages/planet/tsconfig.lib.json", "packages/planet/tsconfig.spec.json"],
                         "exclude": ["**/node_modules/**"]
                     }
                 }

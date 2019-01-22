@@ -1,5 +1,5 @@
 import { Component, HostBinding, NgZone } from '@angular/core';
-import { GlobalEventDispatcher } from '../../../../packages/micro-core/src/public_api';
+import { GlobalEventDispatcher } from '../../../../packages/planet/src/public_api';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { UserDetailComponent } from './user/detail/user-detail.component';
 
@@ -21,13 +21,6 @@ export class AppComponent {
                     userId: payload
                 }
             });
-            // this.ngZone.run(() => {
-            //     thyDialog.open(UserDetailComponent, {
-            //         initialState: {
-            //             userId: payload
-            //         }
-            //     });
-            // });
         });
     }
 }

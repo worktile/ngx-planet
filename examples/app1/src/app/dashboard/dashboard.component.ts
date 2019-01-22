@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { PlanetPortalApplication, GlobalEventDispatcher } from '../../../../../packages/micro-core/src/public_api';
+import { PlanetPortalApplication, GlobalEventDispatcher } from '../../../../../packages/planet/src/public_api';
 import { CounterService } from '../counter.service';
 
 @Component({
