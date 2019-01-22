@@ -1,13 +1,19 @@
 import { Injectable, NgZone, ApplicationRef, Injector } from '@angular/core';
 import { NavigationEnd, RouterEvent, Router } from '@angular/router';
-import { AssetsLoader, AssetsLoadResult } from './lib/assets-loader';
-import { MicroHostApplication } from './lib/host-application';
-import { GlobalEventDispatcher } from './lib/global-event-dispatcher';
-import { getHTMLElement, coerceArray } from './lib/helpers';
+import { AssetsLoader, AssetsLoadResult } from './assets-loader';
+import { GlobalEventDispatcher } from './global-event-dispatcher';
+import { getHTMLElement, coerceArray } from './helpers';
 import { of, Observable, BehaviorSubject, Subject, Observer } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import { IPlanetApplicationRef, SwitchModes, MicroRouterEvent, PlanetOptions, PlanetApplication } from './planet.class';
-import { PlanetApplicationService } from './planet-application.service';
+import {
+    IPlanetApplicationRef,
+    SwitchModes,
+    PlanetRouterEvent,
+    PlanetOptions,
+    PlanetApplication
+} from './planet.class';
+import { PlanetApplicationService } from './application/planet-application.service';
+import { PlanetPortalApplication } from './application/portal-application';
 
 interface InternalPlanetApplication extends PlanetApplication {
     loaded?: boolean;
@@ -21,7 +27,7 @@ export class Planet {
 
     private currentApp: InternalPlanetApplication;
 
-    private hostApp = new MicroHostApplication();
+    private hostApp = new PlanetPortalApplication();
 
     private firstLoad = true;
 
@@ -34,8 +40,12 @@ export class Planet {
     }
 
     private getPlanetApplicationRef(app: InternalPlanetApplication): IPlanetApplicationRef {
-        const appInstance = (window as any)[app.name] as { app: IPlanetApplicationRef };
-        return appInstance && appInstance.app;
+        const planet = (window as any).planet;
+        if (planet && planet.apps && planet.apps[app.name]) {
+            return planet.apps[app.name];
+        } else {
+            return null;
+        }
     }
 
     private hideApplication(planetApp: InternalPlanetApplication) {
@@ -141,7 +151,7 @@ export class Planet {
         });
     }
 
-    loadAndBootstrapApp(planetApp: InternalPlanetApplication, event?: MicroRouterEvent) {
+    loadAndBootstrapApp(planetApp: InternalPlanetApplication, event?: PlanetRouterEvent) {
         return new Promise((resolve, reject) => {
             this.ngZone.runOutsideAngular(() => {
                 this.loadingDone = false;
@@ -186,7 +196,7 @@ export class Planet {
         }
     }
 
-    resetRouting(event: MicroRouterEvent) {
+    resetRouting(event: PlanetRouterEvent) {
         const matchedApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
         const matchedApp = this.planetApplicationService.getAppByMatchedUrl(event.url);
 

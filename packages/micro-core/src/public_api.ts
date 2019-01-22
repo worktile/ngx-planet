@@ -3,8 +3,8 @@
  */
 
 export * from './planet';
-export * from './lib/global-event-dispatcher';
-export * from './lib/host-application';
+export * from './global-event-dispatcher';
+export * from './application/portal-application';
 export * from './planet.class';
 export * from './module';
-
+export { defineApplication, PlanetApplicationRef } from './application/planet-application-ref';

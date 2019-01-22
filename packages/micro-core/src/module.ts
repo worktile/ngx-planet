@@ -1,5 +1,5 @@
 import { NgModule, InjectionToken } from '@angular/core';
-import { GlobalEventDispatcher } from './lib/global-event-dispatcher';
+import { GlobalEventDispatcher } from './global-event-dispatcher';
 import { ModuleWithProviders } from '@angular/compiler/src/core';
 import { PlanetApplication } from './planet.class';
 import { HttpClientModule } from '@angular/common/http';

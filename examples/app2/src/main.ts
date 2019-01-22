@@ -6,59 +6,29 @@ import { environment } from './environments/environment';
 import { Router } from '@angular/router';
 import {
     IPlanetApplicationRef,
-    MicroHostApplication,
-    MicroRouterEvent,
-    GlobalEventDispatcher
+    PlanetPortalApplication,
+    PlanetRouterEvent,
+    GlobalEventDispatcher,
+    defineApplication
 } from '../../../packages/micro-core/src/public_api';
 
 if (environment.production) {
     enableProdMode();
 }
 
-class MicroApp implements IPlanetApplicationRef {
-    private appModuleRef: NgModuleRef<AppModule>;
-
-    bootstrap(hostApp: MicroHostApplication) {
-        platformBrowserDynamic([
-            {
-                provide: MicroHostApplication,
-                useValue: hostApp
-            },
-            {
-                provide: GlobalEventDispatcher,
-                useValue: hostApp.globalEventDispatcher
-            },
-            {
-                provide: NgZone,
-                useValue: hostApp.ngZone
-            }
-        ])
-            .bootstrapModule(AppModule)
-            .then(appModule => {
-                this.appModuleRef = appModule;
-            })
-            .catch(error => console.error(error));
-    }
-
-    destroy() {
-        if (this.appModuleRef) {
-            // const router = this.appModuleRef.injector.get(Router);
-            // if (router) {
-            //     router.dispose();
-            // }
-            this.appModuleRef.destroy();
-            delete this.appModuleRef;
+defineApplication('app2', (hostApp: PlanetPortalApplication) => {
+    return platformBrowserDynamic([
+        {
+            provide: PlanetPortalApplication,
+            useValue: hostApp
         }
-    }
-
-    onRouteChange(event: MicroRouterEvent): void {
-        const ngZone = this.appModuleRef.injector.get(NgZone);
-        const router = this.appModuleRef.injector.get(Router);
-        // router.navigateByUrl(location.pathname);
-        ngZone.run(() => {
-            router.navigateByUrl(event.url);
+    ])
+        .bootstrapModule(AppModule)
+        .then(appModule => {
+            return appModule;
+        })
+        .catch(error => {
+            console.error(error);
+            return null;
         });
-    }
-}
-export const app = new MicroApp();
-// app.bootstrap();
+});

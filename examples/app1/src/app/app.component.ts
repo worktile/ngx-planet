@@ -16,18 +16,18 @@ export class AppComponent {
         private ngZone: NgZone
     ) {
         this.globalEventDispatcher.register('openUserDetail').subscribe((payload: number) => {
-            // thyDialog.open(UserDetailComponent, {
-            //     initialState: {
-            //         userId: payload
-            //     }
-            // });
-            this.ngZone.run(() => {
-                thyDialog.open(UserDetailComponent, {
-                    initialState: {
-                        userId: payload
-                    }
-                });
+            thyDialog.open(UserDetailComponent, {
+                initialState: {
+                    userId: payload
+                }
             });
+            // this.ngZone.run(() => {
+            //     thyDialog.open(UserDetailComponent, {
+            //         initialState: {
+            //             userId: payload
+            //         }
+            //     });
+            // });
         });
     }
 }

@@ -1,5 +1,5 @@
 import { Component, inject, InjectionToken, OnInit } from '@angular/core';
-import { GlobalEventDispatcher } from '../../../../../../packages/micro-core/src/lib/global-event-dispatcher';
+import { GlobalEventDispatcher } from '../../../../../../packages/micro-core/src/public_api';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

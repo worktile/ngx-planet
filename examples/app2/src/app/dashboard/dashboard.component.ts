@@ -1,19 +1,19 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MicroHostApplication } from '../../../../../packages/micro-core/src/lib/host-application';
+import { PlanetPortalApplication } from '../../../../../packages/micro-core/src/public_api';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
-    constructor(private hostApplication: MicroHostApplication) {}
+    constructor(private portalApp: PlanetPortalApplication) {}
 
     toAbout() {
-        this.hostApplication.navigateByUrl('/about');
+        this.portalApp.navigateByUrl('/about');
     }
 
     openApp1UserDetail() {
-        this.hostApplication.globalEventDispatcher.dispatch('openUserDetail', 1);
+        this.portalApp.globalEventDispatcher.dispatch('openUserDetail', 1);
     }
 }

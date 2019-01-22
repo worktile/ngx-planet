@@ -1,8 +1,11 @@
-import { MicroHostApplication } from './lib/host-application';
+import { NgZone } from '@angular/core';
+import { Router } from '@angular/router';
+import { PlanetPortalApplication } from './application/portal-application';
+
 
 export interface IPlanetApplicationRef {
-    bootstrap(app: MicroHostApplication): void;
-    onRouteChange(event: MicroRouterEvent): void;
+    bootstrap(app: PlanetPortalApplication): void;
+    onRouteChange(event: PlanetRouterEvent): void;
     destroy(): void;
 }
 
@@ -42,6 +45,6 @@ export enum SwitchModes {
     coexist = 'coexist'
 }
 
-export interface MicroRouterEvent {
+export interface PlanetRouterEvent {
     url: string;
 }

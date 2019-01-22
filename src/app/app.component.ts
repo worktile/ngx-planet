@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
-import { Planet, SwitchModes } from '../../packages/micro-core/src/public_api';
+import { Planet, SwitchModes, GlobalEventDispatcher } from '../../packages/micro-core/src/public_api';
 import { Router, NavigationEnd } from '@angular/router';
-import { GlobalEventDispatcher } from '../../packages/micro-core/src/lib/global-event-dispatcher';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
 import { ThyConfirmService, ThyNotifyService } from 'ngx-tethys';
