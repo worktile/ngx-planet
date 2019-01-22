@@ -174,7 +174,7 @@ export class Planet {
         });
     }
 
-    destroyApplication(planetApp: InternalPlanetApplication) {
+    destroyApp(planetApp: InternalPlanetApplication) {
         const appRef = this.getPlanetApplicationRef(planetApp);
         if (appRef) {
             appRef.destroy();
@@ -198,7 +198,7 @@ export class Planet {
                     appRef.onRouteChange(event);
                 }
             } else {
-                this.destroyApplication(this.currentApp);
+                this.destroyApp(this.currentApp);
             }
             this.currentApp = null;
         }
