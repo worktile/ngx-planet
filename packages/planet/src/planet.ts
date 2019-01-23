@@ -98,8 +98,12 @@ export class Planet {
         };
     }
 
-    registerApp(app: PlanetApplication | PlanetApplication[]) {
+    registerApp(app: PlanetApplication) {
         this.planetApplicationService.register(app);
+    }
+
+    registerApps(apps: PlanetApplication[]) {
+        this.planetApplicationService.register(apps);
     }
 
     loadApp(app: InternalPlanetApplication): Observable<AssetsLoadResult[]> {

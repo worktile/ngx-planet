@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
 import { Planet, SwitchModes, GlobalEventDispatcher } from '../../packages/planet/src/public_api';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterEvent } from '@angular/router';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
 import { ThyConfirmService, ThyNotifyService } from 'ngx-tethys';
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
         const appHostContainerSelector = '#app-host-container';
         const appHostContainerClass = 'thy-layout';
 
-        this.planet.registerApp([
+        this.planet.registerApps([
             {
                 name: 'app1',
                 host: appHostContainerSelector,
@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
             }
         ]);
 
-        this.router.events.subscribe((event: any) => {
+        this.router.events.subscribe((event: RouterEvent) => {
             if (event instanceof NavigationEnd) {
                 this.planet.resetRouting(event);
             }
@@ -75,9 +75,6 @@ export class AppComponent implements OnInit {
 
         this.globalEventDispatcher.register('openADetail').subscribe(event => {
             this.thyDialog.open(ADetailComponent);
-            // this.ngZone.run(() => {
-            //     this.thyDialog.open(ADetailComponent);
-            // });
         });
     }
 }
