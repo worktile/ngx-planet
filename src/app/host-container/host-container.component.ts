@@ -1,20 +1,12 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
-import { Planet } from '../../../packages/planet/src/public_api';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-host-container',
-    templateUrl: './host-container.component.html',
-    styleUrls: ['./host-container.component.scss']
+    template: ''
 })
 export class HostContainerComponent implements OnInit {
-    @HostBinding('class.thy-layout1') isThyLayout = true;
 
-    @HostBinding('class.loading')
-    get loading() {
-        return !this.planet || !this.planet.loadingDone;
-    }
-
-    constructor(public planet: Planet) {}
+    constructor() {}
 
     ngOnInit() {}
 }
