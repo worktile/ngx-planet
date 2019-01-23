@@ -53,10 +53,9 @@ export class PlanetApplicationRef implements IPlanetApplicationRef {
 }
 
 export function defineApplication(name: string, bootstrapModule: BootstrapAppModule) {
+    if (window.planet.apps[name]) {
+        throw new Error(`${name} application has exist.`);
+    }
     const appRef = new PlanetApplicationRef(name, bootstrapModule);
     window.planet.apps[name] = appRef;
 }
-
-// bootstrapApp('app1').then(()=>{
-//     return
-// });
