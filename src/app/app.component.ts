@@ -11,7 +11,7 @@ import { ThyConfirmService, ThyNotifyService } from 'ngx-tethys';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-    title = 'ngx-micro-frontend';
+    title = 'ngx-planet';
 
     get loadingDone() {
         return this.planet.loadingDone;

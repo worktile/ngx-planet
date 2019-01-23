@@ -3,8 +3,8 @@
     "version": "0.0.0",
     "scripts": {
         "ng": "ng",
-        "start": "ng serve --port 8889",
-        "serve:portal": "ng serve --port 8889",
+        "start": "ng serve --port 3000",
+        "serve:portal": "ng serve --port 3000",
         "serve:app1": "ng serve app1",
         "serve:app2": "ng serve app2",
         "build:app1": "ng build app1",
