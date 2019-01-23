@@ -16,11 +16,11 @@ if (environment.production) {
     enableProdMode();
 }
 
-defineApplication('app2', (hostApp: PlanetPortalApplication) => {
+defineApplication('app2', (portalApp: PlanetPortalApplication) => {
     return platformBrowserDynamic([
         {
             provide: PlanetPortalApplication,
-            useValue: hostApp
+            useValue: portalApp
         }
     ])
         .bootstrapModule(AppModule)

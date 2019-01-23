@@ -104,7 +104,7 @@ defineApplication('app1', (portalApp: PlanetPortalApplication) => {
     return platformBrowserDynamic([
         {
             provide: PlanetPortalApplication,
-            useValue: hostApp
+            useValue: portalApp
         }
     ])
         .bootstrapModule(AppModule)
