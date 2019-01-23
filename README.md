@@ -8,7 +8,7 @@ npm i @worktile/planet --save
 
 ## Demo
 
-![ngx-planet-micro-front-end.gif](https://github.com/worktile/ngx-planet/tree/master/src/assets/ngx-planet-micro-front-end.gif)
+![ngx-planet-micro-front-end.gif](https://github.com/worktile/ngx-planet/blob/master/src/assets/ngx-planet-micro-front-end.gif?raw=true)
 
 ## Usage
 
