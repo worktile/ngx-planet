@@ -1,6 +1,7 @@
 {
-  "name": "@worktile/micro-core",
+  "name": "@worktile/planet",
   "version": "0.0.1",
+  "private": false,
   "peerDependencies": {
     "@angular/common": "^7.1.0",
     "@angular/core": "^7.1.0"

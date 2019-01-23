@@ -1,19 +1,19 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { PlanetPortalApplication } from '../../../../../packages/planet/src/public_api';
+import { PlanetPortalApplication, GlobalEventDispatcher } from '../../../../../packages/planet/src/public_api';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
-    constructor(private portalApp: PlanetPortalApplication) {}
+    constructor(private portalApp: PlanetPortalApplication, private globalEventDispatcher: GlobalEventDispatcher) {}
 
     toAbout() {
         this.portalApp.navigateByUrl('/about');
     }
 
     openApp1UserDetail() {
-        this.portalApp.globalEventDispatcher.dispatch('openUserDetail', 1);
+        this.globalEventDispatcher.dispatch('openUserDetail', 1);
     }
 }

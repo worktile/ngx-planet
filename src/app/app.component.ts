@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
                 routerPathPrefix: '/app1',
                 selector: 'app1-root-container',
                 scriptPathPrefix: 'app1/assets/',
-                // preload: true,
+                preload: true,
                 // prettier-ignore
                 scripts: [
                     'main.js'
