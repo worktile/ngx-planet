@@ -210,30 +210,34 @@ export class Planet {
     }
 
     resetRouting(event: PlanetRouterEvent) {
-        // 从其他应用切换到主应用的时候会有视图卡顿现象，所以先等主应用渲染完毕后再加载其他应用
-        setTimeout(() => {
-            const matchedApp = this.planetApplicationService.getAppByMatchedUrl(event.url);
-            if (this.currentApp) {
-                if (this.switchModeIsCoexist(this.currentApp)) {
-                    const appRef = this.getPlanetApplicationRef(this.currentApp);
-                    if (appRef) {
-                        this.hideApplication(this.currentApp);
+        const matchedApp = this.planetApplicationService.getAppByMatchedUrl(event.url);
+        if (this.currentApp) {
+            if (this.switchModeIsCoexist(this.currentApp)) {
+                const appRef = this.getPlanetApplicationRef(this.currentApp);
+                if (appRef) {
+                    this.hideApplication(this.currentApp);
+                    // 从其他应用切换到主应用的时候会有视图卡顿现象，所以先等主应用渲染完毕后再加载其他应用
+                    setTimeout(() => {
                         appRef.onRouteChange(event);
-                    }
-                } else {
-                    this.destroyApp(this.currentApp);
+                    });
                 }
-                this.currentApp = null;
+            } else {
+                setTimeout(() => {
+                    this.destroyApp(this.currentApp);
+                });
             }
+            this.currentApp = null;
+        }
 
-            if (matchedApp) {
+        if (matchedApp) {
+            setTimeout(() => {
                 this.loadAndBootstrapApp(matchedApp, event).then(() => {
                     this.preloadApps(matchedApp);
                 });
-            } else {
-                this.preloadApps();
-            }
-        });
+            });
+        } else {
+            this.preloadApps();
+        }
     }
 
     preloadApps(matchedApp?: InternalPlanetApplication) {
