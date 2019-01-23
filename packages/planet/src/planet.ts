@@ -31,7 +31,7 @@ export class Planet {
 
     private firstLoad = true;
 
-    public loadingDone: boolean;
+    public loadingDone = true;
 
     private setLoadingDoneInNgZone(loadingDone: boolean) {
         this.ngZone.run(() => {

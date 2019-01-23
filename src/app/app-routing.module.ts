@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AboutComponent } from './about/about.component';
 import { HostContainerComponent } from './host-container/host-container.component';
+import { HelpComponent } from './help/help.component';
 
 const routes: Routes = [
     {
@@ -12,6 +13,10 @@ const routes: Routes = [
     {
         path: 'about',
         component: AboutComponent
+    },
+    {
+        path: 'help',
+        component: HelpComponent
     },
     {
         path: 'app1',
@@ -42,7 +47,7 @@ const routes: Routes = [
                 component: HostContainerComponent
             }
         ]
-    },
+    }
 ];
 
 @NgModule({
