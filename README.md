@@ -107,4 +107,4 @@ npm run serve:app2 // 3002
 npm run serve:portal // 3000
 ```
 
-open http://localhost:8889
+open http://localhost:3000
