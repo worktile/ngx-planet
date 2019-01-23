@@ -21,13 +21,14 @@ export class PlanetApplicationRef implements IPlanetApplicationRef {
         this.appModuleBootstrap = appModuleBootstrap;
     }
 
-    bootstrap(app: PlanetPortalApplication): void {
+    bootstrap(app: PlanetPortalApplication): Promise<void> {
         if (!this.appModuleBootstrap) {
             throw new Error(`${this.name} app is not define`);
         }
         this.portalApp = app;
-        this.appModuleBootstrap(app).then(appModuleRef => {
+        return this.appModuleBootstrap(app).then(appModuleRef => {
             this.appModuleRef = appModuleRef;
+            return;
         });
     }
 

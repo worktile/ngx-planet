@@ -35,8 +35,12 @@ export class Planet {
 
     // public appLoad$ = new Subject<IPlanetApplicationRef>();
 
-    private switchModeIsCoexist() {
-        return this.options.switchMode === SwitchModes.coexist;
+    private switchModeIsCoexist(app?: InternalPlanetApplication) {
+        if (app && app.switchMode) {
+            return app.switchMode === SwitchModes.coexist;
+        } else {
+            return this.options.switchMode === SwitchModes.coexist;
+        }
     }
 
     private getPlanetApplicationRef(app: InternalPlanetApplication): IPlanetApplicationRef {
@@ -157,7 +161,7 @@ export class Planet {
                 this.loadingDone = false;
                 this.currentApp = planetApp;
                 if (planetApp.loaded) {
-                    if (this.switchModeIsCoexist()) {
+                    if (this.switchModeIsCoexist(planetApp)) {
                         this.showApplication(planetApp);
                         const appRef = this.getPlanetApplicationRef(planetApp);
                         appRef.onRouteChange(event);
@@ -201,7 +205,7 @@ export class Planet {
         const matchedApp = this.planetApplicationService.getAppByMatchedUrl(event.url);
 
         if (this.currentApp) {
-            if (this.switchModeIsCoexist()) {
+            if (this.switchModeIsCoexist(this.currentApp)) {
                 const appRef = this.getPlanetApplicationRef(this.currentApp);
                 if (appRef) {
                     this.hideApplication(this.currentApp);
@@ -231,7 +235,7 @@ export class Planet {
                 toPreloadApps.forEach(preloadApp => {
                     this.preloadAndBootstrapApp(preloadApp).then(() => {}, error => {});
                 });
-            });
+            }, 200);
             this.firstLoad = true;
         }
     }
