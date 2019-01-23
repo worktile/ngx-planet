@@ -1,5 +1,5 @@
 # ngx-planet
-> An Angular 7+ Micro Frontend library.
+An Angular 7+ Micro Frontend library.
 
 ## Installation
 ```
