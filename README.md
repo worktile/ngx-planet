@@ -6,6 +6,10 @@ An Angular 7+ Micro Frontend library.
 npm i @worktile/planet --save
 ```
 
+## Demo
+
+![ngx-planet-micro-front-end.gif](https://github.com/worktile/ngx-planet/tree/master/src/assets/ngx-planet-micro-front-end.gif)
+
 ## Usage
 
 ### 1. Loading the module in the portal app module
