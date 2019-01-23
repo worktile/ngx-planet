@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
                 name: 'app1',
                 host: appHostContainerSelector,
                 hostClass: appHostContainerClass,
-                routerPathPrefix: '/app1',
+                routerPathPrefix: /\/app1|app4/, // '/app1',
                 selector: 'app1-root-container',
                 scriptPathPrefix: 'app1/assets/',
                 preload: true,

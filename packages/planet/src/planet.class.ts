@@ -22,7 +22,7 @@ export interface PlanetApplication {
     // 子应用的选择器
     selector: string;
     // 子应用路由前缀路径
-    routerPathPrefix: string;
+    routerPathPrefix: string | RegExp;
     // 宿主元素附加样式
     hostClass?: string | string[];
     // 是否需要预加载

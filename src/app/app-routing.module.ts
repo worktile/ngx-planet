@@ -32,7 +32,17 @@ const routes: Routes = [
                 component: HostContainerComponent
             }
         ]
-    }
+    },
+    {
+        path: 'app4',
+        component: HostContainerComponent,
+        children: [
+            {
+                path: '**',
+                component: HostContainerComponent
+            }
+        ]
+    },
 ];
 
 @NgModule({

@@ -54,13 +54,21 @@ export class PlanetApplicationService {
 
     getAppsByMatchedUrl(url: string) {
         return this.apps.filter(app => {
-            return url.includes(app.routerPathPrefix);
+            if (app.routerPathPrefix instanceof RegExp) {
+                return app.routerPathPrefix.test(url);
+            } else {
+                return url.includes(app.routerPathPrefix);
+            }
         });
     }
 
     getAppByMatchedUrl(url: string) {
         return this.apps.find(app => {
-            return url.includes(app.routerPathPrefix);
+            if (app.routerPathPrefix instanceof RegExp) {
+                return app.routerPathPrefix.test(url);
+            } else {
+                return url.includes(app.routerPathPrefix);
+            }
         });
     }
 
