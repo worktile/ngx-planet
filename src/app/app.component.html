@@ -8,4 +8,5 @@
     </thy-sidebar>
     <router-outlet></router-outlet>
     <div id="app-host-container" class="thy-layout"></div>
+    <thy-loading *ngIf="!loadingDone" [thyDone]="loadingDone"></thy-loading>
 </thy-layout>

@@ -33,7 +33,11 @@ export class Planet {
 
     public loadingDone: boolean;
 
-    // public appLoad$ = new Subject<IPlanetApplicationRef>();
+    private setLoadingDoneInNgZone(loadingDone: boolean) {
+        this.ngZone.run(() => {
+            this.loadingDone = loadingDone;
+        });
+    }
 
     private switchModeIsCoexist(app?: InternalPlanetApplication) {
         if (app && app.switchMode) {
@@ -158,7 +162,7 @@ export class Planet {
     loadAndBootstrapApp(planetApp: InternalPlanetApplication, event?: PlanetRouterEvent) {
         return new Promise((resolve, reject) => {
             this.ngZone.runOutsideAngular(() => {
-                this.loadingDone = false;
+                this.setLoadingDoneInNgZone(false);
                 this.currentApp = planetApp;
                 if (planetApp.loaded) {
                     if (this.switchModeIsCoexist(planetApp)) {
@@ -168,13 +172,14 @@ export class Planet {
                     } else {
                         this.bootstrapApp(planetApp);
                     }
+                    this.setLoadingDoneInNgZone(true);
                     resolve();
                 } else {
                     this.loadApp(planetApp).subscribe(
                         result => {
                             this.bootstrapApp(planetApp);
                             planetApp.loaded = true;
-                            this.loadingDone = true;
+                            this.setLoadingDoneInNgZone(true);
                             resolve();
                         },
                         error => {

@@ -13,6 +13,10 @@ import { ThyConfirmService, ThyNotifyService } from 'ngx-tethys';
 export class AppComponent implements OnInit {
     title = 'ngx-micro-frontend';
 
+    get loadingDone() {
+        return this.planet.loadingDone;
+    }
+
     constructor(
         private planet: Planet,
         private router: Router,
@@ -43,7 +47,7 @@ export class AppComponent implements OnInit {
                 routerPathPrefix: '/app1',
                 selector: 'app1-root-container',
                 scriptPathPrefix: 'app1/assets/',
-                preload: true,
+                // preload: true,
                 // prettier-ignore
                 scripts: [
                     'main.js'
@@ -55,7 +59,7 @@ export class AppComponent implements OnInit {
                 hostClass: appHostContainerClass,
                 routerPathPrefix: '/app2',
                 selector: 'app2-root-container',
-                preload: true,
+                // preload: true,
                 // prettier-ignore
                 scripts: [
                     'app2/assets/main.js'
