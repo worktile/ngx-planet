@@ -8,7 +8,7 @@ npm i @worktile/planet --save
 
 ## Usage
 
-### 1. Loading the module in the app module
+### 1. Loading the module in the portal app module
 ```
 import { NgxPlanetModule } from '@worktile/planet';
 
@@ -20,7 +20,7 @@ import { NgxPlanetModule } from '@worktile/planet';
 })
 class AppModule {}
 ```
-### 2. Register Applications to planet User Planet Service
+### 2. Register Applications to planet use Planet Service in portal app 
 ```
 @Component({
     selector: 'app-portal-root',
@@ -97,6 +97,25 @@ export class AppComponent implements OnInit {
         });
     }
 }
+```
+### 3. Sub Apps define app to bootstrap app module
+```
+defineApplication('app1', (portalApp: PlanetPortalApplication) => {
+    return platformBrowserDynamic([
+        {
+            provide: PlanetPortalApplication,
+            useValue: hostApp
+        }
+    ])
+        .bootstrapModule(AppModule)
+        .then(appModule => {
+            return appModule;
+        })
+        .catch(error => {
+            console.error(error);
+            return null;
+        });
+});
 ```
 
 ## Development
