@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { shareReplay, map } from 'rxjs/operators';
 import { coerceArray } from '../helpers';
+import { Observable } from 'rxjs';
 
 interface InternalPlanetApplication extends PlanetApplication {
     loaded?: boolean;
@@ -31,7 +32,7 @@ export class PlanetApplicationService {
         });
     }
 
-    registerByUrl(url: string) {
+    registerByUrl(url: string): Observable<void> {
         return this.http.get(`${url}?t=${new Date().getTime().toString()}`).pipe(
             map(apps => {
                 if (apps && Array.isArray(apps)) {
