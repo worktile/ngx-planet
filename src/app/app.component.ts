@@ -67,11 +67,7 @@ export class AppComponent implements OnInit {
             }
         ]);
 
-        this.router.events.subscribe((event: RouterEvent) => {
-            if (event instanceof NavigationEnd) {
-                this.planet.resetRouting(event);
-            }
-        });
+        this.planet.start();
 
         this.globalEventDispatcher.register('openADetail').subscribe(event => {
             this.thyDialog.open(ADetailComponent);

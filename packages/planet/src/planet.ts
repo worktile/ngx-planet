@@ -209,7 +209,7 @@ export class Planet {
         }
     }
 
-    resetRouting(event: PlanetRouterEvent) {
+    resetByRoute(event: PlanetRouterEvent) {
         const matchedApp = this.planetApplicationService.getAppByMatchedUrl(event.url);
         if (this.currentApp) {
             if (this.switchModeIsCoexist(this.currentApp)) {
@@ -252,5 +252,13 @@ export class Planet {
             }, 200);
             this.firstLoad = true;
         }
+    }
+
+    start() {
+        this.router.events.subscribe((event: RouterEvent) => {
+            if (event instanceof NavigationEnd) {
+                this.resetByRoute(event);
+            }
+        });
     }
 }
