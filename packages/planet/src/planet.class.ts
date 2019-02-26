@@ -2,7 +2,6 @@ import { NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanetPortalApplication } from './application/portal-application';
 
-
 export interface IPlanetApplicationRef {
     bootstrap(app: PlanetPortalApplication): void;
     onRouteChange(event: PlanetRouterEvent): void;
@@ -35,10 +34,12 @@ export interface PlanetApplication {
     styles?: string[];
     // 脚本资源加载前缀
     scriptPathPrefix?: string;
+
     // 脚本资源文件
     scripts?: string[];
+    // 串行加载，默认并行加载脚本资源
+    loadSerial?: boolean;
 }
-
 
 export enum SwitchModes {
     default = 'default',

@@ -7,10 +7,13 @@ const projectRoot = path.resolve(__dirname, './');
 const {
     IndexHtmlWebpackPlugin
 } = require('@angular-devkit/build-angular/src/angular-cli-files/plugins/index-html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-console.log(`projectRoot:${projectRoot}`)
+const devMode = process.env.NODE_ENV !== 'production';
+
 const config = {
     mode: 'development',
+    context: projectRoot,
     resolve: {
         extensions: ['.ts', '.js']
     },
@@ -25,12 +28,17 @@ const config = {
         library: 'app1'
     },
     plugins: [
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: devMode ? '[name].css' : '[name].[hash].css',
+            chunkFilename: devMode ? '[id].css' : '[id].[hash].css'
+        }),
         new ngToolsWebpack.AngularCompilerPlugin({
             tsConfigPath: path.resolve(projectRoot, './src/tsconfig.app.json'),
             mainPath: path.resolve(projectRoot, './src/main.ts'),
             hostReplacementPaths: {
-                './src/environments/environment.ts':
-                    './src/environments/environment.prod.ts'
+                './src/environments/environment.ts': './src/environments/environment.prod.ts'
             },
             sourceMap: true,
             compilerOptions: {}
@@ -50,7 +58,16 @@ const config = {
     ],
     module: {
         rules: [
-            { test: /\.scss$/, loaders: ['raw-loader', 'sass-loader'] },
+            // {
+            //     test: /\.(sa|sc|c)ss$/,
+            //     use: [
+            //         devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+            //         'css-loader',
+            //         'postcss-loader',
+            //         'sass-loader'
+            //     ]
+            // },
+            { test: /\.scss$/, loaders: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] },
             { test: /\.css$/, loader: 'raw-loader' },
             { test: /\.html$/, loader: 'raw-loader' },
             {
@@ -85,10 +102,7 @@ const copyWebpackPluginOptions = {
     ignore: ['.gitkeep', '**/.DS_Store', '**/Thumbs.db']
 };
 
-const copyWebpackPluginInstance = new CopyWebpackPlugin(
-    copyWebpackPluginPatterns,
-    copyWebpackPluginOptions
-);
+const copyWebpackPluginInstance = new CopyWebpackPlugin(copyWebpackPluginPatterns, copyWebpackPluginOptions);
 config.plugins.push(copyWebpackPluginInstance);
 
 module.exports = config;

@@ -176,7 +176,7 @@
                         "polyfills": "examples/app1/src/polyfills.ts",
                         "tsConfig": "examples/app1/tsconfig.app.json",
                         "assets": ["examples/app1/src/favicon.ico", "examples/app1/src/assets"],
-                        "styles": ["examples/app1/src/styles.css"],
+                        "styles": ["examples/app1/src/styles.scss"],
                         "scripts": []
                     },
                     "configurations": {

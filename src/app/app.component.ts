@@ -48,9 +48,13 @@ export class AppComponent implements OnInit {
                 selector: 'app1-root-container',
                 scriptPathPrefix: 'app1/assets/',
                 preload: true,
+                loadSerial: true,
                 // prettier-ignore
                 scripts: [
                     'main.js'
+                ],
+                styles: [
+                    'app1/assets/main.css'
                 ]
             },
             {

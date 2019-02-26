@@ -111,12 +111,18 @@ export class Planet {
             return of([]);
         }
         let scripts = app.scripts;
+        let styles = app.styles;
         if (app.scriptPathPrefix) {
             scripts = scripts.map(script => {
                 return `${app.scriptPathPrefix}/${script}`;
             });
         }
-        return this.assetsLoader.loadScripts(scripts);
+        if (app.stylePathPrefix) {
+            styles = styles.map(style => {
+                return `${app.stylePathPrefix}/${style}`;
+            });
+        }
+        return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
     }
 
     bootstrapApp(planetApp: InternalPlanetApplication): IPlanetApplicationRef {

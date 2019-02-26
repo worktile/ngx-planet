@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { hashCode } from './helpers';
-import { of, Observable, Observer, forkJoin } from 'rxjs';
-import { tap, shareReplay, map, switchMap } from 'rxjs/operators';
+import { of, Observable, Observer, forkJoin, concat, merge } from 'rxjs';
+import { tap, shareReplay, map, switchMap, switchAll, concatMap, concatAll, scan, reduce } from 'rxjs/operators';
 
 export interface AssetsLoadResult {
     src: string;
@@ -112,12 +112,21 @@ export class AssetsLoader {
         });
     }
 
-    loadScripts(sources: string[]): Observable<AssetsLoadResult[]> {
-        return forkJoin(
-            sources.map(src => {
-                return this.loadScript(src);
-            })
-        );
+    loadScripts(sources: string[], serial = false): Observable<AssetsLoadResult[]> {
+        const observables = sources.map(src => {
+            return this.loadScript(src);
+        });
+        if (serial) {
+            const a = concat(...observables).pipe(
+                map(item => {
+                    return of([item]);
+                }),
+                concatAll()
+            );
+            return a;
+        } else {
+            return forkJoin(observables);
+        }
     }
 
     loadStyles(sources: string[]): Observable<AssetsLoadResult[]> {
@@ -128,7 +137,7 @@ export class AssetsLoader {
         );
     }
 
-    loadScriptsAndStyles(scripts: string[], styles: string[]) {
-        return forkJoin(this.loadScripts(scripts), this.loadStyles(styles));
+    loadScriptsAndStyles(scripts: string[] = [], styles: string[] = [], serial = false) {
+        return concat(this.loadScripts(scripts, serial), this.loadStyles(styles));
     }
 }
