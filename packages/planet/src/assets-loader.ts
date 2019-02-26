@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { hashCode } from './helpers';
+import { hashCode, isEmpty } from './helpers';
 import { of, Observable, Observer, forkJoin, concat, merge } from 'rxjs';
 import { tap, shareReplay, map, switchMap, switchAll, concatMap, concatAll, scan, reduce } from 'rxjs/operators';
 
@@ -113,6 +113,9 @@ export class AssetsLoader {
     }
 
     loadScripts(sources: string[], serial = false): Observable<AssetsLoadResult[]> {
+        if (isEmpty(sources)) {
+            return of(null);
+        }
         const observables = sources.map(src => {
             return this.loadScript(src);
         });
@@ -125,11 +128,14 @@ export class AssetsLoader {
             );
             return a;
         } else {
-            return forkJoin(observables);
+            return forkJoin(observables).pipe();
         }
     }
 
     loadStyles(sources: string[]): Observable<AssetsLoadResult[]> {
+        if (isEmpty(sources)) {
+            return of(null);
+        }
         return forkJoin(
             sources.map(src => {
                 return this.loadStyle(src);
@@ -138,6 +144,6 @@ export class AssetsLoader {
     }
 
     loadScriptsAndStyles(scripts: string[] = [], styles: string[] = [], serial = false) {
-        return concat(this.loadScripts(scripts, serial), this.loadStyles(styles));
+        return forkJoin(this.loadScripts(scripts, serial), this.loadStyles(styles));
     }
 }

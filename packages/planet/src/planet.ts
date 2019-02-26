@@ -106,9 +106,9 @@ export class Planet {
         this.planetApplicationService.register(apps);
     }
 
-    loadApp(app: InternalPlanetApplication): Observable<AssetsLoadResult[]> {
+    loadApp(app: InternalPlanetApplication): Observable<[AssetsLoadResult[], AssetsLoadResult[]]> {
         if (app.loaded) {
-            return of([]);
+            return of(null);
         }
         let scripts = app.scripts;
         let styles = app.styles;

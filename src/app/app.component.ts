@@ -51,7 +51,8 @@ export class AppComponent implements OnInit {
                 loadSerial: true,
                 // prettier-ignore
                 scripts: [
-                    'main.js'
+                    'main.js',
+                    'polyfills.js'
                 ],
                 styles: [
                     'app1/assets/main.css'

@@ -24,3 +24,11 @@ export function getHTMLElement(selector: string | HTMLElement): HTMLElement {
 export function coerceArray<T>(value: T | T[]): T[] {
     return Array.isArray(value) ? value : [value];
 }
+
+export function isEmpty(value: any) {
+    if (!value || value.length === 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
