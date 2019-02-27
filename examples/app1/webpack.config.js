@@ -7,6 +7,8 @@ const projectRoot = path.resolve(__dirname, './');
 const {
     IndexHtmlWebpackPlugin
 } = require('@angular-devkit/build-angular/src/angular-cli-files/plugins/index-html-webpack-plugin');
+const RawCssLoader = require('@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader').default;
+
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const devMode = process.env.NODE_ENV !== 'production';
@@ -67,7 +69,23 @@ const config = {
             //         'sass-loader'
             //     ]
             // },
-            { test: /\.scss$/, loaders: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] },
+            {
+                test: /\.scss$/,
+                include: path.resolve(projectRoot, './src/styles.scss'),
+                loaders: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    // RawCssLoader,
+                    {
+                        loader:'postcss-loader',
+                        options: {
+                            ident: "extracted",
+                            sourceMap: true
+                        }
+                    },
+                    'sass-loader'
+                ]
+            },
             { test: /\.css$/, loader: 'raw-loader' },
             { test: /\.html$/, loader: 'raw-loader' },
             {

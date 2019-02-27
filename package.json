@@ -10,7 +10,7 @@
         "build:app1": "ng build app1",
         "build:app2": "ng build app2",
         "build": "ng build planet",
-        "build:app3": "ng build app3-lib",
+        "build:portal": "ng build",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
