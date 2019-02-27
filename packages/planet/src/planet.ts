@@ -114,12 +114,12 @@ export class Planet {
         let styles = app.styles;
         if (app.scriptPathPrefix) {
             scripts = scripts.map(script => {
-                return `${app.scriptPathPrefix}/${script}`;
+                return `${app.scriptPathPrefix}${script}`;
             });
         }
         if (app.stylePathPrefix) {
             styles = styles.map(style => {
-                return `${app.stylePathPrefix}/${style}`;
+                return `${app.stylePathPrefix}${style}`;
             });
         }
         return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);

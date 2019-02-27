@@ -4,7 +4,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve --port 3000",
-        "serve:portal": "ng serve --port 3000",
+        "serve:portal": "ng serve",
         "serve:app1": "ng serve app1",
         "serve:app2": "ng serve app2",
         "build:app1": "ng build app1",

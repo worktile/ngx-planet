@@ -15,6 +15,18 @@
             },
             "architect": {
                 "build": {
+                    "builder": "@angular-devkit/build-webpack:webpack",
+                    "options": {
+                        "webpackConfig": "./webpack.config.js"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-webpack:webpack-dev-server",
+                    "options": {
+                        "webpackConfig": "./webpack.config.js"
+                    }
+                },
+                "build1": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
                         "outputPath": "dist/demo",
@@ -54,7 +66,7 @@
                         }
                     }
                 },
-                "serve": {
+                "serve1": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
                         "browserTarget": "demo:build",

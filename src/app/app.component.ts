@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
                     'polyfills.js'
                 ],
                 styles: [
-                    'app1/assets/main.css'
+                    'app1/assets/assets/main.css'
                 ]
             },
             {
