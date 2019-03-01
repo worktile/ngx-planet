@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanetPortalApplication, GlobalEventDispatcher } from '../../../../../packages/planet/src/public_api';
 import { CounterService } from '../counter.service';
+import { AppRootContext } from '../../../../../src/app/app-root-context';
 
 @Component({
     selector: 'app-dashboard',
@@ -12,7 +13,8 @@ export class DashboardComponent {
         private planetPortal: PlanetPortalApplication,
         private router: Router,
         public counter: CounterService,
-        private globalEventDispatcher: GlobalEventDispatcher
+        private globalEventDispatcher: GlobalEventDispatcher,
+        public appRootContext: AppRootContext
     ) {}
 
     openADetail() {
@@ -26,5 +28,13 @@ export class DashboardComponent {
 
     toAbout() {
         this.router.navigateByUrl('/about');
+    }
+
+    changeName(newName: string) {
+        // this.planetPortal.run(() => {
+        //     this.appRootContext.setName(newName);
+        // });
+        this.appRootContext.setName(newName);
+        this.planetPortal.tick();
     }
 }

@@ -12,6 +12,9 @@ export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promis
 
 export class PlanetApplicationRef implements IPlanetApplicationRef {
     private appModuleRef: NgModuleRef<any>;
+    private get bootstrapped() {
+        return !!this.appModuleRef;
+    }
     private name: string;
     private portalApp: PlanetPortalApplication;
     private appModuleBootstrap: (app: PlanetPortalApplication) => Promise<NgModuleRef<any>>;

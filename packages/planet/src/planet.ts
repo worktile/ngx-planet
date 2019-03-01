@@ -27,7 +27,7 @@ export class Planet {
 
     private currentApp: InternalPlanetApplication;
 
-    private hostApp = new PlanetPortalApplication();
+    private portalApp = new PlanetPortalApplication();
 
     private firstLoad = true;
 
@@ -74,14 +74,17 @@ export class Planet {
         private assetsLoader: AssetsLoader,
         private ngZone: NgZone,
         private router: Router,
-        private globalEventDispatcher: GlobalEventDispatcher,
+        globalEventDispatcher: GlobalEventDispatcher,
+        injector: Injector,
         private applicationRef: ApplicationRef,
         private planetApplicationService: PlanetApplicationService
     ) {
-        this.hostApp.ngZone = ngZone;
-        this.hostApp.router = router;
+        this.portalApp.ngZone = ngZone;
+        this.portalApp.applicationRef = applicationRef;
+        this.portalApp.router = router;
+        this.portalApp.injector = injector;
+        this.portalApp.globalEventDispatcher = globalEventDispatcher;
 
-        this.hostApp.globalEventDispatcher = globalEventDispatcher;
         this.options = {
             switchMode: SwitchModes.default,
             preload: true,
@@ -96,6 +99,10 @@ export class Planet {
             ...this.options,
             ...options
         };
+    }
+
+    setPortalAppData(data: any) {
+        this.portalApp.data = data;
     }
 
     registerApp(app: PlanetApplication) {
@@ -139,7 +146,7 @@ export class Planet {
                     container.appendChild(appRootElement);
                 }
             }
-            appRef.bootstrap(this.hostApp);
+            appRef.bootstrap(this.portalApp);
             return appRef;
         }
         return null;

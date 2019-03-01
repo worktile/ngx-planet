@@ -10,11 +10,14 @@ import { NgxPlanetModule } from '../../packages/planet/src/public_api';
 import { ThyDialogModule } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
 import { HelpComponent } from './help/help.component';
+import { AppRootContext } from './app-root-context';
 
 @NgModule({
     declarations: [AppComponent, AboutComponent, HelpComponent, HostContainerComponent, ADetailComponent],
     imports: [BrowserModule, NgxTethysModule, ThyDialogModule, AppRoutingModule, NgxPlanetModule],
-    providers: [],
+    providers: [
+        AppRootContext
+    ],
     bootstrap: [AppComponent],
     entryComponents: [ADetailComponent]
 })

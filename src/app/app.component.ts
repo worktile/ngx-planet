@@ -4,6 +4,7 @@ import { Router, NavigationEnd, RouterEvent } from '@angular/router';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
 import { ThyConfirmService, ThyNotifyService } from 'ngx-tethys';
+import { AppRootContext } from './app-root-context';
 
 @Component({
     selector: 'app-root',
@@ -19,13 +20,10 @@ export class AppComponent implements OnInit {
 
     constructor(
         private planet: Planet,
-        private router: Router,
         private globalEventDispatcher: GlobalEventDispatcher,
         private thyDialog: ThyDialog,
-        private changeDetectorRef: ChangeDetectorRef,
-        private applicationRef: ApplicationRef,
-        private ngZone: NgZone,
-        private thyNotify: ThyNotifyService
+        private thyNotify: ThyNotifyService,
+        public appRootContext: AppRootContext
     ) {}
 
     ngOnInit() {
@@ -36,6 +34,10 @@ export class AppComponent implements OnInit {
             }
         });
 
+        this.appRootContext.setName(`app root context`);
+        this.planet.setPortalAppData({
+            appRootContext: this.appRootContext
+        });
         const appHostContainerSelector = '#app-host-container';
         const appHostContainerClass = 'thy-layout';
 
@@ -52,11 +54,9 @@ export class AppComponent implements OnInit {
                 // prettier-ignore
                 scripts: [
                     'main.js',
-                    'polyfills.js'
+                    // 'polyfills.js'
                 ],
-                styles: [
-                    'app1/assets/assets/main.css'
-                ]
+                styles: ['app1/assets/assets/main.css']
             },
             {
                 name: 'app2',
