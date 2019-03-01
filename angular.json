@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "demo": {
+        "portal": {
             "root": "",
             "sourceRoot": "src",
             "projectType": "application",
@@ -14,22 +14,27 @@
                 }
             },
             "architect": {
-                "build": {
+                "build-webpack": {
                     "builder": "@angular-devkit/build-webpack:webpack",
                     "options": {
                         "webpackConfig": "./webpack.config.js"
                     }
                 },
-                "serve": {
+                "serve-webpack": {
                     "builder": "@angular-devkit/build-webpack:webpack-dev-server",
                     "options": {
                         "webpackConfig": "./webpack.config.js"
                     }
                 },
-                "build1": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                "build": {
+                    "builder": "@angular-builders/custom-webpack:browser",
                     "options": {
-                        "outputPath": "dist/demo",
+                        "customWebpackConfig": {
+                            "path": "./extra-webpack.config.js",
+                            "mergeStrategies": { "externals": "replace" }
+                        },
+                        "baseHref": "/",
+                        "outputPath": "dist/portal",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
@@ -66,22 +71,22 @@
                         }
                     }
                 },
-                "serve1": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                "serve": {
+                    "builder": "@angular-builders/dev-server:generic",
                     "options": {
-                        "browserTarget": "demo:build",
+                        "browserTarget": "portal:build",
                         "proxyConfig": "proxy.conf.js"
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "demo:build:production"
+                            "browserTarget": "portal:build:production"
                         }
                     }
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "demo:build"
+                        "browserTarget": "portal:build"
                     }
                 },
                 "test": {
@@ -105,7 +110,7 @@
                 }
             }
         },
-        "demo-e2e": {
+        "portal-e2e": {
             "root": "e2e/",
             "projectType": "application",
             "prefix": "",
@@ -114,11 +119,11 @@
                     "builder": "@angular-devkit/build-angular:protractor",
                     "options": {
                         "protractorConfig": "e2e/protractor.conf.js",
-                        "devServerTarget": "demo:serve"
+                        "devServerTarget": "portal:serve"
                     },
                     "configurations": {
                         "production": {
-                            "devServerTarget": "demo:serve:production"
+                            "devServerTarget": "portal:serve:production"
                         }
                     }
                 },
@@ -409,5 +414,5 @@
             }
         }
     },
-    "defaultProject": "demo"
+    "defaultProject": "portal"
 }
