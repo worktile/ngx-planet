@@ -101,7 +101,7 @@ export class Planet {
         };
     }
 
-    setPortalAppData(data: any) {
+    setPortalAppData<T>(data: T) {
         this.portalApp.data = data;
     }
 
