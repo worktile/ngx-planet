@@ -35,9 +35,11 @@ export class AppComponent implements OnInit {
         });
 
         this.appRootContext.setName(`app root context`);
+
         this.planet.setPortalAppData({
             appRootContext: this.appRootContext
         });
+
         const appHostContainerSelector = '#app-host-container';
         const appHostContainerClass = 'thy-layout';
 
