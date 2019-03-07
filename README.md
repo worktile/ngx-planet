@@ -125,9 +125,13 @@ defineApplication('app1', (portalApp: PlanetPortalApplication) => {
 ## Development
 
 ```
+npm run serve:portal // 3000
 npm run serve:app1 // 3001
 npm run serve:app2 // 3002
-npm run serve:portal // 3000
+
+or 
+
+npm start
 ```
 
 open http://localhost:3000
