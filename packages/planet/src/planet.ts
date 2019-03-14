@@ -2,18 +2,13 @@ import { Injectable, NgZone, ApplicationRef, Injector } from '@angular/core';
 import { NavigationEnd, RouterEvent, Router } from '@angular/router';
 import { AssetsLoader, AssetsLoadResult } from './assets-loader';
 import { GlobalEventDispatcher } from './global-event-dispatcher';
-import { getHTMLElement, coerceArray } from './helpers';
+import { getHTMLElement, coerceArray, getResourceFileName } from './helpers';
 import { of, Observable, BehaviorSubject, Subject, Observer } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
-import {
-    IPlanetApplicationRef,
-    SwitchModes,
-    PlanetRouterEvent,
-    PlanetOptions,
-    PlanetApplication
-} from './planet.class';
+import { tap, map, switchMap } from 'rxjs/operators';
+import { SwitchModes, PlanetRouterEvent, PlanetOptions, PlanetApplication } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { PlanetPortalApplication } from './application/portal-application';
+import { PlanetApplicationRef } from './application/planet-application-ref';
 
 interface InternalPlanetApplication extends PlanetApplication {
     loaded?: boolean;
@@ -47,7 +42,7 @@ export class Planet {
         }
     }
 
-    private getPlanetApplicationRef(app: InternalPlanetApplication): IPlanetApplicationRef {
+    private getPlanetApplicationRef(app: InternalPlanetApplication): PlanetApplicationRef {
         const planet = (window as any).planet;
         if (planet && planet.apps && planet.apps[app.name]) {
             return planet.apps[app.name];
@@ -68,6 +63,41 @@ export class Planet {
         if (appRootElement) {
             appRootElement.setAttribute('style', '');
         }
+    }
+
+    private combineResourceFilePath(resourceFilePath: string, manifestResult: { [key: string]: string }) {
+        const fileName = getResourceFileName(resourceFilePath);
+        if (manifestResult[fileName]) {
+            return resourceFilePath.replace(fileName, manifestResult[fileName]);
+        } else {
+            return resourceFilePath;
+        }
+    }
+
+    private getScriptsAndStylesFullPaths(app: InternalPlanetApplication, manifestResult?: { [key: string]: string }) {
+        let scripts = app.scripts || [];
+        let styles = app.styles || [];
+        // combine resource path by manifest
+        if (manifestResult) {
+            scripts = scripts.map(script => {
+                return this.combineResourceFilePath(script, manifestResult);
+            });
+            styles = styles.map(style => {
+                return this.combineResourceFilePath(style, manifestResult);
+            });
+        }
+        if (app.resourcePathPrefix) {
+            scripts = scripts.map(script => {
+                return `${app.resourcePathPrefix}${script}`;
+            });
+            styles = styles.map(style => {
+                return `${app.resourcePathPrefix}${style}`;
+            });
+        }
+        return {
+            scripts: scripts,
+            styles: styles
+        };
     }
 
     constructor(
@@ -105,11 +135,11 @@ export class Planet {
         this.portalApp.data = data;
     }
 
-    registerApp(app: PlanetApplication) {
+    registerApp<TExtra>(app: PlanetApplication<TExtra>) {
         this.planetApplicationService.register(app);
     }
 
-    registerApps(apps: PlanetApplication[]) {
+    registerApps<TExtra>(apps: PlanetApplication<TExtra>[]) {
         this.planetApplicationService.register(apps);
     }
 
@@ -117,22 +147,24 @@ export class Planet {
         if (app.loaded) {
             return of(null);
         }
-        let scripts = app.scripts;
-        let styles = app.styles;
-        if (app.scriptPathPrefix) {
-            scripts = scripts.map(script => {
-                return `${app.scriptPathPrefix}${script}`;
-            });
+        if (app.manifest) {
+            return this.assetsLoader
+                .loadManifest(`${app.resourcePathPrefix || ''}${app.manifest}?t=${new Date().getTime()}`)
+                .pipe(
+                    switchMap(manifestResult => {
+                        const { scripts, styles } = this.getScriptsAndStylesFullPaths(app, manifestResult);
+                        return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
+                    })
+                );
+        } else {
+            const { scripts, styles } = this.getScriptsAndStylesFullPaths(app);
+            return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
         }
-        if (app.stylePathPrefix) {
-            styles = styles.map(style => {
-                return `${app.stylePathPrefix}${style}`;
-            });
-        }
-        return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
+
+        // return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
     }
 
-    bootstrapApp(planetApp: InternalPlanetApplication): IPlanetApplicationRef {
+    bootstrapApp(planetApp: InternalPlanetApplication): PlanetApplicationRef {
         const appRef = this.getPlanetApplicationRef(planetApp);
         if (appRef && appRef.bootstrap) {
             const container = getHTMLElement(planetApp.host);

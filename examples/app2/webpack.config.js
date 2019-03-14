@@ -7,8 +7,8 @@ const projectRoot = path.resolve(__dirname, './');
 const {
     IndexHtmlWebpackPlugin
 } = require('@angular-devkit/build-angular/src/angular-cli-files/plugins/index-html-webpack-plugin');
+const WebpackAssetsManifest = require('webpack-assets-manifest');
 
-console.log(`projectRoot:${projectRoot}`)
 const config = {
     mode: 'development',
     resolve: {
@@ -25,6 +25,7 @@ const config = {
         library: 'app2'
     },
     plugins: [
+        new WebpackAssetsManifest(),
         new ngToolsWebpack.AngularCompilerPlugin({
             tsConfigPath: path.resolve(projectRoot, './src/tsconfig.app.json'),
             mainPath: path.resolve(projectRoot, './src/main.ts'),

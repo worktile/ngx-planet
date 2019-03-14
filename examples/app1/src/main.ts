@@ -6,7 +6,6 @@ import { environment } from './environments/environment';
 import { Router } from '@angular/router';
 import { PlanetPortalApplication, defineApplication } from '../../../packages/planet/src/public_api';
 import { GlobalEventDispatcher } from '../../../packages/planet/src/global-event-dispatcher';
-import { IPlanetApplicationRef, PlanetRouterEvent } from '../../../packages/planet/src/planet.class';
 import { AppRootContext } from '../../../src/app/app-root-context';
 
 // import './styles.scss';

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { hashCode, isEmpty } from './helpers';
 import { of, Observable, Observer, forkJoin, concat, merge } from 'rxjs';
 import { tap, shareReplay, map, switchMap, switchAll, concatMap, concatAll, scan, reduce } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 export interface AssetsLoadResult {
     src: string;
@@ -15,6 +16,8 @@ export interface AssetsLoadResult {
 })
 export class AssetsLoader {
     private loadedSources: number[] = [];
+
+    constructor(private http: HttpClient) {}
 
     loadScript(src: string): Observable<AssetsLoadResult> {
         const id = hashCode(src);
@@ -145,5 +148,13 @@ export class AssetsLoader {
 
     loadScriptsAndStyles(scripts: string[] = [], styles: string[] = [], serial = false) {
         return forkJoin(this.loadScripts(scripts, serial), this.loadStyles(styles));
+    }
+
+    loadManifest(url: string): Observable<{ [key: string]: string }> {
+        return this.http.get(url).pipe(
+            map((response: any) => {
+                return response;
+            })
+        );
     }
 }

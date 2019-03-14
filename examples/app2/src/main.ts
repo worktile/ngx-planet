@@ -5,7 +5,6 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { Router } from '@angular/router';
 import {
-    IPlanetApplicationRef,
     PlanetPortalApplication,
     PlanetRouterEvent,
     GlobalEventDispatcher,

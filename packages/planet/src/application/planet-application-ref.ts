@@ -1,4 +1,4 @@
-import { IPlanetApplicationRef, PlanetRouterEvent } from '../planet.class';
+import { PlanetRouterEvent } from '../planet.class';
 import { PlanetPortalApplication } from './portal-application';
 import { NgModuleRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ window.planet = window.planet || {
 
 export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
 
-export class PlanetApplicationRef implements IPlanetApplicationRef {
+export class PlanetApplicationRef {
     private appModuleRef: NgModuleRef<any>;
     private get bootstrapped() {
         return !!this.appModuleRef;

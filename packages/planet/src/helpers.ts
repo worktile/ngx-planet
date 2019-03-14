@@ -32,3 +32,12 @@ export function isEmpty(value: any) {
         return false;
     }
 }
+
+export function getResourceFileName(path: string) {
+    const lastSlashIndex = path.lastIndexOf('/');
+    if (lastSlashIndex >= 0) {
+        return path.slice(lastSlashIndex + 1);
+    } else {
+        return path;
+    }
+}

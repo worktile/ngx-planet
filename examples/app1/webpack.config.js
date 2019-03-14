@@ -8,7 +8,7 @@ const {
     IndexHtmlWebpackPlugin
 } = require('@angular-devkit/build-angular/src/angular-cli-files/plugins/index-html-webpack-plugin');
 const RawCssLoader = require('@angular-devkit/build-angular/src/angular-cli-files/plugins/raw-css-loader').default;
-
+const WebpackAssetsManifest = require('webpack-assets-manifest');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const devMode = process.env.NODE_ENV !== 'production';
@@ -25,11 +25,12 @@ const config = {
     },
     output: {
         path: path.resolve(workspaceRoot, './dist'),
-        filename: `[name].js`,
+        filename: `[name].[hash:20].js`,
         libraryTarget: 'umd',
         library: 'app1'
     },
     plugins: [
+        new WebpackAssetsManifest(),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional

@@ -2,19 +2,13 @@ import { NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanetPortalApplication } from './application/portal-application';
 
-export interface IPlanetApplicationRef {
-    bootstrap(app: PlanetPortalApplication): void;
-    onRouteChange(event: PlanetRouterEvent): void;
-    destroy(): void;
-}
-
 export interface PlanetOptions {
     preload?: boolean;
     switchMode?: SwitchModes;
     errorHandler: (error: Error) => void;
 }
 
-export interface PlanetApplication {
+export interface PlanetApplication<TExtra = any> {
     name: string;
     // 应用加载的宿主元素或者选择器
     host: string | HTMLElement;
@@ -28,17 +22,20 @@ export interface PlanetApplication {
     preload?: boolean;
     // 切换应用的模式
     switchMode?: SwitchModes;
-    // 样式资源加载前缀
-    stylePathPrefix?: string;
+    // 资源文件路径的前缀
+    resourcePathPrefix?: string;
     // 样式资源文件
     styles?: string[];
-    // 脚本资源加载前缀
-    scriptPathPrefix?: string;
-
     // 脚本资源文件
     scripts?: string[];
     // 串行加载，默认并行加载脚本资源
     loadSerial?: boolean;
+    // 皮肤样式的路径
+    themeStylesPath?: string;
+    // 应用程序打包后的脚本和样式文件替换
+    manifest?: string;
+    // 附加数据，主要应用于业务，比如图标，子应用的颜色，显示名等个性化配置
+    extra?: TExtra;
 }
 
 export enum SwitchModes {

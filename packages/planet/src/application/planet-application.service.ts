@@ -21,7 +21,7 @@ export class PlanetApplicationService {
 
     constructor(private http: HttpClient) {}
 
-    register(appOrApps: PlanetApplication | PlanetApplication[]) {
+    register<TExtra>(appOrApps: PlanetApplication<TExtra> | PlanetApplication<TExtra>[]) {
         const apps = coerceArray(appOrApps);
         apps.forEach(app => {
             if (this.appsMap[app.name]) {
@@ -33,12 +33,10 @@ export class PlanetApplicationService {
     }
 
     registerByUrl(url: string): Observable<void> {
-        return this.http.get(`${url}?t=${new Date().getTime().toString()}`).pipe(
+        return this.http.get(`${url}`).pipe(
             map(apps => {
                 if (apps && Array.isArray(apps)) {
-                    apps.forEach(app => {
-                        this.register(app);
-                    });
+                    this.register(apps);
                 }
             })
         );
@@ -53,7 +51,7 @@ export class PlanetApplicationService {
         }
     }
 
-    getAppsByMatchedUrl(url: string) {
+    getAppsByMatchedUrl<TExtra>(url: string): PlanetApplication<TExtra>[] {
         return this.apps.filter(app => {
             if (app.routerPathPrefix instanceof RegExp) {
                 return app.routerPathPrefix.test(url);
@@ -63,7 +61,7 @@ export class PlanetApplicationService {
         });
     }
 
-    getAppByMatchedUrl(url: string) {
+    getAppByMatchedUrl<TExtra>(url: string): PlanetApplication<TExtra> {
         return this.apps.find(app => {
             if (app.routerPathPrefix instanceof RegExp) {
                 return app.routerPathPrefix.test(url);
