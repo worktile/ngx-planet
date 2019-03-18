@@ -1,6 +1,6 @@
 {
   "name": "ngx-planet",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "scripts": {
     "ng": "ng",
     "start": "concurrently \"npm run serve:portal\" \"npm run serve:app1\" \"npm run serve:app2\"",

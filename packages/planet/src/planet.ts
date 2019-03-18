@@ -8,7 +8,7 @@ import { tap, map, switchMap } from 'rxjs/operators';
 import { SwitchModes, PlanetRouterEvent, PlanetOptions, PlanetApplication } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { PlanetPortalApplication } from './application/portal-application';
-import { PlanetApplicationRef } from './application/planet-application-ref';
+import { PlanetApplicationRef, globalPlanet } from './application/planet-application-ref';
 
 interface InternalPlanetApplication extends PlanetApplication {
     loaded?: boolean;
@@ -114,7 +114,7 @@ export class Planet {
         this.portalApp.router = router;
         this.portalApp.injector = injector;
         this.portalApp.globalEventDispatcher = globalEventDispatcher;
-
+        globalPlanet.portalApplication = this.portalApp;
         this.options = {
             switchMode: SwitchModes.default,
             preload: true,

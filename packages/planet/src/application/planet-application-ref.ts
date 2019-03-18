@@ -4,9 +4,14 @@ import { NgModuleRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 
 declare const window: any;
-window.planet = window.planet || {
+export interface GlobalPlanet {
+    apps: { [key: string]: PlanetApplicationRef };
+    portalApplication: PlanetPortalApplication;
+}
+
+const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
     apps: {}
-};
+});
 
 export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
 
@@ -62,3 +67,5 @@ export function defineApplication(name: string, bootstrapModule: BootstrapAppMod
     const appRef = new PlanetApplicationRef(name, bootstrapModule);
     window.planet.apps[name] = appRef;
 }
+
+export { globalPlanet };
