@@ -1,7 +1,9 @@
 import { PlanetRouterEvent } from '../planet.class';
 import { PlanetPortalApplication } from './portal-application';
-import { NgModuleRef, NgZone } from '@angular/core';
+import { NgModuleRef, NgZone, ApplicationRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { PlantComponentConfig } from '../component/plant-component.config';
+import { PlantComponentRef } from '../component/planet-component-ref';
 
 declare const window: any;
 export interface GlobalPlanet {
@@ -15,14 +17,20 @@ const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
 
 export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
 
+export type PlantComponentFactory = <TData>(
+    componentName: string,
+    config: PlantComponentConfig<TData>
+) => PlantComponentRef<TData>;
+
 export class PlanetApplicationRef {
-    private appModuleRef: NgModuleRef<any>;
+    public appModuleRef: NgModuleRef<any>;
     private get bootstrapped() {
         return !!this.appModuleRef;
     }
     private name: string;
     private portalApp: PlanetPortalApplication;
     private appModuleBootstrap: (app: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
+    private componentFactory: PlantComponentFactory;
 
     constructor(name: string, appModuleBootstrap: (app: PlanetPortalApplication) => Promise<NgModuleRef<any>>) {
         this.name = name;
@@ -36,6 +44,7 @@ export class PlanetApplicationRef {
         this.portalApp = app;
         return this.appModuleBootstrap(app).then(appModuleRef => {
             this.appModuleRef = appModuleRef;
+            this.appModuleRef.instance.appName = this.name;
             return;
         });
     }
@@ -46,6 +55,14 @@ export class PlanetApplicationRef {
         ngZone.run(() => {
             router.navigateByUrl(event.url);
         });
+    }
+
+    registerComponentFactory(componentFactory: PlantComponentFactory) {
+        this.componentFactory = componentFactory;
+    }
+
+    loadPlantComponent<TData = any>(componentName: string, config: PlantComponentConfig<TData>) {
+        return this.componentFactory<TData>(componentName, config);
     }
 
     destroy(): void {

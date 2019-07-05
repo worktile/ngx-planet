@@ -28,10 +28,10 @@
     "@angular/platform-browser-dynamic": "~7.1.0",
     "@angular/router": "~7.1.0",
     "angular-sortablejs": "^2.6.0",
-    "bootstrap": "4.0.0",
+    "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",
     "ngx-bootstrap": "3.0.0",
-    "ngx-tethys": "^0.2.30",
+    "ngx-tethys": "^7.3.0",
     "rxjs": "~6.4.0",
     "sortablejs": "^1.8.0-rc1",
     "zone.js": "~0.8.26"
