@@ -1,7 +1,7 @@
-import { Injectable, ApplicationRef, NgModuleRef, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Injectable, ApplicationRef, NgModuleRef, NgZone, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { ComponentType, DomPortalOutlet, ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 import { globalPlanet } from '../application/planet-application-ref';
-import { PlantComponentRef } from './planet-component-ref';
+import { PlanetComponentRef } from './planet-component-ref';
 import { PlantComponentConfig } from './plant-component.config';
 import { coerceArray } from '../helpers';
 
@@ -14,7 +14,7 @@ export interface PlanetComponent<T = any> {
     providedIn: 'root'
 })
 export class PlanetComponentLoader {
-    public domPortalOutletCache = new WeakMap<HTMLElement, DomPortalOutlet>();
+    private domPortalOutletCache = new WeakMap<any, DomPortalOutlet>();
 
     constructor(
         private applicationRef: ApplicationRef,
@@ -32,37 +32,54 @@ export class PlanetComponentLoader {
 
     private createInjector<TData>(
         appModuleRef: NgModuleRef<any>,
-        componentRef: PlantComponentRef<TData>
+        componentRef: PlanetComponentRef<TData>
     ): PortalInjector {
-        const injectionTokens = new WeakMap<any, any>([[PlantComponentRef, componentRef]]);
+        const injectionTokens = new WeakMap<any, any>([[PlanetComponentRef, componentRef]]);
         const defaultInjector = appModuleRef.injector;
         return new PortalInjector(defaultInjector, injectionTokens);
+    }
+
+    private getContainerElement(config: PlantComponentConfig): HTMLElement {
+        if (config.container) {
+            if ((config.container as ElementRef).nativeElement) {
+                return (config.container as ElementRef).nativeElement;
+            } else {
+                return config.container as HTMLElement;
+            }
+        } else {
+            throw new Error(`config 'container' cannot be null`);
+        }
     }
 
     private attachComponent<TData>(
         plantComponent: PlanetComponent,
         appModuleRef: NgModuleRef<any>,
         config: PlantComponentConfig
-    ): PlantComponentRef<TData> {
-        const plantComponentRef = new PlantComponentRef();
+    ): PlanetComponentRef<TData> {
+        const plantComponentRef = new PlanetComponentRef();
         const componentFactoryResolver = appModuleRef.componentFactoryResolver;
         const appRef = this.applicationRef;
         const injector = this.createInjector<TData>(appModuleRef, plantComponentRef);
-        let portalOutlet = this.domPortalOutletCache.get(config.container);
+        const container = this.getContainerElement(config);
+        let portalOutlet = this.domPortalOutletCache.get(container);
         if (portalOutlet) {
             portalOutlet.detach();
         } else {
-            portalOutlet = new DomPortalOutlet(config.container, componentFactoryResolver, appRef, injector);
-            this.domPortalOutletCache.set(config.container, portalOutlet);
+            portalOutlet = new DomPortalOutlet(container, componentFactoryResolver, appRef, injector);
+            this.domPortalOutletCache.set(container, portalOutlet);
         }
-        const componentPortal = new ComponentPortal(plantComponent.component, config.viewContainerRef);
+        const componentPortal = new ComponentPortal(plantComponent.component, null);
         const componentRef = portalOutlet.attachComponentPortal<TData>(componentPortal);
         if (config.initialState) {
             Object.assign(componentRef.instance, config.initialState);
         }
-        plantComponentRef.container = config.container;
+        plantComponentRef.container = container;
         plantComponentRef.componentInstance = componentRef.instance;
         plantComponentRef.componentRef = componentRef;
+        plantComponentRef.dispose = () => {
+            this.domPortalOutletCache.delete(container);
+            portalOutlet.dispose();
+        };
         return plantComponentRef;
     }
 
@@ -88,8 +105,13 @@ export class PlanetComponentLoader {
         });
     }
 
-    load<TData = any>(app: string, componentName: string, config: PlantComponentConfig<TData>) {
-        const planetAppRef = globalPlanet.apps[app];
+    load<TData = any>(
+        app: string,
+        componentName: string,
+        config: PlantComponentConfig<TData>,
+        error: (error) => void = e => {}
+    ) {
+        const planetAppRef = this.getPlantAppRef(app);
         return planetAppRef.loadPlantComponent<TData>(componentName, config);
     }
 }

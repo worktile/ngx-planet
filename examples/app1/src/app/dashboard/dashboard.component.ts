@@ -4,6 +4,7 @@ import { PlanetPortalApplication, GlobalEventDispatcher } from '../../../../../p
 import { CounterService } from '../counter.service';
 import { AppRootContext } from '../../../../../src/app/app-root-context';
 import { PlanetComponentLoader } from '../../../../../packages/planet/src/component/planet-component-loader';
+import { PlanetComponentRef } from '../../../../../packages/planet/src/component/planet-component-ref';
 import { ThyDialog } from 'ngx-tethys';
 
 @Component({
@@ -11,7 +12,9 @@ import { ThyDialog } from 'ngx-tethys';
     templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
-    @ViewChild('portal') portalElementRef: ElementRef<HTMLDivElement>;
+    @ViewChild('container') containerElementRef: ElementRef<HTMLDivElement>;
+
+    private componentRef: PlanetComponentRef;
 
     constructor(
         private planetPortal: PlanetPortalApplication,
@@ -27,11 +30,15 @@ export class DashboardComponent {
         this.globalEventDispatcher.dispatch('openADetail');
     }
 
-    openApp2Test() {
-        const componentRef = this.planetComponentLoader.load('app2', 'project1', {
-            container: this.portalElementRef.nativeElement,
+    openApp2Component() {
+        this.componentRef = this.planetComponentLoader.load('app2', 'project1', {
+            container: this.containerElementRef,
             initialState: {}
         });
+    }
+
+    disposeApp2Component() {
+        this.componentRef.dispose();
     }
 
     toHostAbout() {

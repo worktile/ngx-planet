@@ -1,9 +1,8 @@
 import { Component, EventEmitter, OnInit, DoCheck, ApplicationRef } from '@angular/core';
-import { GlobalEventDispatcher } from '../../../../../packages/planet/src/public_api';
+import { GlobalEventDispatcher, PlanetComponentRef } from '../../../../../packages/planet/src/public_api';
 import { ProjectService } from './projects.service';
 import { ThyDialog } from 'ngx-tethys/dialog/dialog.service';
 import { ProjectDetailComponent } from './detail/detail.component';
-import { PlantComponentRef } from '../../../../../packages/planet/src/component/planet-component-ref';
 
 @Component({
     selector: 'app-project-list',
@@ -14,8 +13,11 @@ export class ProjectListComponent implements OnInit, DoCheck {
         private globalEventDispatcher: GlobalEventDispatcher,
         private projectService: ProjectService,
         private dialog: ThyDialog,
-        private applicationRef: ApplicationRef
-    ) {}
+        private applicationRef: ApplicationRef,
+        private ref: PlanetComponentRef
+    ) {
+        console.log(ref);
+    }
 
     click = new EventEmitter<any>();
 

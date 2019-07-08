@@ -3,7 +3,7 @@ import { PlanetPortalApplication } from './portal-application';
 import { NgModuleRef, NgZone, ApplicationRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlantComponentConfig } from '../component/plant-component.config';
-import { PlantComponentRef } from '../component/planet-component-ref';
+import { PlanetComponentRef } from '../component/planet-component-ref';
 
 declare const window: any;
 export interface GlobalPlanet {
@@ -20,7 +20,7 @@ export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promis
 export type PlantComponentFactory = <TData>(
     componentName: string,
     config: PlantComponentConfig<TData>
-) => PlantComponentRef<TData>;
+) => PlanetComponentRef<TData>;
 
 export class PlanetApplicationRef {
     public appModuleRef: NgModuleRef<any>;

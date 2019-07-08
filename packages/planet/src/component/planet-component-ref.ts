@@ -1,7 +1,8 @@
-import { ComponentRef } from '@angular/core';
+import { ComponentRef, ElementRef } from '@angular/core';
 
-export class PlantComponentRef<TData = any> {
+export class PlanetComponentRef<TData = any> {
     container: HTMLElement;
     componentInstance: TData;
     componentRef: ComponentRef<TData>;
+    dispose: () => void;
 }
