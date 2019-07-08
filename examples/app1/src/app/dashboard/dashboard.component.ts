@@ -1,24 +1,44 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanetPortalApplication, GlobalEventDispatcher } from '../../../../../packages/planet/src/public_api';
 import { CounterService } from '../counter.service';
 import { AppRootContext } from '../../../../../src/app/app-root-context';
+import { PlanetComponentLoader } from '../../../../../packages/planet/src/component/planet-component-loader';
+import { PlanetComponentRef } from '../../../../../packages/planet/src/component/planet-component-ref';
+import { ThyDialog } from 'ngx-tethys';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
+    @ViewChild('container') containerElementRef: ElementRef<HTMLDivElement>;
+
+    private componentRef: PlanetComponentRef;
+
     constructor(
         private planetPortal: PlanetPortalApplication,
         private router: Router,
         public counter: CounterService,
         private globalEventDispatcher: GlobalEventDispatcher,
-        public appRootContext: AppRootContext
+        public appRootContext: AppRootContext,
+        private dialog: ThyDialog,
+        private planetComponentLoader: PlanetComponentLoader
     ) {}
 
     openADetail() {
         this.globalEventDispatcher.dispatch('openADetail');
+    }
+
+    openApp2Component() {
+        this.componentRef = this.planetComponentLoader.load('app2', 'project1', {
+            container: this.containerElementRef,
+            initialState: {}
+        });
+    }
+
+    disposeApp2Component() {
+        this.componentRef.dispose();
     }
 
     toHostAbout() {

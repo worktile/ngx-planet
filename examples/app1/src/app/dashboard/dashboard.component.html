@@ -1,4 +1,4 @@
-<h3>This is dashboard name:{{appRootContext.name}}</h3>
+<h3>This is dashboard name:{{ appRootContext.name }}</h3>
 
 <div class="app1-dashboard">
     <h5 class="red">count: {{ counter.count }}</h5>
@@ -7,9 +7,13 @@
         <button thyButton="outline-primary-square" (click)="counter.decrease()">Decrease</button>
         <button thyButton="primary-square" (click)="openADetail()">Open a Detail</button>
         <button thyButton="primary-square" (click)="changeName('new name')">Set New Name</button>
+        <button thyButton="primary-square" (click)="openApp2Component()">Open App2 Project list</button>
+        <button thyButton="primary-square" (click)="disposeApp2Component()">Dispose App2 Project list</button>
     </div>
 </div>
 
 <div class="mt-2">
     <a href="javascript:;" (click)="toHostAbout()">To Host About</a>
 </div>
+
+<div #container></div>
