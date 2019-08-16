@@ -65,7 +65,7 @@ export class Planet {
         }
     }
 
-    private combineResourceFilePath(resourceFilePath: string, manifestResult: { [key: string]: string }) {
+    private buildResourceFilePath(resourceFilePath: string, manifestResult: { [key: string]: string }) {
         const fileName = getResourceFileName(resourceFilePath);
         if (manifestResult[fileName]) {
             return resourceFilePath.replace(fileName, manifestResult[fileName]);
@@ -80,10 +80,10 @@ export class Planet {
         // combine resource path by manifest
         if (manifestResult) {
             scripts = scripts.map(script => {
-                return this.combineResourceFilePath(script, manifestResult);
+                return this.buildResourceFilePath(script, manifestResult);
             });
             styles = styles.map(style => {
-                return this.combineResourceFilePath(style, manifestResult);
+                return this.buildResourceFilePath(style, manifestResult);
             });
         }
         if (app.resourcePathPrefix) {
@@ -148,20 +148,16 @@ export class Planet {
             return of(null);
         }
         if (app.manifest) {
-            return this.assetsLoader
-                .loadManifest(`${app.resourcePathPrefix || ''}${app.manifest}?t=${new Date().getTime()}`)
-                .pipe(
-                    switchMap(manifestResult => {
-                        const { scripts, styles } = this.getScriptsAndStylesFullPaths(app, manifestResult);
-                        return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
-                    })
-                );
+            return this.assetsLoader.loadManifest(`${app.manifest}?t=${new Date().getTime()}`).pipe(
+                switchMap(manifestResult => {
+                    const { scripts, styles } = this.getScriptsAndStylesFullPaths(app, manifestResult);
+                    return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
+                })
+            );
         } else {
             const { scripts, styles } = this.getScriptsAndStylesFullPaths(app);
             return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
         }
-
-        // return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
     }
 
     bootstrapApp(planetApp: InternalPlanetApplication): PlanetApplicationRef {
