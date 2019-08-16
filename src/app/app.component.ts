@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
                     // 'polyfills.js'
                 ],
                 styles: ['assets/main.css'],
-                manifest: 'manifest.json',
+                manifest: '/app1/static/manifest.json',
                 extra: {
                     name: '应用1',
                     color: '#ffa415'

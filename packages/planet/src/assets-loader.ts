@@ -30,14 +30,15 @@ export class AssetsLoader {
             });
         }
         return Observable.create((observer: Observer<AssetsLoadResult>) => {
-            const script: any = document.createElement('script');
+            const script: HTMLScriptElement = document.createElement('script');
             script.type = 'text/javascript';
             script.src = src;
-            if (script.readyState) {
+            script.async = true;
+            if (script['readyState']) {
                 // IE
-                script.onreadystatechange = () => {
-                    if (script.readyState === 'loaded' || script.readyState === 'complete') {
-                        script.onreadystatechange = null;
+                script['readyState'] = () => {
+                    if (script['readyState'] === 'loaded' || script['readyState'] === 'complete') {
+                        script['onreadystatechange'] = null;
                         observer.next({
                             src: src,
                             hashCode: id,
@@ -70,7 +71,7 @@ export class AssetsLoader {
                 });
                 observer.complete();
             };
-            document.getElementsByTagName('head')[0].appendChild(script);
+            document.getElementsByTagName('body')[0].appendChild(script);
         });
     }
 
