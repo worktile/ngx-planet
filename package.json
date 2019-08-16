@@ -1,10 +1,11 @@
 {
   "name": "ngx-planet",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "scripts": {
     "ng": "ng",
     "start": "concurrently \"npm run serve:portal\" \"npm run serve:app1\" \"npm run serve:app2\"",
     "serve:portal": "ng run portal:serve-webpack",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --pkg ./packages/planet/package.json",
     "serve:app1": "ng serve app1",
     "serve:app2": "ng serve app2",
     "build:portal": "ng build",
@@ -14,7 +15,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "publish": "cd dist/planet && npm publish --access=public"
+    "pub-only": "cd dist/planet && npm publish --access=public",
+    "pub": "npm run build && npm run pub-only"
   },
   "private": true,
   "dependencies": {
@@ -44,6 +46,8 @@
     "@angular/cli": "~7.3.4",
     "@angular/compiler-cli": "~7.1.0",
     "@angular/language-service": "~7.1.0",
+    "@commitlint/cli": "^7.5.2",
+    "@commitlint/config-conventional": "^7.5.0",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
@@ -68,6 +72,16 @@
     "tslib": "^1.9.0",
     "tslint": "~5.11.0",
     "typescript": "3.1.6",
-    "webpack-assets-manifest": "^3.1.1"
+    "webpack-assets-manifest": "^3.1.1",
+    "husky": "^2.4.1",
+    "conventional-changelog-cli": "^2.0.12",
+    "prettier": "^1.16.4",
+    "pretty-quick": "^1.10.0"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
