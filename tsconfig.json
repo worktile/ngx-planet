@@ -11,26 +11,12 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"],
     "paths": {
-      "core": [
-        "dist/core"
-      ],
-      "core/*": [
-        "dist/core/*"
-      ],
-      "app3-lib": [
-        "dist/app3-lib"
-      ],
-      "app3-lib/*": [
-        "dist/app3-lib/*"
-      ]
+      "@demo/common": ["examples/common"],
+      "ngx-planet": ["packages/planet/src/public_api.ts"],
+      "ngx-planet/*": ["packages/planet/src/*"]
     }
   }
 }

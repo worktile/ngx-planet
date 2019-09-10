@@ -1,10 +1,10 @@
 <thy-layout>
-    <thy-sidebar>
-        <h2 class="header">App1 Toc</h2>
-        <ul>
-            <li><a [routerLink]="['/app1/users']" routerLinkActive="active">App1 Users</a></li>
-            <li><a [routerLink]="['/app1/dashboard']" routerLinkActive="active">App1 Dashboard</a></li>
-        </ul>
-    </thy-sidebar>
-    <thy-content> <router-outlet></router-outlet> </thy-content>
+  <thy-sidebar>
+    <h2 class="header">App1 Toc</h2>
+    <ul>
+      <li><a [routerLink]="['/app1/dashboard']" routerLinkActive="active">App1 Dashboard</a></li>
+      <li><a [routerLink]="['/app1/users']" routerLinkActive="active">App1 Users</a></li>
+    </ul>
+  </thy-sidebar>
+  <thy-content> <router-outlet></router-outlet> </thy-content>
 </thy-layout>

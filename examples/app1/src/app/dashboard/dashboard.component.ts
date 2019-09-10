@@ -1,10 +1,8 @@
 import { Component, Inject, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { PlanetPortalApplication, GlobalEventDispatcher } from '../../../../../packages/planet/src/public_api';
 import { CounterService } from '../counter.service';
-import { AppRootContext } from '../../../../../src/app/app-root-context';
-import { PlanetComponentLoader } from '../../../../../packages/planet/src/component/planet-component-loader';
-import { PlanetComponentRef } from '../../../../../packages/planet/src/component/planet-component-ref';
+import { AppRootContext } from '@demo/common';
+import { PlanetComponentRef, PlanetComponentLoader, PlanetPortalApplication, GlobalEventDispatcher } from 'ngx-planet';
 import { ThyDialog } from 'ngx-tethys';
 
 @Component({

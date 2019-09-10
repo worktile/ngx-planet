@@ -1,0 +1,29 @@
+[
+  {
+    "name": "app1",
+    "host": "#app-host-container",
+    "selector": "app1-root-container",
+    "routerPathPrefix": "/app1",
+    "hostClass": "thy-layout",
+    "preload": false,
+    "switchMode": "default",
+    "assetsUrl": "/app1/assets/app.json",
+    "stylePathPrefix": "",
+    "styles": [],
+    "scriptPathPrefix": "/app1/assets/",
+    "scripts": ["main.js"]
+  },
+  {
+    "name": "app2",
+    "host": "#app-host-container",
+    "selector": "app2-root-container",
+    "routerPathPrefix": "/app2",
+    "hostClass": "thy-layout",
+    "preload": false,
+    "switchMode": "default",
+    "stylePathPrefix": "",
+    "styles": [],
+    "scriptPathPrefix": "/app2/assets/",
+    "scripts": ["main.js"]
+  }
+]

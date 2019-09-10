@@ -1,5 +1,5 @@
 import { Component, inject, InjectionToken } from '@angular/core';
-import { GlobalEventDispatcher } from '../../../../../packages/planet/src/public_api';
+import { GlobalEventDispatcher } from 'ngx-planet';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { UserDetailComponent } from './detail/user-detail.component';
 
