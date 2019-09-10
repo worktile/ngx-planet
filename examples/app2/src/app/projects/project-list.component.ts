@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, DoCheck, ApplicationRef } from '@angular/core';
-import { GlobalEventDispatcher, PlanetComponentRef } from '../../../../../packages/planet/src/public_api';
+import { GlobalEventDispatcher } from 'ngx-planet';
 import { ProjectService } from './projects.service';
 import { ThyDialog } from 'ngx-tethys/dialog/dialog.service';
 import { ProjectDetailComponent } from './detail/detail.component';
@@ -13,11 +13,8 @@ export class ProjectListComponent implements OnInit, DoCheck {
         private globalEventDispatcher: GlobalEventDispatcher,
         private projectService: ProjectService,
         private dialog: ThyDialog,
-        private applicationRef: ApplicationRef,
-        private ref: PlanetComponentRef
-    ) {
-        console.log(ref);
-    }
+        private applicationRef: ApplicationRef
+    ) {}
 
     click = new EventEmitter<any>();
 
@@ -36,7 +33,7 @@ export class ProjectListComponent implements OnInit, DoCheck {
         setTimeout(() => {
             this.projects = this.projectService.getProjects();
             this.loadingDone = true;
-        }, 2000);
+        }, 500);
     }
 
     openDetail() {

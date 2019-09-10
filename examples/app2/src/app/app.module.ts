@@ -9,10 +9,9 @@ import { NgxTethysModule } from 'ngx-tethys';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { EmptyComponent } from './empty/empty.component';
 import { ProjectDetailComponent } from './projects/detail/detail.component';
-import { PlanetPortalApplication } from '../../../../packages/planet/src/public_api';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PlanetComponentLoader } from '../../../../packages/planet/src/component/planet-component-loader';
+import { PlanetComponentLoader } from 'ngx-planet';
 
 const routers: Route[] = [
     {

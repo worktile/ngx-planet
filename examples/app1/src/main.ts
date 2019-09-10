@@ -4,9 +4,8 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { Router } from '@angular/router';
-import { PlanetPortalApplication, defineApplication } from '../../../packages/planet/src/public_api';
-import { GlobalEventDispatcher } from '../../../packages/planet/src/global-event-dispatcher';
-import { AppRootContext } from '../../../src/app/app-root-context';
+import { PlanetPortalApplication, defineApplication } from 'ngx-planet';
+import { AppRootContext } from '@demo/common';
 
 // import './styles.scss';
 if (environment.production) {

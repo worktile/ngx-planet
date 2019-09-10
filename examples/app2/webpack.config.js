@@ -14,6 +14,7 @@ const config = {
     resolve: {
         extensions: ['.ts', '.js']
     },
+    context: projectRoot,
     entry: {
         main: path.resolve(projectRoot, './src/main.ts'),
         polyfills: path.resolve(projectRoot, './src/polyfills.ts')
@@ -30,8 +31,7 @@ const config = {
             tsConfigPath: path.resolve(projectRoot, './src/tsconfig.app.json'),
             mainPath: path.resolve(projectRoot, './src/main.ts'),
             hostReplacementPaths: {
-                './src/environments/environment.ts':
-                    './src/environments/environment.prod.ts'
+                './src/environments/environment.ts': './src/environments/environment.prod.ts'
             },
             sourceMap: true,
             compilerOptions: {}
@@ -86,10 +86,7 @@ const copyWebpackPluginOptions = {
     ignore: ['.gitkeep', '**/.DS_Store', '**/Thumbs.db']
 };
 
-const copyWebpackPluginInstance = new CopyWebpackPlugin(
-    copyWebpackPluginPatterns,
-    copyWebpackPluginOptions
-);
+const copyWebpackPluginInstance = new CopyWebpackPlugin(copyWebpackPluginPatterns, copyWebpackPluginOptions);
 config.plugins.push(copyWebpackPluginInstance);
 
 module.exports = config;
