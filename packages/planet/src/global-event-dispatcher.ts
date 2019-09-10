@@ -21,7 +21,7 @@ export class GlobalEventDispatcher {
 
     private globalEventListener = (event: CustomEvent) => {
         this.subject$.next(event.detail);
-    }
+    };
 
     private addGlobalEventListener() {
         this.hasAddGlobalEventListener = true;
@@ -47,7 +47,7 @@ export class GlobalEventDispatcher {
     }
 
     register(eventName: string): Observable<any> {
-        return Observable.create(observer => {
+        return new Observable(observer => {
             if (!this.hasAddGlobalEventListener) {
                 this.addGlobalEventListener();
             }
