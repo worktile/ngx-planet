@@ -1,11 +1,10 @@
-export function hashCode(str: string) {
-    let hash = 0,
-        i,
-        chr;
+export function hashCode(str: string): number {
+    let hash = 0;
+    let chr: number;
     if (str.length === 0) {
         return hash;
     }
-    for (i = 0; i < str.length; i++) {
+    for (let i = 0; i < str.length; i++) {
         chr = str.charCodeAt(i);
         hash = (hash << 5) - hash + chr;
         hash |= 0; // Convert to 32bit integer
@@ -25,7 +24,7 @@ export function coerceArray<T>(value: T | T[]): T[] {
     return Array.isArray(value) ? value : [value];
 }
 
-export function isEmpty(value: any) {
+export function isEmpty(value: any): boolean {
     if (!value || value.length === 0) {
         return true;
     } else {

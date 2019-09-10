@@ -29,7 +29,7 @@ export class AssetsLoader {
                 status: 'Loaded'
             });
         }
-        return Observable.create((observer: Observer<AssetsLoadResult>) => {
+        return new Observable((observer: Observer<AssetsLoadResult>) => {
             const script: HTMLScriptElement = document.createElement('script');
             script.type = 'text/javascript';
             script.src = src;
@@ -62,16 +62,17 @@ export class AssetsLoader {
                     this.loadedSources.push(id);
                 };
             }
-            script.onerror = (error: any) => {
+            script.onerror = error => {
                 observer.error({
                     src: src,
                     hashCode: id,
                     loaded: false,
-                    status: 'Error'
+                    status: 'Error',
+                    error: error
                 });
                 observer.complete();
             };
-            document.getElementsByTagName('body')[0].appendChild(script);
+            document.body.appendChild(script);
         });
     }
 
@@ -85,7 +86,7 @@ export class AssetsLoader {
                 status: 'Loaded'
             });
         }
-        return Observable.create((observer: Observer<AssetsLoadResult>) => {
+        return new Observable((observer: Observer<AssetsLoadResult>) => {
             const head = document.getElementsByTagName('head')[0];
             const link = document.createElement('link');
             link.rel = 'stylesheet';
