@@ -1,7 +1,9 @@
-# ngx-planet
+# ngx-planet [![Build Status](https://travis-ci.org/worktile/ngx-planet.svg?branch=master)](https://travis-ci.org/worktile/ngx-planet)
+
 An Angular 7+ Micro Frontend library.
 
 ## Installation
+
 ```
 npm i @worktile/planet --save
 ```
@@ -13,6 +15,7 @@ npm i @worktile/planet --save
 ## Usage
 
 ### 1. Loading the module in the portal app module
+
 ```
 import { NgxPlanetModule } from '@worktile/planet';
 
@@ -24,7 +27,9 @@ import { NgxPlanetModule } from '@worktile/planet';
 })
 class AppModule {}
 ```
-### 2. Register Applications to planet use Planet Service in portal app 
+
+### 2. Register Applications to planet use Planet Service in portal app
+
 ```
 @Component({
     selector: 'app-portal-root',
@@ -102,7 +107,9 @@ export class AppComponent implements OnInit {
     }
 }
 ```
+
 ### 3. Sub Apps define app to bootstrap app module
+
 ```
 defineApplication('app1', (portalApp: PlanetPortalApplication) => {
     return platformBrowserDynamic([
@@ -129,7 +136,7 @@ npm run serve:portal // 3000
 npm run serve:app1 // 3001
 npm run serve:app2 // 3002
 
-or 
+or
 
 npm start
 ```
