@@ -13,7 +13,7 @@
     "build:app2": "ng build app2",
     "build": "ng build planet",
     "test": "ng test planet",
-    "lint": "ng lint",
+    "lint": "ng lint planet",
     "e2e": "ng e2e",
     "pub-only": "cd dist/planet && npm publish --access=public",
     "pub": "npm run build && npm run pub-only"

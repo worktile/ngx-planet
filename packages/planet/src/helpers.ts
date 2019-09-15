@@ -1,3 +1,5 @@
+import { PlanetApplication } from './planet.class';
+
 export function hashCode(str: string): number {
     let hash = 0;
     let chr: number;
@@ -32,6 +34,12 @@ export function isEmpty(value: any): boolean {
     }
 }
 
+/**
+ * Get file name from path
+ * 1. "main.js" => "main.js"
+ * 2. "assets/scripts/main.js" => "main.js"
+ * @param path path
+ */
 export function getResourceFileName(path: string) {
     const lastSlashIndex = path.lastIndexOf('/');
     if (lastSlashIndex >= 0) {
@@ -39,4 +47,52 @@ export function getResourceFileName(path: string) {
     } else {
         return path;
     }
+}
+
+/**
+ * Build resource path by manifest
+ * if manifest is { "main.js": "main.h2sh23abee.js"}
+ * 1. "main.js" => "main.h2sh23abee.js"
+ * 2. "assets/scripts/main.js" =>"assets/scripts/main.h2sh23abee.js"
+ * @param resourceFilePath Resource File Path
+ * @param manifestResult manifest
+ */
+export function buildResourceFilePath(resourceFilePath: string, manifestResult: { [key: string]: string }) {
+    const fileName = getResourceFileName(resourceFilePath);
+    if (manifestResult[fileName]) {
+        return resourceFilePath.replace(fileName, manifestResult[fileName]);
+    } else {
+        return resourceFilePath;
+    }
+}
+
+/**
+ * Get static resource full path
+ * @param app PlanetApplication
+ * @param manifestResult manifest
+ */
+export function getScriptsAndStylesFullPaths(app: PlanetApplication, manifestResult?: { [key: string]: string }) {
+    let scripts = app.scripts || [];
+    let styles = app.styles || [];
+    // combine resource path by manifest
+    if (manifestResult) {
+        scripts = scripts.map(script => {
+            return buildResourceFilePath(script, manifestResult);
+        });
+        styles = styles.map(style => {
+            return buildResourceFilePath(style, manifestResult);
+        });
+    }
+    if (app.resourcePathPrefix) {
+        scripts = scripts.map(script => {
+            return `${app.resourcePathPrefix}${script}`;
+        });
+        styles = styles.map(style => {
+            return `${app.resourcePathPrefix}${style}`;
+        });
+    }
+    return {
+        scripts: scripts,
+        styles: styles
+    };
 }

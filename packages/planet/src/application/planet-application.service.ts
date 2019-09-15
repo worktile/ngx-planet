@@ -1,9 +1,10 @@
 import { PlanetApplication } from '../planet.class';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { shareReplay, map } from 'rxjs/operators';
-import { coerceArray } from '../helpers';
-import { Observable } from 'rxjs';
+import { shareReplay, map, switchMap } from 'rxjs/operators';
+import { coerceArray, getScriptsAndStylesFullPaths } from '../helpers';
+import { Observable, of } from 'rxjs';
+import { AssetsLoadResult, AssetsLoader } from '../assets-loader';
 
 interface InternalPlanetApplication extends PlanetApplication {
     loaded?: boolean;
@@ -19,7 +20,7 @@ export class PlanetApplicationService {
 
     private currentApps: InternalPlanetApplication[] = [];
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private assetsLoader: AssetsLoader) {}
 
     register<TExtra>(appOrApps: PlanetApplication<TExtra> | PlanetApplication<TExtra>[]) {
         const apps = coerceArray(appOrApps);
@@ -79,5 +80,26 @@ export class PlanetApplicationService {
                 return app.preload;
             }
         });
+    }
+
+    getApps() {
+        return this.apps;
+    }
+
+    loadApp(app: InternalPlanetApplication): Observable<[AssetsLoadResult[], AssetsLoadResult[]]> {
+        if (app.loaded) {
+            return of(null);
+        }
+        if (app.manifest) {
+            return this.assetsLoader.loadManifest(`${app.manifest}?t=${new Date().getTime()}`).pipe(
+                switchMap(manifestResult => {
+                    const { scripts, styles } = getScriptsAndStylesFullPaths(app, manifestResult);
+                    return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
+                })
+            );
+        } else {
+            const { scripts, styles } = getScriptsAndStylesFullPaths(app);
+            return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
+        }
     }
 }

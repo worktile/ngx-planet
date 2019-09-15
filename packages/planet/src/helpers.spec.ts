@@ -1,4 +1,12 @@
-import { hashCode, isEmpty, coerceArray, getHTMLElement, getResourceFileName } from './helpers';
+import {
+    hashCode,
+    isEmpty,
+    coerceArray,
+    getHTMLElement,
+    getResourceFileName,
+    buildResourceFilePath,
+    getScriptsAndStylesFullPaths
+} from './helpers';
 
 describe('helpers', () => {
     describe('hashCode', () => {
@@ -130,4 +138,73 @@ describe('helpers', () => {
             expect(result).toBe('file.js');
         });
     });
+
+    describe('buildResourceFilePath', () => {
+        it('should get correct path input "main.js"', () => {
+            const result = buildResourceFilePath('main.js', { 'main.js': 'main.h2d3f2232.js' });
+            expect(result).toBe('main.h2d3f2232.js');
+        });
+
+        it('should get correct path when input "main.js" which has not exist in manifest', () => {
+            const result = buildResourceFilePath('main.js', {});
+            expect(result).toBe('main.js');
+        });
+
+        it('should get correct path input "assets/scripts/main.js"', () => {
+            const result = buildResourceFilePath('assets/scripts/main.js', { 'main.js': 'main.h2d3f2232.js' });
+            expect(result).toBe('assets/scripts/main.h2d3f2232.js');
+        });
+    });
+
+    describe('getScriptsAndStylesFullPaths', () => {
+        const app = {
+            name: 'app1',
+            host: '.host-selector',
+            selector: 'app1-root-container',
+            routerPathPrefix: '/app1',
+            hostClass: 'app1-host',
+            preload: false,
+            // resourcePathPrefix: '/static/app1/',
+            styles: ['styles/main.css'],
+            scripts: ['vendor.js', 'main.js'],
+            extra: {
+                appName: '应用1'
+            }
+        };
+
+        it('should get correct full path without resourcePathPrefix', () => {
+            const result = getScriptsAndStylesFullPaths({ ...app });
+            expect(result).toEqual({
+                scripts: ['vendor.js', 'main.js'],
+                styles: ['styles/main.css']
+            });
+        });
+
+        it('should get correct full path with resourcePathPrefix', () => {
+            const result = getScriptsAndStylesFullPaths({ ...app, resourcePathPrefix: '/static/app1/' });
+            expect(result).toEqual({
+                scripts: ['/static/app1/vendor.js', '/static/app1/main.js'],
+                styles: ['/static/app1/styles/main.css']
+            });
+        });
+
+        it('should get correct full path with manifest', () => {
+            const manifest = {
+                'vendor.js': `vendor.${randomString()}.js`,
+                'main.js': `main.${randomString()}.js`,
+                'main.css': `main.${randomString()}.css`
+            };
+            const result = getScriptsAndStylesFullPaths({ ...app, resourcePathPrefix: '/static/app1/' }, manifest);
+            expect(result).toEqual({
+                scripts: [`/static/app1/${manifest['vendor.js']}`, `/static/app1/${manifest['main.js']}`],
+                styles: [`/static/app1/styles/${manifest['main.css']}`]
+            });
+        });
+    });
 });
+
+function randomString() {
+    return Math.random()
+        .toString(36)
+        .slice(-8);
+}
