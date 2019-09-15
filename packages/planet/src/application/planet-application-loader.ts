@@ -21,6 +21,8 @@ export enum ApplicationStatus {
     providedIn: 'root'
 })
 export class PlanetApplicationLoader {
+    private firstLoad = true;
+
     private options: PlanetOptions;
 
     private inProgressAppAssetsLoads = new Map<string, Observable<PlanetApplication>>();
@@ -33,11 +35,9 @@ export class PlanetApplicationLoader {
 
     private appStatusChange$ = new Subject<{ app: PlanetApplication; status: ApplicationStatus }>();
 
-    get appStatusChange(): Observable<{ app: PlanetApplication; status: ApplicationStatus }> {
+    public get appStatusChange(): Observable<{ app: PlanetApplication; status: ApplicationStatus }> {
         return this.appStatusChange$.asObservable();
     }
-
-    private firstLoad = true;
 
     public loadingDone = false;
 

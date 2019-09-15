@@ -1,8 +1,9 @@
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AssetsLoader } from './assets-loader';
 import { hashCode } from './helpers';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 describe('assets-loader', () => {
     let assetsLoader: AssetsLoader;
@@ -154,6 +155,114 @@ describe('assets-loader', () => {
 
             expect(loadScriptsSpy).toHaveBeenCalled();
             expect(loadScriptsSpy).toHaveBeenCalledWith([result1, result2]);
+        });
+    });
+
+    describe('loadManifest', () => {
+        let httpClient: HttpClient;
+        let httpTestingController: HttpTestingController;
+        beforeEach(() => {
+            httpClient = TestBed.get(HttpClient);
+            httpTestingController = TestBed.get(HttpTestingController);
+        });
+
+        afterEach(() => {
+            // After every test, assert that there are no more pending requests.
+            httpTestingController.verify();
+        });
+
+        it('should load manifest success', async(() => {
+            const testData = {
+                'main.js': 'main1.js'
+            };
+            const loadManifestSpy = jasmine.createSpy('load manifest spy');
+            assetsLoader.loadManifest('/static/assets/manifest.json').subscribe(loadManifestSpy);
+            const req = httpTestingController.expectOne('/static/assets/manifest.json');
+
+            // Assert that the request is a GET.
+            expect(req.request.method).toEqual('GET');
+            expect(loadManifestSpy).not.toHaveBeenCalled();
+
+            // Respond with mock data, causing Observable to resolve.
+            // Subscribe callback asserts that correct data was returned.
+            req.flush(testData);
+
+            expect(loadManifestSpy).toHaveBeenCalled();
+            expect(loadManifestSpy).toHaveBeenCalledWith(testData);
+        }));
+    });
+
+    describe('loadAppAssets', () => {
+        const app1 = {
+            name: 'app1',
+            host: '.host-selector',
+            selector: 'app1-root-container',
+            routerPathPrefix: '/app1',
+            hostClass: 'app1-host',
+            preload: false,
+            resourcePathPrefix: '/static/app1/',
+            styles: ['styles/main.css'],
+            scripts: ['vendor.js', 'main.js'],
+            loadSerial: false,
+            manifest: '',
+            extra: {
+                appName: '应用1'
+            }
+        };
+
+        it('load assets success without manifest', () => {
+            const loadScriptsAndStyles$ = new Subject();
+            const loadScriptsAndStylesSpy = spyOn(assetsLoader, 'loadScriptsAndStyles');
+            loadScriptsAndStylesSpy.and.returnValue(loadScriptsAndStyles$);
+
+            const loadAssetsSpy = jasmine.createSpy('load assets spy');
+            assetsLoader.loadAppAssets(app1).subscribe(loadAssetsSpy);
+
+            expect(loadAssetsSpy).not.toHaveBeenCalled();
+            expect(loadScriptsAndStylesSpy).toHaveBeenCalled();
+            expect(loadScriptsAndStylesSpy).toHaveBeenCalledWith(
+                ['/static/app1/vendor.js', '/static/app1/main.js'],
+                ['/static/app1/styles/main.css'],
+                app1.loadSerial
+            );
+
+            loadScriptsAndStyles$.next('load success');
+            expect(loadAssetsSpy).toHaveBeenCalled();
+            expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
+        });
+
+        it('load assets success with manifest', () => {
+            const loadScriptsAndStyles$ = new Subject();
+            const loadScriptsAndStylesSpy = spyOn(assetsLoader, 'loadScriptsAndStyles');
+            loadScriptsAndStylesSpy.and.returnValue(loadScriptsAndStyles$);
+
+            const loadManifestSpy = spyOn(assetsLoader, 'loadManifest');
+            const manifestResult = {
+                'main.js': 'main.123455.js',
+                'vendor.js': 'vendor.23221.js',
+                'main.css': 'main.s1223.css'
+            };
+            loadManifestSpy.and.returnValue(of(manifestResult));
+
+            const loadAssetsSpy = jasmine.createSpy('load assets spy');
+            assetsLoader
+                .loadAppAssets({
+                    ...app1,
+                    manifest: '/app1/manifest.json'
+                })
+                .subscribe(loadAssetsSpy);
+
+            expect(loadAssetsSpy).not.toHaveBeenCalled();
+            expect(loadScriptsAndStylesSpy).toHaveBeenCalled();
+            expect(loadScriptsAndStylesSpy).toHaveBeenCalledWith(
+                [`/static/app1/${manifestResult['vendor.js']}`, `/static/app1/${manifestResult['main.js']}`],
+                [`/static/app1/styles/${manifestResult['main.css']}`],
+                app1.loadSerial
+            );
+
+            loadScriptsAndStyles$.next('load success');
+            expect(loadAssetsSpy).toHaveBeenCalled();
+            expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
         });
     });
 });
