@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { hashCode, isEmpty } from './helpers';
+import { hashCode, isEmpty, getScriptsAndStylesFullPaths } from './helpers';
 import { of, Observable, Observer, forkJoin, concat, merge } from 'rxjs';
 import { tap, shareReplay, map, switchMap, switchAll, concatMap, concatAll, scan, reduce } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { PlanetApplication } from './planet.class';
 
 export interface AssetsLoadResult {
     src: string;
@@ -150,6 +151,20 @@ export class AssetsLoader {
 
     loadScriptsAndStyles(scripts: string[] = [], styles: string[] = [], serial = false) {
         return forkJoin(this.loadScripts(scripts, serial), this.loadStyles(styles));
+    }
+
+    loadAppAssets(app: PlanetApplication) {
+        if (app.manifest) {
+            return this.loadManifest(`${app.manifest}?t=${new Date().getTime()}`).pipe(
+                switchMap(manifestResult => {
+                    const { scripts, styles } = getScriptsAndStylesFullPaths(app, manifestResult);
+                    return this.loadScriptsAndStyles(scripts, styles, app.loadSerial);
+                })
+            );
+        } else {
+            const { scripts, styles } = getScriptsAndStylesFullPaths(app);
+            return this.loadScriptsAndStyles(scripts, styles, app.loadSerial);
+        }
     }
 
     loadManifest(url: string): Observable<{ [key: string]: string }> {

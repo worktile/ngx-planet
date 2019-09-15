@@ -23,7 +23,7 @@ export enum ApplicationStatus {
 export class PlanetApplicationLoader {
     private options: PlanetOptions;
 
-    private inProgressAppLoads = new Map<string, Observable<PlanetApplication>>();
+    private inProgressAppAssetsLoads = new Map<string, Observable<PlanetApplication>>();
 
     private appsStatus = new Map<PlanetApplication, ApplicationStatus>();
 
@@ -93,52 +93,58 @@ export class PlanetApplicationLoader {
                     const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
                     const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
                     this.unloadApps(shouldUnloadApps, event);
+
+                    const eventAndApps = {
+                        event: event,
+                        apps: shouldLoadApps
+                    };
+
                     if (shouldLoadApps && shouldLoadApps.length > 0) {
-                        return of(shouldLoadApps).pipe(
-                            switchMap(apps => {
-                                const loadApps$ = apps.map(app => {
-                                    const appStatus = this.appsStatus.get(app);
-                                    if (!appStatus) {
-                                        return this.startLoadAppAssets(app);
-                                    } else {
-                                        return of(app);
-                                    }
-                                });
-                                return forkJoin(loadApps$);
-                            }),
-                            map(apps => {
-                                const shouldBootstrapApps = [];
-                                const shouldShowApps = [];
-                                apps.forEach(app => {
-                                    const appStatus = this.appsStatus.get(app);
-                                    if (appStatus === ApplicationStatus.bootstrapped) {
-                                        shouldShowApps.push(app);
-                                    } else {
-                                        shouldBootstrapApps.push(app);
-                                    }
-                                });
-
-                                // 切换到应用后会有闪烁现象，所以使用 onStable 后启动应用
-                                this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-                                    this.ngZone.runOutsideAngular(() => {
-                                        shouldShowApps.forEach(app => {
-                                            this.showApp(app);
-                                            const appRef = getPlanetApplicationRef(app.name);
-                                            appRef.onRouteChange(event);
-                                        });
-
-                                        shouldBootstrapApps.forEach(app => {
-                                            this.bootstrapApp(app);
-                                        });
-                                    });
-                                });
-
-                                return apps;
+                        const loadApps$ = shouldLoadApps.map(app => {
+                            const appStatus = this.appsStatus.get(app);
+                            if (!appStatus) {
+                                return this.startLoadAppAssets(app);
+                            } else {
+                                return of(app);
+                            }
+                        });
+                        return forkJoin(loadApps$).pipe(
+                            map(() => {
+                                return eventAndApps;
                             })
                         );
                     } else {
-                        return of([]);
+                        return of(eventAndApps);
                     }
+                }),
+                map(eventAndApps => {
+                    const shouldBootstrapApps = [];
+                    const shouldShowApps = [];
+                    eventAndApps.apps.forEach(app => {
+                        const appStatus = this.appsStatus.get(app);
+                        if (appStatus === ApplicationStatus.bootstrapped) {
+                            shouldShowApps.push(app);
+                        } else {
+                            shouldBootstrapApps.push(app);
+                        }
+                    });
+
+                    // 切换到应用后会有闪烁现象，所以使用 onStable 后启动应用
+                    this.ngZone.onStable.pipe(take(1)).subscribe(() => {
+                        this.ngZone.runOutsideAngular(() => {
+                            shouldShowApps.forEach(app => {
+                                this.showApp(app);
+                                const appRef = getPlanetApplicationRef(app.name);
+                                appRef.onRouteChange(eventAndApps.event);
+                            });
+
+                            shouldBootstrapApps.forEach(app => {
+                                this.bootstrapApp(app);
+                            });
+                        });
+                    });
+
+                    return eventAndApps.apps;
                 })
             )
             .subscribe({
@@ -156,12 +162,12 @@ export class PlanetApplicationLoader {
     }
 
     private startLoadAppAssets(app: PlanetApplication) {
-        if (this.inProgressAppLoads.get(app.name)) {
-            return this.inProgressAppLoads.get(app.name);
+        if (this.inProgressAppAssetsLoads.get(app.name)) {
+            return this.inProgressAppAssetsLoads.get(app.name);
         } else {
-            const loadApp$ = this.loadAppAssets(app).pipe(
+            const loadApp$ = this.assetsLoader.loadAppAssets(app).pipe(
                 tap(() => {
-                    this.inProgressAppLoads.delete(app.name);
+                    this.inProgressAppAssetsLoads.delete(app.name);
                     this.setAppStatus(app, ApplicationStatus.assetsLoaded);
                 }),
                 map(() => {
@@ -169,23 +175,9 @@ export class PlanetApplicationLoader {
                 }),
                 share()
             );
-            this.inProgressAppLoads.set(app.name, loadApp$);
+            this.inProgressAppAssetsLoads.set(app.name, loadApp$);
             this.setAppStatus(app, ApplicationStatus.assetsLoading);
             return loadApp$;
-        }
-    }
-
-    private loadAppAssets(app: PlanetApplication): Observable<[AssetsLoadResult[], AssetsLoadResult[]]> {
-        if (app.manifest) {
-            return this.assetsLoader.loadManifest(`${app.manifest}?t=${new Date().getTime()}`).pipe(
-                switchMap(manifestResult => {
-                    const { scripts, styles } = getScriptsAndStylesFullPaths(app, manifestResult);
-                    return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
-                })
-            );
-        } else {
-            const { scripts, styles } = getScriptsAndStylesFullPaths(app);
-            return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
         }
     }
 
