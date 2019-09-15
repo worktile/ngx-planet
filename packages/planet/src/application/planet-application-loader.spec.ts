@@ -75,10 +75,15 @@ describe('PlanetApplicationLoader', () => {
         (window as any).planet.apps = {};
     });
 
-    it(`should load and bootstrap app`, fakeAsync(() => {
+    it(`should load (load assets and bootstrap) app1 success`, fakeAsync(() => {
         const loadAppAssets$ = new Subject();
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValue(loadAppAssets$);
+
+        // 创建宿主容器
+        const hostContainer = document.createElement('DIV');
+        hostContainer.classList.add('host-selector');
+        document.body.appendChild(hostContainer);
 
         const planetAppRef = mockApplicationRef(app1.name);
         const bootstrapSpy = spyOn(planetAppRef, 'bootstrap');
@@ -105,10 +110,14 @@ describe('PlanetApplicationLoader', () => {
         expect(appStatusChangeSpy).toHaveBeenCalledTimes(4);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapped });
 
+        // 判断是否在宿主元素中创建了应用根节点
+        const app1Host = document.querySelector(app1.selector);
+        expect(app1Host).toBeTruthy();
+        expect(app1Host.outerHTML).toEqual(`<app1-root-container class="app1-host"></app1-root-container>`);
         tick();
     }));
 
-    it(`should cancel load app1 which not returned and start load app2`, fakeAsync(() => {
+    it(`should cancel load app1 which has not loaded when next route (app2) change`, fakeAsync(() => {
         const loadApp1Assets$ = new Subject();
         const loadApp2Assets$ = new Subject();
 
@@ -146,6 +155,11 @@ describe('PlanetApplicationLoader', () => {
         expect(appStatusChangeSpy).toHaveBeenCalledTimes(5);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.bootstrapped });
 
+        expect(app1BootstrapSpy).not.toHaveBeenCalled();
+        expect(app2BootstrapSpy).toHaveBeenCalled();
+
         tick();
     }));
+
+    it(`should preload apps`, () => {});
 });

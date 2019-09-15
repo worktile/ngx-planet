@@ -2,7 +2,7 @@ import { Injectable, NgZone, ApplicationRef, Injector } from '@angular/core';
 import { of, Observable, Subject, forkJoin } from 'rxjs';
 import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
-import { switchMap, finalize, share, map, tap, delay, take } from 'rxjs/operators';
+import { switchMap, finalize, share, map, tap, delay, take, filter } from 'rxjs/operators';
 import { getScriptsAndStylesFullPaths, getHTMLElement, coerceArray } from '../helpers';
 import { PlanetApplicationRef, getPlanetApplicationRef, globalPlanet } from './planet-application-ref';
 import { PlanetPortalApplication } from './portal-application';
@@ -150,6 +150,7 @@ export class PlanetApplicationLoader {
             .subscribe({
                 next: apps => {
                     this.loadingDone = true;
+                    // 第一次加载，预加载
                     if (this.firstLoad) {
                         this.preloadApps(apps);
                         this.firstLoad = false;
@@ -285,6 +286,7 @@ export class PlanetApplicationLoader {
             const loadApps$ = toPreloadApps.map(preloadApp => {
                 return this.preload(preloadApp);
             });
+
             forkJoin(loadApps$).subscribe({
                 error: this.errorHandler
             });
@@ -311,7 +313,7 @@ export class PlanetApplicationLoader {
      */
     preload(app: PlanetApplication): Observable<PlanetApplicationRef> {
         const status = this.appsStatus.get(app);
-        if (!status || status === ApplicationStatus.assetsLoading) {
+        if (!status) {
             return this.startLoadAppAssets(app).pipe(
                 map(() => {
                     this.ngZone.runOutsideAngular(() => {
@@ -320,7 +322,18 @@ export class PlanetApplicationLoader {
                     return getPlanetApplicationRef(app.name);
                 })
             );
+        } else if (status === ApplicationStatus.assetsLoading || status === ApplicationStatus.bootstrapping) {
+            return this.appStatusChange.pipe(
+                filter(event => {
+                    return event.app === app && event.status === ApplicationStatus.bootstrapped;
+                }),
+                take(1),
+                map(() => {
+                    return getPlanetApplicationRef(app.name);
+                })
+            );
+        } else {
+            return of(getPlanetApplicationRef(app.name));
         }
-        return of(getPlanetApplicationRef(app.name));
     }
 }
