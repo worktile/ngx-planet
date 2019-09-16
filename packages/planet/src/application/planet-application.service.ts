@@ -6,19 +6,13 @@ import { coerceArray, getScriptsAndStylesFullPaths } from '../helpers';
 import { Observable, of } from 'rxjs';
 import { AssetsLoadResult, AssetsLoader } from '../assets-loader';
 
-interface InternalPlanetApplication extends PlanetApplication {
-    loaded?: boolean;
-}
-
 @Injectable({
     providedIn: 'root'
 })
 export class PlanetApplicationService {
-    private apps: InternalPlanetApplication[] = [];
+    private apps: PlanetApplication[] = [];
 
-    private appsMap: { [key: string]: InternalPlanetApplication } = {};
-
-    private currentApps: InternalPlanetApplication[] = [];
+    private appsMap: { [key: string]: PlanetApplication } = {};
 
     constructor(private http: HttpClient, private assetsLoader: AssetsLoader) {}
 
@@ -84,22 +78,5 @@ export class PlanetApplicationService {
 
     getApps() {
         return this.apps;
-    }
-
-    loadApp(app: InternalPlanetApplication): Observable<[AssetsLoadResult[], AssetsLoadResult[]]> {
-        if (app.loaded) {
-            return of(null);
-        }
-        if (app.manifest) {
-            return this.assetsLoader.loadManifest(`${app.manifest}?t=${new Date().getTime()}`).pipe(
-                switchMap(manifestResult => {
-                    const { scripts, styles } = getScriptsAndStylesFullPaths(app, manifestResult);
-                    return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
-                })
-            );
-        } else {
-            const { scripts, styles } = getScriptsAndStylesFullPaths(app);
-            return this.assetsLoader.loadScriptsAndStyles(scripts, styles, app.loadSerial);
-        }
     }
 }
