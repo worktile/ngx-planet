@@ -23,6 +23,8 @@ export enum ApplicationStatus {
 export class PlanetApplicationLoader {
     private firstLoad = true;
 
+    private startRouteChangeEvent: PlanetRouterEvent;
+
     private options: PlanetOptions;
 
     private inProgressAppAssetsLoads = new Map<string, Observable<PlanetApplication>>();
@@ -90,6 +92,7 @@ export class PlanetApplicationLoader {
             .pipe(
                 switchMap(event => {
                     this.loadingDone = false;
+                    this.startRouteChangeEvent = event;
                     const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
                     const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
                     this.unloadApps(shouldUnloadApps, event);
@@ -102,7 +105,7 @@ export class PlanetApplicationLoader {
                     if (shouldLoadApps && shouldLoadApps.length > 0) {
                         const loadApps$ = shouldLoadApps.map(app => {
                             const appStatus = this.appsStatus.get(app);
-                            if (!appStatus) {
+                            if (!appStatus || appStatus === ApplicationStatus.assetsLoading) {
                                 return this.startLoadAppAssets(app);
                             } else {
                                 return of(app);
@@ -131,17 +134,20 @@ export class PlanetApplicationLoader {
 
                     // 切换到应用后会有闪烁现象，所以使用 onStable 后启动应用
                     this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-                        this.ngZone.runOutsideAngular(() => {
-                            shouldShowApps.forEach(app => {
-                                this.showApp(app);
-                                const appRef = getPlanetApplicationRef(app.name);
-                                appRef.onRouteChange(eventAndApps.event);
-                            });
+                        // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
+                        if (this.startRouteChangeEvent === eventAndApps.event) {
+                            this.ngZone.runOutsideAngular(() => {
+                                shouldShowApps.forEach(app => {
+                                    this.showApp(app);
+                                    const appRef = getPlanetApplicationRef(app.name);
+                                    appRef.onRouteChange(eventAndApps.event);
+                                });
 
-                            shouldBootstrapApps.forEach(app => {
-                                this.bootstrapApp(app);
+                                shouldBootstrapApps.forEach(app => {
+                                    this.bootstrapApp(app);
+                                });
                             });
-                        });
+                        }
                     });
 
                     return eventAndApps.apps;
@@ -317,7 +323,12 @@ export class PlanetApplicationLoader {
             return this.startLoadAppAssets(app).pipe(
                 map(() => {
                     this.ngZone.runOutsideAngular(() => {
-                        this.bootstrapApp(app, 'hidden');
+                        this.ngZone.onStable
+                            .asObservable()
+                            .pipe(take(1))
+                            .subscribe(() => {
+                                this.bootstrapApp(app, 'hidden');
+                            });
                     });
                     return getPlanetApplicationRef(app.name);
                 })
