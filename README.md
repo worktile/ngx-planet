@@ -17,7 +17,7 @@ npm i @worktile/ngx-planet --save
 ### 1. Loading the module in the portal app module
 
 ```
-import { NgxPlanetModule } from '@worktile/planet';
+import { NgxPlanetModule } from '@worktile/ngx-planet';
 
 @NgModule({
   imports: [

@@ -1,6 +1,6 @@
 {
-  "name": "ngx-planet",
-  "version": "0.0.11",
+  "name": "@worktile/planet",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "concurrently \"npm run serve:portal\" \"npm run serve:app1\" \"npm run serve:app2\"",
