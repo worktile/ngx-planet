@@ -1,3 +1,12 @@
+<a name="1.0.1"></a>
+
+## [1.0.1](https://github.com/worktile/ngx-micro-frontend/compare/1.0.0...1.0.1) (2019-09-16)
+
+### Bug Fixes
+
+-   **application:** should reload last fail app which status is loadError ([a28b97f](https://github.com/worktile/ngx-micro-frontend/commit/a28b97f))
+-   **application:** should trigger next route change when last throw error ([75b3ca3](https://github.com/worktile/ngx-micro-frontend/commit/75b3ca3))
+
 <a name="1.0.0"></a>
 
 # [1.0.0](https://github.com/worktile/ngx-micro-frontend/compare/0.0.11...1.0.0) (2019-09-16)
