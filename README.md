@@ -1,4 +1,4 @@
-# ngx-planet [![Build Status](https://travis-ci.org/worktile/ngx-planet.svg?branch=master)](https://travis-ci.org/worktile/ngx-planet)
+# ngx-planet [![CircleCI](https://circleci.com/gh/worktile/ngx-planet.svg?style=svg)](https://circleci.com/gh/worktile/ngx-planet)
 
 An Angular 7+ Micro Frontend library.
 
