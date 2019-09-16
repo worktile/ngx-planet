@@ -5,7 +5,7 @@ An Angular 7+ Micro Frontend library.
 ## Installation
 
 ```
-npm i @worktile/ngx-planet --save
+npm i @worktile/planet --save
 ```
 
 ## Demo
