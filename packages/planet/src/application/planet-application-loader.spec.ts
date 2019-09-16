@@ -271,7 +271,6 @@ describe('PlanetApplicationLoader', () => {
         expect(app2Host).toBeTruthy();
         expect(app2Host.outerHTML).toEqual(`<app2-root-container class="app2-host"></app2-root-container>`);
         tick();
-        tick();
     }));
 
     describe('preload', () => {
