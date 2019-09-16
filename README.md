@@ -1,11 +1,11 @@
-# ngx-planet [![CircleCI](https://circleci.com/gh/worktile/ngx-planet.svg?style=svg)](https://circleci.com/gh/worktile/ngx-planet)
+# ngx-planet [![CircleCI](https://circleci.com/gh/worktile/ngx-planet.svg?style=shield)](https://circleci.com/gh/worktile/ngx-planet) [![npm (scoped)](https://img.shields.io/npm/v/@worktile/planet?style=plastic)](https://www.npmjs.com/package/@worktile/planet) [![npm](https://img.shields.io/npm/dm/@worktile/planet)](https://www.npmjs.com/package/@worktile/planet)
 
 An Angular 7+ Micro Frontend library.
 
 ## Installation
 
 ```
-npm i @worktile/planet --save
+npm i @worktile/ngx-planet --save
 ```
 
 ## Demo
@@ -95,11 +95,7 @@ export class AppComponent implements OnInit {
             }
         ]);
 
-        this.router.events.subscribe((event: RouterEvent) => {
-            if (event instanceof NavigationEnd) {
-                this.planet.resetRouting(event);
-            }
-        });
+        this.planet.start();
 
         this.globalEventDispatcher.register('openADetail').subscribe(event => {
             // open a Detail
@@ -132,13 +128,14 @@ defineApplication('app1', (portalApp: PlanetPortalApplication) => {
 ## Development
 
 ```
+npm start open http://localhost:3000
+
+or
+
 npm run serve:portal // 3000
 npm run serve:app1 // 3001
 npm run serve:app2 // 3002
 
-or
-
-npm start
+// test
+npm run test
 ```
-
-open http://localhost:3000
