@@ -110,7 +110,11 @@ export class PlanetApplicationLoader {
                             if (shouldLoadApps && shouldLoadApps.length > 0) {
                                 const loadApps$ = shouldLoadApps.map(app => {
                                     const appStatus = this.appsStatus.get(app);
-                                    if (!appStatus || appStatus === ApplicationStatus.assetsLoading) {
+                                    if (
+                                        !appStatus ||
+                                        appStatus === ApplicationStatus.assetsLoading ||
+                                        appStatus === ApplicationStatus.loadError
+                                    ) {
                                         return this.ngZone.runOutsideAngular(() => {
                                             return this.startLoadAppAssets(app);
                                         });
@@ -338,7 +342,7 @@ export class PlanetApplicationLoader {
      */
     preload(app: PlanetApplication): Observable<PlanetApplicationRef> {
         const status = this.appsStatus.get(app);
-        if (!status) {
+        if (!status || status === ApplicationStatus.loadError) {
             return this.startLoadAppAssets(app).pipe(
                 map(() => {
                     this.ngZone.runOutsideAngular(() => {

@@ -1,13 +1,12 @@
 import { Subject } from 'rxjs';
 import { RouterModule } from '@angular/router';
-import { TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PlanetApplicationLoader, ApplicationStatus } from './planet-application-loader';
 import { AssetsLoader } from '../assets-loader';
 
 import { SwitchModes } from '../planet.class';
 import { PlanetApplicationService } from './planet-application.service';
-import { CommonModule } from '@angular/common';
 import { NgZone } from '@angular/core';
 import { PlanetApplicationRef } from './planet-application-ref';
 
@@ -35,7 +34,7 @@ const app2 = {
     selector: 'app2-root-container',
     routerPathPrefix: '/app2',
     hostClass: 'app2-host',
-    preload: true,
+    preload: false,
     switchMode: SwitchModes.coexist,
     resourcePathPrefix: '/static/app2',
     styles: ['styles/main.css'],
@@ -46,10 +45,12 @@ const app2 = {
     }
 };
 
-function mockApplicationRef(appName: string) {
+function spyPlanetApplicationRef(appName: string) {
     const planetAppRef = new PlanetApplicationRef(appName, null);
     (window as any).planet.apps[appName] = planetAppRef;
-    return planetAppRef;
+    const appRefBootstrapSpy = spyOn(planetAppRef, 'bootstrap');
+    const appRefDestroySpy = spyOn(planetAppRef, 'destroy');
+    return [appRefBootstrapSpy, appRefDestroySpy, planetAppRef];
 }
 
 describe('PlanetApplicationLoader', () => {
@@ -85,8 +86,7 @@ describe('PlanetApplicationLoader', () => {
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValue(loadAppAssets$);
 
-        const planetAppRef = mockApplicationRef(app1.name);
-        const bootstrapSpy = spyOn(planetAppRef, 'bootstrap');
+        const [bootstrapSpy] = spyPlanetApplicationRef(app1.name);
 
         const appStatusChangeSpy = jasmine.createSpy('app status change spy');
         planetApplicationLoader.appStatusChange.subscribe(appStatusChangeSpy);
@@ -96,14 +96,17 @@ describe('PlanetApplicationLoader', () => {
 
         expect(appStatusChangeSpy).toHaveBeenCalled();
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoading });
+        expect(planetApplicationLoader.loadingDone).toBe(false);
 
         loadAppAssets$.next();
         loadAppAssets$.complete();
 
+        expect(planetApplicationLoader.loadingDone).toBe(true);
         expect(appStatusChangeSpy).toHaveBeenCalledTimes(2);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoaded });
 
         expect(bootstrapSpy).not.toHaveBeenCalled();
+
         ngZone.onStable.next();
         expect(bootstrapSpy).toHaveBeenCalled();
 
@@ -112,9 +115,7 @@ describe('PlanetApplicationLoader', () => {
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapped });
 
         // 判断是否在宿主元素中创建了应用根节点
-        const app1Host = document.querySelector(app1.selector);
-        expect(app1Host).toBeTruthy();
-        expect(app1Host.outerHTML).toEqual(`<app1-root-container class="app1-host"></app1-root-container>`);
+        expectApp1Element();
         tick();
     }));
 
@@ -122,11 +123,8 @@ describe('PlanetApplicationLoader', () => {
         const loadApp1Assets$ = new Subject();
         const loadApp2Assets$ = new Subject();
 
-        const planetApp1Ref = mockApplicationRef(app1.name);
-        const app1BootstrapSpy = spyOn(planetApp1Ref, 'bootstrap');
-
-        const planetApp2Ref = mockApplicationRef(app2.name);
-        const app2BootstrapSpy = spyOn(planetApp2Ref, 'bootstrap');
+        const [app1BootstrapSpy] = spyPlanetApplicationRef(app1.name);
+        const [app2BootstrapSpy] = spyPlanetApplicationRef(app2.name);
 
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValues(loadApp1Assets$, loadApp2Assets$);
@@ -167,11 +165,8 @@ describe('PlanetApplicationLoader', () => {
         const loadApp1Assets$ = new Subject();
         const loadApp2Assets$ = new Subject();
 
-        const planetApp1Ref = mockApplicationRef(app1.name);
-        const app1BootstrapSpy = spyOn(planetApp1Ref, 'bootstrap');
-
-        const planetApp2Ref = mockApplicationRef(app2.name);
-        const app2BootstrapSpy = spyOn(planetApp2Ref, 'bootstrap');
+        const [app1BootstrapSpy] = spyPlanetApplicationRef(app1.name);
+        const [app2BootstrapSpy] = spyPlanetApplicationRef(app2.name);
 
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValues(loadApp1Assets$, loadApp2Assets$);
@@ -221,11 +216,8 @@ describe('PlanetApplicationLoader', () => {
             errorHandler: errorHandlerSpy
         });
 
-        const planetApp1Ref = mockApplicationRef(app1.name);
-        const app1BootstrapSpy = spyOn(planetApp1Ref, 'bootstrap');
-
-        const planetApp2Ref = mockApplicationRef(app2.name);
-        const app2BootstrapSpy = spyOn(planetApp2Ref, 'bootstrap');
+        const [app1BootstrapSpy] = spyPlanetApplicationRef(app1.name);
+        const [app2BootstrapSpy] = spyPlanetApplicationRef(app2.name);
 
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValues(loadApp1Assets$, loadApp2Assets$);
@@ -267,22 +259,83 @@ describe('PlanetApplicationLoader', () => {
         expect(app2BootstrapSpy).toHaveBeenCalled();
 
         // 判断是否在宿主元素中创建了应用根节点
-        const app2Host = document.querySelector(app2.selector);
-        expect(app2Host).toBeTruthy();
-        expect(app2Host.outerHTML).toEqual(`<app2-root-container class="app2-host"></app2-root-container>`);
+        expectApp2Element();
+        tick();
+    }));
+
+    it(`should reload app(app1) when before app(app1) load error`, fakeAsync(() => {
+        const loadApp1Assets$ = new Subject();
+        const loadApp1AginAssets$ = new Subject();
+
+        const errorHandlerSpy = jasmine.createSpy(`error handler spy`);
+        planetApplicationLoader.setOptions({
+            errorHandler: errorHandlerSpy
+        });
+
+        const [app1BootstrapSpy] = spyPlanetApplicationRef(app1.name);
+
+        const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
+        assetsLoaderSpy.and.returnValues(loadApp1Assets$, loadApp1AginAssets$);
+
+        const appStatusChangeSpy = jasmine.createSpy('app status change spy');
+        planetApplicationLoader.appStatusChange.subscribe(appStatusChangeSpy);
+
+        expect(appStatusChangeSpy).not.toHaveBeenCalled();
+        planetApplicationLoader.reroute({ url: '/app1' });
+        expect(appStatusChangeSpy).toHaveBeenCalled();
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoading });
+
+        expect(errorHandlerSpy).not.toHaveBeenCalled();
+
+        // Load Error
+        loadApp1Assets$.error(new Error(`load app1 assets error`));
+        loadApp1Assets$.complete();
+
+        expect(errorHandlerSpy).toHaveBeenCalled();
+        expect(errorHandlerSpy).toHaveBeenCalledWith(new Error(`load app1 assets error`));
+
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(2);
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.loadError });
+
+        planetApplicationLoader.reroute({ url: '/app1' });
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(3);
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoading });
+
+        loadApp1AginAssets$.next();
+        loadApp1AginAssets$.complete();
+
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(4);
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoaded });
+
+        ngZone.onStable.next();
+
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(6);
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapping });
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapped });
+
+        expect(app1BootstrapSpy).toHaveBeenCalled();
+
+        // 判断是否在宿主元素中创建了应用根节点
+        expectApp1Element();
+
         tick();
     }));
 
     describe('preload', () => {
-        it(`should preload load app2 when after loaded app1`, fakeAsync(() => {
+        it(`should preload load app3 when after loaded app1`, fakeAsync(() => {
+            const newApp2 = {
+                ...app2,
+                preload: true
+            };
+
+            planetApplicationService.unregister(app2.name);
+            planetApplicationService.register(newApp2);
+
             const loadApp1Assets$ = new Subject();
             const loadApp2Assets$ = new Subject();
 
-            const planetApp1Ref = mockApplicationRef(app1.name);
-            const app1BootstrapSpy = spyOn(planetApp1Ref, 'bootstrap');
-
-            const planetApp2Ref = mockApplicationRef(app2.name);
-            const app2BootstrapSpy = spyOn(planetApp2Ref, 'bootstrap');
+            const [app1BootstrapSpy] = spyPlanetApplicationRef(app1.name);
+            const [app2BootstrapSpy] = spyPlanetApplicationRef(app2.name);
 
             const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
             assetsLoaderSpy.and.returnValues(loadApp1Assets$, loadApp2Assets$);
@@ -314,23 +367,35 @@ describe('PlanetApplicationLoader', () => {
 
             // 已经开始加载 App2 静态资源
             expect(appStatusChangeSpy).toHaveBeenCalledTimes(5);
-            expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.assetsLoading });
+            expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: newApp2, status: ApplicationStatus.assetsLoading });
 
             // App2 静态资源加载完毕
             loadApp2Assets$.next();
             loadApp2Assets$.complete();
 
             expect(appStatusChangeSpy).toHaveBeenCalledTimes(6);
-            expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.assetsLoaded });
+            expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: newApp2, status: ApplicationStatus.assetsLoaded });
 
             // onStable 开始启动应用
             ngZone.onStable.next();
             expect(appStatusChangeSpy).toHaveBeenCalledTimes(8);
-            expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.bootstrapping });
-            expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.bootstrapped });
+            expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: newApp2, status: ApplicationStatus.bootstrapping });
+            expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: newApp2, status: ApplicationStatus.bootstrapped });
             expect(app2BootstrapSpy).toHaveBeenCalled();
         }));
 
         it(`should preload app`, () => {});
     });
+
+    function expectApp1Element() {
+        const app1Host = document.querySelector(app1.selector);
+        expect(app1Host).toBeTruthy();
+        expect(app1Host.outerHTML).toEqual(`<app1-root-container class="app1-host"></app1-root-container>`);
+    }
+
+    function expectApp2Element() {
+        const app2Host = document.querySelector(app2.selector);
+        expect(app2Host).toBeTruthy();
+        expect(app2Host.outerHTML).toEqual(`<app2-root-container class="app2-host"></app2-root-container>`);
+    }
 });
