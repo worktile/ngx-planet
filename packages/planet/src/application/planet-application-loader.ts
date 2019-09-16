@@ -1,8 +1,8 @@
 import { Injectable, NgZone, ApplicationRef, Injector } from '@angular/core';
-import { of, Observable, Subject, forkJoin } from 'rxjs';
+import { of, Observable, Subject, forkJoin, throwError } from 'rxjs';
 import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
-import { switchMap, finalize, share, map, tap, delay, take, filter } from 'rxjs/operators';
+import { switchMap, finalize, share, map, tap, delay, take, filter, catchError } from 'rxjs/operators';
 import { getScriptsAndStylesFullPaths, getHTMLElement, coerceArray } from '../helpers';
 import { PlanetApplicationRef, getPlanetApplicationRef, globalPlanet } from './planet-application-ref';
 import { PlanetPortalApplication } from './portal-application';
@@ -14,7 +14,8 @@ export enum ApplicationStatus {
     assetsLoading = 1,
     assetsLoaded = 2,
     bootstrapping = 3,
-    bootstrapped = 4
+    bootstrapped = 4,
+    loadError = 10
 }
 
 @Injectable({
@@ -90,82 +91,99 @@ export class PlanetApplicationLoader {
     private setupRouteChange() {
         this.routeChange$
             .pipe(
+                // Using switchMap so we cancel executing loading when a new one comes in
                 switchMap(event => {
-                    this.loadingDone = false;
-                    this.startRouteChangeEvent = event;
-                    const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
-                    const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
-                    this.unloadApps(shouldUnloadApps, event);
-
-                    const eventAndApps = {
-                        event: event,
-                        apps: shouldLoadApps
-                    };
-
-                    if (shouldLoadApps && shouldLoadApps.length > 0) {
-                        const loadApps$ = shouldLoadApps.map(app => {
-                            const appStatus = this.appsStatus.get(app);
-                            if (!appStatus || appStatus === ApplicationStatus.assetsLoading) {
-                                return this.startLoadAppAssets(app);
+                    // Return new observable use of and catchError,
+                    // in order to prevent routeChange$ completed which never trigger new route change
+                    return of(event).pipe(
+                        // unload apps and return should load apps
+                        map(() => {
+                            this.loadingDone = false;
+                            this.startRouteChangeEvent = event;
+                            const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
+                            const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
+                            this.unloadApps(shouldUnloadApps, event);
+                            return shouldLoadApps;
+                        }),
+                        // Load app assets (static resources)
+                        switchMap(shouldLoadApps => {
+                            if (shouldLoadApps && shouldLoadApps.length > 0) {
+                                const loadApps$ = shouldLoadApps.map(app => {
+                                    const appStatus = this.appsStatus.get(app);
+                                    if (
+                                        !appStatus ||
+                                        appStatus === ApplicationStatus.assetsLoading ||
+                                        appStatus === ApplicationStatus.loadError
+                                    ) {
+                                        return this.ngZone.runOutsideAngular(() => {
+                                            return this.startLoadAppAssets(app);
+                                        });
+                                    } else {
+                                        return of(app);
+                                    }
+                                });
+                                return forkJoin(loadApps$);
                             } else {
-                                return of(app);
+                                return of([]);
                             }
-                        });
-                        return forkJoin(loadApps$).pipe(
-                            map(() => {
-                                return eventAndApps;
-                            })
-                        );
-                    } else {
-                        return of(eventAndApps);
-                    }
-                }),
-                map(eventAndApps => {
-                    const shouldBootstrapApps = [];
-                    const shouldShowApps = [];
-                    eventAndApps.apps.forEach(app => {
-                        const appStatus = this.appsStatus.get(app);
-                        if (appStatus === ApplicationStatus.bootstrapped) {
-                            shouldShowApps.push(app);
-                        } else {
-                            shouldBootstrapApps.push(app);
-                        }
-                    });
-
-                    // 切换到应用后会有闪烁现象，所以使用 onStable 后启动应用
-                    this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-                        // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
-                        if (this.startRouteChangeEvent === eventAndApps.event) {
-                            this.ngZone.runOutsideAngular(() => {
-                                shouldShowApps.forEach(app => {
-                                    this.showApp(app);
-                                    const appRef = getPlanetApplicationRef(app.name);
-                                    appRef.onRouteChange(eventAndApps.event);
-                                });
-
-                                shouldBootstrapApps.forEach(app => {
-                                    this.bootstrapApp(app);
-                                });
+                        }),
+                        // Bootstrap or show apps
+                        map(apps => {
+                            const shouldBootstrapApps = [];
+                            const shouldShowApps = [];
+                            apps.forEach(app => {
+                                const appStatus = this.appsStatus.get(app);
+                                if (appStatus === ApplicationStatus.bootstrapped) {
+                                    shouldShowApps.push(app);
+                                } else {
+                                    shouldBootstrapApps.push(app);
+                                }
                             });
-                        }
-                    });
 
-                    return eventAndApps.apps;
+                            // 切换到应用后会有闪烁现象，所以使用 onStable 后启动应用
+                            this.ngZone.onStable
+                                .asObservable()
+                                .pipe(take(1))
+                                .subscribe(() => {
+                                    // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
+                                    if (this.startRouteChangeEvent === event) {
+                                        this.ngZone.runOutsideAngular(() => {
+                                            shouldShowApps.forEach(app => {
+                                                this.showApp(app);
+                                                const appRef = getPlanetApplicationRef(app.name);
+                                                appRef.onRouteChange(event);
+                                            });
+
+                                            shouldBootstrapApps.forEach(app => {
+                                                this.bootstrapApp(app);
+                                            });
+                                        });
+                                    }
+                                });
+
+                            return apps;
+                        }),
+                        // Start preload apps
+                        tap(activeApps => {
+                            // 第一次加载，预加载
+                            if (this.firstLoad) {
+                                this.preloadApps(activeApps);
+                                this.firstLoad = false;
+                            }
+                        }),
+                        // Finish loadingDone true
+                        finalize(() => {
+                            this.loadingDone = true;
+                        }),
+                        // Error handler
+                        catchError(error => {
+                            this.errorHandler(error);
+                            return [];
+                        })
+                    );
                 })
             )
-            .subscribe({
-                next: apps => {
-                    this.loadingDone = true;
-                    // 第一次加载，预加载
-                    if (this.firstLoad) {
-                        this.preloadApps(apps);
-                        this.firstLoad = false;
-                    }
-                },
-                error: error => {
-                    this.errorHandler(error);
-                }
-            });
+            .subscribe();
     }
 
     private startLoadAppAssets(app: PlanetApplication) {
@@ -179,6 +197,11 @@ export class PlanetApplicationLoader {
                 }),
                 map(() => {
                     return app;
+                }),
+                catchError(error => {
+                    this.inProgressAppAssetsLoads.delete(app.name);
+                    this.setAppStatus(app, ApplicationStatus.loadError);
+                    throw error;
                 }),
                 share()
             );
@@ -319,7 +342,7 @@ export class PlanetApplicationLoader {
      */
     preload(app: PlanetApplication): Observable<PlanetApplicationRef> {
         const status = this.appsStatus.get(app);
-        if (!status) {
+        if (!status || status === ApplicationStatus.loadError) {
             return this.startLoadAppAssets(app).pipe(
                 map(() => {
                     this.ngZone.runOutsideAngular(() => {
