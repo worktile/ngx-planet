@@ -15,7 +15,7 @@
     "lib": ["es2018", "dom"],
     "paths": {
       "@demo/common": ["examples/common"],
-      "ngx-planet": ["packages/planet/src/public_api.ts"],
+      "ngx-planet": ["packages/planet/src/public-api.ts"],
       "ngx-planet/*": ["packages/planet/src/*"]
     }
   }

@@ -1,5 +1,5 @@
 {
-  "name": "@worktile/planet",
+  "name": "@worktile/ngx-planet",
   "version": "0.0.11",
   "private": false,
   "peerDependencies": {

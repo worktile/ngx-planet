@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { PlanetPortalApplication } from './application/portal-application';
 
 export interface PlanetOptions {
-    preload?: boolean;
     switchMode?: SwitchModes;
     errorHandler: (error: Error) => void;
 }

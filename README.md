@@ -10,7 +10,7 @@ npm i @worktile/planet --save
 
 ## Demo
 
-![ngx-planet-micro-front-end.gif](https://github.com/worktile/ngx-planet/blob/master/src/assets/ngx-planet-micro-front-end.gif?raw=true)
+![ngx-planet-micro-front-end.gif](https://github.com/worktile/ngx-planet/blob/master/examples/portal/src/assets/ngx-planet-micro-front-end.gif?raw=true)
 
 ## Usage
 

@@ -1,4 +1,4 @@
-import { PlanetRouterEvent } from '../planet.class';
+import { PlanetRouterEvent, PlanetApplication } from '../planet.class';
 import { PlanetPortalApplication } from './portal-application';
 import { NgModuleRef, NgZone, ApplicationRef } from '@angular/core';
 import { Router } from '@angular/router';
@@ -37,7 +37,7 @@ export class PlanetApplicationRef {
         this.appModuleBootstrap = appModuleBootstrap;
     }
 
-    bootstrap(app: PlanetPortalApplication): Promise<void> {
+    async bootstrap(app: PlanetPortalApplication): Promise<void> {
         if (!this.appModuleBootstrap) {
             throw new Error(`${this.name} app is not define`);
         }
@@ -83,6 +83,19 @@ export function defineApplication(name: string, bootstrapModule: BootstrapAppMod
     }
     const appRef = new PlanetApplicationRef(name, bootstrapModule);
     window.planet.apps[name] = appRef;
+}
+
+export function getPlanetApplicationRef(appName: string): PlanetApplicationRef {
+    const planet = (window as any).planet;
+    if (planet && planet.apps && planet.apps[appName]) {
+        return planet.apps[appName];
+    } else {
+        return null;
+    }
+}
+
+export function setPortalApplicationData<T>(data: T) {
+    globalPlanet.portalApplication.data = data;
 }
 
 export { globalPlanet };
