@@ -317,7 +317,7 @@ export class PlanetApplicationLoader {
             });
 
             forkJoin(loadApps$).subscribe({
-                error: this.errorHandler
+                error: err => this.errorHandler(err)
             });
         });
     }
