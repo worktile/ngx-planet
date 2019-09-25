@@ -17,7 +17,7 @@
 
 ### BREAKING CHANGES
 
-Rename `onRouteChange` to `navigateByUrl` in PlanetApplicationRef, please upgrade planet to 1.0.3 in portal and sub apps at the same. if you upgrade only in portal, it will throw error navigateByUrl is not defined.
+Rename `onRouteChange` to `navigateByUrl` in PlanetApplicationRef, please upgrade planet to 1.0.3 in portal and sub apps at the same. if you are only upgrade planet in portal, it will throw error `navigateByUrl is undefined`.
 
 <a name="1.0.2"></a>
 
