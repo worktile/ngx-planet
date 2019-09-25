@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
-import { Planet, SwitchModes, GlobalEventDispatcher } from 'ngx-planet';
+import { Planet, SwitchModes, GlobalEventDispatcher, ApplicationStatus, PlanetApplication } from 'ngx-planet';
 import { Router, NavigationEnd, RouterEvent } from '@angular/router';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
@@ -13,6 +13,8 @@ import { AppRootContext } from '@demo/common';
 })
 export class AppComponent implements OnInit {
     title = 'ngx-planet';
+
+    activeAppNames: string[] = [];
 
     get loadingDone() {
         return this.planet.loadingDone;
@@ -88,6 +90,11 @@ export class AppComponent implements OnInit {
 
         this.globalEventDispatcher.register('openADetail').subscribe(event => {
             this.thyDialog.open(ADetailComponent);
+        });
+
+        this.planet.appsLoadingStart.subscribe(event => {
+            this.activeAppNames = event.map(item => item.name);
+            console.log(`active app names: ${this.activeAppNames.join(',')}`);
         });
     }
 }

@@ -1,9 +1,10 @@
 import { PlanetRouterEvent, PlanetApplication } from '../planet.class';
 import { PlanetPortalApplication } from './portal-application';
 import { NgModuleRef, NgZone, ApplicationRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { PlantComponentConfig } from '../component/plant-component.config';
 import { PlanetComponentRef } from '../component/planet-component-ref';
+import { take } from 'rxjs/operators';
 
 declare const window: any;
 export interface GlobalPlanet {
@@ -37,6 +38,23 @@ export class PlanetApplicationRef {
         this.appModuleBootstrap = appModuleBootstrap;
     }
 
+    // 子应用路由变化后同步修改 portal 的 Route
+    private syncPortalRouteWhenNavigationEnd() {
+        const router = this.appModuleRef.injector.get(Router);
+        const ngZone = this.appModuleRef.injector.get(NgZone);
+        if (router) {
+            router.events.subscribe(event => {
+                if (event instanceof NavigationEnd) {
+                    ngZone.onStable
+                        .asObservable()
+                        .pipe(take(1))
+                        .subscribe(() => {
+                            this.portalApp.navigateByUrl(event.url);
+                        });
+                }
+            });
+        }
+    }
     async bootstrap(app: PlanetPortalApplication): Promise<void> {
         if (!this.appModuleBootstrap) {
             throw new Error(`${this.name} app is not define`);
@@ -45,15 +63,16 @@ export class PlanetApplicationRef {
         return this.appModuleBootstrap(app).then(appModuleRef => {
             this.appModuleRef = appModuleRef;
             this.appModuleRef.instance.appName = this.name;
+            this.syncPortalRouteWhenNavigationEnd();
             return;
         });
     }
 
-    onRouteChange(event: PlanetRouterEvent): void {
+    navigateByUrl(url: string): void {
         const ngZone = this.appModuleRef.injector.get(NgZone);
         const router = this.appModuleRef.injector.get(Router);
         ngZone.run(() => {
-            router.navigateByUrl(event.url);
+            router.navigateByUrl(url);
         });
     }
 

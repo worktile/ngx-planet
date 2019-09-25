@@ -15,6 +15,7 @@ export enum ApplicationStatus {
     assetsLoaded = 2,
     bootstrapping = 3,
     bootstrapped = 4,
+    active = 5,
     loadError = 10
 }
 
@@ -38,8 +39,14 @@ export class PlanetApplicationLoader {
 
     private appStatusChange$ = new Subject<{ app: PlanetApplication; status: ApplicationStatus }>();
 
+    private appsLoadingStart$ = new Subject<PlanetApplication[]>();
+
     public get appStatusChange(): Observable<{ app: PlanetApplication; status: ApplicationStatus }> {
         return this.appStatusChange$.asObservable();
+    }
+
+    public get appsLoadingStart(): Observable<PlanetApplication[]> {
+        return this.appsLoadingStart$.asObservable();
     }
 
     public loadingDone = false;
@@ -102,6 +109,7 @@ export class PlanetApplicationLoader {
                             this.startRouteChangeEvent = event;
                             const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
                             const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
+                            this.appsLoadingStart$.next(shouldLoadApps);
                             this.unloadApps(shouldUnloadApps, event);
                             return shouldLoadApps;
                         }),
@@ -151,11 +159,13 @@ export class PlanetApplicationLoader {
                                             shouldShowApps.forEach(app => {
                                                 this.showApp(app);
                                                 const appRef = getPlanetApplicationRef(app.name);
-                                                appRef.onRouteChange(event);
+                                                appRef.navigateByUrl(event.url);
+                                                this.setAppStatus(app, ApplicationStatus.active);
                                             });
 
                                             shouldBootstrapApps.forEach(app => {
                                                 this.bootstrapApp(app);
+                                                this.setAppStatus(app, ApplicationStatus.active);
                                             });
                                         });
                                     }
@@ -268,7 +278,10 @@ export class PlanetApplicationLoader {
     private getUnloadApps(activeApps: PlanetApplication[]) {
         const unloadApps: PlanetApplication[] = [];
         this.appsStatus.forEach((value, app) => {
-            if (value === ApplicationStatus.bootstrapped && !activeApps.find(item => item.name === app.name)) {
+            if (
+                [ApplicationStatus.bootstrapped, ApplicationStatus.active].includes(value) &&
+                !activeApps.find(item => item.name === app.name)
+            ) {
                 unloadApps.push(app);
             }
         });
@@ -298,7 +311,7 @@ export class PlanetApplicationLoader {
             hideApps.forEach(app => {
                 const appRef = getPlanetApplicationRef(app.name);
                 if (appRef) {
-                    appRef.onRouteChange(event);
+                    appRef.navigateByUrl(event.url);
                 }
             });
             destroyApps.forEach(app => {

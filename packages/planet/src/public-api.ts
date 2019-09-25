@@ -9,6 +9,7 @@ export * from './planet.class';
 export * from './module';
 export { defineApplication, PlanetApplicationRef } from './application/planet-application-ref';
 export { PlanetApplicationService } from './application/planet-application.service';
+export * from './application/planet-application-loader';
 export * from './assets-loader';
 export { PlanetComponent, PlanetComponentLoader } from './component/planet-component-loader';
 export { PlanetComponentRef } from './component/planet-component-ref';
