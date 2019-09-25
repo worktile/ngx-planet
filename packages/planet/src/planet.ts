@@ -4,6 +4,7 @@ import { PlanetOptions, PlanetApplication } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { setPortalApplicationData } from './application/planet-application-ref';
 import { PlanetApplicationLoader, ApplicationStatus } from './application/planet-application-loader';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +12,14 @@ import { PlanetApplicationLoader, ApplicationStatus } from './application/planet
 export class Planet {
     public get loadingDone() {
         return this.planetApplicationLoader.loadingDone;
+    }
+
+    public get appStatusChange(): Observable<{ app: PlanetApplication; status: ApplicationStatus }> {
+        return this.planetApplicationLoader.appStatusChange;
+    }
+
+    public get appsLoadingStart(): Observable<PlanetApplication[]> {
+        return this.planetApplicationLoader.appsLoadingStart;
     }
 
     constructor(

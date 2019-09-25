@@ -88,15 +88,24 @@ describe('PlanetApplicationLoader', () => {
 
         const [bootstrapSpy] = spyPlanetApplicationRef(app1.name);
 
+        // App state change
         const appStatusChangeSpy = jasmine.createSpy('app status change spy');
         planetApplicationLoader.appStatusChange.subscribe(appStatusChangeSpy);
         expect(appStatusChangeSpy).not.toHaveBeenCalled();
+
+        // Apps loading start
+        const appsLoadingStartSpy = jasmine.createSpy('apps loading start spy');
+        planetApplicationLoader.appsLoadingStart.subscribe(appsLoadingStartSpy);
+        expect(appsLoadingStartSpy).not.toHaveBeenCalled();
 
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
 
         expect(appStatusChangeSpy).toHaveBeenCalled();
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoading });
         expect(planetApplicationLoader.loadingDone).toBe(false);
+
+        expect(appsLoadingStartSpy).toHaveBeenCalled();
+        expect(appsLoadingStartSpy).toHaveBeenCalledWith([app1]);
 
         loadAppAssets$.next();
         loadAppAssets$.complete();
@@ -110,9 +119,10 @@ describe('PlanetApplicationLoader', () => {
         ngZone.onStable.next();
         expect(bootstrapSpy).toHaveBeenCalled();
 
-        expect(appStatusChangeSpy).toHaveBeenCalledTimes(4);
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(5);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapping });
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapped });
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.active });
 
         // 判断是否在宿主元素中创建了应用根节点
         expectApp1Element();
@@ -151,9 +161,10 @@ describe('PlanetApplicationLoader', () => {
 
         ngZone.onStable.next();
 
-        expect(appStatusChangeSpy).toHaveBeenCalledTimes(5);
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(6);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.bootstrapping });
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.bootstrapped });
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.active });
 
         expect(app1BootstrapSpy).not.toHaveBeenCalled();
         expect(app2BootstrapSpy).toHaveBeenCalled();
@@ -197,9 +208,10 @@ describe('PlanetApplicationLoader', () => {
 
         ngZone.onStable.next();
 
-        expect(appStatusChangeSpy).toHaveBeenCalledTimes(6);
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(7);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.bootstrapping });
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.bootstrapped });
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.active });
 
         expect(app1BootstrapSpy).not.toHaveBeenCalled();
         expect(app2BootstrapSpy).toHaveBeenCalled();
@@ -251,9 +263,10 @@ describe('PlanetApplicationLoader', () => {
 
         ngZone.onStable.next();
 
-        expect(appStatusChangeSpy).toHaveBeenCalledTimes(6);
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(7);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.bootstrapping });
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.bootstrapped });
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.active });
 
         expect(app1BootstrapSpy).not.toHaveBeenCalled();
         expect(app2BootstrapSpy).toHaveBeenCalled();
@@ -309,9 +322,10 @@ describe('PlanetApplicationLoader', () => {
 
         ngZone.onStable.next();
 
-        expect(appStatusChangeSpy).toHaveBeenCalledTimes(6);
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(7);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapping });
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapped });
+        expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.active });
 
         expect(app1BootstrapSpy).toHaveBeenCalled();
 
@@ -356,9 +370,10 @@ describe('PlanetApplicationLoader', () => {
 
             ngZone.onStable.next();
 
-            expect(appStatusChangeSpy).toHaveBeenCalledTimes(4);
+            expect(appStatusChangeSpy).toHaveBeenCalledTimes(5);
             expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapping });
             expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapped });
+            expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.active });
 
             expect(app1BootstrapSpy).toHaveBeenCalled();
 
@@ -366,19 +381,19 @@ describe('PlanetApplicationLoader', () => {
             expect(app2BootstrapSpy).not.toHaveBeenCalled();
 
             // 已经开始加载 App2 静态资源
-            expect(appStatusChangeSpy).toHaveBeenCalledTimes(5);
+            expect(appStatusChangeSpy).toHaveBeenCalledTimes(6);
             expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: newApp2, status: ApplicationStatus.assetsLoading });
 
             // App2 静态资源加载完毕
             loadApp2Assets$.next();
             loadApp2Assets$.complete();
 
-            expect(appStatusChangeSpy).toHaveBeenCalledTimes(6);
+            expect(appStatusChangeSpy).toHaveBeenCalledTimes(7);
             expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: newApp2, status: ApplicationStatus.assetsLoaded });
 
             // onStable 开始启动应用
             ngZone.onStable.next();
-            expect(appStatusChangeSpy).toHaveBeenCalledTimes(8);
+            expect(appStatusChangeSpy).toHaveBeenCalledTimes(9);
             expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: newApp2, status: ApplicationStatus.bootstrapping });
             expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: newApp2, status: ApplicationStatus.bootstrapped });
             expect(app2BootstrapSpy).toHaveBeenCalled();
@@ -423,7 +438,7 @@ describe('PlanetApplicationLoader', () => {
 
             ngZone.onStable.next();
 
-            expect(appStatusChangeSpy).toHaveBeenCalledTimes(4);
+            expect(appStatusChangeSpy).toHaveBeenCalledTimes(5);
             expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapping });
             expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.bootstrapped });
 
