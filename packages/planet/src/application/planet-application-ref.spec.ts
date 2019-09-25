@@ -1,5 +1,47 @@
 import { defineApplication, getPlanetApplicationRef } from './planet-application-ref';
 import { PlanetPortalApplication } from './portal-application';
+import { platformBrowser } from '@angular/platform-browser';
+import { NgModule, NgModuleRef, NgModuleFactory, Compiler, Injector, Component, NgZone } from '@angular/core';
+import { RouterModule, Router } from '@angular/router';
+import { async, TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
+
+@Component({
+    selector: 'app-root',
+    template: `
+        <router-outlet></router-outlet>
+    `
+})
+class EmptyComponent {}
+@NgModule({
+    declarations: [EmptyComponent],
+    imports: [
+        RouterModule.forRoot([
+            {
+                path: 'app1',
+                component: EmptyComponent
+            }
+        ])
+    ]
+})
+class AppModule {}
+
+const app1 = {
+    name: 'app1',
+    host: '.host-selector',
+    selector: 'app1-root-container',
+    routerPathPrefix: '/app1',
+    hostClass: 'app1-host',
+    preload: false,
+    resourcePathPrefix: '/static/app1',
+    styles: ['styles/main.css'],
+    scripts: ['vendor.js', 'main.js'],
+    loadSerial: false,
+    manifest: '',
+    extra: {
+        appName: '应用1'
+    }
+};
+
 describe('PlanetApplicationRef', () => {
     afterEach(() => {
         // delete all apps
@@ -45,5 +87,61 @@ describe('PlanetApplicationRef', () => {
             const planetAppRef = getPlanetApplicationRef('app2');
             expect(planetAppRef).toBeFalsy();
         });
+    });
+
+    describe('ApplicationRef', () => {
+        let compiler: Compiler;
+        let injector: Injector;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({});
+        });
+
+        beforeEach(inject([Compiler, Injector], (_compiler: Compiler, _injector: Injector) => {
+            compiler = _compiler;
+            injector = _injector;
+        }));
+
+        it(`should bootstrap application ref`, fakeAsync(() => {
+            const portalApplication = new PlanetPortalApplication();
+            const ngModuleFactory = compiler.compileModuleSync(AppModule);
+            const ngModuleRef = ngModuleFactory.create(injector);
+            defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
+                return new Promise(resolve => {
+                    expect(portalApp).toBe(portalApplication);
+                    resolve(ngModuleRef);
+                });
+            });
+            const appRef = getPlanetApplicationRef('app1');
+            expect(appRef).toBeTruthy();
+            appRef.bootstrap(portalApplication);
+        }));
+
+        it(`should sync portal route change when sub app(app1) route navigate`, fakeAsync(() => {
+            const portalApplication = new PlanetPortalApplication();
+            const navigateByUrlSpy = spyOn(portalApplication, 'navigateByUrl');
+            const ngModuleFactory = compiler.compileModuleSync(AppModule);
+            const ngModuleRef = ngModuleFactory.create(injector);
+            defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
+                return new Promise(resolve => {
+                    expect(portalApp).toBe(portalApplication);
+                    resolve(ngModuleRef);
+                });
+            });
+            const appRef = getPlanetApplicationRef('app1');
+            expect(appRef).toBeTruthy();
+            appRef.bootstrap(portalApplication);
+
+            const route = ngModuleRef.injector.get(Router);
+            const ngZone = ngModuleRef.injector.get(NgZone);
+            ngZone.run(() => {
+                route.navigateByUrl('/app1');
+            });
+            expect(navigateByUrlSpy).not.toHaveBeenCalled();
+            ngZone.onStable.next();
+            tick();
+            expect(navigateByUrlSpy).toHaveBeenCalled();
+            expect(navigateByUrlSpy).toHaveBeenCalledWith('/app1');
+        }));
     });
 });
