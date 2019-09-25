@@ -2,8 +2,8 @@ import { Injectable, NgZone, ApplicationRef, Injector } from '@angular/core';
 import { of, Observable, Subject, forkJoin, throwError } from 'rxjs';
 import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
-import { switchMap, finalize, share, map, tap, delay, take, filter, catchError } from 'rxjs/operators';
-import { getScriptsAndStylesFullPaths, getHTMLElement, coerceArray } from '../helpers';
+import { switchMap, finalize, share, map, tap, distinctUntilChanged, take, filter, catchError } from 'rxjs/operators';
+import { getHTMLElement, coerceArray } from '../helpers';
 import { PlanetApplicationRef, getPlanetApplicationRef, globalPlanet } from './planet-application-ref';
 import { PlanetPortalApplication } from './portal-application';
 import { PlanetApplicationService } from './planet-application.service';
@@ -108,6 +108,9 @@ export class PlanetApplicationLoader {
     private setupRouteChange() {
         this.routeChange$
             .pipe(
+                distinctUntilChanged((x, y) => {
+                    return (x && x.url) === (y && y.url);
+                }),
                 // Using switchMap so we cancel executing loading when a new one comes in
                 switchMap(event => {
                     // Return new observable use of and catchError,
@@ -150,39 +153,45 @@ export class PlanetApplicationLoader {
                         }),
                         // Bootstrap or show apps
                         map(apps => {
-                            const shouldBootstrapApps = [];
-                            const shouldShowApps = [];
+                            const shouldBootstrapApps: PlanetApplication[] = [];
+                            const shouldShowApps: PlanetApplication[] = [];
                             apps.forEach(app => {
                                 const appStatus = this.appsStatus.get(app);
                                 if (appStatus === ApplicationStatus.bootstrapped) {
                                     shouldShowApps.push(app);
-                                } else {
+                                } else if (appStatus === ApplicationStatus.assetsLoaded) {
                                     shouldBootstrapApps.push(app);
+                                } else if (appStatus === ApplicationStatus.active) {
+                                } else {
+                                    throw new Error(
+                                        `app(${app.name})'s status is ${appStatus}, can't be show or bootstrap`
+                                    );
                                 }
                             });
 
-                            // 切换到应用后会有闪烁现象，所以使用 onStable 后启动应用
-                            this.ngZone.onStable
-                                .asObservable()
-                                .pipe(take(1))
-                                .subscribe(() => {
-                                    // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
-                                    if (this.startRouteChangeEvent === event) {
-                                        this.ngZone.runOutsideAngular(() => {
-                                            shouldShowApps.forEach(app => {
-                                                this.showApp(app);
-                                                const appRef = getPlanetApplicationRef(app.name);
-                                                appRef.navigateByUrl(event.url);
-                                                this.setAppStatus(app, ApplicationStatus.active);
+                            if (shouldShowApps.length > 0 || shouldBootstrapApps.length > 0) {
+                                // 切换到应用后会有闪烁现象，所以使用 onStable 后启动应用
+                                this.ngZone.onStable
+                                    .asObservable()
+                                    .pipe(take(1))
+                                    .subscribe(() => {
+                                        // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
+                                        if (this.startRouteChangeEvent === event) {
+                                            this.ngZone.runOutsideAngular(() => {
+                                                shouldShowApps.forEach(app => {
+                                                    this.showApp(app);
+                                                    const appRef = getPlanetApplicationRef(app.name);
+                                                    appRef.navigateByUrl(event.url);
+                                                    this.setAppStatus(app, ApplicationStatus.active);
+                                                });
+                                                shouldBootstrapApps.forEach(app => {
+                                                    this.bootstrapApp(app);
+                                                    this.setAppStatus(app, ApplicationStatus.active);
+                                                });
                                             });
-
-                                            shouldBootstrapApps.forEach(app => {
-                                                this.bootstrapApp(app);
-                                                this.setAppStatus(app, ApplicationStatus.active);
-                                            });
-                                        });
-                                    }
-                                });
+                                        }
+                                    });
+                            }
 
                             return apps;
                         }),
@@ -291,10 +300,7 @@ export class PlanetApplicationLoader {
     private getUnloadApps(activeApps: PlanetApplication[]) {
         const unloadApps: PlanetApplication[] = [];
         this.appsStatus.forEach((value, app) => {
-            if (
-                [ApplicationStatus.bootstrapped, ApplicationStatus.active].includes(value) &&
-                !activeApps.find(item => item.name === app.name)
-            ) {
+            if (value === ApplicationStatus.active && !activeApps.find(item => item.name === app.name)) {
                 unloadApps.push(app);
             }
         });
@@ -318,19 +324,21 @@ export class PlanetApplicationLoader {
             }
         });
 
-        // 从其他应用切换到主应用的时候会有视图卡顿现象，所以先等主应用渲染完毕后再加载其他应用
-        // 此处尝试使用 this.ngZone.onStable.pipe(take(1)) 应用之间的切换会出现闪烁
-        setTimeout(() => {
-            hideApps.forEach(app => {
-                const appRef = getPlanetApplicationRef(app.name);
-                if (appRef) {
-                    appRef.navigateByUrl(event.url);
-                }
+        if (hideApps.length > 0 || destroyApps.length > 0) {
+            // 从其他应用切换到主应用的时候会有视图卡顿现象，所以先等主应用渲染完毕后再加载其他应用
+            // 此处尝试使用 this.ngZone.onStable.pipe(take(1)) 应用之间的切换会出现闪烁
+            setTimeout(() => {
+                hideApps.forEach(app => {
+                    const appRef = getPlanetApplicationRef(app.name);
+                    if (appRef) {
+                        appRef.navigateByUrl(event.url);
+                    }
+                });
+                destroyApps.forEach(app => {
+                    this.destroyApp(app);
+                });
             });
-            destroyApps.forEach(app => {
-                this.destroyApp(app);
-            });
-        });
+        }
     }
 
     private preloadApps(activeApps?: PlanetApplication[]) {

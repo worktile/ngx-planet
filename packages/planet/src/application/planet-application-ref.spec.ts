@@ -32,7 +32,7 @@ const app1 = {
     routerPathPrefix: '/app1',
     hostClass: 'app1-host',
     preload: false,
-    resourcePathPrefix: '/static/app1',
+    resourcePathPrefix: '/static/app1/',
     styles: ['styles/main.css'],
     scripts: ['vendor.js', 'main.js'],
     loadSerial: false,

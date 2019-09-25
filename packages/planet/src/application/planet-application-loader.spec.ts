@@ -18,7 +18,7 @@ const app1 = {
     hostClass: 'app1-host',
     preload: false,
     switchMode: SwitchModes.default,
-    resourcePathPrefix: '/static/app1',
+    resourcePathPrefix: '/static/app1/',
     styles: ['styles/main.css'],
     scripts: ['vendor.js', 'main.js'],
     loadSerial: false,
@@ -129,6 +129,56 @@ describe('PlanetApplicationLoader', () => {
 
         // 判断是否在宿主元素中创建了应用根节点
         expectApp1Element();
+        tick();
+    }));
+
+    it(`should not bootstrap app1 which is active`, fakeAsync(() => {
+        const loadAppAssets$ = new Subject();
+        const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
+        assetsLoaderSpy.and.returnValue(loadAppAssets$);
+
+        // App state change
+        const appStatusChangeSpy = jasmine.createSpy('app status change spy');
+        planetApplicationLoader.appStatusChange.subscribe(appStatusChangeSpy);
+        expect(appStatusChangeSpy).not.toHaveBeenCalled();
+
+        const [bootstrapSpy] = spyPlanetApplicationRef(app1.name);
+        planetApplicationLoader.reroute({ url: '/app1/dashboard' });
+        loadAppAssets$.next();
+        loadAppAssets$.complete();
+        ngZone.onStable.next();
+        expect(bootstrapSpy).toHaveBeenCalled();
+        // 判断是否在宿主元素中创建了应用根节点
+        expectApp1Element();
+
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(5);
+        planetApplicationLoader.reroute({ url: '/app1/dashboard2' });
+        ngZone.onStable.next();
+        expect(bootstrapSpy).toHaveBeenCalledTimes(1);
+        expect(appStatusChangeSpy).toHaveBeenCalledTimes(5);
+        tick();
+    }));
+
+    it(`should start load app1 once when reroute same url: /app1/dashboard`, fakeAsync(() => {
+        const loadAppAssets$ = new Subject();
+        const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
+        assetsLoaderSpy.and.returnValue(loadAppAssets$);
+
+        // Apps loading start
+        const appsLoadingStartSpy = jasmine.createSpy('apps loading start spy');
+        planetApplicationLoader.appsLoadingStart.subscribe(appsLoadingStartSpy);
+        expect(appsLoadingStartSpy).not.toHaveBeenCalled();
+
+        planetApplicationLoader.reroute({ url: '/app1/dashboard' });
+        expect(appsLoadingStartSpy).toHaveBeenCalledTimes(1);
+        expect(appsLoadingStartSpy).toHaveBeenCalled();
+        expect(appsLoadingStartSpy).toHaveBeenCalledWith({
+            shouldLoadApps: [app1],
+            shouldUnloadApps: []
+        });
+        planetApplicationLoader.reroute({ url: '/app1/dashboard' });
+        expect(appsLoadingStartSpy).toHaveBeenCalledTimes(1);
+
         tick();
     }));
 
@@ -313,7 +363,7 @@ describe('PlanetApplicationLoader', () => {
         expect(appStatusChangeSpy).toHaveBeenCalledTimes(2);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.loadError });
 
-        planetApplicationLoader.reroute({ url: '/app1' });
+        planetApplicationLoader.reroute({ url: '/app1/hello' });
         expect(appStatusChangeSpy).toHaveBeenCalledTimes(3);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoading });
 
