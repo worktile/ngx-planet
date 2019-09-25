@@ -55,6 +55,7 @@ export class PlanetApplicationRef {
             });
         }
     }
+
     async bootstrap(app: PlanetPortalApplication): Promise<void> {
         if (!this.appModuleBootstrap) {
             throw new Error(`${this.name} app is not define`);
