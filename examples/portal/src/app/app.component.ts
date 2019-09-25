@@ -93,7 +93,7 @@ export class AppComponent implements OnInit {
         });
 
         this.planet.appsLoadingStart.subscribe(event => {
-            this.activeAppNames = event.map(item => item.name);
+            this.activeAppNames = event.shouldLoadApps.map(item => item.name);
             console.log(`active app names: ${this.activeAppNames.join(',')}`);
         });
     }

@@ -3,7 +3,12 @@ import { NavigationEnd, RouterEvent, Router } from '@angular/router';
 import { PlanetOptions, PlanetApplication } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { setPortalApplicationData } from './application/planet-application-ref';
-import { PlanetApplicationLoader, ApplicationStatus } from './application/planet-application-loader';
+import {
+    PlanetApplicationLoader,
+    ApplicationStatus,
+    AppsLoadingStartEvent,
+    AppStatusChangeEvent
+} from './application/planet-application-loader';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,11 +19,11 @@ export class Planet {
         return this.planetApplicationLoader.loadingDone;
     }
 
-    public get appStatusChange(): Observable<{ app: PlanetApplication; status: ApplicationStatus }> {
+    public get appStatusChange(): Observable<AppStatusChangeEvent> {
         return this.planetApplicationLoader.appStatusChange;
     }
 
-    public get appsLoadingStart(): Observable<PlanetApplication[]> {
+    public get appsLoadingStart(): Observable<AppsLoadingStartEvent> {
         return this.planetApplicationLoader.appsLoadingStart;
     }
 

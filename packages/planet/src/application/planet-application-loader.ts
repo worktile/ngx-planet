@@ -19,6 +19,16 @@ export enum ApplicationStatus {
     loadError = 10
 }
 
+export interface AppsLoadingStartEvent {
+    shouldLoadApps: PlanetApplication[];
+    shouldUnloadApps: PlanetApplication[];
+}
+
+export interface AppStatusChangeEvent {
+    app: PlanetApplication;
+    status: ApplicationStatus;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -37,15 +47,15 @@ export class PlanetApplicationLoader {
 
     private routeChange$ = new Subject<PlanetRouterEvent>();
 
-    private appStatusChange$ = new Subject<{ app: PlanetApplication; status: ApplicationStatus }>();
+    private appStatusChange$ = new Subject<AppStatusChangeEvent>();
 
-    private appsLoadingStart$ = new Subject<PlanetApplication[]>();
+    private appsLoadingStart$ = new Subject<AppsLoadingStartEvent>();
 
-    public get appStatusChange(): Observable<{ app: PlanetApplication; status: ApplicationStatus }> {
+    public get appStatusChange(): Observable<AppStatusChangeEvent> {
         return this.appStatusChange$.asObservable();
     }
 
-    public get appsLoadingStart(): Observable<PlanetApplication[]> {
+    public get appsLoadingStart(): Observable<AppsLoadingStartEvent> {
         return this.appsLoadingStart$.asObservable();
     }
 
@@ -109,7 +119,10 @@ export class PlanetApplicationLoader {
                             this.startRouteChangeEvent = event;
                             const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
                             const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
-                            this.appsLoadingStart$.next(shouldLoadApps);
+                            this.appsLoadingStart$.next({
+                                shouldLoadApps,
+                                shouldUnloadApps
+                            });
                             this.unloadApps(shouldUnloadApps, event);
                             return shouldLoadApps;
                         }),
