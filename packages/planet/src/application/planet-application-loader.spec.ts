@@ -105,7 +105,10 @@ describe('PlanetApplicationLoader', () => {
         expect(planetApplicationLoader.loadingDone).toBe(false);
 
         expect(appsLoadingStartSpy).toHaveBeenCalled();
-        expect(appsLoadingStartSpy).toHaveBeenCalledWith([app1]);
+        expect(appsLoadingStartSpy).toHaveBeenCalledWith({
+            shouldLoadApps: [app1],
+            shouldUnloadApps: []
+        });
 
         loadAppAssets$.next();
         loadAppAssets$.complete();
