@@ -10,10 +10,6 @@
 
 ## [1.0.3](https://github.com/worktile/ngx-micro-frontend/compare/1.0.1...1.0.3) (2019-09-25)
 
-### Bug Fixes
-
--   **app-loader:** should call errorHandle when preload app assets failed ([f043018](https://github.com/worktile/ngx-micro-frontend/commit/f043018))
-
 ### Features
 
 -   **app-ref:** sync portal route when route change, rename navigateByUrl ([dc104f9](https://github.com/worktile/ngx-micro-frontend/commit/dc104f9))
