@@ -1,3 +1,11 @@
+<a name="1.0.4"></a>
+
+## [1.0.4](https://github.com/worktile/ngx-planet/compare/1.0.3...1.0.4) (2019-09-25)
+
+### Bug Fixes
+
+-   **app:** can't start when url is same, don't reload active app [#265669](https://github.com/worktile/ngx-planet/issues/265669) ([af61eb4](https://github.com/worktile/ngx-planet/commit/af61eb4))
+
 <a name="1.0.3"></a>
 
 ## [1.0.3](https://github.com/worktile/ngx-micro-frontend/compare/1.0.1...1.0.3) (2019-09-25)
