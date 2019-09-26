@@ -14,3 +14,4 @@ export * from './assets-loader';
 export { PlanetComponent, PlanetComponentLoader } from './component/planet-component-loader';
 export { PlanetComponentRef } from './component/planet-component-ref';
 export { PlantComponentConfig } from './component/plant-component.config';
+export * from './empty/empty.component';

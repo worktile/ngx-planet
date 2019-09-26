@@ -8,20 +8,13 @@ import { NgxTethysModule } from 'ngx-tethys';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { routers } from './app.routing';
 import { UserDetailComponent } from './user/detail/user-detail.component';
-import { EmptyComponent } from './empty/empty.component';
 import { AppRootComponent } from './root/root.component';
 import { DemoCommonModule } from '@demo/common';
+import { NgxPlanetModule } from 'ngx-planet';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        AppRootComponent,
-        UserListComponent,
-        UserDetailComponent,
-        DashboardComponent,
-        EmptyComponent
-    ],
-    imports: [BrowserModule, RouterModule.forRoot(routers), NgxTethysModule, DemoCommonModule],
+    declarations: [AppComponent, AppRootComponent, UserListComponent, UserDetailComponent, DashboardComponent],
+    imports: [BrowserModule, RouterModule.forRoot(routers), NgxTethysModule, DemoCommonModule, NgxPlanetModule],
     providers: [],
     entryComponents: [UserDetailComponent],
     bootstrap: [AppComponent]

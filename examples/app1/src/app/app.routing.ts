@@ -2,8 +2,8 @@ import { UserListComponent } from './user/user-list.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Route } from '@angular/router';
 import { UserDetailComponent } from './user/detail/user-detail.component';
-import { EmptyComponent } from './empty/empty.component';
 import { AppRootComponent } from './root/root.component';
+import { EmptyComponent } from 'ngx-planet';
 
 export const routers: Route[] = [
     {
