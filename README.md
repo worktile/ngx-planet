@@ -1,4 +1,7 @@
-# ngx-planet [![CircleCI](https://circleci.com/gh/worktile/ngx-planet.svg?style=shield)](https://circleci.com/gh/worktile/ngx-planet) [![npm (scoped)](https://img.shields.io/npm/v/@worktile/planet?style=flat)](https://www.npmjs.com/package/@worktile/planet) [![npm](https://img.shields.io/npm/dm/@worktile/planet)](https://www.npmjs.com/package/@worktile/planet) ![npm bundle size (scoped)](https://img.shields.io/bundlephobia/min/@worktile/planet)
+# ngx-planet [![CircleCI](https://circleci.com/gh/worktile/ngx-planet.svg?style=shield)](https://circleci.com/gh/worktile/ngx-planet) [![Coverage Status][coveralls-image]][coveralls-url] [![npm (scoped)](https://img.shields.io/npm/v/@worktile/planet?style=flat)](https://www.npmjs.com/package/@worktile/planet) [![npm](https://img.shields.io/npm/dm/@worktile/planet)](https://www.npmjs.com/package/@worktile/planet) ![npm bundle size (scoped)](https://img.shields.io/bundlephobia/min/@worktile/planet)
+
+[coveralls-image]: https://coveralls.io/repos/github/worktile/ngx-planet/badge.svg
+[coveralls-url]: https://coveralls.io/github/worktile/ngx-planet
 
 An Angular 7+ Micro Frontend library.
 
