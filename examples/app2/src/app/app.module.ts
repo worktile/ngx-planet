@@ -7,11 +7,10 @@ import { ProjectListComponent } from './projects/project-list.component';
 import { AppRootComponent } from './root/root.component';
 import { NgxTethysModule } from 'ngx-tethys';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { EmptyComponent } from './empty/empty.component';
 import { ProjectDetailComponent } from './projects/detail/detail.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PlanetComponentLoader } from 'ngx-planet';
+import { PlanetComponentLoader, EmptyComponent, NgxPlanetModule } from 'ngx-planet';
 import { DemoCommonModule } from '@demo/common';
 
 const routers: Route[] = [
@@ -41,14 +40,7 @@ const routers: Route[] = [
 ];
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        AppRootComponent,
-        ProjectListComponent,
-        DashboardComponent,
-        EmptyComponent,
-        ProjectDetailComponent
-    ],
+    declarations: [AppComponent, AppRootComponent, ProjectListComponent, DashboardComponent, ProjectDetailComponent],
     entryComponents: [AppComponent, ProjectDetailComponent],
     imports: [
         CommonModule,
@@ -56,7 +48,8 @@ const routers: Route[] = [
         BrowserModule,
         RouterModule.forRoot(routers),
         NgxTethysModule,
-        DemoCommonModule
+        DemoCommonModule,
+        NgxPlanetModule
     ],
     providers: [],
     bootstrap: [AppComponent]
