@@ -14,6 +14,7 @@
     "build": "ng build planet",
     "test": "ng test planet",
     "lint": "ng lint planet",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "e2e": "ng e2e",
     "pub-only": "cd dist/planet && npm publish --access=public",
     "pub": "npm run build && npm run pub-only"

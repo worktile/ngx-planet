@@ -21,7 +21,8 @@
           "options": {
             "main": "packages/planet/src/test.ts",
             "tsConfig": "packages/planet/tsconfig.spec.json",
-            "karmaConfig": "packages/planet/karma.conf.js"
+            "karmaConfig": "packages/planet/karma.conf.js",
+            "codeCoverage": true
           }
         },
         "lint": {
