@@ -12,6 +12,7 @@ import { ProjectDetailComponent } from './projects/detail/detail.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlanetComponentLoader } from 'ngx-planet';
+import { DemoCommonModule } from '@demo/common';
 
 const routers: Route[] = [
     {
@@ -49,7 +50,14 @@ const routers: Route[] = [
         ProjectDetailComponent
     ],
     entryComponents: [AppComponent, ProjectDetailComponent],
-    imports: [CommonModule, FormsModule, BrowserModule, RouterModule.forRoot(routers), NgxTethysModule],
+    imports: [
+        CommonModule,
+        FormsModule,
+        BrowserModule,
+        RouterModule.forRoot(routers),
+        NgxTethysModule,
+        DemoCommonModule
+    ],
     providers: [],
     bootstrap: [AppComponent]
 })

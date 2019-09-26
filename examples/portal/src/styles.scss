@@ -1,9 +1,14 @@
 $layout-content-background: #fff;
+$primary: #348fe4;
 
 @import 'ngx-tethys/styles/variables.scss';
 @import 'ngx-tethys/styles/index.scss';
+
+@import './app/app.component.scss';
 
 body,
 html {
     height: 100%;
 }
+
+@import '../../common/section-card/section-card.component.scss';

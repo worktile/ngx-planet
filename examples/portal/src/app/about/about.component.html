@@ -1,10 +1,17 @@
-<p>
-  这是一个微前端（Micro Front-End）的应用程序
-</p>
+<section-card title="Planet">
+  <code>ngx-planet</code> is a powerful and easy micro front-end library only for angular.<br />
+  This is live demo for planet which contains portal, app1, app2.
+</section-card>
 
-<a [routerLink]="['/app1/dashboard']" routerLinkActive="active">To App1's Dashboard</a> <br />
-<a href="javascript:;" (click)="toApp2Dashboard()">To App2's Dashboard</a>
+<section-card class="mt-5" title="AppRootContext data, it can be change in app1">
+  <span class="text-desc">appRootContext.name: </span> <span class="text-danger">{{ appRootContext.name }}</span>
+</section-card>
 
-<div class="mt-2">
+<section-card class="mt-5" title="Links to app1 and app2 from portal">
+  <a [routerLink]="['/app1/dashboard']" routerLinkActive="active">To App1's Dashboard</a> <br />
+  <a href="javascript:;" (click)="toApp2Dashboard()">To App2's Dashboard</a>
+</section-card>
+
+<section-card class="mt-5" title="Open detail by dialog, it can be opened in app1">
   <button thyButton="primary-square" (click)="openADetail()">Open A Detail</button>
-</div>
+</section-card>

@@ -1,0 +1,15 @@
+.section-card {
+    display: block;
+    position: relative;
+    padding: 15px;
+    border: 2px $gray-300 dashed;
+
+    .section-card-header {
+        position: absolute;
+        padding: 0 10px;
+        background: $white;
+        top: -10px;
+        left: 5px;
+        color: $gray-600; // $gray-500;
+    }
+}

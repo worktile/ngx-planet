@@ -36,22 +36,12 @@ export class DashboardComponent {
     }
 
     disposeApp2Component() {
-        this.componentRef.dispose();
-    }
-
-    toHostAbout() {
-        this.planetPortal.navigateByUrl('/about');
-        // this.hostApplication.router.navigateByUrl('/about');
-    }
-
-    toAbout() {
-        this.router.navigateByUrl('/about');
+        if (this.componentRef) {
+            this.componentRef.dispose();
+        }
     }
 
     changeName(newName: string) {
-        // this.planetPortal.run(() => {
-        //     this.appRootContext.setName(newName);
-        // });
         this.appRootContext.setName(newName);
         this.planetPortal.tick();
     }
