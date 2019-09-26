@@ -54,7 +54,10 @@
     "@types/node": "~8.9.4",
     "codelyzer": "~4.5.0",
     "concurrently": "^4.1.0",
+    "conventional-changelog-cli": "^2.0.12",
+    "coveralls": "^3.0.6",
     "css-loader": "^2.1.0",
+    "husky": "^2.4.1",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.1.1",
@@ -65,6 +68,8 @@
     "mini-css-extract-plugin": "^0.5.0",
     "ng-packagr": "^4.2.0",
     "postcss-loader": "^3.0.0",
+    "prettier": "^1.16.4",
+    "pretty-quick": "^1.10.0",
     "protractor": "~5.4.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
@@ -73,11 +78,7 @@
     "tslib": "^1.10.0",
     "tslint": "~5.11.0",
     "typescript": "3.1.6",
-    "webpack-assets-manifest": "^3.1.1",
-    "husky": "^2.4.1",
-    "conventional-changelog-cli": "^2.0.12",
-    "prettier": "^1.16.4",
-    "pretty-quick": "^1.10.0"
+    "webpack-assets-manifest": "^3.1.1"
   },
   "husky": {
     "hooks": {
