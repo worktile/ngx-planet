@@ -8,8 +8,7 @@ import { AppRootContext } from '@demo/common';
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
     title = 'ngx-planet';

@@ -1,3 +1,32 @@
+$app-nav-width: 70px;
+
 .app-nav {
-    width: 70px;
+    width: $app-nav-width;
+    background: #48525c;
+
+    .logo {
+        height: 50px;
+        margin-top: 15px;
+    }
+
+    &.thy-layout-sidebar {
+        border-right: none;
+    }
+
+    .nav-link {
+        opacity: 0.8;
+        min-width: $app-nav-width;
+        color: $white;
+        &.active,
+        &:hover {
+            background: rgb(57, 65, 76);
+            color: $white;
+        }
+    }
+
+    .thy-nav--vertical {
+        .nav-link {
+            border-left-width: 4px;
+        }
+    }
 }

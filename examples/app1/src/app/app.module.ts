@@ -10,6 +10,7 @@ import { routers } from './app.routing';
 import { UserDetailComponent } from './user/detail/user-detail.component';
 import { EmptyComponent } from './empty/empty.component';
 import { AppRootComponent } from './root/root.component';
+import { DemoCommonModule } from '@demo/common';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,7 @@ import { AppRootComponent } from './root/root.component';
         DashboardComponent,
         EmptyComponent
     ],
-    imports: [BrowserModule, RouterModule.forRoot(routers), NgxTethysModule],
+    imports: [BrowserModule, RouterModule.forRoot(routers), NgxTethysModule, DemoCommonModule],
     providers: [],
     entryComponents: [UserDetailComponent],
     bootstrap: [AppComponent]
