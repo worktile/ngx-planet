@@ -189,6 +189,14 @@ export class PlanetApplicationLoader {
                                         )
                                     );
                                 } else if (appStatus === ApplicationStatus.active) {
+                                    apps$.push(
+                                        of(app).pipe(
+                                            tap(() => {
+                                                const appRef = getPlanetApplicationRef(app.name);
+                                                appRef.navigateByUrl(event.url);
+                                            })
+                                        )
+                                    );
                                 } else {
                                     throw new Error(
                                         `app(${app.name})'s status is ${appStatus}, can't be show or bootstrap`
@@ -204,6 +212,7 @@ export class PlanetApplicationLoader {
                                     if (this.startRouteChangeEvent === event) {
                                         this.ngZone.runOutsideAngular(() => {
                                             forkJoin(apps$).subscribe(() => {
+                                                this.setLoadingDone();
                                                 this.ensurePreloadApps(apps);
                                             });
                                         });
