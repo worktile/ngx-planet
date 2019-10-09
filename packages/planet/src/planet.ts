@@ -10,6 +10,7 @@ import {
     AppStatusChangeEvent
 } from './application/planet-application-loader';
 import { Observable } from 'rxjs';
+import { EmptyComponent } from './empty/empty.component';
 
 @Injectable({
     providedIn: 'root'

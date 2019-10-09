@@ -2,7 +2,7 @@ import { PlanetApplication } from '../planet.class';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { shareReplay, map, switchMap } from 'rxjs/operators';
-import { coerceArray, getScriptsAndStylesFullPaths } from '../helpers';
+import { coerceArray } from '../helpers';
 import { Observable, of } from 'rxjs';
 import { AssetsLoadResult, AssetsLoader } from '../assets-loader';
 

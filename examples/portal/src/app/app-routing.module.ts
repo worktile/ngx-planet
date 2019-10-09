@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AboutComponent } from './about/about.component';
 import { HostContainerComponent } from './host-container/host-container.component';
-import { HelpComponent } from './help/help.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
     {
@@ -15,8 +15,8 @@ const routes: Routes = [
         component: AboutComponent
     },
     {
-        path: 'help',
-        component: HelpComponent
+        path: 'settings',
+        component: SettingsComponent
     },
     {
         path: 'app1',
@@ -51,7 +51,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes, { paramsInheritanceStrategy: 'always' })],
     exports: [RouterModule]
 })
 export class AppRoutingModule {}

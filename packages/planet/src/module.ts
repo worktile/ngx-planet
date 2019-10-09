@@ -8,6 +8,7 @@ const PLANET_APPLICATIONS = new InjectionToken<PlanetApplication>('PLANET_APPLIC
 
 @NgModule({
     declarations: [EmptyComponent],
+    entryComponents: [EmptyComponent],
     imports: [HttpClientModule],
     providers: [GlobalEventDispatcher],
     exports: [HttpClientModule, EmptyComponent]

@@ -5,11 +5,11 @@ import { ADetailComponent } from '../a-detail/a-detail.component';
 import { AppRootContext } from '@demo/common';
 
 @Component({
-    selector: 'app-help',
-    templateUrl: './help.component.html',
-    styleUrls: ['./help.component.scss']
+    selector: 'app-settings',
+    templateUrl: './settings.component.html',
+    styleUrls: ['./settings.component.scss']
 })
-export class HelpComponent implements OnInit {
+export class SettingsComponent implements OnInit {
     @HostBinding(`class.thy-layout-content`) isThyLayoutContent = true;
 
     constructor(private router: Router, private thyDialog: ThyDialog, public appRootContext: AppRootContext) {}
