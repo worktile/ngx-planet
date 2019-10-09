@@ -201,7 +201,7 @@ describe('PlanetApplicationLoader', () => {
         loadAppAssets$.complete();
         flush();
         app1RefFaker.haveBeenBootstrap();
-        app1RefFaker.bootstrap$.next();
+        app1RefFaker.bootstrap();
 
         // 判断是否在宿主元素中创建了应用根节点
         expectApp1Element();
@@ -227,10 +227,7 @@ describe('PlanetApplicationLoader', () => {
         loadAppAssets$.complete();
         flush();
         app1RefFaker.haveBeenBootstrap();
-        app1RefFaker.bootstrap$.next();
-
-        // 判断是否在宿主元素中创建了应用根节点
-        expectApp1Element();
+        app1RefFaker.bootstrap();
 
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(5);
         expect(app1RefFaker.navigateByUrlSpy).not.toHaveBeenCalled();
