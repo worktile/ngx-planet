@@ -17,16 +17,27 @@ $app-nav-width: 70px;
         opacity: 0.8;
         min-width: $app-nav-width;
         color: $white;
+        height: $app-nav-width;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        .thy-icon {
+            color: $white;
+            font-size: $font-size-xlg;
+        }
         &.active,
         &:hover {
             background: rgb(57, 65, 76);
             color: $white;
+            .thy-icon {
+                color: $white;
+            }
         }
     }
 
-    .thy-nav--vertical {
-        .nav-link {
-            border-left-width: 4px;
-        }
-    }
+    // .thy-nav--vertical {
+    //     .nav-link {
+    //         border-left-width: 0px;
+    //     }
+    // }
 }

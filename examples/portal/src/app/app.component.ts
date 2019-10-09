@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
 import { Planet, SwitchModes, GlobalEventDispatcher, ApplicationStatus, PlanetApplication } from 'ngx-planet';
-import { Router, NavigationEnd, RouterEvent } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
 import { ThyConfirmService, ThyNotifyService } from 'ngx-tethys';
@@ -20,6 +20,8 @@ export class AppComponent implements OnInit {
     }
 
     constructor(
+        private router: Router,
+        private route: ActivatedRoute,
         private planet: Planet,
         private globalEventDispatcher: GlobalEventDispatcher,
         private thyDialog: ThyDialog,

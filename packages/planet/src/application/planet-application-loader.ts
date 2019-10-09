@@ -1,8 +1,8 @@
 import { Injectable, NgZone, ApplicationRef, Injector } from '@angular/core';
-import { of, Observable, Subject, forkJoin, throwError } from 'rxjs';
-import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
+import { of, Observable, Subject, forkJoin, from } from 'rxjs';
+import { AssetsLoader } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
-import { switchMap, finalize, share, map, tap, distinctUntilChanged, take, filter, catchError } from 'rxjs/operators';
+import { switchMap, share, map, tap, distinctUntilChanged, take, filter, catchError } from 'rxjs/operators';
 import { getHTMLElement, coerceArray } from '../helpers';
 import { PlanetApplicationRef, getPlanetApplicationRef, globalPlanet } from './planet-application-ref';
 import { PlanetPortalApplication } from './portal-application';
@@ -105,6 +105,16 @@ export class PlanetApplicationLoader {
         this.applicationRef.tick();
     }
 
+    private takeOneStable() {
+        return this.ngZone.onStable.asObservable().pipe(take(1));
+    }
+
+    private setLoadingDone() {
+        this.ngZone.run(() => {
+            this.loadingDone = true;
+        });
+    }
+
     private setupRouteChange() {
         this.routeChange$
             .pipe(
@@ -131,36 +141,53 @@ export class PlanetApplicationLoader {
                         }),
                         // Load app assets (static resources)
                         switchMap(shouldLoadApps => {
-                            if (shouldLoadApps && shouldLoadApps.length > 0) {
-                                const loadApps$ = shouldLoadApps.map(app => {
-                                    const appStatus = this.appsStatus.get(app);
-                                    if (
-                                        !appStatus ||
-                                        appStatus === ApplicationStatus.assetsLoading ||
-                                        appStatus === ApplicationStatus.loadError
-                                    ) {
-                                        return this.ngZone.runOutsideAngular(() => {
-                                            return this.startLoadAppAssets(app);
-                                        });
-                                    } else {
-                                        return of(app);
-                                    }
-                                });
-                                return forkJoin(loadApps$);
-                            } else {
-                                return of([]);
-                            }
+                            const loadApps$ = shouldLoadApps.map(app => {
+                                const appStatus = this.appsStatus.get(app);
+                                if (
+                                    !appStatus ||
+                                    appStatus === ApplicationStatus.assetsLoading ||
+                                    appStatus === ApplicationStatus.loadError
+                                ) {
+                                    return this.ngZone.runOutsideAngular(() => {
+                                        return this.startLoadAppAssets(app);
+                                    });
+                                } else {
+                                    return of(app);
+                                }
+                            });
+                            return loadApps$.length > 0 ? forkJoin(loadApps$) : of([] as PlanetApplication[]);
                         }),
                         // Bootstrap or show apps
                         map(apps => {
-                            const shouldBootstrapApps: PlanetApplication[] = [];
-                            const shouldShowApps: PlanetApplication[] = [];
+                            const apps$: Observable<PlanetApplication>[] = [];
                             apps.forEach(app => {
                                 const appStatus = this.appsStatus.get(app);
                                 if (appStatus === ApplicationStatus.bootstrapped) {
-                                    shouldShowApps.push(app);
+                                    apps$.push(
+                                        of(app).pipe(
+                                            tap(() => {
+                                                this.showApp(app);
+                                                const appRef = getPlanetApplicationRef(app.name);
+                                                appRef.navigateByUrl(event.url);
+                                                this.setAppStatus(app, ApplicationStatus.active);
+                                                this.setLoadingDone();
+                                            })
+                                        )
+                                    );
                                 } else if (appStatus === ApplicationStatus.assetsLoaded) {
-                                    shouldBootstrapApps.push(app);
+                                    apps$.push(
+                                        of(app).pipe(
+                                            switchMap(() => {
+                                                return this.bootstrapApp(app).pipe(
+                                                    map(() => {
+                                                        this.setAppStatus(app, ApplicationStatus.active);
+                                                        this.setLoadingDone();
+                                                        return app;
+                                                    })
+                                                );
+                                            })
+                                        )
+                                    );
                                 } else if (appStatus === ApplicationStatus.active) {
                                 } else {
                                     throw new Error(
@@ -169,43 +196,23 @@ export class PlanetApplicationLoader {
                                 }
                             });
 
-                            if (shouldShowApps.length > 0 || shouldBootstrapApps.length > 0) {
-                                // 切换到应用后会有闪烁现象，所以使用 onStable 后启动应用
-                                this.ngZone.onStable
-                                    .asObservable()
-                                    .pipe(take(1))
-                                    .subscribe(() => {
-                                        // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
-                                        if (this.startRouteChangeEvent === event) {
-                                            this.ngZone.runOutsideAngular(() => {
-                                                shouldShowApps.forEach(app => {
-                                                    this.showApp(app);
-                                                    const appRef = getPlanetApplicationRef(app.name);
-                                                    appRef.navigateByUrl(event.url);
-                                                    this.setAppStatus(app, ApplicationStatus.active);
-                                                });
-                                                shouldBootstrapApps.forEach(app => {
-                                                    this.bootstrapApp(app);
-                                                    this.setAppStatus(app, ApplicationStatus.active);
-                                                });
+                            if (apps$.length > 0) {
+                                // 切换到应用后会有闪烁现象，所以使用 setTimeout 后启动应用
+                                // If app's route has redirect, it doesn't work, it ok just in setTimeout, I don't know why.
+                                setTimeout(() => {
+                                    // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
+                                    if (this.startRouteChangeEvent === event) {
+                                        this.ngZone.runOutsideAngular(() => {
+                                            forkJoin(apps$).subscribe(() => {
+                                                this.ensurePreloadApps(apps);
                                             });
-                                        }
-                                    });
+                                        });
+                                    }
+                                });
+                            } else {
+                                this.ensurePreloadApps(apps);
+                                this.setLoadingDone();
                             }
-
-                            return apps;
-                        }),
-                        // Start preload apps
-                        tap(activeApps => {
-                            // 第一次加载，预加载
-                            if (this.firstLoad) {
-                                this.preloadApps(activeApps);
-                                this.firstLoad = false;
-                            }
-                        }),
-                        // Finish loadingDone true
-                        finalize(() => {
-                            this.loadingDone = true;
                         }),
                         // Error handler
                         catchError(error => {
@@ -272,29 +279,41 @@ export class PlanetApplicationLoader {
     private bootstrapApp(
         app: PlanetApplication,
         defaultStatus: 'hidden' | 'display' = 'display'
-    ): PlanetApplicationRef {
+    ): Observable<PlanetApplicationRef> {
         this.setAppStatus(app, ApplicationStatus.bootstrapping);
         const appRef = getPlanetApplicationRef(app.name);
         if (appRef && appRef.bootstrap) {
             const container = getHTMLElement(app.host);
+            let appRootElement: HTMLElement;
             if (container) {
-                let appRootElement = container.querySelector(app.selector);
+                appRootElement = container.querySelector(app.selector);
                 if (!appRootElement) {
                     appRootElement = document.createElement(app.selector);
-                    if (defaultStatus === 'hidden') {
-                        appRootElement.setAttribute('style', 'display:none;');
-                    }
+                    appRootElement.setAttribute('style', 'display:none;');
                     if (app.hostClass) {
                         appRootElement.classList.add(...coerceArray(app.hostClass));
                     }
                     container.appendChild(appRootElement);
                 }
             }
-            appRef.bootstrap(this.portalApp);
-            this.setAppStatus(app, ApplicationStatus.bootstrapped);
-            return appRef;
+            let result = appRef.bootstrap(this.portalApp);
+            // Forward compatibility promise for bootstrap
+            if (result['then']) {
+                result = from(result) as Observable<PlanetApplicationRef>;
+            }
+            return result.pipe(
+                tap(() => {
+                    this.setAppStatus(app, ApplicationStatus.bootstrapped);
+                    if (defaultStatus === 'display' && appRootElement) {
+                        appRootElement.removeAttribute('style');
+                    }
+                }),
+                map(() => {
+                    return appRef;
+                })
+            );
         }
-        return null;
+        return of(null);
     }
 
     private getUnloadApps(activeApps: PlanetApplication[]) {
@@ -351,9 +370,18 @@ export class PlanetApplicationLoader {
             });
 
             forkJoin(loadApps$).subscribe({
-                error: err => this.errorHandler(err)
+                error: error => this.errorHandler(error)
             });
         });
+    }
+
+    private ensurePreloadApps(activeApps?: PlanetApplication[]) {
+        // Start preload apps
+        // Start preload when first time app loaded
+        if (this.firstLoad) {
+            this.preloadApps(activeApps);
+            this.firstLoad = false;
+        }
     }
 
     setOptions(options: Partial<PlanetOptions>) {
@@ -378,16 +406,17 @@ export class PlanetApplicationLoader {
         const status = this.appsStatus.get(app);
         if (!status || status === ApplicationStatus.loadError) {
             return this.startLoadAppAssets(app).pipe(
-                map(() => {
-                    this.ngZone.runOutsideAngular(() => {
-                        this.ngZone.onStable
-                            .asObservable()
-                            .pipe(take(1))
-                            .subscribe(() => {
-                                this.bootstrapApp(app, 'hidden');
-                            });
+                switchMap(() => {
+                    return this.ngZone.runOutsideAngular(() => {
+                        return this.takeOneStable().pipe(
+                            tap(() => {
+                                this.bootstrapApp(app, 'hidden').subscribe();
+                            }),
+                            map(() => {
+                                return getPlanetApplicationRef(app.name);
+                            })
+                        );
                     });
-                    return getPlanetApplicationRef(app.name);
                 })
             );
         } else if (status === ApplicationStatus.assetsLoading || status === ApplicationStatus.bootstrapping) {

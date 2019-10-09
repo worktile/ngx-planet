@@ -1,10 +1,11 @@
 import { PlanetRouterEvent, PlanetApplication } from '../planet.class';
 import { PlanetPortalApplication } from './portal-application';
 import { NgModuleRef, NgZone, ApplicationRef } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { PlantComponentConfig } from '../component/plant-component.config';
 import { PlanetComponentRef } from '../component/planet-component-ref';
 import { take } from 'rxjs/operators';
+import { Observable, from } from 'rxjs';
 
 declare const window: any;
 export interface GlobalPlanet {
@@ -56,17 +57,19 @@ export class PlanetApplicationRef {
         }
     }
 
-    async bootstrap(app: PlanetPortalApplication): Promise<void> {
+    bootstrap(app: PlanetPortalApplication): Observable<this> {
         if (!this.appModuleBootstrap) {
             throw new Error(`${this.name} app is not define`);
         }
         this.portalApp = app;
-        return this.appModuleBootstrap(app).then(appModuleRef => {
-            this.appModuleRef = appModuleRef;
-            this.appModuleRef.instance.appName = this.name;
-            this.syncPortalRouteWhenNavigationEnd();
-            return;
-        });
+        return from(
+            this.appModuleBootstrap(app).then(appModuleRef => {
+                this.appModuleRef = appModuleRef;
+                this.appModuleRef.instance.appName = this.name;
+                this.syncPortalRouteWhenNavigationEnd();
+                return this;
+            })
+        );
     }
 
     navigateByUrl(url: string): void {

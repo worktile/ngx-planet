@@ -2,10 +2,31 @@
   <thy-sidebar class="app-nav">
     <img class="logo" src="/assets/images/logo.svg" />
     <thy-nav [thyVertical]="'true'" class="mt-2" [thyType]="'primary'">
-      <a thyNavLink [routerLink]="['/app1']" routerLinkActive="active">App1</a>
-      <a thyNavLink [routerLink]="['/app2']" routerLinkActive="active">App2</a>
-      <a thyNavLink [routerLink]="['/about']" routerLinkActive="active">About</a>
-      <!-- <a thyNavLink [routerLink]="['/help']" routerLinkActive="active">Help</a> -->
+      <a
+        thyNavLink
+        thyTooltip="App1"
+        thyTooltipPlacement="right"
+        [routerLink]="['/app1']"
+        routerLinkActive="active"
+        thyTooltip="App1"
+        thyTooltipPlacement="right"
+      >
+        <thy-icon thyIconName="application"></thy-icon>
+      </a>
+      <a thyNavLink [routerLink]="['/app2']" routerLinkActive="active" thyTooltip="App2" thyTooltipPlacement="right">
+        <thy-icon thyIconName="app-agile"></thy-icon>
+      </a>
+      <a thyNavLink [routerLink]="['/about']" routerLinkActive="active" thyTooltip="About" thyTooltipPlacement="right">
+        <thy-icon thyIconName="smile"></thy-icon>
+      </a>
+      <a
+        thyNavLink
+        [routerLink]="['/settings']"
+        routerLinkActive="active"
+        thyTooltip="Settings"
+        thyTooltipPlacement="right"
+        ><thy-icon thyIconName="settings"></thy-icon
+      ></a>
     </thy-nav>
   </thy-sidebar>
   <router-outlet></router-outlet>
