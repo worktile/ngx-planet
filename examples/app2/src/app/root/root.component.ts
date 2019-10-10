@@ -1,6 +1,6 @@
 import { Component, HostBinding, ComponentFactoryResolver, Injector, ApplicationRef } from '@angular/core';
 @Component({
-    selector: 'app2-root-container',
+    selector: 'app2-root',
     templateUrl: './root.component.html',
     styleUrls: ['./root.component.scss']
 })

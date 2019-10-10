@@ -15,7 +15,7 @@ describe('PlanetApplicationService', () => {
 
     const app1 = {
         name: 'app1',
-        host: '.host-selector',
+        hostParent: '.host-selector',
         selector: 'app1-root-container',
         routerPathPrefix: '/app1',
         hostClass: 'app1-host',
@@ -33,7 +33,7 @@ describe('PlanetApplicationService', () => {
 
     const app2 = {
         name: 'app2',
-        host: '.host-selector',
+        hostParent: '.host-selector',
         selector: 'app2-root-container',
         routerPathPrefix: '/app2',
         hostClass: 'app2-host',

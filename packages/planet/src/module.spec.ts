@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 
 const app1 = {
     name: 'app1',
-    host: '.host-selector',
+    hostParent: '.host-selector',
     selector: 'app1-root-container',
     routerPathPrefix: '/app1',
     hostClass: 'app1-host',

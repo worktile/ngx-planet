@@ -159,7 +159,7 @@ describe('helpers', () => {
     describe('getScriptsAndStylesFullPaths', () => {
         const app = {
             name: 'app1',
-            host: '.host-selector',
+            hostParent: '.host-selector',
             selector: 'app1-root-container',
             routerPathPrefix: '/app1',
             hostClass: 'app1-host',
