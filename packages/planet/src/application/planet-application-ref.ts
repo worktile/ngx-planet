@@ -121,4 +121,8 @@ export function setPortalApplicationData<T>(data: T) {
     globalPlanet.portalApplication.data = data;
 }
 
+export function getPortalApplicationData<TData>(): TData {
+    return globalPlanet.portalApplication.data as TData;
+}
+
 export { globalPlanet };

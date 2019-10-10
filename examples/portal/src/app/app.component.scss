@@ -1,8 +1,9 @@
 $app-nav-width: 70px;
+$app-nav-bg-color: #48525c;
 
 .app-nav {
     width: $app-nav-width;
-    background: #48525c;
+    background: $app-nav-bg-color;
 
     .logo {
         height: 50px;

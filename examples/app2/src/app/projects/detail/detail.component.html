@@ -1,4 +1,16 @@
-<thy-dialog-header thyTitle="项目详情"> </thy-dialog-header>
-<div class="dialog-body">
-    This is project detail!
-</div>
+<thy-header thyHasBorder="true">
+  <ng-template #headerTitle>
+    <!-- <thy-icon class="prefix-icon" thyIconName="house-square" thyIconType="fill"></thy-icon> -->
+    <!-- <a href="javascript:;" class="title-name">Project Detail {{ projectId }} </a> -->
+    <span>Project Detail {{ projectId }}</span>
+  </ng-template>
+  <ng-template #headerContent>
+    <thy-nav thyType="primary" thyHorizontal="center">
+      <a href="javascript:;" thyNavLink thyNavLinkActive="true">Tasks</a>
+      <a href="javascript:;" thyNavLink>Defects</a>
+    </thy-nav>
+  </ng-template>
+</thy-header>
+<thy-layout>
+  <router-outlet></router-outlet>
+</thy-layout>
