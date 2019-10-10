@@ -50,7 +50,7 @@ class PlanetApplicationRefFaker {
     destroySpy: jasmine.Spy;
     bootstrapSpy: jasmine.Spy;
     navigateByUrlSpy: jasmine.Spy;
-
+    getCurrentRouterStateUrlSpy: jasmine.Spy;
     bootstrap$: Subject<PlanetApplicationRef>;
 
     constructor(appName: string) {
@@ -60,6 +60,9 @@ class PlanetApplicationRefFaker {
         this.bootstrapSpy.and.returnValues(this.bootstrap$, this.bootstrap$);
         this.destroySpy = spyOn(this.planetAppRef, 'destroy');
         this.navigateByUrlSpy = spyOn(this.planetAppRef, 'navigateByUrl');
+
+        this.getCurrentRouterStateUrlSpy = spyOn(this.planetAppRef, 'getCurrentRouterStateUrl');
+
         (window as any).planet.apps[appName] = this.planetAppRef;
     }
 
@@ -235,6 +238,29 @@ describe('PlanetApplicationLoader', () => {
         flush();
         expect(app1RefFaker.navigateByUrlSpy).toHaveBeenCalledTimes(1);
         expect(app1RefFaker.navigateByUrlSpy).toHaveBeenCalledWith('/app1/dashboard2');
+        tick();
+    }));
+
+    it(`should not call app1 navigateByUrl when app1 is active and url is same`, fakeAsync(() => {
+        const loadAppAssets$ = new Subject();
+        const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
+        assetsLoaderSpy.and.returnValue(loadAppAssets$);
+
+        const appStatusChangeFaker = AppStatusChangeFaker.create(planetApplicationLoader);
+        const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
+        planetApplicationLoader.reroute({ url: '/app1/dashboard' });
+        loadAppAssets$.next();
+        loadAppAssets$.complete();
+        flush();
+        app1RefFaker.haveBeenBootstrap();
+        app1RefFaker.bootstrap();
+
+        expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(5);
+        expect(app1RefFaker.navigateByUrlSpy).not.toHaveBeenCalled();
+        app1RefFaker.getCurrentRouterStateUrlSpy.and.returnValue('/app1/dashboard2');
+        planetApplicationLoader.reroute({ url: '/app1/dashboard2' });
+        flush();
+        expect(app1RefFaker.navigateByUrlSpy).not.toHaveBeenCalled();
         tick();
     }));
 

@@ -193,7 +193,10 @@ export class PlanetApplicationLoader {
                                         of(app).pipe(
                                             tap(() => {
                                                 const appRef = getPlanetApplicationRef(app.name);
-                                                appRef.navigateByUrl(event.url);
+                                                const currentUrl = appRef.getCurrentRouterStateUrl();
+                                                if (currentUrl !== event.url) {
+                                                    appRef.navigateByUrl(event.url);
+                                                }
                                             })
                                         )
                                     );
