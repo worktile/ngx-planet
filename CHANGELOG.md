@@ -1,3 +1,11 @@
+<a name="1.0.6"></a>
+
+## [1.0.6](https://github.com/worktile/ngx-planet/compare/1.0.5...1.0.6) (2019-10-10)
+
+### Bug Fixes
+
+-   portal route change out ngZone when sub app route trigger change ([c2a5a66](https://github.com/worktile/ngx-planet/commit/c2a5a66))
+
 <a name="1.0.5"></a>
 
 ## [1.0.5](https://github.com/worktile/ngx-planet/compare/1.0.4...1.0.5) (2019-10-10)
