@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AboutComponent } from './about/about.component';
-import { HostContainerComponent } from './host-container/host-container.component';
 import { SettingsComponent } from './settings/settings.component';
 import { EmptyComponent } from 'ngx-planet';
 

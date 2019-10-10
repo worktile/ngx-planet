@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanetPortalApplication, GlobalEventDispatcher } from 'ngx-planet';
 
@@ -7,6 +7,8 @@ import { PlanetPortalApplication, GlobalEventDispatcher } from 'ngx-planet';
     templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
+    @HostBinding('class') class = 'thy-layout';
+
     constructor(private portalApp: PlanetPortalApplication, private globalEventDispatcher: GlobalEventDispatcher) {}
 
     toAbout() {

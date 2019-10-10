@@ -119,7 +119,8 @@ describe('PlanetApplicationRef', () => {
 
         it(`should sync portal route change when sub app(app1) route navigate`, fakeAsync(() => {
             const portalApplication = new PlanetPortalApplication();
-            const navigateByUrlSpy = spyOn(portalApplication, 'navigateByUrl');
+            portalApplication.router = { navigateByUrl: () => {} } as any;
+            const navigateByUrlSpy = spyOn(portalApplication.router, 'navigateByUrl');
             const ngModuleFactory = compiler.compileModuleSync(AppModule);
             const ngModuleRef = ngModuleFactory.create(injector);
             defineApplication('app1', (portalApp?: PlanetPortalApplication) => {

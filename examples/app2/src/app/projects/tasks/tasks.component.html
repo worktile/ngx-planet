@@ -1,0 +1,10 @@
+<thy-header thySize="sm">
+  <ng-template #headerContent>
+    <thy-nav thyType="thirdly" thyHorizontal="left">
+      <a thyNavLink [routerLink]="['./view-1']" routerLinkActive="active">View1</a>
+      <a thyNavLink [routerLink]="['./view-2']" routerLinkActive="active">View2</a>
+      <a thyNavLink [routerLink]="['./view-3']" routerLinkActive="active">View3</a>
+    </thy-nav>
+  </ng-template>
+</thy-header>
+<router-outlet></router-outlet>

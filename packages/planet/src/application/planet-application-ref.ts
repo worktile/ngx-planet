@@ -50,7 +50,7 @@ export class PlanetApplicationRef {
                         .asObservable()
                         .pipe(take(1))
                         .subscribe(() => {
-                            this.portalApp.navigateByUrl(event.url);
+                            this.portalApp.router.navigateByUrl(event.url);
                         });
                 }
             });
@@ -72,9 +72,17 @@ export class PlanetApplicationRef {
         );
     }
 
+    getRouter() {
+        return this.appModuleRef.injector.get(Router);
+    }
+
+    getCurrentRouterStateUrl() {
+        return this.getRouter().routerState.snapshot.url;
+    }
+
     navigateByUrl(url: string): void {
         const ngZone = this.appModuleRef.injector.get(NgZone);
-        const router = this.appModuleRef.injector.get(Router);
+        const router = this.getRouter();
         ngZone.run(() => {
             router.navigateByUrl(url);
         });
@@ -119,6 +127,10 @@ export function getPlanetApplicationRef(appName: string): PlanetApplicationRef {
 
 export function setPortalApplicationData<T>(data: T) {
     globalPlanet.portalApplication.data = data;
+}
+
+export function getPortalApplicationData<TData>(): TData {
+    return globalPlanet.portalApplication.data as TData;
 }
 
 export { globalPlanet };

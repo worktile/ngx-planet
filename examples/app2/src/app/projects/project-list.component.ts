@@ -1,15 +1,20 @@
-import { Component, EventEmitter, OnInit, DoCheck, ApplicationRef } from '@angular/core';
+import { Component, EventEmitter, OnInit, DoCheck, ApplicationRef, HostBinding } from '@angular/core';
 import { GlobalEventDispatcher } from 'ngx-planet';
 import { ProjectService } from './projects.service';
 import { ThyDialog } from 'ngx-tethys/dialog/dialog.service';
 import { ProjectDetailComponent } from './detail/detail.component';
+import { Router } from '@angular/router';
+import { ThyGridRowEvent } from 'ngx-tethys/grid';
 
 @Component({
     selector: 'app-project-list',
     templateUrl: './project-list.component.html'
 })
 export class ProjectListComponent implements OnInit, DoCheck {
+    @HostBinding('class') class = 'thy-layout';
+
     constructor(
+        private router: Router,
         private globalEventDispatcher: GlobalEventDispatcher,
         private projectService: ProjectService,
         private dialog: ThyDialog,
@@ -36,14 +41,15 @@ export class ProjectListComponent implements OnInit, DoCheck {
         }, 500);
     }
 
-    openDetail() {
-        this.dialog.open(ProjectDetailComponent, {
-            hasBackdrop: true,
-            backdropClosable: true,
-            closeOnNavigation: true
-        });
+    openDetail(event: ThyGridRowEvent) {
+        this.router.navigateByUrl(`/app2/projects/${event.row.id}`);
+        // this.dialog.open(ProjectDetailComponent, {
+        //     hasBackdrop: true,
+        //     backdropClosable: true,
+        //     closeOnNavigation: true
+        // });
 
-        this.click.emit();
+        // this.click.emit();
     }
 
     ngDoCheck() {
