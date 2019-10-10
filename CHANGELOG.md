@@ -1,3 +1,24 @@
+<a name="1.0.5"></a>
+
+## [1.0.5](https://github.com/worktile/ngx-planet/compare/1.0.4...1.0.5) (2019-10-10)
+
+### Bug Fixes
+
+-   **app-loader:** should navigate when reroute active app [#267024](https://github.com/worktile/ngx-planet/issues/267024) ([34bdc1a](https://github.com/worktile/ngx-planet/commit/34bdc1a))
+-   **app-loader:** should not circulate redirect apps ([a009a6a](https://github.com/worktile/ngx-planet/commit/a009a6a))
+
+### Code Refactoring
+
+-   **planet:** rename app's host to hostParent, add settings for demo ([1bdb21e](https://github.com/worktile/ngx-planet/commit/1bdb21e))
+
+### Features
+
+-   **empty:** add empty component [#265875](https://github.com/worktile/ngx-planet/issues/265875) ([41f5ddd](https://github.com/worktile/ngx-planet/commit/41f5ddd))
+
+### BREAKING CHANGES
+
+-   **planet:** should change host to hostParent when register app
+
 <a name="1.0.4"></a>
 
 ## [1.0.4](https://github.com/worktile/ngx-planet/compare/1.0.3...1.0.4) (2019-09-25)
