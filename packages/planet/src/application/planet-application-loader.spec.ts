@@ -49,6 +49,8 @@ class PlanetApplicationRefFaker {
     planetAppRef: PlanetApplicationRef;
     destroySpy: jasmine.Spy;
     bootstrapSpy: jasmine.Spy;
+    navigateByUrlSpy: jasmine.Spy;
+
     bootstrap$: Subject<PlanetApplicationRef>;
 
     constructor(appName: string) {
@@ -57,6 +59,7 @@ class PlanetApplicationRefFaker {
         this.bootstrap$ = new Subject<PlanetApplicationRef>();
         this.bootstrapSpy.and.returnValues(this.bootstrap$, this.bootstrap$);
         this.destroySpy = spyOn(this.planetAppRef, 'destroy');
+        this.navigateByUrlSpy = spyOn(this.planetAppRef, 'navigateByUrl');
         (window as any).planet.apps[appName] = this.planetAppRef;
     }
 
@@ -198,7 +201,7 @@ describe('PlanetApplicationLoader', () => {
         loadAppAssets$.complete();
         flush();
         app1RefFaker.haveBeenBootstrap();
-        app1RefFaker.bootstrap$.next();
+        app1RefFaker.bootstrap();
 
         // 判断是否在宿主元素中创建了应用根节点
         expectApp1Element();
@@ -208,6 +211,30 @@ describe('PlanetApplicationLoader', () => {
         flush();
         expect(app1RefFaker.bootstrapSpy).toHaveBeenCalledTimes(1);
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(5);
+        tick();
+    }));
+
+    it(`should call app1 navigateByUrl when app1 is active`, fakeAsync(() => {
+        const loadAppAssets$ = new Subject();
+        const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
+        assetsLoaderSpy.and.returnValue(loadAppAssets$);
+
+        const appStatusChangeFaker = AppStatusChangeFaker.create(planetApplicationLoader);
+        const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
+
+        planetApplicationLoader.reroute({ url: '/app1/dashboard' });
+        loadAppAssets$.next();
+        loadAppAssets$.complete();
+        flush();
+        app1RefFaker.haveBeenBootstrap();
+        app1RefFaker.bootstrap();
+
+        expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(5);
+        expect(app1RefFaker.navigateByUrlSpy).not.toHaveBeenCalled();
+        planetApplicationLoader.reroute({ url: '/app1/dashboard2' });
+        flush();
+        expect(app1RefFaker.navigateByUrlSpy).toHaveBeenCalledTimes(1);
+        expect(app1RefFaker.navigateByUrlSpy).toHaveBeenCalledWith('/app1/dashboard2');
         tick();
     }));
 

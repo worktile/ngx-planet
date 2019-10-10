@@ -35,7 +35,7 @@ export class GlobalEventDispatcher {
 
     constructor(private ngZone: NgZone) {}
 
-    dispatch(name: string, payload?: any) {
+    dispatch<TPayload>(name: string, payload?: TPayload) {
         window.dispatchEvent(
             new CustomEvent(CUSTOM_EVENT_NAME, {
                 detail: {
@@ -46,7 +46,7 @@ export class GlobalEventDispatcher {
         );
     }
 
-    register(eventName: string): Observable<any> {
+    register<T>(eventName: string): Observable<T> {
         return new Observable(observer => {
             if (!this.hasAddGlobalEventListener) {
                 this.addGlobalEventListener();

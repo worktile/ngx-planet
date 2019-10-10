@@ -5,7 +5,6 @@
       <a
         thyNavLink
         thyTooltip="App1"
-        thyTooltipPlacement="right"
         [routerLink]="['/app1']"
         routerLinkActive="active"
         thyTooltip="App1"
@@ -27,6 +26,32 @@
         thyTooltipPlacement="right"
         ><thy-icon thyIconName="settings"></thy-icon
       ></a>
+      <a
+        thyNavLink
+        href="javascript:;"
+        [thyPopover]="more"
+        thyPlacement="right"
+        thyTooltip="More"
+        thyTooltipPlacement="right"
+      >
+        <thy-icon thyIconName="more"></thy-icon>
+      </a>
+      <ng-template #more>
+        <thy-action-menu>
+          <a thyActionMenuItem routerLinkActive="active" [routerLink]="['/app1/dashboard']">
+            <span thyActionMenuItemIcon>
+              <thy-icon thyIconName="house"></thy-icon>
+            </span>
+            <span thyActionMenuItemName>To App1's dashboard</span>
+          </a>
+          <a thyActionMenuItem routerLinkActive="active" [routerLink]="['/app1/users']">
+            <span thyActionMenuItemIcon>
+              <thy-icon thyIconName="user-group"></thy-icon>
+            </span>
+            <span thyActionMenuItemName>To App1's users</span>
+          </a>
+        </thy-action-menu>
+      </ng-template>
     </thy-nav>
   </thy-sidebar>
   <router-outlet></router-outlet>
