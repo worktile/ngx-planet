@@ -73,14 +73,11 @@ export class AppComponent implements OnInit {
             }
         });
 
-        const appHostContainerSelector = '#app-host-container';
-        const appHostContainerClass = 'thy-layout';
-
         this.planet.registerApps([
             {
                 name: 'app1',
-                host: appHostContainerSelector,
-                hostClass: appHostContainerClass,
+                hostParent: '#app-host-container',
+                hostClass: 'thy-layout',
                 routerPathPrefix: '/app1',
                 selector: 'app1-root-container',
                 resourcePathPrefix: '/static/app1',
@@ -94,8 +91,8 @@ export class AppComponent implements OnInit {
             },
             {
                 name: 'app2',
-                host: appHostContainerSelector,
-                hostClass: appHostContainerClass,
+                hostParent: '#app-host-container',
+                hostClass: 'thy-layout',
                 routerPathPrefix: '/app2',
                 selector: 'app2-root-container',
                 preload: true,
@@ -141,7 +138,7 @@ defineApplication('app1', (portalApp: PlanetPortalApplication) => {
 ## Development
 
 ```
-npm start open http://localhost:3000
+npm run start // open http://localhost:3000
 
 or
 
@@ -152,3 +149,7 @@ npm run serve:app2 // 3002
 // test
 npm run test
 ```
+
+## LICENSE
+
+[MIT License](https://github.com/worktile/ngx-planet/blob/master/LICENSE)
