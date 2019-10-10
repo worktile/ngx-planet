@@ -1,16 +1,15 @@
 import { NgModule, InjectionToken, ModuleWithProviders } from '@angular/core';
 import { GlobalEventDispatcher } from './global-event-dispatcher';
-import { PlanetApplication } from './planet.class';
+import { PlanetApplication, PLANET_APPLICATIONS } from './planet.class';
 import { HttpClientModule } from '@angular/common/http';
 import { EmptyComponent } from './empty/empty.component';
-
-const PLANET_APPLICATIONS = new InjectionToken<PlanetApplication>('PLANET_APPLICATIONS');
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     declarations: [EmptyComponent],
     entryComponents: [EmptyComponent],
     imports: [HttpClientModule],
-    providers: [GlobalEventDispatcher],
+    providers: [],
     exports: [HttpClientModule, EmptyComponent]
 })
 export class NgxPlanetModule {

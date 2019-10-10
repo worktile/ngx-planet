@@ -1,4 +1,4 @@
-import { NgZone } from '@angular/core';
+import { NgZone, InjectionToken } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanetPortalApplication } from './application/portal-application';
 
@@ -45,3 +45,7 @@ export enum SwitchModes {
 export interface PlanetRouterEvent {
     url: string;
 }
+
+const PLANET_APPLICATIONS = new InjectionToken<PlanetApplication>('PLANET_APPLICATIONS');
+
+export { PLANET_APPLICATIONS };
