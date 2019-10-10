@@ -1,8 +1,9 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
-import { ThyDialog } from 'ngx-tethys/dialog';
+import { ThyNotifyService } from 'ngx-tethys';
 import { ADetailComponent } from '../a-detail/a-detail.component';
 import { AppRootContext } from '@demo/common';
+import { CustomSettingsService, CustomSettingsInfo } from '../custom-settings.service';
 
 @Component({
     selector: 'app-settings',
@@ -12,15 +13,31 @@ import { AppRootContext } from '@demo/common';
 export class SettingsComponent implements OnInit {
     @HostBinding(`class.thy-layout-content`) isThyLayoutContent = true;
 
-    constructor(private router: Router, private thyDialog: ThyDialog, public appRootContext: AppRootContext) {}
+    settings: CustomSettingsInfo;
 
-    ngOnInit() {}
+    constructor(
+        public appRootContext: AppRootContext,
+        private customSettingsService: CustomSettingsService,
+        private thyNotifyService: ThyNotifyService
+    ) {}
 
-    toApp2Dashboard() {
-        this.router.navigateByUrl(`/app2/dashboard`);
+    ngOnInit() {
+        this.reset();
     }
 
-    openADetail() {
-        this.thyDialog.open(ADetailComponent);
+    save() {
+        this.customSettingsService.save(this.settings);
+        this.thyNotifyService.success(`Save success`);
+    }
+
+    reset() {
+        this.settings = {
+            ...this.customSettingsService.get()
+        };
+    }
+
+    restore() {
+        this.customSettingsService.restore();
+        this.reset();
     }
 }

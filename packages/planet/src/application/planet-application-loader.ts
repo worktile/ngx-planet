@@ -278,7 +278,7 @@ export class PlanetApplicationLoader {
         if (appRef) {
             appRef.destroy();
         }
-        const container = getHTMLElement(planetApp.host);
+        const container = getHTMLElement(planetApp.hostParent);
         const appRootElement = container.querySelector(planetApp.selector);
         if (appRootElement) {
             container.removeChild(appRootElement);
@@ -292,7 +292,7 @@ export class PlanetApplicationLoader {
         this.setAppStatus(app, ApplicationStatus.bootstrapping);
         const appRef = getPlanetApplicationRef(app.name);
         if (appRef && appRef.bootstrap) {
-            const container = getHTMLElement(app.host);
+            const container = getHTMLElement(app.hostParent);
             let appRootElement: HTMLElement;
             if (container) {
                 appRootElement = container.querySelector(app.selector);

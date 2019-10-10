@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AboutComponent } from './about/about.component';
 import { HostContainerComponent } from './host-container/host-container.component';
 import { SettingsComponent } from './settings/settings.component';
+import { EmptyComponent } from 'ngx-planet';
 
 const routes: Routes = [
     {
@@ -20,31 +21,31 @@ const routes: Routes = [
     },
     {
         path: 'app1',
-        component: HostContainerComponent,
+        component: EmptyComponent,
         children: [
             {
                 path: '**',
-                component: HostContainerComponent
+                component: EmptyComponent
             }
         ]
     },
     {
         path: 'app2',
-        component: HostContainerComponent,
+        component: EmptyComponent,
         children: [
             {
                 path: '**',
-                component: HostContainerComponent
+                component: EmptyComponent
             }
         ]
     },
     {
         path: 'app4',
-        component: HostContainerComponent,
+        component: EmptyComponent,
         children: [
             {
                 path: '**',
-                component: HostContainerComponent
+                component: EmptyComponent
             }
         ]
     }

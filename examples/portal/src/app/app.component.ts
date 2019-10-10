@@ -5,6 +5,7 @@ import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
 import { ThyConfirmService, ThyNotifyService } from 'ngx-tethys';
 import { AppRootContext } from '@demo/common';
+import { CustomSettingsService } from './custom-settings.service';
 
 @Component({
     selector: 'app-root',
@@ -20,8 +21,7 @@ export class AppComponent implements OnInit {
     }
 
     constructor(
-        private router: Router,
-        private route: ActivatedRoute,
+        private customSettingsService: CustomSettingsService,
         private planet: Planet,
         private globalEventDispatcher: GlobalEventDispatcher,
         private thyDialog: ThyDialog,
@@ -43,18 +43,19 @@ export class AppComponent implements OnInit {
             appRootContext: this.appRootContext
         });
 
-        const appHostContainerSelector = '#app-host-container';
-        const appHostContainerClass = 'thy-layout';
+        const appHostClass = 'thy-layout';
 
+        const settings = this.customSettingsService.get();
         this.planet.registerApps([
             {
                 name: 'app1',
-                host: appHostContainerSelector,
-                hostClass: appHostContainerClass,
+                hostParent: '#app-host-container',
+                hostClass: appHostClass,
                 routerPathPrefix: /\/app1|app4/, // '/app1',
                 selector: 'app1-root-container',
                 resourcePathPrefix: '/app1/static/',
-                preload: true,
+                preload: settings.app1.preload,
+                switchMode: settings.app1.switchMode,
                 loadSerial: true,
                 // prettier-ignore
                 scripts: [
@@ -70,11 +71,12 @@ export class AppComponent implements OnInit {
             },
             {
                 name: 'app2',
-                host: appHostContainerSelector,
-                hostClass: appHostContainerClass,
-                routerPathPrefix: '/app2',
+                hostParent: '#app-host-container',
                 selector: 'app2-root-container',
-                preload: true,
+                hostClass: appHostClass,
+                routerPathPrefix: '/app2',
+                preload: settings.app2.preload,
+                switchMode: settings.app2.switchMode,
                 // prettier-ignore
                 scripts: [
                     '/app2/static/main.js'

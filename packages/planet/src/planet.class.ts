@@ -10,7 +10,7 @@ export interface PlanetOptions {
 export interface PlanetApplication<TExtra = any> {
     name: string;
     // 应用加载的宿主元素或者选择器
-    host: string | HTMLElement;
+    hostParent: string | HTMLElement;
     // 子应用的选择器
     selector: string;
     // 子应用路由前缀路径

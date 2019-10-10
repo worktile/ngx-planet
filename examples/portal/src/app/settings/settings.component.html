@@ -1,4 +1,31 @@
 <section-card title="Settings">
-  <label thyCheckbox name="app1-preload" thyLabelText="App1 Preload"></label>
-  <label thyCheckbox name="app2-preload" thyLabelText="App2 Preload"></label>
+  <form thyForm name="settings">
+    <thy-form-group thyLabelText="Preload" thyLabelPaddingTopClear="true">
+      <label thyCheckbox name="app1-preload" thyLabelText="App1 Preload" [(ngModel)]="settings.app1.preload"></label>
+      <label thyCheckbox name="app2-preload" thyLabelText="App2 Preload" [(ngModel)]="settings.app2.preload"></label>
+    </thy-form-group>
+
+    <thy-form-group thyLabelText="App1 Switch Mode" thyLabelPaddingTopClear="true">
+      <thy-radio-group name="app1SwitchMode" [(ngModel)]="settings.app1.switchMode" thyLayout="flex" required>
+        <label thyRadio thyLabelText="Default (Destroy App when not active)" thyValue="default"></label>
+        <label thyRadio thyLabelText="Coexist (Hide App when when not active)" thyValue="coexist"></label>
+      </thy-radio-group>
+    </thy-form-group>
+
+    <thy-form-group thyLabelText="App2 Switch Mode" thyLabelPaddingTopClear="true">
+      <thy-radio-group name="app2SwitchMode" [(ngModel)]="settings.app2.switchMode" thyLayout="flex" required>
+        <label thyRadio thyLabelText="Default (Destroy App when not active)" thyValue="default"></label>
+        <label thyRadio thyLabelText="Coexist (Hide App when when not active)" thyValue="coexist"></label>
+      </thy-radio-group>
+    </thy-form-group>
+
+    <thy-form-group-footer>
+      <button thyButton="primary" (thyFormSubmit)="save()">Save</button>
+      <button thyButton="link-secondary" (click)="reset()">Reset</button>
+      <button thyButton="outline-info" (click)="restore()">Restore to default</button>
+    </thy-form-group-footer>
+    <!-- <thy-form-group>
+      {{ settings | json }}
+    </thy-form-group> -->
+  </form>
 </section-card>
