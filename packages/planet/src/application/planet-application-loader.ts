@@ -193,7 +193,10 @@ export class PlanetApplicationLoader {
                                         of(app).pipe(
                                             tap(() => {
                                                 const appRef = getPlanetApplicationRef(app.name);
-                                                const currentUrl = appRef.getCurrentRouterStateUrl();
+                                                // Backwards compatibility sub app use old version which has not getCurrentRouterStateUrl
+                                                const currentUrl = appRef.getCurrentRouterStateUrl
+                                                    ? appRef.getCurrentRouterStateUrl()
+                                                    : '';
                                                 if (currentUrl !== event.url) {
                                                     appRef.navigateByUrl(event.url);
                                                 }
@@ -309,7 +312,7 @@ export class PlanetApplicationLoader {
                 }
             }
             let result = appRef.bootstrap(this.portalApp);
-            // Forward compatibility promise for bootstrap
+            // Backwards compatibility promise for bootstrap
             if (result['then']) {
                 result = from(result) as Observable<PlanetApplicationRef>;
             }

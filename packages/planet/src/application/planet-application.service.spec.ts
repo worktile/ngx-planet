@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { PlanetApplicationService } from './planet-application.service';
 import { SwitchModes } from '../planet.class';
+import { HttpClient } from '@angular/common/http';
+import { app1, app2, app2WithPreload } from '../test/applications';
 
 describe('PlanetApplicationService', () => {
     let planetApplicationService: PlanetApplicationService;
@@ -12,42 +14,6 @@ describe('PlanetApplicationService', () => {
         });
         planetApplicationService = TestBed.get(PlanetApplicationService);
     });
-
-    const app1 = {
-        name: 'app1',
-        hostParent: '.host-selector',
-        selector: 'app1-root-container',
-        routerPathPrefix: '/app1',
-        hostClass: 'app1-host',
-        preload: false,
-        switchMode: SwitchModes.coexist,
-        resourcePathPrefix: '/static/app1/',
-        styles: ['styles/main.css'],
-        scripts: ['vendor.js', 'main.js'],
-        loadSerial: false,
-        manifest: '/static/app/manifest.json',
-        extra: {
-            appName: '应用1'
-        }
-    };
-
-    const app2 = {
-        name: 'app2',
-        hostParent: '.host-selector',
-        selector: 'app2-root-container',
-        routerPathPrefix: '/app2',
-        hostClass: 'app2-host',
-        preload: true,
-        switchMode: SwitchModes.coexist,
-        resourcePathPrefix: '/static/app2',
-        styles: ['styles/main.css'],
-        scripts: ['vendor.js', 'main.js'],
-        loadSerial: false,
-        manifest: '/static/app/manifest.json',
-        extra: {
-            appName: '应用2'
-        }
-    };
 
     describe('register', () => {
         it('should register signal app1 success', () => {
@@ -65,6 +31,42 @@ describe('PlanetApplicationService', () => {
         it('should register multiple apps contains app1 and app2 success', () => {
             planetApplicationService.register([app1, app2]);
             expect(planetApplicationService.getApps()).toEqual([app1, app2]);
+        });
+
+        describe('registerByUrl', () => {
+            let httpClient: HttpClient;
+            let httpTestingController: HttpTestingController;
+            beforeEach(() => {
+                httpClient = TestBed.get(HttpClient);
+                httpTestingController = TestBed.get(HttpTestingController);
+            });
+
+            afterEach(() => {
+                // After every test, assert that there are no more pending requests.
+                httpTestingController.verify();
+            });
+
+            it('should register multiple apps by url', () => {
+                planetApplicationService.registerByUrl('/static/apps.json');
+                const req = httpTestingController.expectOne('/static/apps.json');
+
+                // Assert that the request is a GET.
+                expect(req.request.method).toEqual('GET');
+
+                // Respond with mock data, causing Observable to resolve.
+                // Subscribe callback asserts that correct data was returned.
+                req.flush([app1, app2]);
+
+                expect(planetApplicationService.getApps()).toEqual([app1, app2]);
+            });
+
+            it('should register one app by url', () => {
+                planetApplicationService.registerByUrl('/static/apps.json');
+                const req = httpTestingController.expectOne('/static/apps.json');
+                expect(req.request.method).toEqual('GET');
+                req.flush(app1);
+                expect(planetApplicationService.getApps()).toEqual([app1]);
+            });
         });
     });
 
@@ -110,14 +112,14 @@ describe('PlanetApplicationService', () => {
     describe('getAppsToPreload', () => {
         it('should get correct preload apps', () => {
             planetApplicationService.register(app1);
-            planetApplicationService.register(app2);
+            planetApplicationService.register(app2WithPreload);
             const appsToPreload = planetApplicationService.getAppsToPreload();
-            expect(appsToPreload).toEqual([app2]);
+            expect(appsToPreload).toEqual([app2WithPreload]);
         });
 
         it('should get correct preload apps exclude app names', () => {
             planetApplicationService.register(app1);
-            planetApplicationService.register(app2);
+            planetApplicationService.register(app2WithPreload);
             const appsToPreload = planetApplicationService.getAppsToPreload(['app2']);
             expect(appsToPreload).toEqual([]);
         });

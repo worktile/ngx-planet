@@ -28,13 +28,18 @@ export class PlanetApplicationService {
     }
 
     registerByUrl(url: string): Observable<void> {
-        return this.http.get(`${url}`).pipe(
+        const result = this.http.get(`${url}`).pipe(
             map(apps => {
                 if (apps && Array.isArray(apps)) {
                     this.register(apps);
+                } else {
+                    this.register(apps as PlanetApplication);
                 }
-            })
+            }),
+            shareReplay()
         );
+        result.subscribe();
+        return result;
     }
 
     unregister(name: string) {
