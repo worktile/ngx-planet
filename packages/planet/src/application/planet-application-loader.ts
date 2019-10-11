@@ -101,8 +101,9 @@ export class PlanetApplicationLoader {
     }
 
     private errorHandler(error: Error) {
-        this.options.errorHandler(error);
-        this.applicationRef.tick();
+        this.ngZone.run(() => {
+            this.options.errorHandler(error);
+        });
     }
 
     private takeOneStable() {

@@ -75,4 +75,8 @@ export class GlobalEventDispatcher {
             };
         });
     }
+
+    getSubscriptionCount() {
+        return this.subscriptionCount;
+    }
 }
