@@ -25,23 +25,6 @@ class EmptyComponent {}
 })
 class AppModule {}
 
-const app1 = {
-    name: 'app1',
-    hostParent: '.host-selector',
-    selector: 'app1-root-container',
-    routerPathPrefix: '/app1',
-    hostClass: 'app1-host',
-    preload: false,
-    resourcePathPrefix: '/static/app1/',
-    styles: ['styles/main.css'],
-    scripts: ['vendor.js', 'main.js'],
-    loadSerial: false,
-    manifest: '',
-    extra: {
-        appName: '应用1'
-    }
-};
-
 describe('PlanetApplicationRef', () => {
     afterEach(() => {
         // delete all apps

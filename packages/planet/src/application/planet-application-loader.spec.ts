@@ -9,41 +9,7 @@ import { SwitchModes, PlanetApplication } from '../planet.class';
 import { PlanetApplicationService } from './planet-application.service';
 import { NgZone } from '@angular/core';
 import { PlanetApplicationRef } from './planet-application-ref';
-
-const app1 = {
-    name: 'app1',
-    hostParent: '.host-selector',
-    selector: 'app1-root-container',
-    routerPathPrefix: '/app1',
-    hostClass: 'app1-host',
-    preload: false,
-    switchMode: SwitchModes.default,
-    resourcePathPrefix: '/static/app1/',
-    styles: ['styles/main.css'],
-    scripts: ['vendor.js', 'main.js'],
-    loadSerial: false,
-    manifest: '',
-    extra: {
-        appName: '应用1'
-    }
-};
-
-const app2 = {
-    name: 'app2',
-    hostParent: '.host-selector',
-    selector: 'app2-root-container',
-    routerPathPrefix: '/app2',
-    hostClass: 'app2-host',
-    preload: false,
-    switchMode: SwitchModes.coexist,
-    resourcePathPrefix: '/static/app2',
-    styles: ['styles/main.css'],
-    scripts: ['vendor.js', 'main.js'],
-    loadSerial: false,
-    extra: {
-        appName: '应用2'
-    }
-};
+import { app1, app2 } from '../test/applications';
 
 class PlanetApplicationRefFaker {
     planetAppRef: PlanetApplicationRef;
