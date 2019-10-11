@@ -6,7 +6,7 @@
 [![npm](https://img.shields.io/npm/dm/@worktile/planet)](https://www.npmjs.com/package/@worktile/planet)
 ![npm bundle size (scoped)](https://img.shields.io/bundlephobia/min/@worktile/planet)
 
-[coveralls-image]: https://coveralls.io/repos/github/worktile/ngx-planet/badge.svg
+[coveralls-image]: https://coveralls.io/repos/github/worktile/ngx-planet/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/worktile/ngx-planet
 
 An Angular 7+ Micro Frontend library.
