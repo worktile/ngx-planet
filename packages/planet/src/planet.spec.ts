@@ -114,13 +114,13 @@ describe('Planet', () => {
         expect(setOptionsSpy).toHaveBeenCalledWith(options);
     });
 
-    it('should reroute when navigateByUrl', fakeAsync(() => {
+    it('should reroute when start or navigateByUrl', fakeAsync(() => {
         const router: Router = TestBed.get(Router);
         const ngZone: NgZone = TestBed.get(NgZone);
         const rerouteSpy = spyOn(planetApplicationLoader, 'reroute');
         expect(rerouteSpy).not.toHaveBeenCalled();
         planet.start();
-        expect(rerouteSpy).not.toHaveBeenCalled();
+        expect(rerouteSpy).toHaveBeenCalledTimes(1);
 
         ngZone.run(() => {
             router.navigateByUrl('/app1/dashboard');
@@ -128,7 +128,7 @@ describe('Planet', () => {
 
         tick();
 
-        expect(rerouteSpy).toHaveBeenCalledTimes(1);
+        expect(rerouteSpy).toHaveBeenCalledTimes(2);
         expect(rerouteSpy).toHaveBeenCalledWith({
             url: '/app1/dashboard'
         });
@@ -138,7 +138,7 @@ describe('Planet', () => {
         });
         tick();
 
-        expect(rerouteSpy).toHaveBeenCalledTimes(2);
+        expect(rerouteSpy).toHaveBeenCalledTimes(3);
         expect(rerouteSpy).toHaveBeenCalledWith({
             url: '/app1/users'
         });
