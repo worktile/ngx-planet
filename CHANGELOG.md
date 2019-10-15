@@ -1,3 +1,12 @@
+<a name="1.0.8"></a>
+
+## [1.0.8](https://github.com/worktile/ngx-planet/compare/1.0.7...1.0.8) (2019-10-15)
+
+### Bug Fixes
+
+-   **app-loader:** should call error handler in ngZone, add test by way ([164adfc](https://github.com/worktile/ngx-planet/commit/164adfc))
+-   **planet:** should reroute once when start planet ([7f1bb3b](https://github.com/worktile/ngx-planet/commit/7f1bb3b))
+
 <a name="1.0.7"></a>
 
 ## [1.0.7](https://github.com/worktile/ngx-planet/compare/1.0.6...1.0.7) (2019-10-11)
