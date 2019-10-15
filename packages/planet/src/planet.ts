@@ -9,6 +9,7 @@ import {
     AppStatusChangeEvent
 } from './application/planet-application-loader';
 import { Observable } from 'rxjs';
+import { filter, startWith, distinctUntilChanged, map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -62,12 +63,21 @@ export class Planet {
     }
 
     start() {
-        this.router.events.subscribe((event: RouterEvent) => {
-            if (event instanceof NavigationEnd) {
+        this.router.events
+            .pipe(
+                filter(event => {
+                    return event instanceof NavigationEnd;
+                }),
+                map((event: NavigationEnd) => {
+                    return event.url;
+                }),
+                startWith(location.pathname),
+                distinctUntilChanged()
+            )
+            .subscribe((url: string) => {
                 this.planetApplicationLoader.reroute({
-                    url: event.url
+                    url: url
                 });
-            }
-        });
+            });
     }
 }
