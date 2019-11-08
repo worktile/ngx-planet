@@ -87,6 +87,14 @@ describe('PlanetApplicationService', () => {
             expect(app).toBe(app1);
         });
 
+        it('should get matched app by url /app1/dashboard/app2', () => {
+            planetApplicationService.register(app2);
+            planetApplicationService.register(app1);
+            const app = planetApplicationService.getAppByMatchedUrl('/app1/dashboard/app2');
+
+            expect(app).toBe(app1);
+        });
+
         it('should get matched app which rule is RegExp("(a\\wp3)|app4") by url app3/dashboard', () => {
             planetApplicationService.register(app1);
             planetApplicationService.register(app2);
