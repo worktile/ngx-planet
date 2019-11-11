@@ -87,6 +87,12 @@ describe('PlanetApplicationService', () => {
             expect(app).toBe(app1);
         });
 
+        it('should not get matched app by url /__/dashboard/app1', () => {
+            planetApplicationService.register(app1);
+            const app = planetApplicationService.getAppByMatchedUrl('/__/dashboard/app1');
+            expect(app).toBe(undefined);
+        });
+
         it('should get matched app which rule is RegExp("(a\\wp3)|app4") by url app3/dashboard', () => {
             planetApplicationService.register(app1);
             planetApplicationService.register(app2);
@@ -106,6 +112,30 @@ describe('PlanetApplicationService', () => {
             planetApplicationService.register(app2);
             const app = planetApplicationService.getAppByMatchedUrl('/__app1/dashboard');
             expect(app).toBeFalsy();
+        });
+    });
+
+    describe('getAppsByMatchedUrl', () => {
+        it('should get matched apps(app1) by url app1/dashboard', () => {
+            planetApplicationService.register(app1);
+            planetApplicationService.register(app2);
+            const apps = planetApplicationService.getAppsByMatchedUrl('/app1/dashboard');
+            expect(apps).toEqual([app1]);
+        });
+
+        it('should get matched apps by url when apps has same routerPathPrefix', () => {
+            planetApplicationService.register(app1);
+            const app2SameApp1 = { ...app2, routerPathPrefix: '/app1' };
+            planetApplicationService.register(app2SameApp1);
+            const apps = planetApplicationService.getAppsByMatchedUrl('/app1/dashboard');
+            expect(apps).toEqual([app1, app2SameApp1]);
+        });
+
+        it('should get empty apps by url __/dashboard/app1 without start with app1', () => {
+            planetApplicationService.register(app1);
+            planetApplicationService.register(app2);
+            const apps = planetApplicationService.getAppsByMatchedUrl('/__/dashboard/app1');
+            expect(apps).toEqual([]);
         });
     });
 

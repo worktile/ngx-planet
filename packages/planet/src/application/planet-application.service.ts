@@ -1,7 +1,7 @@
 import { PlanetApplication } from '../planet.class';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { shareReplay, map, switchMap } from 'rxjs/operators';
+import { shareReplay, map, switchMap, startWith } from 'rxjs/operators';
 import { coerceArray } from '../helpers';
 import { Observable, of } from 'rxjs';
 import { AssetsLoadResult, AssetsLoader } from '../assets-loader';
@@ -56,7 +56,7 @@ export class PlanetApplicationService {
             if (app.routerPathPrefix instanceof RegExp) {
                 return app.routerPathPrefix.test(url);
             } else {
-                return url.includes(app.routerPathPrefix);
+                return url.startsWith(app.routerPathPrefix);
             }
         });
     }
@@ -66,7 +66,7 @@ export class PlanetApplicationService {
             if (app.routerPathPrefix instanceof RegExp) {
                 return app.routerPathPrefix.test(url);
             } else {
-                return url.includes(app.routerPathPrefix);
+                return url.startsWith(app.routerPathPrefix);
             }
         });
     }
