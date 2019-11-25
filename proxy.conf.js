@@ -1,25 +1,24 @@
 const PROXY_CONFIG = {};
 
-PROXY_CONFIG['/app1/static'] = {
+PROXY_CONFIG['/static/app1'] = {
     target: 'http://localhost:3001',
-    pathRewrite: { '^/app1/static': '' },
+    pathRewrite: { '^/static/app1': '' },
     secure: false,
     changeOrigin: false
 };
 
-PROXY_CONFIG['/app2/static'] = {
+PROXY_CONFIG['/static/app2'] = {
     target: 'http://localhost:3002',
-    pathRewrite: { '^/app2/static': '' },
+    pathRewrite: { '^/static/app2': '' },
     secure: false,
     changeOrigin: true
 };
 
-PROXY_CONFIG['/app3/static'] = {
+PROXY_CONFIG['/static/app3'] = {
     target: 'http://localhost:3003',
-    pathRewrite: { '^/app3/static': '' },
+    pathRewrite: { '^/static/app3': '' },
     secure: false,
     changeOrigin: true
 };
-
 
 module.exports = PROXY_CONFIG;

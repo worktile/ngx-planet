@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
                 hostClass: appHostClass,
                 routerPathPrefix: /\/app1|app4/, // '/app1',
                 selector: 'app1-root-container',
-                resourcePathPrefix: '/app1/static/',
+                resourcePathPrefix: '/static/app1/',
                 preload: settings.app1.preload,
                 switchMode: settings.app1.switchMode,
                 loadSerial: true,
@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
                     // 'polyfills.js'
                 ],
                 styles: ['assets/main.css'],
-                manifest: '/app1/static/manifest.json',
+                manifest: '/static/app1/manifest.json',
                 extra: {
                     name: '应用1',
                     color: '#ffa415'
@@ -79,9 +79,9 @@ export class AppComponent implements OnInit {
                 switchMode: settings.app2.switchMode,
                 // prettier-ignore
                 scripts: [
-                    '/app2/static/main.js'
+                    '/static/app2/main.js'
                 ],
-                manifest: '/app2/static/manifest.json',
+                manifest: '/static/app2/manifest.json',
                 extra: {
                     name: '应用2',
                     color: '#66c060'
