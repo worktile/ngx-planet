@@ -21,6 +21,8 @@ yarn add @worktile/planet
 
 ## Demo
 
+[Try out our live demo](http://planet.ngnice.com)
+
 ![ngx-planet-micro-front-end.gif](https://github.com/worktile/ngx-planet/blob/master/examples/portal/src/assets/ngx-planet-micro-front-end.gif?raw=true)
 
 ## Usage
