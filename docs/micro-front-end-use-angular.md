@@ -81,108 +81,111 @@
 
 -   提供静态资源动态加载功能
 -   配置好子应用的规则，包含：应用名称，路由前缀，静态资源文件
-    ```
-    this.planet.registerApps([
-      {
-          name: 'app1',
-          hostParent: '#app-host-container',
-          routerPathPrefix: '/app1',
-          selector: 'app1-root',
-          scripts: ['/static/app1/main.js'],
-          styles: ['/static/app1/styles.css']
-      },
-      // ...
-    ]);
-    ```
 
 ```
+this.planet.registerApps([
+   {
+       name: 'app1',
+       hostParent: '#app-host-container',
+       routerPathPrefix: '/app1',
+       selector: 'app1-root',
+       scripts: ['/static/app1/main.js'],
+       styles: ['/static/app1/styles.css']
+   },
+   // ...
+]);
+```
 
-- 应用加载：根据当前页面的 URL 找到对应的子应用，然后加载应用的静态资源，调用预定义好的启动函数直接启动应用即可，在 Angular 中就是启动根模块 `platformBrowserDynamic().bootstrapModule(AppModule)`。
-- 应用的预加载：当前应用渲染完毕会预加载其他应用，并启动，并不会显示
-- 销毁应用使用 `appModuleRef.destroy();`
+-   应用加载：根据当前页面的 URL 找到对应的子应用，然后加载应用的静态资源，调用预定义好的启动函数直接启动应用即可，在 Angular 中就是启动根模块 `platformBrowserDynamic().bootstrapModule(AppModule)`。
+-   应用的预加载：当前应用渲染完毕会预加载其他应用，并启动，并不会显示
+-   销毁应用使用 `appModuleRef.destroy();`
 
-按照上述的步骤处理简单的场景基本就足够了，但是如果希望应用共存就不一样了，我们的做法是把  `bootstrapped` 状态隐藏起来，而不是销毁，只有 `Active` 状态的应用才会显示在当前页面中。
+按照上述的步骤处理简单的场景基本就足够了，但是如果希望应用共存就不一样了，我们的做法是把 `bootstrapped` 状态隐藏起来，而不是销毁，只有 `Active` 状态的应用才会显示在当前页面中。
 
 #### 路由
 
 因为选择了每个子应用是独立的 Angular 应用，同时还可以共存多个子应用，那么多个应用的路由同步，跳转就成了难题，而且还要支持应用之间路由跳转，应用之间通信，组件渲染等场景。我认为路由是我们在使用微前端架构中遇到的最复杂的问题。
 
-目前我们的做法是主应用的路由中把所有子应用的路由都配置上，组件设置成 `EmptyComponent` , 这样在切换到子应用路由的时候，主应用会匹配空路由状态，不会报错，每个子应用需要添加一个通用的空路由  `EmptyComponent`
-```
+目前我们的做法是主应用的路由中把所有子应用的路由都配置上，组件设置成 `EmptyComponent` , 这样在切换到子应用路由的时候，主应用会匹配空路由状态，不会报错，每个子应用需要添加一个通用的空路由 `EmptyComponent`
 
+```
 {
-path: '\*\*',
-component: EmptyComponent
+        path: '**',
+        component: EmptyComponent
 }
-
 ```
-除此之外还需要在切换路由的时候同步更新其他应用的路由，否则会造成每个应用的当前路由状态不一致，切换的时候会有跳转不成功的问题。
-- 主应用路由切换时，找到所有当前启动的子应用，使用 `router.navigateByUrl` 同步跳转
-- 子应用路由切换时，同步主应用路由，同时同步其他启动状态的子路由
 
-我看了很多微前端框架包括  `single-spa`，基本上路由这一块没有处理，完全交给开发者自己去填坑，`single-spa` 的 Angular 示例基本就是切换就销毁了 Angular 应用，因为没有并存，所以也就不需要处理多个应用路由的问题了，当然它作为和框架无关的微前端解决方案，也只能做到这一步了吧。
+除此之外还需要在切换路由的时候同步更新其他应用的路由，否则会造成每个应用的当前路由状态不一致，切换的时候会有跳转不成功的问题。
+
+-   主应用路由切换时，找到所有当前启动的子应用，使用 `router.navigateByUrl` 同步跳转
+-   子应用路由切换时，同步主应用路由，同时同步其他启动状态的子路由
+
+我看了很多微前端框架包括 `single-spa`，基本上路由这一块没有处理，完全交给开发者自己去填坑，`single-spa` 的 Angular 示例基本就是切换就销毁了 Angular 应用，因为没有并存，所以也就不需要处理多个应用路由的问题了，当然它作为和框架无关的微前端解决方案，也只能做到这一步了吧。
 
 这个等 Ivy 渲染引擎正式发布后，可以把子应用编译成直接可以运行的模块，整个应用如果只有一个路由会简化很多。
 
 #### 共享全局服务
+
 对于一些全局的数据我们一般会存储在服务中，然后子应用可以直接共享，比如：`当前登录用户`，`多语言服务`等，简单的数据共享可以直接挂载在 window 上即可，为了让每个子应用使用全局服务和模块内服务一致，我们通过在主应用中实例化这些服务，但后在每个子应用的 AppModule 中使用 provide 重新设置主应用的 value，当然这些不需要子应用的业务开发人员自己设置，已经封装到业务组件库中全局配置好了。
+
 ```
-
 {
-provide: AppContext,
-useValue: window.portalAppContext
+  provide: AppContext,
+  useValue: window.portalAppContext
 }
-
 ```
 
 #### 应用间通信
-应用间通信有很多中方式，我们底层使用浏览器的 `CustomEvent` ，在这之上封装了 `GlobalEventDispatcher` 服务做通信（当然你也可以使用在 window 对象上挂载全局对象实现），场景就是某个子应用要打开另外一个子应用的详情页
-```
 
+应用间通信有很多中方式，我们底层使用浏览器的 `CustomEvent` ，在这之上封装了 `GlobalEventDispatcher` 服务做通信（当然你也可以使用在 window 对象上挂载全局对象实现），场景就是某个子应用要打开另外一个子应用的详情页
+
+```
 // App1
 globalEventDispatcher.dispatch('open-task-detail', { taskId: 'xxx' });
 
 // App2
 globalEventDispatcher.register('open-task-detail').subscribe((payload) => {
-// open dialog of task detail
+    // open dialog of task detail
 });
-
 ```
+
 #### 应用间组件互相调用
+
 在我们的`敏捷开发`子产品中，一个用户故事的详情页，需要显示`测试管理`应用的关联的测试用例和测试执行情况，那么这个测试用例列表组件放在 `测试管理` 子应用是最合适的，那么用户故事详情页肯定在`敏捷开发`应用中，如何加载`测试管理`应用的某个组件就是一个问题。
 
-这一块使用了 `Angular CDK 中的 DomPortalOutlet`  动态创建组件，并指定渲染在某个容器中，这样保证了这个动态组件的创建还是 `测试管理` 模块的，只是渲染在了其他应用中而已。
-```
+这一块使用了 `Angular CDK 中的 DomPortalOutlet` 动态创建组件，并指定渲染在某个容器中，这样保证了这个动态组件的创建还是 `测试管理` 模块的，只是渲染在了其他应用中而已。
 
+```
 const portalOutlet = new DomPortalOutlet(container, componentFactoryResolver, appRef, injector);
 const testCasesPortalComponent = new ComponentPortal(TestCasesComponent, null);
 portalOutlet.attachComponentPortal(testCasesPortalComponent);
-
 ```
+
 #### 工程化
+
 使用微前端开发应用不仅仅要解决 Angular 的技术问题，还有一些开发，协作，部署等工程化的问题需要解决，比如：
 
-- 公共依赖库抽取
-- 本地如何启动开发
-- 如何打包部署，生成的 hash 资源文件如何通知主应用
+-   公共依赖库抽取
+-   本地如何启动开发
+-   如何打包部署，生成的 hash 资源文件如何通知主应用
 
 应用公共依赖库抽取避免类库重复打包，减少打包体积，这就需要自定义 Webpack Config 实现，起初我们是完全自定义 Webpack 打包 Angular 应用，一旦这么做就会失去很多 CLI 提供的方便功能，偶尔发现了一个类库 [angular-builders](https://github.com/just-jeb/angular-builders) ，他的作用其实就是在 Angular CLI 生成的 Webpack Config 中合并自定义的 Webpack Config，这样就做到了只需要写少量的自定义配置，其余的还是完全使用 CLI 的打包功能，差一点就要自己写一个类似的工具了。
-在主应用中把需要公共依赖包放入 `scripts` 中，然后在子应用中配置 `externals`，比如：`moment` `lodash` `rxjs` 这样的类库。
-```
+在主应用中把需要公共依赖包放入 scripts 中，然后在子应用中配置 externals，比如：moment lodash rxjs 这样的类库。
 
+```
 const webpackExtraConfig = {
-optimization: {
-runtimeChunk: false // 子应用一定要设置 false，否则会报错
-},
-externals: {
-moment: 'moment',
-lodash: '\_',
-rxjs: 'rxjs',
-'rxjs/operators': 'rxjs.operators',
-highcharts: 'Highcharts'
-},
-devtool: options.isDev ? 'eval-source-map' : '',
-plugins: [new WebpackAssetsManifest()]
+    optimization: {
+        runtimeChunk: false // 子应用一定要设置 false，否则会报错
+    },
+    externals: {
+        moment: 'moment',
+        lodash: '_',
+        rxjs: 'rxjs',
+       'rxjs/operators': 'rxjs.operators',
+        highcharts: 'Highcharts'
+    },
+    devtool: options.isDev ? 'eval-source-map' : '',
+    plugins: [new WebpackAssetsManifest()]
 };
 return webpackExtraConfig;
 
@@ -192,18 +195,17 @@ WebpackAssetsManifest 主要作用是生成 `manifest.json` 文件，目的就�
 
 本地开发配置 `proxy.conf.js` 代理访问每个子应用的资源文件，同时包括 API 调用。
 
-
 ## 基于 Angular 的微前端库 ngx-planet
+
 以上是我们在使用 Angular 打造微前端应用遇到的一些技术难点和我们的解决方案，调研后最终选择自研一套符合我们业务场景的，同时只为 Angular 量身打造的微前端库。
 
 Github 仓储地址：[ngx-planet](https://github.com/worktile/ngx-planet)
 在线 Demo：http://planet.ngnice.com
 
-不敢说 “你见过最完善的微前端解决方案” ，但至少是 Angular 社区目前我见过完全可用于生产环境的方案，API 符合 Angular Style ，国内很多大厂做微前端方案基本都忽略了 Angular 这个框架的存在，Worktile 四个研发子产品完全基于 `ngx-planet`  打造开发，经过接近一年的踩坑和实践，基本完全可用。
+不敢说 “你见过最完善的微前端解决方案” ，但至少是 Angular 社区目前我见过完全可用于生产环境的方案，API 符合 Angular Style ，国内很多大厂做微前端方案基本都忽略了 Angular 这个框架的存在，Worktile 四个研发子产品完全基于 `ngx-planet` 打造开发，经过接近一年的踩坑和实践，基本完全可用。
 
 ![image.png](https://wt-box.worktile.com/public/33072ae1-9724-4dbc-8754-3914d59c19aa)
 
 希望 Angular 社区可以多一些微前端的解决方案，一起进步，我们的方案肯定也存在很多问题，也欢迎大家提出改进的建议和吐槽，我们也将继续在 Angular 微前端的路上继续深耕下去，如果你正在寻找 Angular 的微前端类库，不妨试试 ngx-planet。
 
 将来会调研在 Ivy 渲染引擎下的优化和改进方案。
-```
