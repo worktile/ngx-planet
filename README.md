@@ -27,7 +27,7 @@ yarn add @worktile/planet
 
 ## Usage
 
-### 1. Loading the module in the portal app module
+### Loading NgxPlanetModule in the portal's AppModule
 
 ```
 import { NgxPlanetModule } from '@worktile/planet';
@@ -41,7 +41,7 @@ import { NgxPlanetModule } from '@worktile/planet';
 class AppModule {}
 ```
 
-### 2. Register Applications to planet use Planet Service in portal app
+### 2. Register applications to planet use PlanetService in portal app
 
 ```
 @Component({
@@ -118,7 +118,7 @@ export class AppComponent implements OnInit {
 }
 ```
 
-### 3. Sub Apps define app to bootstrap app module
+### 3. Sub App define how to bootstrap AppModule
 
 ```
 defineApplication('app1', (portalApp: PlanetPortalApplication) => {
