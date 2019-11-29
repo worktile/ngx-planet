@@ -27,7 +27,7 @@ yarn add @worktile/planet
 
 ## Usage
 
-### Loading NgxPlanetModule in the portal's AppModule
+### 1. Loading NgxPlanetModule in the portal's AppModule
 
 ```
 import { NgxPlanetModule } from '@worktile/planet';
