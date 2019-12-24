@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PlanetApplicationLoader, ApplicationStatus } from './planet-application-loader';
-import { AssetsLoader } from '../assets-loader';
+import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 
 import { SwitchModes, PlanetApplication } from '../planet.class';
 import { PlanetApplicationService } from './planet-application.service';
@@ -119,7 +119,7 @@ describe('PlanetApplicationLoader', () => {
     });
 
     it(`should load (load assets and bootstrap) app1 success`, fakeAsync(() => {
-        const loadAppAssets$ = new Subject();
+        const loadAppAssets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValue(loadAppAssets$);
 
@@ -158,7 +158,7 @@ describe('PlanetApplicationLoader', () => {
     }));
 
     it(`should not bootstrap app1 which is active`, fakeAsync(() => {
-        const loadAppAssets$ = new Subject();
+        const loadAppAssets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValue(loadAppAssets$);
 
@@ -184,7 +184,7 @@ describe('PlanetApplicationLoader', () => {
     }));
 
     it(`should call app1 navigateByUrl when app1 is active`, fakeAsync(() => {
-        const loadAppAssets$ = new Subject();
+        const loadAppAssets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValue(loadAppAssets$);
 
@@ -208,7 +208,7 @@ describe('PlanetApplicationLoader', () => {
     }));
 
     it(`should not call app1 navigateByUrl when app1 is active and url is same`, fakeAsync(() => {
-        const loadAppAssets$ = new Subject();
+        const loadAppAssets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValue(loadAppAssets$);
 
@@ -231,7 +231,7 @@ describe('PlanetApplicationLoader', () => {
     }));
 
     it(`should start load app1 once when reroute same url: /app1/dashboard`, fakeAsync(() => {
-        const loadAppAssets$ = new Subject();
+        const loadAppAssets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValue(loadAppAssets$);
 
@@ -253,8 +253,8 @@ describe('PlanetApplicationLoader', () => {
     }));
 
     it(`should cancel load app1 which assets has not loaded when next route (app2) change`, fakeAsync(() => {
-        const loadApp1Assets$ = new Subject();
-        const loadApp2Assets$ = new Subject();
+        const loadApp1Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+        const loadApp2Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
 
         const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
         const app2RefFaker = PlanetApplicationRefFaker.create(app2.name);
@@ -289,8 +289,8 @@ describe('PlanetApplicationLoader', () => {
     }));
 
     it(`should cancel load app1 which has not bootstrapped when next route (app2) change`, fakeAsync(() => {
-        const loadApp1Assets$ = new Subject();
-        const loadApp2Assets$ = new Subject();
+        const loadApp1Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+        const loadApp2Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
 
         const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
         const app2RefFaker = PlanetApplicationRefFaker.create(app2.name);
@@ -329,8 +329,8 @@ describe('PlanetApplicationLoader', () => {
     }));
 
     it(`should load next app(app2) when last app(app1) load error`, fakeAsync(() => {
-        const loadApp1Assets$ = new Subject();
-        const loadApp2Assets$ = new Subject();
+        const loadApp1Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+        const loadApp2Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
 
         const errorHandlerSpy = jasmine.createSpy(`error handler spy`);
         planetApplicationLoader.setOptions({
@@ -387,8 +387,8 @@ describe('PlanetApplicationLoader', () => {
     }));
 
     it(`should reload app(app1) when before app(app1) load error`, fakeAsync(() => {
-        const loadApp1Assets$ = new Subject();
-        const loadApp1AginAssets$ = new Subject();
+        const loadApp1Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+        const loadApp1AginAssets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
 
         const errorHandlerSpy = jasmine.createSpy(`error handler spy`);
         planetApplicationLoader.setOptions({
@@ -449,8 +449,8 @@ describe('PlanetApplicationLoader', () => {
             planetApplicationService.unregister(app2.name);
             planetApplicationService.register(newApp2);
 
-            const loadApp1Assets$ = new Subject();
-            const loadApp2Assets$ = new Subject();
+            const loadApp1Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+            const loadApp2Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
 
             const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
             const app2RefFaker = PlanetApplicationRefFaker.create(newApp2.name);
@@ -555,8 +555,8 @@ describe('PlanetApplicationLoader', () => {
             planetApplicationService.unregister(app2.name);
             planetApplicationService.register(newApp2);
 
-            const loadApp1Assets$ = new Subject();
-            const loadApp2Assets$ = new Subject();
+            const loadApp1Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+            const loadApp2Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
 
             const errorHandlerSpy = jasmine.createSpy(`error handler spy`);
             planetApplicationLoader.setOptions({

@@ -1,6 +1,6 @@
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { AssetsLoader } from './assets-loader';
+import { AssetsLoader, AssetsLoadResult } from './assets-loader';
 import { hashCode } from './helpers';
 import { Subject, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -23,7 +23,7 @@ describe('assets-loader', () => {
     describe('loadScript', () => {
         it('should load script success', fakeAsync(() => {
             const src = 'assets/main.js';
-            const createElementSpy = spyOn(document, 'createElement');
+            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
 
             // 返回 mock script
@@ -58,7 +58,7 @@ describe('assets-loader', () => {
 
         it('should not load script which has been loaded', fakeAsync(() => {
             const src = 'assets/main.js';
-            const createElementSpy = spyOn(document, 'createElement');
+            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
 
             createElementSpy.and.returnValue(mockScript);
@@ -86,7 +86,7 @@ describe('assets-loader', () => {
 
         it('should get error when load script fail', fakeAsync(() => {
             const src = 'assets/main.js';
-            const createElementSpy = spyOn(document, 'createElement');
+            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
 
             // 返回 mock script
@@ -128,8 +128,8 @@ describe('assets-loader', () => {
             const src2 = 'assets/main.js';
 
             const loadScriptSpy = spyOn(assetsLoader, 'loadScript');
-            const loadScriptObservable1 = new Subject();
-            const loadScriptObservable2 = new Subject();
+            const loadScriptObservable1 = new Subject<AssetsLoadResult>();
+            const loadScriptObservable2 = new Subject<AssetsLoadResult>();
             loadScriptSpy.and.returnValues(loadScriptObservable1, loadScriptObservable2);
 
             const result1 = {
@@ -211,7 +211,7 @@ describe('assets-loader', () => {
         };
 
         it('load assets success without manifest', () => {
-            const loadScriptsAndStyles$ = new Subject();
+            const loadScriptsAndStyles$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
             const loadScriptsAndStylesSpy = spyOn(assetsLoader, 'loadScriptsAndStyles');
             loadScriptsAndStylesSpy.and.returnValue(loadScriptsAndStyles$);
 
@@ -226,13 +226,13 @@ describe('assets-loader', () => {
                 app1.loadSerial
             );
 
-            loadScriptsAndStyles$.next('load success');
+            loadScriptsAndStyles$.next('load success' as any);
             expect(loadAssetsSpy).toHaveBeenCalled();
             expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
         });
 
         it('load assets success with manifest', () => {
-            const loadScriptsAndStyles$ = new Subject();
+            const loadScriptsAndStyles$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
             const loadScriptsAndStylesSpy = spyOn(assetsLoader, 'loadScriptsAndStyles');
             loadScriptsAndStylesSpy.and.returnValue(loadScriptsAndStyles$);
 
@@ -260,7 +260,7 @@ describe('assets-loader', () => {
                 app1.loadSerial
             );
 
-            loadScriptsAndStyles$.next('load success');
+            loadScriptsAndStyles$.next('load success' as any);
             expect(loadAssetsSpy).toHaveBeenCalled();
             expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
         });
