@@ -91,7 +91,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-builders/dev-server:generic",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "portal:build",
             "proxyConfig": "proxy.conf.js",
@@ -137,24 +137,14 @@
       "prefix": "app1",
       "schematics": {},
       "architect": {
-        "build-webpack": {
-          "builder": "@angular-devkit/build-webpack:webpack",
-          "options": {
-            "webpackConfig": "./examples/app1/webpack.config.js"
-          }
-        },
-        "serve-webpack": {
-          "builder": "@angular-devkit/build-webpack:webpack-dev-server",
-          "options": {
-            "webpackConfig": "./examples/app1/webpack.config.js"
-          }
-        },
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "customWebpackConfig": {
               "path": "./examples/app1/extra-webpack.config.js",
-              "mergeStrategies": { "module.rules": "prepend" },
+              "mergeStrategies": {
+                "module.rules": "prepend"
+              },
               "replaceDuplicatePlugins": true
             },
             "outputPath": "dist/app1",
@@ -194,10 +184,11 @@
           }
         },
         "serve": {
-          "builder": "@angular-builders/dev-server:generic",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "app1:build",
-            "port": 3001
+            "port": 3001,
+            "vendorChunk": false
           },
           "configurations": {
             "production": {
@@ -239,24 +230,14 @@
       "prefix": "app2",
       "schematics": {},
       "architect": {
-        "build-webpack": {
-          "builder": "@angular-devkit/build-webpack:webpack",
-          "options": {
-            "webpackConfig": "./examples/app2/webpack.config.js"
-          }
-        },
-        "serve-webpack": {
-          "builder": "@angular-devkit/build-webpack:webpack-dev-server",
-          "options": {
-            "webpackConfig": "./examples/app2/webpack.config.js"
-          }
-        },
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "customWebpackConfig": {
-              "path": "./examples/app1/extra-webpack.config.js",
-              "mergeStrategies": { "module.rules": "prepend" },
+              "path": "./examples/app2/extra-webpack.config.js",
+              "mergeStrategies": {
+                "module.rules": "prepend"
+              },
               "replaceDuplicatePlugins": true
             },
             "outputPath": "dist/app2",
@@ -296,10 +277,11 @@
           }
         },
         "serve": {
-          "builder": "@angular-builders/dev-server:generic",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "app2:build",
-            "port": 3002
+            "port": 3002,
+            "vendorChunk": false
           },
           "configurations": {
             "production": {

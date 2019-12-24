@@ -10,7 +10,7 @@ import { ThyDialog } from 'ngx-tethys';
     templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
-    @ViewChild('container') containerElementRef: ElementRef<HTMLDivElement>;
+    @ViewChild('container', { static: true }) containerElementRef: ElementRef<HTMLDivElement>;
 
     private componentRef: PlanetComponentRef;
 
