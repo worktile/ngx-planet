@@ -28,6 +28,15 @@
     "pub-only": "cd dist/planet && npm publish --access=public",
     "pub": "npm run build && npm run pub-only"
   },
+  "keywords": [
+    "micro front-end",
+    "micro frontend",
+    "microfrontend",
+    "micro frontends",
+    "angular micro front-end",
+    "ngx micro front-end",
+    "ngx planet"
+  ],
   "private": true,
   "dependencies": {
     "@angular/animations": "~8.2.14",
