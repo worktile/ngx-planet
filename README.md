@@ -1,5 +1,11 @@
 # ngx-planet
 
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 [![CircleCI](https://circleci.com/gh/worktile/ngx-planet.svg?style=shield)](https://circleci.com/gh/worktile/ngx-planet)
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![npm (scoped)](https://img.shields.io/npm/v/@worktile/planet?style=flat)](https://www.npmjs.com/package/@worktile/planet)
@@ -245,3 +251,23 @@ npm run test
 ## LICENSE
 
 [MIT License](https://github.com/worktile/ngx-planet/blob/master/LICENSE)
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://www.zhihu.com/people/why520crazy/activities"><img src="https://avatars2.githubusercontent.com/u/3959960?v=4" width="100px;" alt=""/><br /><sub><b>why520crazy</b></sub></a><br /><a href="#question-why520crazy" title="Answering Questions">💬</a> <a href="#business-why520crazy" title="Business development">💼</a> <a href="https://github.com/why520crazy/ngx-planet/commits?author=why520crazy" title="Code">💻</a> <a href="#design-why520crazy" title="Design">🎨</a> <a href="https://github.com/why520crazy/ngx-planet/commits?author=why520crazy" title="Documentation">📖</a> <a href="#eventOrganizing-why520crazy" title="Event Organizing">📋</a> <a href="#infra-why520crazy" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-why520crazy" title="Maintenance">🚧</a> <a href="#projectManagement-why520crazy" title="Project Management">📆</a> <a href="https://github.com/why520crazy/ngx-planet/pulls?q=is%3Apr+reviewed-by%3Awhy520crazy" title="Reviewed Pull Requests">👀</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

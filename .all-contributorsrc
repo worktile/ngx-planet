@@ -1,0 +1,33 @@
+{
+  "projectName": "ngx-planet",
+  "projectOwner": "why520crazy",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "why520crazy",
+      "name": "why520crazy",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3959960?v=4",
+      "profile": "https://www.zhihu.com/people/why520crazy/activities",
+      "contributions": [
+        "question",
+        "business",
+        "code",
+        "design",
+        "doc",
+        "eventOrganizing",
+        "infra",
+        "maintenance",
+        "projectManagement",
+        "review"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
