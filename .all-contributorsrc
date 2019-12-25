@@ -27,6 +27,18 @@
         "projectManagement",
         "review"
       ]
+    },
+    {
+      "login": "walkerkay",
+      "name": "Walker",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/15701592?v=4",
+      "profile": "https://github.com/walkerkay",
+      "contributions": [
+        "code",
+        "example",
+        "maintenance",
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7
