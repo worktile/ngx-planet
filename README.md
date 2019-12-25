@@ -9,7 +9,19 @@
 [coveralls-image]: https://coveralls.io/repos/github/worktile/ngx-planet/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/worktile/ngx-planet
 
-A simple, easy and productively of Angular 7+ Micro Front-end library.
+A powerful, reliable and productively Angular 7+ Micro Front-end library.
+
+APIs consistent with angular style, currently only supports Angular, other frameworks are not supported.
+
+## Features
+
+-   Rendering multiple applications at the same time
+-   Support coexist mode
+-   Application preload
+-   Communication between multiple applications
+-   Cross application component rendering
+-   Comprehensive examples include routing configuration, lazy loading and all features
+-   Support latest Angular 8.x version
 
 ## Installation
 
@@ -224,6 +236,11 @@ npm run serve:app2 // 3002
 // test
 npm run test
 ```
+
+## Roadmap
+
+-   [ ] Ivy render engine
+-   [ ] Supports Other frameworks as React and Vue
 
 ## LICENSE
 
