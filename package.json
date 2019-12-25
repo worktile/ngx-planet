@@ -1,6 +1,17 @@
 {
   "name": "@worktile/planet",
   "version": "1.0.9",
+  "description": "A simple, easy and productively of Angular 7+ Micro Front-end library",
+  "keywords": [
+    "micro front-end",
+    "micro frontend",
+    "microfrontend",
+    "micro frontends",
+    "angular micro front-end",
+    "ngx micro front-end",
+    "ngx planet"
+  ],
+  "private": false,
   "scripts": {
     "ng": "ng",
     "// start": "run app1 and app2 use webpack dev-server",
@@ -28,16 +39,6 @@
     "pub-only": "cd dist/planet && npm publish --access=public",
     "pub": "npm run build && npm run pub-only"
   },
-  "keywords": [
-    "micro front-end",
-    "micro frontend",
-    "microfrontend",
-    "micro frontends",
-    "angular micro front-end",
-    "ngx micro front-end",
-    "ngx planet"
-  ],
-  "private": true,
   "dependencies": {
     "@angular/animations": "~8.2.14",
     "@angular/cdk": "^8.2.3",
