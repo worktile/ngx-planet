@@ -39,6 +39,15 @@
         "maintenance",
         "review"
       ]
+    },
+    {
+      "login": "whyour",
+      "name": "whyour",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/22700758?v=4",
+      "profile": "https://whyour.cn",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
