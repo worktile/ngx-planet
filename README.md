@@ -9,7 +9,7 @@
 [coveralls-image]: https://coveralls.io/repos/github/worktile/ngx-planet/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/worktile/ngx-planet
 
-An Angular 7+ Micro Frontend library.
+A simple, easy and productively of Angular 7+ Micro Front-end library.
 
 ## Installation
 
