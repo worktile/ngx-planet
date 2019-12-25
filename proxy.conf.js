@@ -2,14 +2,14 @@ const PROXY_CONFIG = {};
 
 PROXY_CONFIG['/static/app1'] = {
     target: 'http://localhost:3001',
-    pathRewrite: { '^/static/app1': '' },
+    // pathRewrite: { '^/static/app1': '' },
     secure: false,
     changeOrigin: false
 };
 
 PROXY_CONFIG['/static/app2'] = {
     target: 'http://localhost:3002',
-    pathRewrite: { '^/static/app2': '' },
+    // pathRewrite: { '^/static/app2': '' },
     secure: false,
     changeOrigin: true
 };

@@ -1,7 +1,7 @@
-<p>This is user list page</p>
+<p>This is user list page, <code>and this module is loaded lazy.</code></p>
 <thy-list>
-    <thy-list-item class="thy-list-option"><span (click)="openUserDetail(1)">Peter</span></thy-list-item>
-    <thy-list-item class="thy-list-option"><span (click)="openUserDetail(2)">Lily</span></thy-list-item>
+  <thy-list-item class="thy-list-option" (click)="openUserDetail(1)"><span>Peter</span></thy-list-item>
+  <thy-list-item class="thy-list-option" (click)="openUserDetail(2)"><span>Lily</span></thy-list-item>
 </thy-list>
 
 <router-outlet></router-outlet>
