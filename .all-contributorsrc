@@ -1,0 +1,63 @@
+{
+  "projectName": "ngx-planet",
+  "projectOwner": "why520crazy",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "why520crazy",
+      "name": "why520crazy",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3959960?v=4",
+      "profile": "https://www.zhihu.com/people/why520crazy/activities",
+      "contributions": [
+        "question",
+        "business",
+        "code",
+        "design",
+        "doc",
+        "eventOrganizing",
+        "infra",
+        "maintenance",
+        "projectManagement",
+        "review"
+      ]
+    },
+    {
+      "login": "walkerkay",
+      "name": "Walker",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/15701592?v=4",
+      "profile": "https://github.com/walkerkay",
+      "contributions": [
+        "code",
+        "example",
+        "maintenance",
+        "review"
+      ]
+    },
+    {
+      "login": "whyour",
+      "name": "whyour",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/22700758?v=4",
+      "profile": "https://whyour.cn",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "aoilti",
+      "name": "张威",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/19969080?v=4",
+      "profile": "http://www.231jx.cn",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
