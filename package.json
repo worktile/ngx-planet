@@ -11,7 +11,6 @@
     "ngx micro front-end",
     "ngx planet"
   ],
-  "private": false,
   "scripts": {
     "ng": "ng",
     "// start": "run app1 and app2 use webpack dev-server",
@@ -37,7 +36,10 @@
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "e2e": "ng e2e",
     "pub-only": "cd dist/planet && npm publish --access=public",
-    "pub": "npm run build && npm run pub-only"
+    "pub": "npm run build && npm run pub-only",
+    "contributors:init": "all-contributors init",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate"
   },
   "dependencies": {
     "@angular/animations": "~8.2.14",
@@ -96,7 +98,8 @@
     "tslint": "~5.15.0",
     "typescript": "~3.5.3",
     "webpack": "^4.41.4",
-    "webpack-assets-manifest": "^3.1.1"
+    "webpack-assets-manifest": "^3.1.1",
+    "all-contributors-cli": "^6.6.0"
   },
   "husky": {
     "hooks": {
