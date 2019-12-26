@@ -9,7 +9,7 @@
 [coveralls-image]: https://coveralls.io/repos/github/worktile/ngx-planet/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/worktile/ngx-planet
 
-A powerful, reliable and productively Angular 7+ Micro Front-end library.
+A powerful, reliable, fully-featured and production ready Micro Frontend library for Angular.
 
 APIs consistent with angular style, currently only supports Angular, other frameworks are not supported.
 
@@ -22,6 +22,11 @@ APIs consistent with angular style, currently only supports Angular, other frame
 -   Cross application component rendering
 -   Comprehensive examples include routing configuration, lazy loading and all features
 -   Support latest Angular 8.x version
+
+## Other solutions for Micro Front-end
+
+-   [single-spa](https://github.com/CanopyTax/single-spa): A javascript front-end framework supports any frameworks.
+-   [mooa](https://github.com/phodal/mooa): A independent-deployment micro-frontend Framework for Angular from single-spa, `planet` is very similar to it, but `planet` is more powerful, more reliable, and more production ready, more angular.
 
 ## Installation
 
