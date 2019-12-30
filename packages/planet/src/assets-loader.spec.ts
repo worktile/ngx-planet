@@ -2,7 +2,7 @@ import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AssetsLoader, AssetsLoadResult } from './assets-loader';
 import { hashCode } from './helpers';
-import { Subject, of } from 'rxjs';
+import { Subject, of, observable, Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 describe('assets-loader', () => {
@@ -10,7 +10,7 @@ describe('assets-loader', () => {
     const mockScript: {
         onload: () => void;
         onerror: (error: string | Event) => void;
-    } = { onload: null, onerror: null };
+    } = { onload: () => {}, onerror: null };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -264,5 +264,194 @@ describe('assets-loader', () => {
             expect(loadAssetsSpy).toHaveBeenCalled();
             expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
         });
+    });
+
+    describe('loadStyle', () => {
+        let src, createElementSpy, getElementsByTagNameSpy, appendChildSpy, styleLoaded, styleLoadedFail;
+        const heads: { appendChild: () => void }[] = [{ appendChild: null }];
+        beforeEach(() => {
+            src = 'css/style.css';
+            createElementSpy = spyOn(document, 'createElement');
+            getElementsByTagNameSpy = spyOn(document, 'getElementsByTagName');
+
+            createElementSpy.and.returnValue(mockScript);
+            getElementsByTagNameSpy.and.returnValue(heads);
+
+            expect(createElementSpy).not.toHaveBeenCalled();
+            expect(getElementsByTagNameSpy).not.toHaveBeenCalled();
+            appendChildSpy = spyOn(heads[0], 'appendChild');
+            expect(appendChildSpy).not.toHaveBeenCalled();
+
+            styleLoaded = jasmine.createSpy('style loaded');
+            styleLoadedFail = jasmine.createSpy('load style error');
+            assetsLoader.loadStyle(src).subscribe(styleLoaded, styleLoadedFail);
+
+            expect(createElementSpy).toHaveBeenCalledTimes(1);
+            expect(getElementsByTagNameSpy).toHaveBeenCalledTimes(1);
+            expect(appendChildSpy).toHaveBeenCalledTimes(1);
+            expect(styleLoaded).toHaveBeenCalledTimes(0);
+        });
+
+        it('should load style success', fakeAsync(() => {
+            mockScript.onload();
+
+            expect(styleLoaded).toHaveBeenCalledTimes(1);
+            expect(styleLoadedFail).toHaveBeenCalledTimes(0);
+            expect(styleLoaded).toHaveBeenCalledWith({
+                src: src,
+                hashCode: hashCode(src),
+                loaded: true,
+                status: 'Loaded'
+            });
+        }));
+
+        it('should not load style when style has been loaded', fakeAsync(() => {
+            mockScript.onload();
+
+            const styleLoaded2 = jasmine.createSpy('load style');
+            assetsLoader.loadStyle(src).subscribe(styleLoaded2, error => {
+                console.error(error);
+            });
+            expect(createElementSpy).toHaveBeenCalledTimes(1);
+            expect(getElementsByTagNameSpy).toHaveBeenCalledTimes(1);
+
+            expect(styleLoaded2).toHaveBeenCalledWith({
+                src: src,
+                hashCode: hashCode(src),
+                loaded: true,
+                status: 'Loaded'
+            });
+        }));
+
+        it('should get error when load style fail', fakeAsync(() => {
+            mockScript.onerror('load style error');
+
+            expect(styleLoaded).toHaveBeenCalledTimes(0);
+            expect(styleLoadedFail).toHaveBeenCalledTimes(1);
+            expect(styleLoadedFail).toHaveBeenCalledWith({
+                src: src,
+                hashCode: hashCode(src),
+                loaded: true,
+                status: 'Loaded',
+                error: 'load style error'
+            });
+        }));
+    });
+
+    describe('loadStyles', () => {
+        it('should return null when sources is empty', fakeAsync(() => {
+            const loadStyletSpy = spyOn(assetsLoader, 'loadStyle');
+
+            expect(loadStyletSpy).not.toHaveBeenCalled();
+
+            const loadedStyles = jasmine.createSpy('loaded styles success');
+            const loadedStylesFail = jasmine.createSpy('loaded styles fail');
+            assetsLoader.loadStyles([]).subscribe(loadedStyles, loadedStylesFail);
+
+            expect(loadStyletSpy).not.toHaveBeenCalled();
+            expect(loadedStyles).toHaveBeenCalledTimes(1);
+            expect(loadedStyles).toHaveBeenCalledWith(null);
+        }));
+
+        it('should return load styles', fakeAsync(() => {
+            const stylesSrc = ['css/style1.css', 'css/style2.css'];
+            const loadStyletSpy = spyOn(assetsLoader, 'loadStyle');
+
+            expect(loadStyletSpy).not.toHaveBeenCalled();
+
+            const loadStyleObservable1: Subject<AssetsLoadResult> = new Subject<AssetsLoadResult>();
+            const loadStyleObservable2: Subject<AssetsLoadResult> = new Subject<AssetsLoadResult>();
+
+            const loadStyleObservable1Value = {
+                src: stylesSrc[0],
+                hashCode: hashCode(stylesSrc[0]),
+                loaded: true,
+                status: 'Loaded'
+            };
+            const loadStyleObservable2Value = {
+                src: stylesSrc[1],
+                hashCode: hashCode(stylesSrc[1]),
+                loaded: true,
+                status: 'Loaded'
+            };
+
+            loadStyletSpy.and.returnValues(loadStyleObservable1, loadStyleObservable2);
+
+            const loadedStyles = jasmine.createSpy('loaded styles success');
+            const loadedStylesFail = jasmine.createSpy('loaded styles fail');
+            assetsLoader.loadStyles(stylesSrc).subscribe(loadedStyles, loadedStylesFail);
+
+            expect(loadStyletSpy).toHaveBeenCalledTimes(2);
+            expect(loadedStyles).not.toHaveBeenCalled();
+
+            loadStyleObservable1.next(loadStyleObservable1Value);
+            loadStyleObservable1.complete();
+            loadStyleObservable2.next(loadStyleObservable2Value);
+            loadStyleObservable2.complete();
+
+            expect(loadedStyles).toHaveBeenCalledTimes(1);
+            expect(loadedStyles).toHaveBeenCalledWith([loadStyleObservable1Value, loadStyleObservable2Value]);
+        }));
+    });
+
+    describe('loadScriptsAndStyles', () => {
+        it('should load scripts and styles success', fakeAsync(() => {
+            const scripts = ['assert/main.js', 'assert/main1.js'];
+            const styles = ['css/style.css', 'css/style1.css'];
+            const loadScriptsSpy = spyOn(assetsLoader, 'loadScripts');
+            const loadStylesSpy = spyOn(assetsLoader, 'loadStyles');
+            const loadScriptsObservable = new Subject<AssetsLoadResult[]>();
+            const loadStylesObservable = new Subject<AssetsLoadResult[]>();
+            const loadScriptsValues = [
+                {
+                    src: scripts[0],
+                    hashCode: hashCode(scripts[0]),
+                    loaded: true,
+                    status: 'Loaded'
+                },
+                {
+                    src: scripts[1],
+                    hashCode: hashCode(scripts[1]),
+                    loaded: true,
+                    status: 'Loaded'
+                }
+            ];
+            const loadStylesValues = [
+                {
+                    src: styles[0],
+                    hashCode: hashCode(styles[0]),
+                    loaded: true,
+                    status: 'Loaded'
+                },
+                {
+                    src: styles[1],
+                    hashCode: hashCode(styles[1]),
+                    loaded: true,
+                    status: 'Loaded'
+                }
+            ];
+
+            loadScriptsSpy.and.returnValue(loadScriptsObservable);
+            loadStylesSpy.and.returnValue(loadStylesObservable);
+
+            expect(loadScriptsSpy).not.toHaveBeenCalled();
+            expect(loadStylesSpy).not.toHaveBeenCalled();
+
+            const loadedSuccess = jasmine.createSpy('loaded scripts and styles success');
+            const loadedFail = jasmine.createSpy('loaded scripts and styles fail');
+            assetsLoader.loadScriptsAndStyles(scripts, styles).subscribe(loadedSuccess, loadedFail);
+
+            expect(loadScriptsSpy).toHaveBeenCalledTimes(1);
+            expect(loadStylesSpy).toHaveBeenCalledTimes(1);
+            expect(loadedSuccess).not.toHaveBeenCalled();
+
+            loadScriptsObservable.next(loadScriptsValues);
+            loadScriptsObservable.complete();
+            loadStylesObservable.next(loadStylesValues);
+            loadStylesObservable.complete();
+
+            expect(loadedSuccess).toHaveBeenCalledTimes(1);
+            expect(loadedSuccess).toHaveBeenCalledWith([loadScriptsValues, loadStylesValues]);
+        }));
     });
 });
