@@ -1,6 +1,6 @@
 {
   "projectName": "ngx-planet",
-  "projectOwner": "why520crazy",
+  "projectOwner": "worktile",
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
@@ -57,7 +57,19 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "luxiaobei",
+      "name": "luxiaobei",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/13583957?v=4",
+      "profile": "https://github.com/luxiaobei",
+      "contributions": [
+        "infra",
+        "test",
+        "code"
+      ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "skipCi": true
 }
