@@ -2,7 +2,7 @@ import { helpers } from 'ngx-tethys/util';
 const { isString, isNumber } = helpers;
 const NUMBER_PREFIX = `____n____`;
 
-const SupportedStorage = window && window.localStorage;
+const supportedStorage = window && window.localStorage;
 const storageSource = window.localStorage || window.sessionStorage;
 
 const cache = {
@@ -23,7 +23,7 @@ const cache = {
             : isNumber(value)
             ? `${NUMBER_PREFIX}${value}`
             : JSON.stringify(value);
-        if (SupportedStorage) {
+        if (supportedStorage) {
             storageSource.setItem(key, itemValue as string);
         }
     },
@@ -40,7 +40,7 @@ const cache = {
      * @param key string
      */
     get<TValue = string>(key: string): TValue {
-        if (SupportedStorage) {
+        if (supportedStorage) {
             const value = storageSource.getItem(key);
             if (value) {
                 try {
@@ -65,7 +65,7 @@ const cache = {
      * @param key cache key
      */
     remove(key: string) {
-        if (SupportedStorage) {
+        if (supportedStorage) {
             storageSource.removeItem(key);
         }
     },
@@ -73,7 +73,7 @@ const cache = {
      * clear all storage
      */
     clear() {
-        if (SupportedStorage) {
+        if (supportedStorage) {
             storageSource.clear();
         }
     }
