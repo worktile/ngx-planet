@@ -20,7 +20,7 @@ const DEFAULT_SETTINGS: CustomSettingsInfo = {
         switchMode: SwitchModes.coexist
     },
     app2: {
-        preload: false,
+        preload: true,
         switchMode: SwitchModes.coexist
     }
 };
