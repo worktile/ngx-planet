@@ -43,13 +43,12 @@ export class ProjectListComponent implements OnInit, DoCheck {
 
     openDetail(event: ThyGridRowEvent) {
         this.router.navigateByUrl(`/app2/projects/${event.row.id}`);
+        this.click.emit();
         // this.dialog.open(ProjectDetailComponent, {
         //     hasBackdrop: true,
         //     backdropClosable: true,
         //     closeOnNavigation: true
         // });
-
-        // this.click.emit();
     }
 
     ngDoCheck() {

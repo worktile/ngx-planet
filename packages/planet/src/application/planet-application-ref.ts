@@ -10,11 +10,13 @@ import { Observable, from } from 'rxjs';
 declare const window: any;
 export interface GlobalPlanet {
     apps: { [key: string]: PlanetApplicationRef };
+    registerApps: PlanetApplication[];
     portalApplication: PlanetPortalApplication;
 }
 
 const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
-    apps: {}
+    apps: {},
+    registerApps: []
 });
 
 export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;

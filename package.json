@@ -55,7 +55,7 @@
     "ngx-bootstrap": "^5.2.0",
     "ngx-tethys": "^7.6.16",
     "rxjs": "~6.4.0",
-    "sortablejs": "^1.10.1",
+    "sortablejs": "1.8.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1",
     "bootstrap": "4.3.1"
