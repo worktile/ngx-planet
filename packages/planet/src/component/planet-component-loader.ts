@@ -1,9 +1,14 @@
-import { Injectable, ApplicationRef, NgModuleRef, NgZone, ChangeDetectorRef, ElementRef } from '@angular/core';
+import { Injectable, ApplicationRef, NgModuleRef, NgZone, ElementRef, Inject } from '@angular/core';
 import { ComponentType, DomPortalOutlet, ComponentPortal, PortalInjector } from '@angular/cdk/portal';
-import { globalPlanet } from '../application/planet-application-ref';
+import { globalPlanet, PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
 import { PlantComponentConfig } from './plant-component.config';
 import { coerceArray } from '../helpers';
+import { getPlanetApplicationByName } from '../application/planet-application.service';
+import { PlanetApplicationLoader } from '../application/planet-application-loader';
+import { delay, map, shareReplay, finalize } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
+import { DOCUMENT } from '@angular/common';
 
 export interface PlanetComponent<T = any> {
     name: string;
@@ -19,14 +24,23 @@ export class PlanetComponentLoader {
     constructor(
         private applicationRef: ApplicationRef,
         private ngModuleRef: NgModuleRef<any>,
-        private ngZone: NgZone
+        private ngZone: NgZone,
+        private applicationLoader: PlanetApplicationLoader,
+        @Inject(DOCUMENT) private document: any
     ) {}
 
-    private getPlantAppRef(app: string) {
-        if (globalPlanet.apps[app]) {
-            return globalPlanet.apps[app];
+    private getPlantAppRef(name: string): Observable<PlanetApplicationRef> {
+        if (globalPlanet.apps[name]) {
+            return of(globalPlanet.apps[name]);
         } else {
-            throwAppNotDefineError(app);
+            const app = getPlanetApplicationByName(name);
+            return this.applicationLoader.preload(app).pipe(
+                // Because register use 'setTimeout',so delay 20
+                delay(20),
+                map(() => {
+                    return globalPlanet.apps[name];
+                })
+            );
         }
     }
 
@@ -40,15 +54,23 @@ export class PlanetComponentLoader {
     }
 
     private getContainerElement(config: PlantComponentConfig): HTMLElement {
-        if (config.container) {
+        if (!config.container) {
+            throw new Error(`config 'container' cannot be null`);
+        } else {
             if ((config.container as ElementRef).nativeElement) {
                 return (config.container as ElementRef).nativeElement;
             } else {
                 return config.container as HTMLElement;
             }
-        } else {
-            throw new Error(`config 'container' cannot be null`);
         }
+    }
+
+    private createContainerElement(config: PlantComponentConfig) {
+        const container = this.getContainerElement(config);
+        const element = this.document.createElement('div');
+        element.classList.add('planet-component-container');
+        container.appendChild(element);
+        return element;
     }
 
     private attachComponent<TData>(
@@ -60,7 +82,7 @@ export class PlanetComponentLoader {
         const componentFactoryResolver = appModuleRef.componentFactoryResolver;
         const appRef = this.applicationRef;
         const injector = this.createInjector<TData>(appModuleRef, plantComponentRef);
-        const container = this.getContainerElement(config);
+        const container = this.createContainerElement(config);
         let portalOutlet = this.domPortalOutletCache.get(container);
         if (portalOutlet) {
             portalOutlet.detach();
@@ -85,17 +107,18 @@ export class PlanetComponentLoader {
 
     private registerComponentFactory(componentOrComponents: PlanetComponent | PlanetComponent[]) {
         const app = this.ngModuleRef.instance.appName;
-        const planetAppRef = this.getPlantAppRef(app);
-        planetAppRef.registerComponentFactory((componentName: string, config: PlantComponentConfig<any>) => {
-            const components = coerceArray(componentOrComponents);
-            const component = components.find(item => item.name === componentName);
-            if (component) {
-                return this.ngZone.run(() => {
-                    return this.attachComponent<any>(component, planetAppRef.appModuleRef, config);
-                });
-            } else {
-                throw Error(`unregistered component ${componentName} in app ${app}`);
-            }
+        this.getPlantAppRef(app).subscribe(appRef => {
+            appRef.registerComponentFactory((componentName: string, config: PlantComponentConfig<any>) => {
+                const components = coerceArray(componentOrComponents);
+                const component = components.find(item => item.name === componentName);
+                if (component) {
+                    return this.ngZone.run(() => {
+                        return this.attachComponent<any>(component, appRef.appModuleRef, config);
+                    });
+                } else {
+                    throw Error(`unregistered component ${componentName} in app ${app}`);
+                }
+            });
         });
     }
 
@@ -105,17 +128,17 @@ export class PlanetComponentLoader {
         });
     }
 
-    load<TData = any>(
-        app: string,
-        componentName: string,
-        config: PlantComponentConfig<TData>,
-        error: (error) => void = e => {}
-    ) {
-        const planetAppRef = this.getPlantAppRef(app);
-        return planetAppRef.loadPlantComponent<TData>(componentName, config);
+    load<TData = any>(app: string, componentName: string, config: PlantComponentConfig<TData>) {
+        const result = this.getPlantAppRef(app).pipe(
+            map(appRef => {
+                return appRef.loadPlantComponent<TData>(componentName, config);
+            }),
+            finalize(() => {
+                this.applicationRef.tick();
+            }),
+            shareReplay()
+        );
+        result.subscribe();
+        return result;
     }
-}
-
-function throwAppNotDefineError(app: string) {
-    throw new Error(`${app} app is not define`);
 }

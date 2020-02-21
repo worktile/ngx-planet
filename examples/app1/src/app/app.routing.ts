@@ -2,6 +2,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { Route } from '@angular/router';
 import { AppRootComponent } from './root/root.component';
 import { EmptyComponent } from 'ngx-planet';
+import { ProjectsComponent } from './projects/projects.component';
 
 export const routers: Route[] = [
     {
@@ -20,6 +21,10 @@ export const routers: Route[] = [
             {
                 path: 'users',
                 loadChildren: () => import('./user/user.module').then(mod => mod.UserModule)
+            },
+            {
+                path: 'projects',
+                component: ProjectsComponent
             }
             // {
             //     path: 'users',

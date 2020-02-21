@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, Inject, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CounterService } from '../counter.service';
 import { AppRootContext } from '@demo/common';
@@ -9,7 +9,7 @@ import { ThyDialog } from 'ngx-tethys';
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
     @ViewChild('container', { static: true }) containerElementRef: ElementRef<HTMLDivElement>;
 
     private componentRef: PlanetComponentRef;
@@ -24,15 +24,21 @@ export class DashboardComponent {
         private planetComponentLoader: PlanetComponentLoader
     ) {}
 
+    ngOnInit() {}
+
     openADetail() {
         this.globalEventDispatcher.dispatch('openADetail');
     }
 
     openApp2Component() {
-        this.componentRef = this.planetComponentLoader.load('app2', 'project1', {
-            container: this.containerElementRef,
-            initialState: {}
-        });
+        this.planetComponentLoader
+            .load('app2', 'project1', {
+                container: this.containerElementRef,
+                initialState: {}
+            })
+            .subscribe(componentRef => {
+                this.componentRef = componentRef;
+            });
     }
 
     disposeApp2Component() {
