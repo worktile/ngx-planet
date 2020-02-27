@@ -246,7 +246,8 @@ describe('assets-loader', () => {
             loadScriptObservable1.complete();
 
             expect(loadScriptsSpy).toHaveBeenCalled();
-            expect(loadScriptsSpy).toHaveBeenCalledWith([result1, result2]);
+            expect(loadScriptsSpy).toHaveBeenCalledWith([result1]);
+            expect(loadScriptsSpy).toHaveBeenCalledWith([result1]);
         });
     });
 
