@@ -90,12 +90,12 @@ export class PlanetApplicationRef {
         });
     }
 
-    registerComponentFactory(componentFactory: PlantComponentFactory) {
-        this.componentFactory = componentFactory;
+    getComponentFactory() {
+        return this.componentFactory;
     }
 
-    loadPlantComponent<TData = any>(componentName: string, config: PlantComponentConfig<TData>) {
-        return this.componentFactory<TData>(componentName, config);
+    registerComponentFactory(componentFactory: PlantComponentFactory) {
+        this.componentFactory = componentFactory;
     }
 
     destroy(): void {

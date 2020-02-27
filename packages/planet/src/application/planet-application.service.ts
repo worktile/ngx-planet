@@ -85,7 +85,7 @@ export class PlanetApplicationService {
     }
 
     getApps() {
-        return globalPlanet.registerApps;
+        return this.apps;
     }
 }
 
