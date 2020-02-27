@@ -21,7 +21,7 @@ describe('assets-loader', () => {
     });
 
     describe('loadScript', () => {
-        it('should load script success', fakeAsync(() => {
+        it('should load script success when not in IE', fakeAsync(() => {
             const src = 'assets/main.js';
             const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
@@ -48,6 +48,49 @@ describe('assets-loader', () => {
 
             // // scriptLoaded 加载完毕
             expect(scriptLoaded).toHaveBeenCalledTimes(1);
+            expect(scriptLoaded).toHaveBeenCalledWith({
+                src: src,
+                hashCode: hashCode(src),
+                loaded: true,
+                status: 'Loaded'
+            });
+        }));
+
+        it('should load script success when in IE', fakeAsync(() => {
+            const mockScriptInIE: { readyState: string; onreadystatechange: () => void } = {
+                readyState: 'uninitialized',
+                onreadystatechange: () => {
+                    console.log('loaded script state change');
+                }
+            };
+            const src = 'assets/main.js';
+            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
+            const appendChildSpy = spyOn(document.body, 'appendChild');
+
+            // 返回 mock script
+            createElementSpy.and.returnValue(mockScriptInIE);
+            // 没有调用
+            expect(appendChildSpy).not.toHaveBeenCalled();
+            expect(createElementSpy).not.toHaveBeenCalled();
+
+            const scriptLoaded = jasmine.createSpy('load script');
+            assetsLoader.loadScript(src).subscribe(scriptLoaded, error => {
+                console.error(error);
+            });
+            // 已经被调用
+            expect(appendChildSpy).toHaveBeenCalledTimes(1);
+            expect(createElementSpy).toHaveBeenCalledTimes(1);
+
+            // scriptLoaded 没有加载完毕
+            expect(scriptLoaded).toHaveBeenCalledTimes(0);
+
+            // 手动调用使其加载完毕
+            mockScriptInIE.readyState = 'loaded';
+            mockScriptInIE.onreadystatechange();
+
+            // // scriptLoaded 加载完毕
+            expect(scriptLoaded).toHaveBeenCalledTimes(1);
+            expect(mockScriptInIE.onreadystatechange).toBeNull();
             expect(scriptLoaded).toHaveBeenCalledWith({
                 src: src,
                 hashCode: hashCode(src),
@@ -123,6 +166,21 @@ describe('assets-loader', () => {
     });
 
     describe('loadScripts', () => {
+        it('should return null when sources is empty', fakeAsync(() => {
+            const loadScriptSpy = spyOn(assetsLoader, 'loadScript');
+
+            expect(loadScriptSpy).not.toHaveBeenCalled();
+
+            const loadedScripts = jasmine.createSpy('loaded scripts success');
+            const loadedScriptsFail = jasmine.createSpy('loaded scripts fail');
+            assetsLoader.loadStyles([]).subscribe(loadedScripts, loadedScriptsFail);
+
+            expect(loadScriptSpy).not.toHaveBeenCalled();
+            expect(loadedScripts).toHaveBeenCalledTimes(1);
+            expect(loadedScripts).toHaveBeenCalledWith(null);
+            expect(loadedScriptsFail).not.toHaveBeenCalled();
+        }));
+
         it('should load scripts success', () => {
             const src1 = 'assets/vendor.js';
             const src2 = 'assets/main.js';
@@ -147,6 +205,40 @@ describe('assets-loader', () => {
 
             const loadScriptsSpy = jasmine.createSpy('load scripts spy');
             assetsLoader.loadScripts([src1, src2]).subscribe(loadScriptsSpy);
+
+            loadScriptObservable2.next(result2);
+            loadScriptObservable2.complete();
+            loadScriptObservable1.next(result1);
+            loadScriptObservable1.complete();
+
+            expect(loadScriptsSpy).toHaveBeenCalled();
+            expect(loadScriptsSpy).toHaveBeenCalledWith([result1, result2]);
+        });
+
+        it('should load scripts success when serial is true', () => {
+            const src1 = 'assets/vendor.js';
+            const src2 = 'assets/main.js';
+
+            const loadScriptSpy = spyOn(assetsLoader, 'loadScript');
+            const loadScriptObservable1 = new Subject<AssetsLoadResult>();
+            const loadScriptObservable2 = new Subject<AssetsLoadResult>();
+            loadScriptSpy.and.returnValues(loadScriptObservable1, loadScriptObservable2);
+
+            const result1 = {
+                src: src1,
+                hashCode: hashCode(src1),
+                loaded: true,
+                status: 'Loaded'
+            };
+            const result2 = {
+                src: src2,
+                hashCode: hashCode(src2),
+                loaded: true,
+                status: 'Loaded'
+            };
+
+            const loadScriptsSpy = jasmine.createSpy('load scripts spy');
+            assetsLoader.loadScripts([src1, src2], true).subscribe(loadScriptsSpy);
 
             loadScriptObservable2.next(result2);
             loadScriptObservable2.complete();
