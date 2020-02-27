@@ -30,7 +30,7 @@ export class PlanetComponentLoader {
     ) {}
 
     private getPlantAppRef(name: string): Observable<PlanetApplicationRef> {
-        if (globalPlanet.apps[name]) {
+        if (globalPlanet.apps[name] && globalPlanet.apps[name].appModuleRef) {
             return of(globalPlanet.apps[name]);
         } else {
             const app = getPlanetApplicationByName(name);
@@ -131,7 +131,12 @@ export class PlanetComponentLoader {
     load<TData = any>(app: string, componentName: string, config: PlantComponentConfig<TData>) {
         const result = this.getPlantAppRef(app).pipe(
             map(appRef => {
-                return appRef.loadPlantComponent<TData>(componentName, config);
+                const componentFactory = appRef.getComponentFactory();
+                if (componentFactory) {
+                    return componentFactory<TData>(componentName, config);
+                } else {
+                    throw new Error(`${app} not registered components`);
+                }
             }),
             finalize(() => {
                 this.applicationRef.tick();
