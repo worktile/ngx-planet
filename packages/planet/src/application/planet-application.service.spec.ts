@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { PlanetApplicationService } from './planet-application.service';
+import { PlanetApplicationService, getPlanetApplicationByName } from './planet-application.service';
 import { SwitchModes } from '../planet.class';
 import { HttpClient } from '@angular/common/http';
 import { app1, app2, app2WithPreload } from '../test/applications';
@@ -152,6 +152,15 @@ describe('PlanetApplicationService', () => {
             planetApplicationService.register(app2WithPreload);
             const appsToPreload = planetApplicationService.getAppsToPreload(['app2']);
             expect(appsToPreload).toEqual([]);
+        });
+    });
+
+    describe('getPlanetApplicationByName', () => {
+        it('should get planet application by name', () => {
+            planetApplicationService.register(app1);
+            const app = getPlanetApplicationByName(app1.name);
+            expect(app).toBe(app1);
+            expect(getPlanetApplicationByName(app2.name)).toEqual(undefined);
         });
     });
 });
