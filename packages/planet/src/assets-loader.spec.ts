@@ -240,14 +240,15 @@ describe('assets-loader', () => {
             const loadScriptsSpy = jasmine.createSpy('load scripts spy');
             assetsLoader.loadScripts([src1, src2], true).subscribe(loadScriptsSpy);
 
-            loadScriptObservable2.next(result2);
-            loadScriptObservable2.complete();
             loadScriptObservable1.next(result1);
             loadScriptObservable1.complete();
+            loadScriptObservable2.next(result2);
+            loadScriptObservable2.complete();
 
             expect(loadScriptsSpy).toHaveBeenCalled();
-            expect(loadScriptsSpy).toHaveBeenCalledWith([result1]);
-            expect(loadScriptsSpy).toHaveBeenCalledWith([result1]);
+            expect(loadScriptsSpy.calls.count()).toEqual(2);
+            expect(loadScriptsSpy.calls.argsFor(0)).toEqual([[result1]]);
+            expect(loadScriptsSpy.calls.argsFor(1)).toEqual([[result2]]);
         });
     });
 
