@@ -37,7 +37,7 @@ export class AssetsLoader {
             script.async = true;
             if (script['readyState']) {
                 // IE
-                script['readyState'] = () => {
+                script['onreadystatechange'] = () => {
                     if (script['readyState'] === 'loaded' || script['readyState'] === 'complete') {
                         script['onreadystatechange'] = null;
                         observer.next({
