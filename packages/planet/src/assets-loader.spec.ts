@@ -138,7 +138,7 @@ describe('assets-loader', () => {
                 src: src,
                 hashCode: hashCode(src),
                 loaded: true,
-                status: 'complete'
+                status: 'Loaded'
             });
         }));
 
