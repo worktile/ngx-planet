@@ -10,11 +10,13 @@ import { Observable, from } from 'rxjs';
 declare const window: any;
 export interface GlobalPlanet {
     apps: { [key: string]: PlanetApplicationRef };
+    registerApps: PlanetApplication[];
     portalApplication: PlanetPortalApplication;
 }
 
 const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
-    apps: {}
+    apps: {},
+    registerApps: []
 });
 
 export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
@@ -88,12 +90,12 @@ export class PlanetApplicationRef {
         });
     }
 
-    registerComponentFactory(componentFactory: PlantComponentFactory) {
-        this.componentFactory = componentFactory;
+    getComponentFactory() {
+        return this.componentFactory;
     }
 
-    loadPlantComponent<TData = any>(componentName: string, config: PlantComponentConfig<TData>) {
-        return this.componentFactory<TData>(componentName, config);
+    registerComponentFactory(componentFactory: PlantComponentFactory) {
+        this.componentFactory = componentFactory;
     }
 
     destroy(): void {

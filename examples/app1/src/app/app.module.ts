@@ -10,9 +10,10 @@ import { AppRootComponent } from './root/root.component';
 import { DemoCommonModule } from '@demo/common';
 import { NgxPlanetModule } from 'ngx-planet';
 import { UserModule } from './user/user.module';
+import { ProjectsComponent } from './projects/projects.component';
 
 @NgModule({
-    declarations: [AppComponent, AppRootComponent, DashboardComponent],
+    declarations: [AppComponent, AppRootComponent, DashboardComponent, ProjectsComponent],
     imports: [
         BrowserModule,
         RouterModule.forRoot(routers),

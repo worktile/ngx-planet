@@ -5,6 +5,7 @@ import { shareReplay, map, switchMap, startWith } from 'rxjs/operators';
 import { coerceArray } from '../helpers';
 import { Observable, of } from 'rxjs';
 import { AssetsLoadResult, AssetsLoader } from '../assets-loader';
+import { globalPlanet } from './planet-application-ref';
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +26,7 @@ export class PlanetApplicationService {
             this.apps.push(app);
             this.appsMap[app.name] = app;
         });
+        globalPlanet.registerApps = this.apps;
     }
 
     registerByUrl(url: string): Observable<void> {
@@ -48,11 +50,12 @@ export class PlanetApplicationService {
             this.apps = this.apps.filter(app => {
                 return app.name !== name;
             });
+            globalPlanet.registerApps = this.apps;
         }
     }
 
     getAppsByMatchedUrl<TExtra>(url: string): PlanetApplication<TExtra>[] {
-        return this.apps.filter(app => {
+        return this.getApps().filter(app => {
             if (app.routerPathPrefix instanceof RegExp) {
                 return app.routerPathPrefix.test(url);
             } else {
@@ -62,7 +65,7 @@ export class PlanetApplicationService {
     }
 
     getAppByMatchedUrl<TExtra>(url: string): PlanetApplication<TExtra> {
-        return this.apps.find(app => {
+        return this.getApps().find(app => {
             if (app.routerPathPrefix instanceof RegExp) {
                 return app.routerPathPrefix.test(url);
             } else {
@@ -72,7 +75,7 @@ export class PlanetApplicationService {
     }
 
     getAppsToPreload(excludeAppNames?: string[]) {
-        return this.apps.filter(app => {
+        return this.getApps().filter(app => {
             if (excludeAppNames) {
                 return app.preload && !excludeAppNames.includes(app.name);
             } else {
@@ -84,4 +87,10 @@ export class PlanetApplicationService {
     getApps() {
         return this.apps;
     }
+}
+
+export function getPlanetApplicationByName(name: string) {
+    return globalPlanet.registerApps.find(app => {
+        return app.name === name;
+    });
 }
