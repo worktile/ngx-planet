@@ -56,7 +56,7 @@ describe('assets-loader', () => {
             });
         }));
 
-        it('should load script success when in IE', fakeAsync(() => {
+        it('should load script success when in IE and readyState is loaded', fakeAsync(() => {
             const mockScriptInIE: { readyState: string; onreadystatechange: () => void } = {
                 readyState: 'uninitialized',
                 onreadystatechange: () => {
@@ -97,6 +97,86 @@ describe('assets-loader', () => {
                 loaded: true,
                 status: 'Loaded'
             });
+        }));
+
+        it('should load script success when in IE and readyState is complete or loaded', fakeAsync(() => {
+            const mockScriptInIE: { readyState: string; onreadystatechange: () => void } = {
+                readyState: 'uninitialized',
+                onreadystatechange: () => {
+                    console.log('loaded script state change');
+                }
+            };
+            const src = 'assets/main.js';
+            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
+            const appendChildSpy = spyOn(document.body, 'appendChild');
+
+            // 返回 mock script
+            createElementSpy.and.returnValue(mockScriptInIE);
+            // 没有调用
+            expect(appendChildSpy).not.toHaveBeenCalled();
+            expect(createElementSpy).not.toHaveBeenCalled();
+
+            const scriptLoaded = jasmine.createSpy('load script');
+            assetsLoader.loadScript(src).subscribe(scriptLoaded, error => {
+                console.error(error);
+            });
+            // 已经被调用
+            expect(appendChildSpy).toHaveBeenCalledTimes(1);
+            expect(createElementSpy).toHaveBeenCalledTimes(1);
+
+            // scriptLoaded 没有加载完毕
+            expect(scriptLoaded).toHaveBeenCalledTimes(0);
+
+            // 手动调用使其加载完毕
+            mockScriptInIE.readyState = 'complete';
+            mockScriptInIE.onreadystatechange();
+
+            // // scriptLoaded 加载完毕
+            expect(scriptLoaded).toHaveBeenCalledTimes(1);
+            expect(mockScriptInIE.onreadystatechange).toBeNull();
+            expect(scriptLoaded).toHaveBeenCalledWith({
+                src: src,
+                hashCode: hashCode(src),
+                loaded: true,
+                status: 'Loaded'
+            });
+        }));
+
+        it('should load script success when in IE and readyState is not complete or loaded', fakeAsync(() => {
+            const mockScriptInIE: { readyState: string; onreadystatechange: () => void } = {
+                readyState: 'uninitialized',
+                onreadystatechange: () => {
+                    console.log('loaded script state change');
+                }
+            };
+            const src = 'assets/main.js';
+            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
+            const appendChildSpy = spyOn(document.body, 'appendChild');
+
+            // 返回 mock script
+            createElementSpy.and.returnValue(mockScriptInIE);
+            // 没有调用
+            expect(appendChildSpy).not.toHaveBeenCalled();
+            expect(createElementSpy).not.toHaveBeenCalled();
+
+            const scriptLoaded = jasmine.createSpy('load script');
+            assetsLoader.loadScript(src).subscribe(scriptLoaded, error => {
+                console.error(error);
+            });
+            // 已经被调用
+            expect(appendChildSpy).toHaveBeenCalledTimes(1);
+            expect(createElementSpy).toHaveBeenCalledTimes(1);
+
+            // scriptLoaded 没有加载完毕
+            expect(scriptLoaded).toHaveBeenCalledTimes(0);
+
+            // 手动调用使其加载完毕
+            mockScriptInIE.readyState = 'any status';
+            mockScriptInIE.onreadystatechange();
+
+            // // scriptLoaded 加载完毕
+            expect(scriptLoaded).not.toHaveBeenCalled();
+            expect(mockScriptInIE.onreadystatechange).not.toBeNull();
         }));
 
         it('should not load script which has been loaded', fakeAsync(() => {
@@ -166,7 +246,7 @@ describe('assets-loader', () => {
     });
 
     describe('loadScripts', () => {
-        it('should return null when sources is empty', fakeAsync(() => {
+        it('should return null when sources is []', fakeAsync(() => {
             const loadScriptSpy = spyOn(assetsLoader, 'loadScript');
 
             expect(loadScriptSpy).not.toHaveBeenCalled();
@@ -174,6 +254,21 @@ describe('assets-loader', () => {
             const loadedScripts = jasmine.createSpy('loaded scripts success');
             const loadedScriptsFail = jasmine.createSpy('loaded scripts fail');
             assetsLoader.loadStyles([]).subscribe(loadedScripts, loadedScriptsFail);
+
+            expect(loadScriptSpy).not.toHaveBeenCalled();
+            expect(loadedScripts).toHaveBeenCalledTimes(1);
+            expect(loadedScripts).toHaveBeenCalledWith(null);
+            expect(loadedScriptsFail).not.toHaveBeenCalled();
+        }));
+
+        it('should return null when sources is null', fakeAsync(() => {
+            const loadScriptSpy = spyOn(assetsLoader, 'loadScript');
+
+            expect(loadScriptSpy).not.toHaveBeenCalled();
+
+            const loadedScripts = jasmine.createSpy('loaded scripts success');
+            const loadedScriptsFail = jasmine.createSpy('loaded scripts fail');
+            assetsLoader.loadStyles(null).subscribe(loadedScripts, loadedScriptsFail);
 
             expect(loadScriptSpy).not.toHaveBeenCalled();
             expect(loadedScripts).toHaveBeenCalledTimes(1);
@@ -240,14 +335,15 @@ describe('assets-loader', () => {
             const loadScriptsSpy = jasmine.createSpy('load scripts spy');
             assetsLoader.loadScripts([src1, src2], true).subscribe(loadScriptsSpy);
 
-            loadScriptObservable2.next(result2);
-            loadScriptObservable2.complete();
             loadScriptObservable1.next(result1);
             loadScriptObservable1.complete();
+            loadScriptObservable2.next(result2);
+            loadScriptObservable2.complete();
 
             expect(loadScriptsSpy).toHaveBeenCalled();
-            expect(loadScriptsSpy).toHaveBeenCalledWith([result1]);
-            expect(loadScriptsSpy).toHaveBeenCalledWith([result1]);
+            expect(loadScriptsSpy.calls.count()).toEqual(2);
+            expect(loadScriptsSpy.calls.argsFor(0)).toEqual([[result1]]);
+            expect(loadScriptsSpy.calls.argsFor(1)).toEqual([[result2]]);
         });
     });
 
@@ -545,6 +641,37 @@ describe('assets-loader', () => {
 
             expect(loadedSuccess).toHaveBeenCalledTimes(1);
             expect(loadedSuccess).toHaveBeenCalledWith([loadScriptsValues, loadStylesValues]);
+        }));
+
+        it('should return null when scripts and styles is []', fakeAsync(() => {
+            const scripts = [];
+            const styles = [];
+            const loadScriptsSpy = spyOn(assetsLoader, 'loadScripts');
+            const loadStylesSpy = spyOn(assetsLoader, 'loadStyles');
+            const loadScriptsObservable = new Subject<AssetsLoadResult[]>();
+            const loadStylesObservable = new Subject<AssetsLoadResult[]>();
+
+            loadScriptsSpy.and.returnValue(loadScriptsObservable);
+            loadStylesSpy.and.returnValue(loadStylesObservable);
+
+            expect(loadScriptsSpy).not.toHaveBeenCalled();
+            expect(loadStylesSpy).not.toHaveBeenCalled();
+
+            const loadedSuccess = jasmine.createSpy('loaded scripts and styles success');
+            const loadedFail = jasmine.createSpy('loaded scripts and styles fail');
+            assetsLoader.loadScriptsAndStyles(scripts, styles).subscribe(loadedSuccess, loadedFail);
+
+            expect(loadScriptsSpy).toHaveBeenCalledTimes(1);
+            expect(loadStylesSpy).toHaveBeenCalledTimes(1);
+            expect(loadedSuccess).not.toHaveBeenCalled();
+
+            loadScriptsObservable.next(null);
+            loadScriptsObservable.complete();
+            loadStylesObservable.next(null);
+            loadStylesObservable.complete();
+
+            expect(loadedSuccess).toHaveBeenCalledTimes(1);
+            expect(loadedSuccess).toHaveBeenCalledWith([null, null]);
         }));
     });
 });
