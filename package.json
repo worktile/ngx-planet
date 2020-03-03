@@ -114,6 +114,7 @@
       "package-lock.json",
       "packages/planet/package.json"
     ],
+    "header": "Changelog\nAll notable changes to ngx-planet will be documented in this file.\n",
     "tagPrefix": "",
     "skip": {
       "tag": true,
