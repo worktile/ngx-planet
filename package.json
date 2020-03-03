@@ -1,6 +1,6 @@
 {
   "name": "@worktile/planet",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "A powerful, reliable, fully-featured and production ready Micro Frontend library for Angular.",
   "keywords": [
     "micro front-end",
@@ -35,6 +35,7 @@
     "lint": "ng lint planet",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "e2e": "ng e2e",
+    "release": "standard-version",
     "pub-only": "cd dist/planet && npm publish --access=public",
     "pub": "npm run build && npm run pub-only",
     "contributors:init": "all-contributors init",
@@ -72,6 +73,7 @@
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
+    "all-contributors-cli": "^6.6.0",
     "codelyzer": "^5.0.0",
     "concurrently": "^4.1.0",
     "conventional-changelog-cli": "^2.0.12",
@@ -91,19 +93,31 @@
     "prettier": "^1.16.4",
     "pretty-quick": "^1.10.0",
     "protractor": "~5.4.0",
+    "standard-version": "^7.1.0",
     "style-loader": "^0.23.1",
     "ts-node": "~7.0.0",
     "tsickle": ">=0.29.0",
     "tslib": "^1.10.0",
     "tslint": "~5.15.0",
     "typescript": "~3.5.3",
-    "webpack-assets-manifest": "^3.1.1",
-    "all-contributors-cli": "^6.6.0"
+    "webpack-assets-manifest": "^3.1.1"
   },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "standard-version": {
+    "bumpFiles": [
+      "package.json",
+      "package-lock.json",
+      "packages/planet/package.json"
+    ],
+    "tagPrefix": "",
+    "skip": {
+      "tag": true,
+      "commit": true
     }
   }
 }
