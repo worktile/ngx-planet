@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { PlanetPortalApplication, defineApplication } from 'ngx-planet';
 import { AppRootContext } from '@demo/common';
 
-// import './styles.scss';
 if (environment.production) {
     enableProdMode();
 }

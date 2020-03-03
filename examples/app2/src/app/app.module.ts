@@ -1,10 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ApplicationRef, NgModuleRef, NgZone, DoBootstrap } from '@angular/core';
 
-import { AppComponent } from './app.component';
 import { RouterModule, Route } from '@angular/router';
 import { ProjectListComponent } from './projects/project-list.component';
-import { AppRootComponent } from './root/root.component';
+import { AppRootComponent, AppActualRootComponent } from './root/root.component';
 import { NgxTethysModule } from 'ngx-tethys';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProjectDetailComponent } from './projects/detail/detail.component';
@@ -19,7 +18,7 @@ import { ViewComponent } from './projects/view/view.component';
 const routers: Route[] = [
     {
         path: 'app2',
-        component: AppRootComponent,
+        component: AppActualRootComponent,
         children: [
             {
                 path: '',
@@ -63,7 +62,7 @@ const routers: Route[] = [
 
 @NgModule({
     declarations: [
-        AppComponent,
+        AppActualRootComponent,
         AppRootComponent,
         ProjectListComponent,
         DashboardComponent,
@@ -71,7 +70,7 @@ const routers: Route[] = [
         TasksComponent,
         ViewComponent
     ],
-    entryComponents: [AppComponent, ProjectDetailComponent],
+    entryComponents: [AppRootComponent, ProjectDetailComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -82,7 +81,7 @@ const routers: Route[] = [
         NgxPlanetModule
     ],
     providers: [],
-    bootstrap: [AppComponent]
+    bootstrap: [AppRootComponent]
 })
 export class AppModule {
     constructor(private planetComponentLoader: PlanetComponentLoader) {

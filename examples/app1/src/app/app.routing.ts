@@ -1,13 +1,13 @@
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Route } from '@angular/router';
-import { AppRootComponent } from './root/root.component';
+import { AppActualRootComponent } from './root/root.component';
 import { EmptyComponent } from 'ngx-planet';
 import { ProjectsComponent } from './projects/projects.component';
 
 export const routers: Route[] = [
     {
         path: 'app1',
-        component: AppRootComponent,
+        component: AppActualRootComponent,
         children: [
             {
                 path: '',

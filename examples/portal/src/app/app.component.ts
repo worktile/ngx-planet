@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
                 hostParent: '#app-host-container',
                 hostClass: appHostClass,
                 routerPathPrefix: /\/app1|app4/, // '/app1',
-                selector: 'app1-root-container',
+                selector: 'app1-root',
                 resourcePathPrefix: '/static/app1/',
                 preload: settings.app1.preload,
                 switchMode: settings.app1.switchMode,
@@ -72,7 +72,7 @@ export class AppComponent implements OnInit {
             {
                 name: 'app2',
                 hostParent: '#app-host-container',
-                selector: 'app2-root-container',
+                selector: 'app2-root',
                 hostClass: appHostClass,
                 routerPathPrefix: '/app2',
                 preload: settings.app2.preload,
