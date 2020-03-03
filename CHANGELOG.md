@@ -1,3 +1,15 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.1.0](https://github.com/worktile/ngx-planet/compare/1.0.9...1.1.0) (2020-03-03)
+
+### Features
+
+-   **build:** bump angular to 8.x [#56](https://github.com/worktile/ngx-planet/issues/56) ([52d6bdf](https://github.com/worktile/ngx-planet/commit/52d6bdf295272b6a04f2f7d7dfd4f8230f4fc370))
+-   **component-loader:** load component support preload appliction ([f1f4a4e](https://github.com/worktile/ngx-planet/commit/f1f4a4ea9b02d4e8875080d44fe68e1a817ca7df))
+-   **demo:** support lazy loading route (app1's user module) [#55](https://github.com/worktile/ngx-planet/issues/55) ([4b78b78](https://github.com/worktile/ngx-planet/commit/4b78b782c4d6e0c616e3dda06d2167916cbfaae5))
+
 <a name="1.0.9"></a>
 
 ## [1.0.9](https://github.com/worktile/ngx-planet/compare/1.0.7...1.0.9) (2019-11-11)
