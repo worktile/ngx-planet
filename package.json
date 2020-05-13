@@ -14,11 +14,12 @@
   "scripts": {
     "ng": "ng",
     "// start": "run app1 and app2 use webpack dev-server",
-    "start": "concurrently \"npm run serve:portal\" \"npm run serve:app1\" \"npm run serve:app2\"",
+    "start": "concurrently \"npm run serve:portal\" \"npm run serve:app1\" \"npm run serve:app2\" \"npm run serve:app3\"",
     "// start:dev": "concurrently \"npm run serve:portal\" \"npm run build:app1:dev\" \"npm run build:app2:dev\"",
     "serve:portal": "ng run portal:serve",
     "serve:app1": "ng serve app1 --deploy-url=/static/app1/",
     "serve:app2": "ng serve app2 --deploy-url=/static/app2/",
+    "serve:app3": "ng serve app3 --deploy-url=/static/app3/",
     "dev:app1": "ng serve app1",
     "build:portal": "ng build",
     "build:app1": "ng build app1",

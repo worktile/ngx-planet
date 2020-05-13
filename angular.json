@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
+  "newProjectRoot": "examples",
   "projects": {
     "planet": {
       "root": "packages/planet",
@@ -342,31 +342,118 @@
         }
       }
     },
-    "app3-lib": {
-      "root": "examples/app3-lib",
-      "sourceRoot": "examples/app3-lib/src",
-      "projectType": "library",
-      "prefix": "lib",
+    "app3": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "examples/app3",
+      "sourceRoot": "examples/app3/src",
+      "prefix": "app3",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-webpack:webpack",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
-            "webpackConfig": "./examples/app3-lib/webpack.config.js"
+            "customWebpackConfig": {
+              "path": "./examples/app3/extra-webpack.config.js",
+              "mergeStrategies": { "externals": "replace" }
+            },
+            "outputPath": "dist/app3",
+            "index": "examples/app3/src/index.html",
+            "main": "examples/app3/src/main.ts",
+            "polyfills": "examples/app3/src/polyfills.ts",
+            "tsConfig": "examples/app3/tsconfig.app.json",
+            "aot": false,
+            "assets": ["examples/app3/src/favicon.ico", "examples/app3/src/assets"],
+            "styles": ["examples/app3/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "examples/app3/src/environments/environment.ts",
+                  "with": "examples/app3/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "browserTarget": "app3:build",
+            "port": 3003,
+            "vendorChunk": false
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "app3:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "app3:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "examples/app3-lib/src/test.ts",
-            "tsConfig": "examples/app3-lib/tsconfig.spec.json",
-            "karmaConfig": "examples/app3-lib/karma.conf.js"
+            "main": "examples/app3/src/test.ts",
+            "polyfills": "examples/app3/src/polyfills.ts",
+            "tsConfig": "examples/app3/tsconfig.spec.json",
+            "karmaConfig": "examples/app3/karma.conf.js",
+            "assets": ["examples/app3/src/favicon.ico", "examples/app3/src/assets"],
+            "styles": ["examples/app3/src/styles.scss"],
+            "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["examples/app3-lib/tsconfig.lib.json", "examples/app3-lib/tsconfig.spec.json"],
+            "tsConfig": [
+              "examples/app3/tsconfig.app.json",
+              "examples/app3/tsconfig.spec.json",
+              "examples/app3/e2e/tsconfig.json"
+            ],
             "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "examples/app3/e2e/protractor.conf.js",
+            "devServerTarget": "app3:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "app3:serve:production"
+            }
           }
         }
       }

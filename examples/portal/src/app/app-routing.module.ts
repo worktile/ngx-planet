@@ -39,6 +39,16 @@ const routes: Routes = [
         ]
     },
     {
+        path: 'app3',
+        component: EmptyComponent,
+        children: [
+            {
+                path: '**',
+                component: EmptyComponent
+            }
+        ]
+    },
+    {
         path: 'app4',
         component: EmptyComponent,
         children: [

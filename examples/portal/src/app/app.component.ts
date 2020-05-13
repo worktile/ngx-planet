@@ -86,6 +86,24 @@ export class AppComponent implements OnInit {
                     name: '应用2',
                     color: '#66c060'
                 }
+            },
+            {
+                name: 'app3',
+                hostParent: '#app-host-container',
+                selector: 'app3-root',
+                hostClass: appHostClass,
+                routerPathPrefix: '/app3',
+                preload: settings.app3.preload,
+                switchMode: settings.app3.switchMode,
+                // prettier-ignore
+                scripts: [
+                    '/static/app3/main.js'
+                ],
+                manifest: '/static/app3/manifest.json',
+                extra: {
+                    name: '应用3',
+                    color: '#66c060'
+                }
             }
         ]);
 
