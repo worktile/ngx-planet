@@ -1,23 +1,11 @@
-import { PlanetRouterEvent, PlanetApplication } from '../planet.class';
+import { PlanetApplication } from '../planet.class';
 import { PlanetPortalApplication } from './portal-application';
-import { NgModuleRef, NgZone, ApplicationRef } from '@angular/core';
-import { Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { NgModuleRef, NgZone } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { PlantComponentConfig } from '../component/plant-component.config';
 import { PlanetComponentRef } from '../component/planet-component-ref';
 import { take } from 'rxjs/operators';
 import { Observable, from } from 'rxjs';
-
-declare const window: any;
-export interface GlobalPlanet {
-    apps: { [key: string]: PlanetApplicationRef };
-    registerApps: PlanetApplication[];
-    portalApplication: PlanetPortalApplication;
-}
-
-const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
-    apps: {},
-    registerApps: []
-});
 
 export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
 
@@ -109,30 +97,3 @@ export class PlanetApplicationRef {
         }
     }
 }
-
-export function defineApplication(name: string, bootstrapModule: BootstrapAppModule) {
-    if (window.planet.apps[name]) {
-        throw new Error(`${name} application has exist.`);
-    }
-    const appRef = new PlanetApplicationRef(name, bootstrapModule);
-    window.planet.apps[name] = appRef;
-}
-
-export function getPlanetApplicationRef(appName: string): PlanetApplicationRef {
-    const planet = (window as any).planet;
-    if (planet && planet.apps && planet.apps[appName]) {
-        return planet.apps[appName];
-    } else {
-        return null;
-    }
-}
-
-export function setPortalApplicationData<T>(data: T) {
-    globalPlanet.portalApplication.data = data;
-}
-
-export function getPortalApplicationData<TData>(): TData {
-    return globalPlanet.portalApplication.data as TData;
-}
-
-export { globalPlanet };

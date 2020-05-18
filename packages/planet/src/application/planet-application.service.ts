@@ -1,11 +1,11 @@
 import { PlanetApplication } from '../planet.class';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { shareReplay, map, switchMap, startWith } from 'rxjs/operators';
+import { shareReplay, map } from 'rxjs/operators';
 import { coerceArray } from '../helpers';
-import { Observable, of } from 'rxjs';
-import { AssetsLoadResult, AssetsLoader } from '../assets-loader';
-import { globalPlanet } from './planet-application-ref';
+import { Observable } from 'rxjs';
+import { AssetsLoader } from '../assets-loader';
+import { getApplicationService } from '../global-planet';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +15,13 @@ export class PlanetApplicationService {
 
     private appsMap: { [key: string]: PlanetApplication } = {};
 
-    constructor(private http: HttpClient, private assetsLoader: AssetsLoader) {}
+    constructor(private http: HttpClient, private assetsLoader: AssetsLoader) {
+        if (getApplicationService()) {
+            throw new Error(
+                'PlanetApplicationService has been injected in the portal, repeated injection is not allowed'
+            );
+        }
+    }
 
     register<TExtra>(appOrApps: PlanetApplication<TExtra> | PlanetApplication<TExtra>[]) {
         const apps = coerceArray(appOrApps);
@@ -26,7 +32,6 @@ export class PlanetApplicationService {
             this.apps.push(app);
             this.appsMap[app.name] = app;
         });
-        globalPlanet.registerApps = this.apps;
     }
 
     registerByUrl(url: string): Observable<void> {
@@ -50,7 +55,6 @@ export class PlanetApplicationService {
             this.apps = this.apps.filter(app => {
                 return app.name !== name;
             });
-            globalPlanet.registerApps = this.apps;
         }
     }
 
@@ -62,6 +66,10 @@ export class PlanetApplicationService {
                 return url.startsWith(app.routerPathPrefix);
             }
         });
+    }
+
+    getAppByName(name: string) {
+        return this.appsMap[name];
     }
 
     getAppByMatchedUrl<TExtra>(url: string): PlanetApplication<TExtra> {
@@ -87,10 +95,4 @@ export class PlanetApplicationService {
     getApps() {
         return this.apps;
     }
-}
-
-export function getPlanetApplicationByName(name: string) {
-    return globalPlanet.registerApps.find(app => {
-        return app.name === name;
-    });
 }

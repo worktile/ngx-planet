@@ -4,11 +4,12 @@ import { AssetsLoader } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
 import { switchMap, share, map, tap, distinctUntilChanged, take, filter, catchError } from 'rxjs/operators';
 import { getHTMLElement, coerceArray } from '../helpers';
-import { PlanetApplicationRef, getPlanetApplicationRef, globalPlanet } from './planet-application-ref';
+import { PlanetApplicationRef } from './planet-application-ref';
 import { PlanetPortalApplication } from './portal-application';
 import { PlanetApplicationService } from './planet-application.service';
 import { GlobalEventDispatcher } from '../global-event-dispatcher';
 import { Router } from '@angular/router';
+import { globalPlanet, getPlanetApplicationRef, getApplicationLoader } from '../global-planet';
 
 export enum ApplicationStatus {
     assetsLoading = 1,
@@ -67,8 +68,14 @@ export class PlanetApplicationLoader {
         private ngZone: NgZone,
         router: Router,
         injector: Injector,
-        private applicationRef: ApplicationRef
+        applicationRef: ApplicationRef
     ) {
+        if (getApplicationLoader()) {
+            throw new Error(
+                'PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed'
+            );
+        }
+
         this.options = {
             switchMode: SwitchModes.default,
             errorHandler: (error: Error) => {

@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PlanetApplicationLoader, ApplicationStatus } from './planet-application-loader';
@@ -7,9 +7,11 @@ import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 
 import { SwitchModes, PlanetApplication } from '../planet.class';
 import { PlanetApplicationService } from './planet-application.service';
-import { NgZone } from '@angular/core';
+import { NgZone, Injector, ApplicationRef } from '@angular/core';
 import { PlanetApplicationRef } from './planet-application-ref';
 import { app1, app2 } from '../test/applications';
+import { Planet } from 'ngx-planet/planet';
+import { getApplicationLoader, getApplicationService, clearGlobalPlanet, globalPlanet } from 'ngx-planet/global-planet';
 
 class PlanetApplicationRefFaker {
     planetAppRef: PlanetApplicationRef;
@@ -95,13 +97,15 @@ describe('PlanetApplicationLoader', () => {
     let planetApplicationService: PlanetApplicationService;
     let assetsLoader: AssetsLoader;
     let ngZone: NgZone;
+    let planet: Planet;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, RouterModule.forRoot([])]
         });
-        planetApplicationLoader = TestBed.get(PlanetApplicationLoader);
-        planetApplicationService = TestBed.get(PlanetApplicationService);
+        planet = TestBed.get(Planet);
+        planetApplicationLoader = getApplicationLoader();
+        planetApplicationService = getApplicationService();
         assetsLoader = TestBed.get(AssetsLoader);
         ngZone = TestBed.get(NgZone);
 
@@ -115,7 +119,20 @@ describe('PlanetApplicationLoader', () => {
     });
 
     afterEach(() => {
-        (window as any).planet.apps = {};
+        clearGlobalPlanet();
+    });
+
+    it(`should repeat injection not allowed`, () => {
+        expect(() => {
+            return new PlanetApplicationLoader(
+                TestBed.get(AssetsLoader),
+                TestBed.get(PlanetApplicationService),
+                TestBed.get(NgZone),
+                TestBed.get(Router),
+                TestBed.get(Injector),
+                TestBed.get(ApplicationRef)
+            );
+        }).toThrowError('PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed');
     });
 
     it(`should load (load assets and bootstrap) app1 success`, fakeAsync(() => {

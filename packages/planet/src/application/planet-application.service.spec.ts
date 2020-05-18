@@ -1,9 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { PlanetApplicationService, getPlanetApplicationByName } from './planet-application.service';
+import { PlanetApplicationService } from './planet-application.service';
 import { SwitchModes } from '../planet.class';
 import { HttpClient } from '@angular/common/http';
 import { app1, app2, app2WithPreload } from '../test/applications';
+import { AssetsLoader } from 'ngx-planet/assets-loader';
+import { Planet } from 'ngx-planet/planet';
 
 describe('PlanetApplicationService', () => {
     let planetApplicationService: PlanetApplicationService;
@@ -13,6 +15,14 @@ describe('PlanetApplicationService', () => {
             providers: []
         });
         planetApplicationService = TestBed.get(PlanetApplicationService);
+    });
+
+    it(`should repeat injection not allowed`, () => {
+        window['planet'].applicationService = TestBed.get(PlanetApplicationService);
+        expect(() => {
+            return new PlanetApplicationService(TestBed.get(HttpClient), TestBed.get(AssetsLoader));
+        }).toThrowError('PlanetApplicationService has been injected in the portal, repeated injection is not allowed');
+        window['planet'].applicationService = null;
     });
 
     describe('register', () => {
@@ -152,15 +162,6 @@ describe('PlanetApplicationService', () => {
             planetApplicationService.register(app2WithPreload);
             const appsToPreload = planetApplicationService.getAppsToPreload(['app2']);
             expect(appsToPreload).toEqual([]);
-        });
-    });
-
-    describe('getPlanetApplicationByName', () => {
-        it('should get planet application by name', () => {
-            planetApplicationService.register(app1);
-            const app = getPlanetApplicationByName(app1.name);
-            expect(app).toBe(app1);
-            expect(getPlanetApplicationByName(app2.name)).toEqual(undefined);
         });
     });
 });

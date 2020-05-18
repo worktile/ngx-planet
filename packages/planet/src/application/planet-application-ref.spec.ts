@@ -1,9 +1,8 @@
-import { defineApplication, getPlanetApplicationRef } from './planet-application-ref';
 import { PlanetPortalApplication } from './portal-application';
-import { platformBrowser } from '@angular/platform-browser';
-import { NgModule, NgModuleRef, NgModuleFactory, Compiler, Injector, Component, NgZone } from '@angular/core';
+import { NgModule, Compiler, Injector, Component, NgZone } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
-import { async, TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
+import { defineApplication, getPlanetApplicationRef, clearGlobalPlanet } from '../global-planet';
 
 @Component({
     selector: 'app-root',
@@ -27,30 +26,7 @@ class AppModule {}
 
 describe('PlanetApplicationRef', () => {
     afterEach(() => {
-        // delete all apps
-        Object.keys(window['planet'].apps).forEach(appName => {
-            delete window['planet'].apps[appName];
-        });
-    });
-
-    describe('defineApplication', () => {
-        it('should define application success', () => {
-            defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
-                return new Promise(() => {});
-            });
-            expect(window['planet'].apps['app1']).toBeTruthy();
-        });
-
-        it('should throw error when define application has exist', () => {
-            defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
-                return new Promise(() => {});
-            });
-            expect(() => {
-                defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
-                    return new Promise(() => {});
-                });
-            }).toThrowError('app1 application has exist.');
-        });
+        clearGlobalPlanet();
     });
 
     describe('getPlanetApplicationRef', () => {
