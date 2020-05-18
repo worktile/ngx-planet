@@ -9,6 +9,8 @@ import { of, Observable } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { globalPlanet, getApplicationLoader, getApplicationService } from '../global-planet';
 
+const componentWrapperClass = 'planet-component-wrapper';
+
 export interface PlanetComponent<T = any> {
     name: string;
     component: ComponentType<T>;
@@ -71,10 +73,13 @@ export class PlanetComponentLoader {
         }
     }
 
-    private createContainerElement(config: PlantComponentConfig) {
+    private createWrapperElement(config: PlantComponentConfig) {
         const container = this.getContainerElement(config);
         const element = this.document.createElement('div');
-        element.classList.add('planet-component-container');
+        element.classList.add(componentWrapperClass);
+        if (config.wrapperClass) {
+            element.classList.add(config.wrapperClass);
+        }
         container.appendChild(element);
         return element;
     }
@@ -88,24 +93,24 @@ export class PlanetComponentLoader {
         const componentFactoryResolver = appModuleRef.componentFactoryResolver;
         const appRef = this.applicationRef;
         const injector = this.createInjector<TData>(appModuleRef, plantComponentRef);
-        const container = this.createContainerElement(config);
-        let portalOutlet = this.domPortalOutletCache.get(container);
+        const wrapper = this.createWrapperElement(config);
+        let portalOutlet = this.domPortalOutletCache.get(wrapper);
         if (portalOutlet) {
             portalOutlet.detach();
         } else {
-            portalOutlet = new DomPortalOutlet(container, componentFactoryResolver, appRef, injector);
-            this.domPortalOutletCache.set(container, portalOutlet);
+            portalOutlet = new DomPortalOutlet(wrapper, componentFactoryResolver, appRef, injector);
+            this.domPortalOutletCache.set(wrapper, portalOutlet);
         }
         const componentPortal = new ComponentPortal(plantComponent.component, null);
         const componentRef = portalOutlet.attachComponentPortal<TData>(componentPortal);
         if (config.initialState) {
             Object.assign(componentRef.instance, config.initialState);
         }
-        plantComponentRef.container = container;
         plantComponentRef.componentInstance = componentRef.instance;
         plantComponentRef.componentRef = componentRef;
+        plantComponentRef.wrapperElement = wrapper;
         plantComponentRef.dispose = () => {
-            this.domPortalOutletCache.delete(container);
+            this.domPortalOutletCache.delete(wrapper);
             portalOutlet.dispose();
         };
         return plantComponentRef;
