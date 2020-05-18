@@ -57,7 +57,7 @@ export function getApplicationService() {
 }
 
 export function clearGlobalPlanet() {
-    window.planet.apps = [];
+    window.planet.apps = {};
     window.planet.portalApplication = null;
     window.planet.applicationLoader = null;
     window.planet.applicationService = null;
