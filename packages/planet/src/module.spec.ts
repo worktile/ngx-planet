@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { NgxPlanetModule } from './module';
 import { NgModule } from '@angular/core';
-import { PlanetApplicationService } from './application/planet-application.service';
 import { Planet } from './planet';
 import { RouterModule } from '@angular/router';
+import { clearGlobalPlanet } from './global-planet';
+import { PlanetApplicationService } from './application/planet-application.service';
 
 const app1 = {
     name: 'app1',
@@ -33,6 +34,13 @@ class AppModule {}
 class AppModuleWithApps {}
 
 describe('NgxPlanetModule', () => {
+    afterEach(() => {
+        clearGlobalPlanet();
+        const applicationService = TestBed.get(PlanetApplicationService);
+        applicationService.apps = [];
+        applicationService.appsMap = {};
+    });
+
     describe('basic', () => {
         beforeEach(() => {
             TestBed.configureTestingModule({

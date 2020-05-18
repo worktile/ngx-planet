@@ -7,6 +7,7 @@ import { PlanetApplicationService } from './application/planet-application.servi
 import { PlanetApplicationLoader } from './application/planet-application-loader';
 import { EmptyComponent } from './empty/empty.component';
 import { NgZone } from '@angular/core';
+import { getApplicationService, getApplicationLoader, clearGlobalPlanet } from './global-planet';
 
 const app1 = {
     name: 'app1',
@@ -61,8 +62,12 @@ describe('Planet', () => {
             ]
         });
         planet = TestBed.get(Planet);
-        planetApplicationService = TestBed.get(PlanetApplicationService);
-        planetApplicationLoader = TestBed.get(PlanetApplicationLoader);
+        planetApplicationService = getApplicationService();
+        planetApplicationLoader = getApplicationLoader();
+    });
+
+    afterEach(() => {
+        clearGlobalPlanet();
     });
 
     it('should create planet', () => {

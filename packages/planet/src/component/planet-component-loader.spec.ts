@@ -2,19 +2,20 @@ import { TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
 import { Compiler, Injector, Type, NgModuleRef } from '@angular/core';
 import { app1Name, App1Module, App1ProjectsComponent } from './test/app1.module';
 import { app2Name, App2Module } from './test/app2.module';
-import { defineApplication, getPlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetPortalApplication } from '../application/portal-application';
 import { PlanetComponentLoader } from './planet-component-loader';
-import { PlanetApplicationLoader } from '../application/planet-application-loader';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PlantComponentConfig } from './plant-component.config';
+import { defineApplication, getPlanetApplicationRef, getApplicationLoader, clearGlobalPlanet } from '../global-planet';
+import { Planet } from 'ngx-planet/planet';
 
 describe('PlanetComponentLoader', () => {
     let compiler: Compiler;
     let injector: Injector;
+    let planet: Planet;
 
     function defineAndBootstrapApplication(name: string, appModule: Type<any>) {
         const ngModuleFactory = compiler.compileModuleSync(appModule);
@@ -34,16 +35,17 @@ describe('PlanetComponentLoader', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, RouterModule.forRoot([])]
         });
-    });
-
-    afterEach(() => {
-        (window as any).planet.apps = {};
+        planet = TestBed.get(Planet);
     });
 
     beforeEach(inject([Compiler, Injector], (_compiler: Compiler, _injector: Injector) => {
         compiler = _compiler;
         injector = _injector;
     }));
+
+    afterEach(() => {
+        clearGlobalPlanet();
+    });
 
     it('should register component success', fakeAsync(() => {
         // mock app1 and app2 bootstrap
@@ -76,7 +78,7 @@ describe('PlanetComponentLoader', () => {
         // mock app2 bootstrap
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App1Module);
         // mock app1 preload
-        const applicationLoader = app2ModuleRef.injector.get(PlanetApplicationLoader);
+        const applicationLoader = getApplicationLoader();
         const applicationLoaderSpy = spyOn(applicationLoader, 'preload');
         const preload$ = of(getPlanetApplicationRef(app1Name)).pipe(
             tap(() => {

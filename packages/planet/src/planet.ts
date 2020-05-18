@@ -1,8 +1,7 @@
-import { Injectable, Inject, Optional } from '@angular/core';
+import { Injectable, Inject, Optional, Injector } from '@angular/core';
 import { NavigationEnd, RouterEvent, Router } from '@angular/router';
 import { PlanetOptions, PlanetApplication, PLANET_APPLICATIONS } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
-import { setPortalApplicationData } from './application/planet-application-ref';
 import {
     PlanetApplicationLoader,
     AppsLoadingStartEvent,
@@ -10,11 +9,26 @@ import {
 } from './application/planet-application-loader';
 import { Observable } from 'rxjs';
 import { filter, startWith, distinctUntilChanged, map } from 'rxjs/operators';
+import {
+    setPortalApplicationData,
+    setApplicationLoader,
+    setApplicationService,
+    getApplicationLoader,
+    getApplicationService
+} from './global-planet';
 
 @Injectable({
     providedIn: 'root'
 })
 export class Planet {
+    private get planetApplicationLoader() {
+        return getApplicationLoader();
+    }
+
+    private get planetApplicationService() {
+        return getApplicationService();
+    }
+
     public get loadingDone() {
         return this.planetApplicationLoader.loadingDone;
     }
@@ -28,11 +42,17 @@ export class Planet {
     }
 
     constructor(
-        private planetApplicationLoader: PlanetApplicationLoader,
+        private injector: Injector,
         private router: Router,
-        private planetApplicationService: PlanetApplicationService,
         @Inject(PLANET_APPLICATIONS) @Optional() planetApplications: PlanetApplication[]
     ) {
+        if (!this.planetApplicationLoader) {
+            setApplicationLoader(this.injector.get(PlanetApplicationLoader));
+        }
+        if (!this.planetApplicationService) {
+            setApplicationService(this.injector.get(PlanetApplicationService));
+        }
+
         if (planetApplications) {
             this.registerApps(planetApplications);
         }

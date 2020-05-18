@@ -7,12 +7,8 @@ export * from './global-event-dispatcher';
 export * from './application/portal-application';
 export * from './planet.class';
 export * from './module';
-export {
-    defineApplication,
-    PlanetApplicationRef,
-    getPortalApplicationData,
-    getPlanetApplicationRef
-} from './application/planet-application-ref';
+export { PlanetApplicationRef } from './application/planet-application-ref';
+export { defineApplication, getPortalApplicationData, getPlanetApplicationRef } from './global-planet';
 export { PlanetApplicationService } from './application/planet-application.service';
 export * from './application/planet-application-loader';
 export * from './assets-loader';

@@ -1,14 +1,13 @@
 import { Injectable, ApplicationRef, NgModuleRef, NgZone, ElementRef, Inject } from '@angular/core';
 import { ComponentType, DomPortalOutlet, ComponentPortal, PortalInjector } from '@angular/cdk/portal';
-import { globalPlanet, PlanetApplicationRef } from '../application/planet-application-ref';
+import { PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
 import { PlantComponentConfig } from './plant-component.config';
 import { coerceArray } from '../helpers';
-import { getPlanetApplicationByName } from '../application/planet-application.service';
-import { PlanetApplicationLoader } from '../application/planet-application-loader';
 import { delay, map, shareReplay, finalize } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
+import { globalPlanet, getApplicationLoader, getApplicationService } from '../global-planet';
 
 export interface PlanetComponent<T = any> {
     name: string;
@@ -21,11 +20,18 @@ export interface PlanetComponent<T = any> {
 export class PlanetComponentLoader {
     private domPortalOutletCache = new WeakMap<any, DomPortalOutlet>();
 
+    private get applicationLoader() {
+        return getApplicationLoader();
+    }
+
+    private get applicationService() {
+        return getApplicationService();
+    }
+
     constructor(
         private applicationRef: ApplicationRef,
         private ngModuleRef: NgModuleRef<any>,
         private ngZone: NgZone,
-        private applicationLoader: PlanetApplicationLoader,
         @Inject(DOCUMENT) private document: any
     ) {}
 
@@ -33,7 +39,7 @@ export class PlanetComponentLoader {
         if (globalPlanet.apps[name] && globalPlanet.apps[name].appModuleRef) {
             return of(globalPlanet.apps[name]);
         } else {
-            const app = getPlanetApplicationByName(name);
+            const app = this.applicationService.getAppByName(name);
             return this.applicationLoader.preload(app).pipe(
                 // Because register use 'setTimeout',so delay 20
                 delay(20),
