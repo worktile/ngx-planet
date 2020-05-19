@@ -1,6 +1,12 @@
-# Changelog
+Changelog
+All notable changes to ngx-planet will be documented in this file.
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+### [1.1.1](https://github.com/worktile/ngx-planet/compare/1.1.0...1.1.1) (2020-05-19)
+
+### Features
+
+-   ensure global services only be injected once [#95](https://github.com/worktile/ngx-planet/issues/95) ([0652bac](https://github.com/worktile/ngx-planet/commit/0652bacd8c280c21befb18d1b94033792d14d599))
+-   **component-loader:** support set wrapper class ([bbdab9d](https://github.com/worktile/ngx-planet/commit/bbdab9d9ef43a55db6e20d7fae97a390e813d623))
 
 ## [1.1.0](https://github.com/worktile/ngx-planet/compare/1.0.9...1.1.0) (2020-03-03)
 
