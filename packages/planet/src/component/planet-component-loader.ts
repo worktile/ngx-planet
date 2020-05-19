@@ -43,8 +43,8 @@ export class PlanetComponentLoader {
         } else {
             const app = this.applicationService.getAppByName(name);
             return this.applicationLoader.preload(app).pipe(
-                // Because register use 'setTimeout',so delay 20
-                delay(20),
+                // Because register use 'setTimeout',so delay 50
+                delay(50),
                 map(() => {
                     return globalPlanet.apps[name];
                 })
