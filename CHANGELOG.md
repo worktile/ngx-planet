@@ -1,6 +1,12 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [1.1.2](https://github.com/worktile/ngx-planet/compare/1.1.1...1.1.2) (2020-05-19)
+
+### Bug Fixes
+
+-   **component-loader:** fix component register after load bug ([faaa57d](https://github.com/worktile/ngx-planet/commit/faaa57db341baf85d8691e8b96d4fce0789d95bb))
+
 ### [1.1.1](https://github.com/worktile/ngx-planet/compare/1.1.0...1.1.1) (2020-05-19)
 
 ### Features
