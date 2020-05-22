@@ -16,24 +16,23 @@ APIs consistent with angular style, currently only supports Angular, other frame
 ## Features
 
 -   Rendering multiple applications at the same time
--   Support coexist mode
--   Application preload
--   Communication between multiple applications
+-   Support two mode, coexist and default that switch to another app and destroy active apps
+-   Support application preload
+-   Built-in communication between multiple applications
 -   Cross application component rendering
 -   Comprehensive examples include routing configuration, lazy loading and all features
--   Support latest Angular 8.x version
 
-## Other solutions for Micro Front-end
+## Alternatives
 
 -   [single-spa](https://github.com/CanopyTax/single-spa): A javascript front-end framework supports any frameworks.
--   [mooa](https://github.com/phodal/mooa): A independent-deployment micro-frontend Framework for Angular from single-spa, `planet` is very similar to it, but `planet` is more powerful, more reliable, and more production ready, more angular.
+-   [mooa](https://github.com/phodal/mooa): A independent-deployment micro-frontend Framework for Angular from single-spa, `planet` is very similar to it, but `planet` is more powerful, reliable, productively and more angular.
 
 ## Installation
 
-```
-npm i @worktile/planet --save
+```bash
+$ npm i @worktile/planet --save
 // or
-yarn add @worktile/planet
+$ yarn add @worktile/planet
 ```
 
 ## Demo
@@ -90,7 +89,7 @@ export class AppComponent implements OnInit {
         this.planet.setOptions({
             switchMode: SwitchModes.coexist,
             errorHandler: error => {
-                this.thyNotify.error(`错误`, '加载资源失败');
+                console.error(`Failed to load resource, error:`, error);
             }
         });
 
