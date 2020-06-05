@@ -5,7 +5,7 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "esNext",
+    "module": "esnext",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -18,5 +18,8 @@
       "ngx-planet": ["packages/planet/src/public-api.ts"],
       "ngx-planet/*": ["packages/planet/src/*"]
     }
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false
   }
 }

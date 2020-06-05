@@ -35,13 +35,10 @@ describe('PlanetComponentLoader', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, RouterModule.forRoot([])]
         });
-        planet = TestBed.get(Planet);
+        compiler = TestBed.inject(Compiler);
+        planet = TestBed.inject(Planet);
+        injector = TestBed.inject(Injector);
     });
-
-    beforeEach(inject([Compiler, Injector], (_compiler: Compiler, _injector: Injector) => {
-        compiler = _compiler;
-        injector = _injector;
-    }));
 
     afterEach(() => {
         clearGlobalPlanet();
