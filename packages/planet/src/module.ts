@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
     exports: [HttpClientModule, EmptyComponent]
 })
 export class NgxPlanetModule {
-    static forRoot(apps: PlanetApplication[]): ModuleWithProviders {
+    static forRoot(apps: PlanetApplication[]): ModuleWithProviders<NgxPlanetModule> {
         return {
             ngModule: NgxPlanetModule,
             providers: [

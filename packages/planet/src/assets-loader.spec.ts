@@ -17,7 +17,7 @@ describe('assets-loader', () => {
             imports: [HttpClientTestingModule],
             providers: []
         });
-        assetsLoader = TestBed.get(AssetsLoader);
+        assetsLoader = TestBed.inject(AssetsLoader);
     });
 
     describe('loadScript', () => {
@@ -351,8 +351,8 @@ describe('assets-loader', () => {
         let httpClient: HttpClient;
         let httpTestingController: HttpTestingController;
         beforeEach(() => {
-            httpClient = TestBed.get(HttpClient);
-            httpTestingController = TestBed.get(HttpTestingController);
+            httpClient = TestBed.inject(HttpClient);
+            httpTestingController = TestBed.inject(HttpTestingController);
         });
 
         afterEach(() => {

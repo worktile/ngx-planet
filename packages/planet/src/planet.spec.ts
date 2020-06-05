@@ -61,7 +61,7 @@ describe('Planet', () => {
                 ])
             ]
         });
-        planet = TestBed.get(Planet);
+        planet = TestBed.inject(Planet);
         planetApplicationService = getApplicationService();
         planetApplicationLoader = getApplicationLoader();
     });
@@ -120,8 +120,8 @@ describe('Planet', () => {
     });
 
     it('should reroute when start or navigateByUrl', fakeAsync(() => {
-        const router: Router = TestBed.get(Router);
-        const ngZone: NgZone = TestBed.get(NgZone);
+        const router: Router = TestBed.inject(Router);
+        const ngZone: NgZone = TestBed.inject(NgZone);
         const rerouteSpy = spyOn(planetApplicationLoader, 'reroute');
         expect(rerouteSpy).not.toHaveBeenCalled();
         planet.start();

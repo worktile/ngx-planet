@@ -1,0 +1,7 @@
+package.json
+package-lock.json
+coverage/
+**/*.md
+**/*.svg
+dist/
+docs/
