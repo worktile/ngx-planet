@@ -2,14 +2,12 @@ import { TestBed, async, tick, fakeAsync } from '@angular/core/testing';
 import { Planet } from './planet';
 import { NgxPlanetModule } from './module';
 import { RouterModule, Router, Event } from '@angular/router';
-import { SwitchModes } from './planet.class';
+import { SwitchModes, PlanetRouterEvent } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { PlanetApplicationLoader } from './application/planet-application-loader';
 import { EmptyComponent } from './empty/empty.component';
 import { NgZone } from '@angular/core';
 import { getApplicationService, getApplicationLoader, clearGlobalPlanet } from './global-planet';
-import { Subject } from 'rxjs';
-import { PlanetRouterEvent } from '../../../dist/planet/public-api';
 
 const app1 = {
     name: 'app1',
