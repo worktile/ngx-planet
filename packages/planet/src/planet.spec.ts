@@ -1,13 +1,15 @@
 import { TestBed, async, tick, fakeAsync } from '@angular/core/testing';
 import { Planet } from './planet';
 import { NgxPlanetModule } from './module';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, Event } from '@angular/router';
 import { SwitchModes } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { PlanetApplicationLoader } from './application/planet-application-loader';
 import { EmptyComponent } from './empty/empty.component';
 import { NgZone } from '@angular/core';
 import { getApplicationService, getApplicationLoader, clearGlobalPlanet } from './global-planet';
+import { Subject } from 'rxjs';
+import { PlanetRouterEvent } from '../../../dist/planet/public-api';
 
 const app1 = {
     name: 'app1',
@@ -147,5 +149,36 @@ describe('Planet', () => {
         expect(rerouteSpy).toHaveBeenCalledWith({
             url: '/app1/users'
         });
+    }));
+
+    it('should load app when redirect to app url "users"', fakeAsync(() => {
+        const router: Router = TestBed.inject(Router);
+        const ngZone: NgZone = TestBed.inject(NgZone);
+        const rerouteSpy = spyOn(planetApplicationLoader, 'reroute');
+        router.resetConfig([
+            {
+                path: '',
+                redirectTo: 'users',
+                pathMatch: 'full'
+            },
+            {
+                path: 'users',
+                component: EmptyComponent
+            }
+        ]);
+        let planetRouterEvent: PlanetRouterEvent;
+        rerouteSpy.and.callFake(function(event) {
+            planetRouterEvent = event;
+        });
+        expect(rerouteSpy).toHaveBeenCalledTimes(0);
+        planet.start();
+        expect(rerouteSpy).toHaveBeenCalledTimes(1);
+        console.log(planetRouterEvent);
+        ngZone.run(() => {
+            router.navigateByUrl('/');
+        });
+        tick();
+        expect(rerouteSpy).toHaveBeenCalledTimes(2);
+        expect(planetRouterEvent.url).toEqual('/users');
     }));
 });
