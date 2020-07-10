@@ -160,6 +160,11 @@ describe('Planet', () => {
                 pathMatch: 'full'
             },
             {
+                path: 'redirect-to-users',
+                redirectTo: 'users',
+                pathMatch: 'full'
+            },
+            {
                 path: 'users',
                 component: EmptyComponent
             }
@@ -171,9 +176,8 @@ describe('Planet', () => {
         expect(rerouteSpy).toHaveBeenCalledTimes(0);
         planet.start();
         expect(rerouteSpy).toHaveBeenCalledTimes(1);
-        console.log(planetRouterEvent);
         ngZone.run(() => {
-            router.navigateByUrl('/');
+            router.navigateByUrl('/redirect-to-users');
         });
         tick();
         expect(rerouteSpy).toHaveBeenCalledTimes(2);
