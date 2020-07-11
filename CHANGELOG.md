@@ -1,6 +1,13 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [1.1.3](https://github.com/worktile/ngx-planet/compare/1.1.2...1.1.3) (2020-07-11)
+
+
+### Bug Fixes
+
+* **planet:** should load sub app when route redirectTo to sub app [#108](https://github.com/worktile/ngx-planet/issues/108) ([#111](https://github.com/worktile/ngx-planet/issues/111)) ([6ddd143](https://github.com/worktile/ngx-planet/commit/6ddd143e89388d918363ef279674e2d703e69ebc))
+
 ### [1.1.2](https://github.com/worktile/ngx-planet/compare/1.1.1...1.1.2) (2020-05-19)
 
 ### Bug Fixes
