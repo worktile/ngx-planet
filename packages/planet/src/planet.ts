@@ -89,7 +89,7 @@ export class Planet {
                     return event instanceof NavigationEnd;
                 }),
                 map((event: NavigationEnd) => {
-                    return event.url;
+                    return event.urlAfterRedirects || event.url;
                 }),
                 startWith(location.pathname),
                 distinctUntilChanged()
