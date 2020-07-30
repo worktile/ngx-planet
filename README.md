@@ -260,12 +260,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://whyour.cn"><img src="https://avatars3.githubusercontent.com/u/22700758?v=4" width="100px;" alt=""/><br /><sub><b>whyour</b></sub></a><br /><a href="https://github.com/worktile/ngx-planet/commits?author=whyour" title="Code">💻</a></td>
     <td align="center"><a href="http://www.231jx.cn"><img src="https://avatars0.githubusercontent.com/u/19969080?v=4" width="100px;" alt=""/><br /><sub><b>张威</b></sub></a><br /><a href="https://github.com/worktile/ngx-planet/commits?author=aoilti" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/luxiaobei"><img src="https://avatars1.githubusercontent.com/u/13583957?v=4" width="100px;" alt=""/><br /><sub><b>luxiaobei</b></sub></a><br /><a href="#infra-luxiaobei" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/worktile/ngx-planet/commits?author=luxiaobei" title="Tests">⚠️</a> <a href="https://github.com/worktile/ngx-planet/commits?author=luxiaobei" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/mario56"><img src="https://avatars2.githubusercontent.com/u/7720722?v=4" width="100px;" alt=""/><br /><sub><b>mario_ma</b></sub></a><br /><a href="https://github.com/worktile/ngx-planet/commits?author=mario56" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
