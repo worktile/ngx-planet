@@ -1,6 +1,18 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+## [1.2.0](https://github.com/worktile/ngx-planet/compare/1.1.2...1.2.0) (2020-07-30)
+
+
+### Features
+
+* **planet:** add stop feature to planet service ([#117](https://github.com/worktile/ngx-planet/issues/117)) ([eb9c93a](https://github.com/worktile/ngx-planet/commit/eb9c93a963bca7bff6b19838986b5844d2c89f4c))
+
+
+### Bug Fixes
+
+* **planet:** should load sub app when route redirectTo to sub app [#108](https://github.com/worktile/ngx-planet/issues/108) ([#111](https://github.com/worktile/ngx-planet/issues/111)) ([6ddd143](https://github.com/worktile/ngx-planet/commit/6ddd143e89388d918363ef279674e2d703e69ebc))
+
 ### [1.1.3](https://github.com/worktile/ngx-planet/compare/1.1.2...1.1.3) (2020-07-11)
 
 
