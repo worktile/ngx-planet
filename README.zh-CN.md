@@ -44,7 +44,7 @@ $ yarn add @worktile/planet
 
 [Try out our live demo](http://planet.ngnice.com)
 
-![ngx-planet-micro-front-end.gif](https://github.com/worktile/ngx-planet/blob/master/examples/portal/src/assets/ngx-planet-micro-front-end.gif?raw=true)
+![ngx-planet-micro-front-end.gif](https://cdn.pingcode.com/open-sources/ngx-planet/ngx-planet-micro-front-end.gif)
 
 ## 使用说明
 
