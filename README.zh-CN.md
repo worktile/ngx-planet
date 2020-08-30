@@ -11,7 +11,8 @@
 
 一个强大、可靠、完善、完全可用于生产环境的 Angular 微前端库。
 Angular 的 API 风格，目前只支持 Angular 框架，不支持其他 MV* 前端框架。
-[English](https://github.com/worktile/ngx-planet/blob/master/README.md)
+
+[English README](https://github.com/worktile/ngx-planet/blob/master/README.md)
 
 ## 功能
 
