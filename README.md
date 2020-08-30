@@ -236,6 +236,7 @@ export class OneComponent {
 Because the portal app and sub app are packaged through webpack, there will be conflicts in module dependent files, we should set up additional config `runtimeChunk` through `@angular-builders/custom-webpack`, we expect webpack 5 to support micro frontend better.
 ```
 // extra-webpack.config.js
+{    
     optimization: {
         runtimeChunk: false
     }

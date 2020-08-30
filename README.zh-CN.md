@@ -235,6 +235,7 @@ export class OneComponent {
 因为主应用和子应用都是通过Webpack打包的，打包的版本依赖会有冲突，需要通过`@angular-builders/custom-webpack`插件设置扩展的`Webpack`配置`runtimeChunk`, 期望 Webpack 5 对于微前端支持的更好。
 ```
 // extra-webpack.config.js
+{    
     optimization: {
         runtimeChunk: false
     }
