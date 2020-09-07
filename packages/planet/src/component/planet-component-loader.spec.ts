@@ -83,6 +83,19 @@ describe('PlanetComponentLoader', () => {
         });
     }));
 
+    it('should app2 load app1 component with stylePrefix of app1', fakeAsync(() => {
+        // mock app1 and app2 bootstrap
+        const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
+        const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+        tick();
+        registerAppComponents(app1ModuleRef);
+        loadApp1Component(app2ModuleRef, { wrapperClass: 'custom-wrapper' }).subscribe(componentRef => {
+            expect(componentRef.wrapperElement.classList.contains('planet-component-wrapper')).toBeTruthy();
+            expect(componentRef.wrapperElement.classList.contains('custom-wrapper')).toBeTruthy();
+            expect(componentRef.wrapperElement.classList.contains('custom-wrapper')).toBeTruthy();
+        });
+    }));
+
     it('should app2 load app1 component and preload app1', fakeAsync(() => {
         // mock app2 bootstrap
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App1Module);

@@ -57,12 +57,13 @@ export class AppComponent implements OnInit {
                 preload: settings.app1.preload,
                 switchMode: settings.app1.switchMode,
                 loadSerial: true,
+                stylePrefix: 'app1',
                 // prettier-ignore
                 scripts: [
                     'main.js',
                     // 'polyfills.js'
                 ],
-                styles: ['assets/main.css'],
+                styles: ['styles.css'],
                 manifest: '/static/app1/manifest.json',
                 extra: {
                     name: '应用1',
@@ -75,12 +76,15 @@ export class AppComponent implements OnInit {
                 selector: 'app2-root',
                 hostClass: appHostClass,
                 routerPathPrefix: '/app2',
+                resourcePathPrefix: '/static/app2/',
                 preload: settings.app2.preload,
                 switchMode: settings.app2.switchMode,
+                stylePrefix: 'app2',
                 // prettier-ignore
                 scripts: [
-                    '/static/app2/main.js'
+                    'main.js'
                 ],
+                styles: ['styles.css'],
                 manifest: '/static/app2/manifest.json',
                 extra: {
                     name: '应用2',

@@ -76,9 +76,13 @@ export class PlanetComponentLoader {
     private createWrapperElement(config: PlantComponentConfig) {
         const container = this.getContainerElement(config);
         const element = this.document.createElement('div');
+        const subApp = this.applicationService.getAppByName(this.ngModuleRef.instance.appName);
         element.classList.add(componentWrapperClass);
         if (config.wrapperClass) {
             element.classList.add(config.wrapperClass);
+        }
+        if (subApp && subApp.stylePrefix) {
+            element.classList.add(subApp.stylePrefix);
         }
         container.appendChild(element);
         return element;
