@@ -95,7 +95,7 @@
     "ng-packagr": "^9.0.0",
     "node-sass": "^4.13.1",
     "postcss-loader": "^3.0.0",
-    "postcss-prefixwrap": "1.16.0",
+    "@worktile/planet-postcss-prefixwrap": "1.19.2",
     "prettier": "^1.16.4",
     "pretty-quick": "^1.10.0",
     "protractor": "~5.4.0",

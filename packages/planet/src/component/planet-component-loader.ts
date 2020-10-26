@@ -78,6 +78,7 @@ export class PlanetComponentLoader {
         const element = this.document.createElement('div');
         const subApp = this.applicationService.getAppByName(this.ngModuleRef.instance.appName);
         element.classList.add(componentWrapperClass);
+        element.setAttribute('planet-inline', '');
         if (config.wrapperClass) {
             element.classList.add(config.wrapperClass);
         }

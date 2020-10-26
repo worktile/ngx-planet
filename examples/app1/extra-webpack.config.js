@@ -1,5 +1,5 @@
 const WebpackAssetsManifest = require('webpack-assets-manifest');
-const PrefixWrap = require('postcss-prefixwrap');
+const PrefixWrap = require('@worktile/planet-postcss-prefixwrap');
 
 module.exports = {
     optimization: {
