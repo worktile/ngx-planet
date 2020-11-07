@@ -36,7 +36,7 @@ class AppModuleWithApps {}
 describe('NgxPlanetModule', () => {
     afterEach(() => {
         clearGlobalPlanet();
-        const applicationService = TestBed.inject(PlanetApplicationService);
+        const applicationService = TestBed.get(PlanetApplicationService);
         applicationService['apps'] = [];
         applicationService['appsMap'] = {};
     });
@@ -49,11 +49,11 @@ describe('NgxPlanetModule', () => {
         });
 
         it('should get NgxPlanetModule', () => {
-            expect(TestBed.inject(NgxPlanetModule)).toBeTruthy();
+            expect(TestBed.get(NgxPlanetModule)).toBeTruthy();
         });
 
         it('should get planet', () => {
-            const planet: Planet = TestBed.inject(Planet);
+            const planet: Planet = TestBed.get(Planet);
             expect(planet).toBeTruthy();
             expect(planet.getApps()).toEqual([]);
         });
@@ -67,11 +67,11 @@ describe('NgxPlanetModule', () => {
         });
 
         it('should get NgxPlanetModule', () => {
-            expect(TestBed.inject(NgxPlanetModule)).toBeTruthy();
+            expect(TestBed.get(NgxPlanetModule)).toBeTruthy();
         });
 
         it('should register app1 when use forRoot', () => {
-            const planet: Planet = TestBed.inject(Planet);
+            const planet: Planet = TestBed.get(Planet);
             expect(planet).toBeTruthy();
             expect(planet.getApps()).toEqual([app1]);
         });

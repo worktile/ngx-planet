@@ -20,10 +20,13 @@ describe('PlanetComponentLoader', () => {
     function defineAndBootstrapApplication(name: string, appModule: Type<any>) {
         const ngModuleFactory = compiler.compileModuleSync(appModule);
         const ngModuleRef = ngModuleFactory.create(injector);
-        defineApplication(name, (portalApp?: PlanetPortalApplication) => {
-            return new Promise(resolve => {
-                resolve(ngModuleRef);
-            });
+        defineApplication(name, {
+            template: '<app1-root-container></app1-root-container>',
+            bootstrap: (portalApp?: PlanetPortalApplication) => {
+                return new Promise(resolve => {
+                    resolve(ngModuleRef);
+                });
+            }
         });
         const appRef = getPlanetApplicationRef(name);
         const portalApplication = new PlanetPortalApplication();
@@ -35,9 +38,9 @@ describe('PlanetComponentLoader', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, RouterModule.forRoot([])]
         });
-        compiler = TestBed.inject(Compiler);
-        planet = TestBed.inject(Planet);
-        injector = TestBed.inject(Injector);
+        compiler = TestBed.get(Compiler);
+        planet = TestBed.get(Planet);
+        injector = TestBed.get(Injector);
     });
 
     afterEach(() => {

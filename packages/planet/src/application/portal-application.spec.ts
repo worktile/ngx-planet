@@ -10,11 +10,11 @@ describe('PlanetPortalApplication', () => {
         TestBed.configureTestingModule({
             imports: [RouterModule.forRoot([])]
         });
-        router = TestBed.inject(Router);
+        router = TestBed.get(Router);
         planetPortalApplication = new PlanetPortalApplication();
-        planetPortalApplication.ngZone = TestBed.inject(NgZone);
-        planetPortalApplication.applicationRef = TestBed.inject(ApplicationRef);
-        planetPortalApplication.router = TestBed.inject(Router);
+        planetPortalApplication.ngZone = TestBed.get(NgZone);
+        planetPortalApplication.applicationRef = TestBed.get(ApplicationRef);
+        planetPortalApplication.router = TestBed.get(Router);
     });
 
     it(`should create PlanetPortalApplication`, () => {

@@ -14,13 +14,13 @@ describe('PlanetApplicationService', () => {
             imports: [HttpClientTestingModule],
             providers: []
         });
-        planetApplicationService = TestBed.inject(PlanetApplicationService);
+        planetApplicationService = TestBed.get(PlanetApplicationService);
     });
 
     it(`should repeat injection not allowed`, () => {
-        window['planet'].applicationService = TestBed.inject(PlanetApplicationService);
+        window['planet'].applicationService = TestBed.get(PlanetApplicationService);
         expect(() => {
-            return new PlanetApplicationService(TestBed.inject(HttpClient), TestBed.inject(AssetsLoader));
+            return new PlanetApplicationService(TestBed.get(HttpClient), TestBed.get(AssetsLoader));
         }).toThrowError('PlanetApplicationService has been injected in the portal, repeated injection is not allowed');
         window['planet'].applicationService = null;
     });
@@ -47,8 +47,8 @@ describe('PlanetApplicationService', () => {
             let httpClient: HttpClient;
             let httpTestingController: HttpTestingController;
             beforeEach(() => {
-                httpClient = TestBed.inject(HttpClient);
-                httpTestingController = TestBed.inject(HttpTestingController);
+                httpClient = TestBed.get(HttpClient);
+                httpTestingController = TestBed.get(HttpTestingController);
             });
 
             afterEach(() => {

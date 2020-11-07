@@ -5,7 +5,8 @@ import {
     getHTMLElement,
     getResourceFileName,
     buildResourceFilePath,
-    getScriptsAndStylesFullPaths
+    getScriptsAndStylesFullPaths,
+    getTagNameByTemplate
 } from './helpers';
 
 describe('helpers', () => {
@@ -122,6 +123,19 @@ describe('helpers', () => {
             getHTMLElement('.span');
             expect(querySelectorSpy).toHaveBeenCalledTimes(1);
             expect(querySelectorSpy).toHaveBeenCalledWith('.span');
+        });
+    });
+
+    describe(`getTagNameByTemplate`, () => {
+        it('should get tagName is APP1-ROOT', () => {
+            const tagName = getTagNameByTemplate(`<app1-root></app1-root>`);
+            expect(tagName).toBe('APP1-ROOT');
+        });
+
+        it('should get tagName when template invalid', () => {
+            expect(() => {
+                getTagNameByTemplate(`app1-root`);
+            }).toThrowError(`invalid template 'app1-root'`);
         });
     });
 

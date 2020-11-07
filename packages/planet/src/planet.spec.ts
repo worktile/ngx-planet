@@ -61,7 +61,7 @@ describe('Planet', () => {
                 ])
             ]
         });
-        planet = TestBed.inject(Planet);
+        planet = TestBed.get(Planet);
         planetApplicationService = getApplicationService();
         planetApplicationLoader = getApplicationLoader();
     });
@@ -120,8 +120,8 @@ describe('Planet', () => {
     });
 
     it('should reroute when start or navigateByUrl', fakeAsync(() => {
-        const router: Router = TestBed.inject(Router);
-        const ngZone: NgZone = TestBed.inject(NgZone);
+        const router: Router = TestBed.get(Router);
+        const ngZone: NgZone = TestBed.get(NgZone);
         const rerouteSpy = spyOn(planetApplicationLoader, 'reroute');
         expect(rerouteSpy).not.toHaveBeenCalled();
         planet.start();
@@ -150,8 +150,8 @@ describe('Planet', () => {
     }));
 
     it('should load app when redirect to app url "users"', fakeAsync(() => {
-        const router: Router = TestBed.inject(Router);
-        const ngZone: NgZone = TestBed.inject(NgZone);
+        const router: Router = TestBed.get(Router);
+        const ngZone: NgZone = TestBed.get(NgZone);
         const rerouteSpy = spyOn(planetApplicationLoader, 'reroute');
         router.resetConfig([
             {
@@ -185,8 +185,8 @@ describe('Planet', () => {
     }));
 
     it('should reroute not be call when planet stop', fakeAsync(() => {
-        const router: Router = TestBed.inject(Router);
-        const ngZone: NgZone = TestBed.inject(NgZone);
+        const router: Router = TestBed.get(Router);
+        const ngZone: NgZone = TestBed.get(NgZone);
         const rerouteSpy = spyOn(planetApplicationLoader, 'reroute');
         expect(rerouteSpy).not.toHaveBeenCalled();
         planet.start();

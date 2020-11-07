@@ -22,7 +22,7 @@ class PlanetApplicationRefFaker {
     bootstrap$: Subject<PlanetApplicationRef>;
 
     constructor(appName: string) {
-        this.planetAppRef = new PlanetApplicationRef(appName, null);
+        this.planetAppRef = new PlanetApplicationRef(appName, { template: null, bootstrap: null });
         this.bootstrapSpy = spyOn(this.planetAppRef, 'bootstrap');
         this.bootstrap$ = new Subject<PlanetApplicationRef>();
         this.bootstrapSpy.and.returnValues(this.bootstrap$, this.bootstrap$);
@@ -103,11 +103,11 @@ describe('PlanetApplicationLoader', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, RouterModule.forRoot([])]
         });
-        planet = TestBed.inject(Planet);
+        planet = TestBed.get(Planet);
         planetApplicationLoader = getApplicationLoader();
         planetApplicationService = getApplicationService();
-        assetsLoader = TestBed.inject(AssetsLoader);
-        ngZone = TestBed.inject(NgZone);
+        assetsLoader = TestBed.get(AssetsLoader);
+        ngZone = TestBed.get(NgZone);
 
         planetApplicationService.register(app1);
         planetApplicationService.register(app2);
@@ -125,12 +125,12 @@ describe('PlanetApplicationLoader', () => {
     it(`should repeat injection not allowed`, () => {
         expect(() => {
             return new PlanetApplicationLoader(
-                TestBed.inject(AssetsLoader),
-                TestBed.inject(PlanetApplicationService),
-                TestBed.inject(NgZone),
-                TestBed.inject(Router),
-                TestBed.inject(Injector),
-                TestBed.inject(ApplicationRef)
+                TestBed.get(AssetsLoader),
+                TestBed.get(PlanetApplicationService),
+                TestBed.get(NgZone),
+                TestBed.get(Router),
+                TestBed.get(Injector),
+                TestBed.get(ApplicationRef)
             );
         }).toThrowError('PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed');
     });

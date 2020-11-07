@@ -1,5 +1,7 @@
 import { PlanetApplication } from './planet.class';
 
+const ELEMENT_NODE_TYPE = 1;
+
 export function hashCode(str: string): number {
     let hash = 0;
     let chr: number;
@@ -22,6 +24,18 @@ export function getHTMLElement(selector: string | HTMLElement): HTMLElement {
     }
 }
 
+export function getTagNameByTemplate(template: string) {
+    if (!template) {
+        return null;
+    }
+    const element = document.createRange().createContextualFragment(template).firstChild;
+    if (element.nodeType === ELEMENT_NODE_TYPE) {
+        return element.nodeName;
+    } else {
+        throw new Error(`invalid template '${template}'`);
+    }
+}
+
 export function coerceArray<T>(value: T | T[]): T[] {
     return Array.isArray(value) ? value : [value];
 }
@@ -32,6 +46,11 @@ export function isEmpty(value: any): boolean {
     } else {
         return false;
     }
+}
+
+export function isFunction(value: any) {
+    const type = typeof value;
+    return !!value && type === 'function';
 }
 
 /**

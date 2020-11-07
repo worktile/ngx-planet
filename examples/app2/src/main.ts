@@ -10,19 +10,22 @@ if (environment.production) {
     enableProdMode();
 }
 
-defineApplication('app2', (portalApp: PlanetPortalApplication) => {
-    return platformBrowserDynamic([
-        {
-            provide: PlanetPortalApplication,
-            useValue: portalApp
-        }
-    ])
-        .bootstrapModule(AppModule)
-        .then(appModule => {
-            return appModule;
-        })
-        .catch(error => {
-            console.error(error);
-            return null;
-        });
+defineApplication('app2', {
+    template: `<app2-root></app2-root>`,
+    bootstrap: (portalApp: PlanetPortalApplication) => {
+        return platformBrowserDynamic([
+            {
+                provide: PlanetPortalApplication,
+                useValue: portalApp
+            }
+        ])
+            .bootstrapModule(AppModule)
+            .then(appModule => {
+                return appModule;
+            })
+            .catch(error => {
+                console.error(error);
+                return null;
+            });
+    }
 });

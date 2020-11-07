@@ -1,7 +1,8 @@
-import { PlanetApplicationRef, BootstrapAppModule } from './application/planet-application-ref';
+import { PlanetApplicationRef, BootstrapAppModule, BootstrapOptions } from './application/planet-application-ref';
 import { PlanetPortalApplication } from './application/portal-application';
 import { PlanetApplicationLoader } from './application/planet-application-loader';
 import { PlanetApplicationService } from './application/planet-application.service';
+import { isFunction } from './helpers';
 
 declare const window: any;
 
@@ -16,11 +17,17 @@ export const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
     apps: {}
 });
 
-export function defineApplication(name: string, bootstrapModule: BootstrapAppModule) {
+export function defineApplication(name: string, options: BootstrapAppModule | BootstrapOptions) {
     if (globalPlanet.apps[name]) {
         throw new Error(`${name} application has exist.`);
     }
-    const appRef = new PlanetApplicationRef(name, bootstrapModule);
+    if (isFunction(options)) {
+        options = {
+            template: '',
+            bootstrap: options as BootstrapAppModule
+        };
+    }
+    const appRef = new PlanetApplicationRef(name, options as BootstrapOptions);
     globalPlanet.apps[name] = appRef;
 }
 
