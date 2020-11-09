@@ -1,6 +1,20 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [1.2.1](https://github.com/worktile/ngx-planet/compare/1.1.2...1.2.1) (2020-11-09)
+
+
+### Features
+
+* **global-planet:** simplify sub application's definition [#58](https://github.com/worktile/ngx-planet/issues/58) ([#131](https://github.com/worktile/ngx-planet/issues/131)) ([b738b26](https://github.com/worktile/ngx-planet/commit/b738b26e4ba6cff0724f18d1df601beaa32f22a5))
+* **planet:** add stop feature to planet service ([#117](https://github.com/worktile/ngx-planet/issues/117)) ([eb9c93a](https://github.com/worktile/ngx-planet/commit/eb9c93a963bca7bff6b19838986b5844d2c89f4c))
+
+
+### Bug Fixes
+
+* **component-loader:** fix load component error when  prod env [#132](https://github.com/worktile/ngx-planet/issues/132) ([30540b2](https://github.com/worktile/ngx-planet/commit/30540b2bf748cb9218e970ab1eb522b54f45ea4d))
+* **planet:** should load sub app when route redirectTo to sub app [#108](https://github.com/worktile/ngx-planet/issues/108) ([#111](https://github.com/worktile/ngx-planet/issues/111)) ([6ddd143](https://github.com/worktile/ngx-planet/commit/6ddd143e89388d918363ef279674e2d703e69ebc))
+
 ## [1.2.0](https://github.com/worktile/ngx-planet/compare/1.1.2...1.2.0) (2020-07-30)
 
 
