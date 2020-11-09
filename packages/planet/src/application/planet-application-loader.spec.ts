@@ -103,11 +103,11 @@ describe('PlanetApplicationLoader', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, RouterModule.forRoot([])]
         });
-        planet = TestBed.get(Planet);
+        planet = TestBed.inject(Planet);
         planetApplicationLoader = getApplicationLoader();
         planetApplicationService = getApplicationService();
-        assetsLoader = TestBed.get(AssetsLoader);
-        ngZone = TestBed.get(NgZone);
+        assetsLoader = TestBed.inject(AssetsLoader);
+        ngZone = TestBed.inject(NgZone);
 
         planetApplicationService.register(app1);
         planetApplicationService.register(app2);
@@ -125,12 +125,12 @@ describe('PlanetApplicationLoader', () => {
     it(`should repeat injection not allowed`, () => {
         expect(() => {
             return new PlanetApplicationLoader(
-                TestBed.get(AssetsLoader),
-                TestBed.get(PlanetApplicationService),
-                TestBed.get(NgZone),
-                TestBed.get(Router),
-                TestBed.get(Injector),
-                TestBed.get(ApplicationRef)
+                TestBed.inject(AssetsLoader),
+                TestBed.inject(PlanetApplicationService),
+                TestBed.inject(NgZone),
+                TestBed.inject(Router),
+                TestBed.inject(Injector),
+                TestBed.inject(ApplicationRef)
             );
         }).toThrowError('PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed');
     });

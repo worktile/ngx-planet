@@ -38,9 +38,9 @@ describe('PlanetComponentLoader', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, RouterModule.forRoot([])]
         });
-        compiler = TestBed.get(Compiler);
-        planet = TestBed.get(Planet);
-        injector = TestBed.get(Injector);
+        compiler = TestBed.inject(Compiler);
+        planet = TestBed.inject(Planet);
+        injector = TestBed.inject(Injector);
     });
 
     afterEach(() => {
