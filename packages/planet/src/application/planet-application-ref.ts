@@ -1,11 +1,17 @@
-import { PlanetApplication } from '../planet.class';
-import { PlanetPortalApplication } from './portal-application';
 import { NgModuleRef, NgZone } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { PlantComponentConfig } from '../component/plant-component.config';
-import { PlanetComponentRef } from '../component/planet-component-ref';
 import { take } from 'rxjs/operators';
 import { Observable, from } from 'rxjs';
+import { PlanetApplication } from '../planet.class';
+import { PlanetPortalApplication } from './portal-application';
+import { PlantComponentConfig } from '../component/plant-component.config';
+import { PlanetComponentRef } from '../component/planet-component-ref';
+import { getTagNameByTemplate } from '../helpers';
+
+export interface BootstrapOptions {
+    template: string;
+    bootstrap: BootstrapAppModule;
+}
 
 export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
 
@@ -16,6 +22,11 @@ export type PlantComponentFactory = <TData>(
 
 export class PlanetApplicationRef {
     public appModuleRef: NgModuleRef<any>;
+    public template: string;
+    public get selector() {
+        return this.template ? getTagNameByTemplate(this.template) : null;
+    }
+
     private get bootstrapped() {
         return !!this.appModuleRef;
     }
@@ -24,9 +35,12 @@ export class PlanetApplicationRef {
     private appModuleBootstrap: (app: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
     private componentFactory: PlantComponentFactory;
 
-    constructor(name: string, appModuleBootstrap: (app: PlanetPortalApplication) => Promise<NgModuleRef<any>>) {
+    constructor(name: string, options: BootstrapOptions) {
         this.name = name;
-        this.appModuleBootstrap = appModuleBootstrap;
+        if (options) {
+            this.template = options.template;
+            this.appModuleBootstrap = options.bootstrap;
+        }
     }
 
     // 子应用路由变化后同步修改 portal 的 Route

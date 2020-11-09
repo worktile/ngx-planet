@@ -7,6 +7,16 @@ describe('defineApplication', () => {
     });
 
     it('should define application success', () => {
+        defineApplication('app1', {
+            template: '<app1-root-container></app1-root-container>',
+            bootstrap: (portalApp?: PlanetPortalApplication) => {
+                return new Promise(() => {});
+            }
+        });
+        expect(window['planet'].apps['app1']).toBeTruthy();
+    });
+
+    it('should define application compatible success', () => {
         defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
             return new Promise(() => {});
         });
@@ -14,8 +24,11 @@ describe('defineApplication', () => {
     });
 
     it('should throw error when define application has exist', () => {
-        defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
-            return new Promise(() => {});
+        defineApplication('app1', {
+            template: '<app1-root-container></app1-root-container>',
+            bootstrap: (portalApp?: PlanetPortalApplication) => {
+                return new Promise(() => {});
+            }
         });
         expect(() => {
             defineApplication('app1', (portalApp?: PlanetPortalApplication) => {

@@ -3,7 +3,7 @@ import { of, Observable, Subject, forkJoin, from } from 'rxjs';
 import { AssetsLoader } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
 import { switchMap, share, map, tap, distinctUntilChanged, take, filter, catchError } from 'rxjs/operators';
-import { getHTMLElement, coerceArray } from '../helpers';
+import { getHTMLElement, coerceArray, createElementByTemplate } from '../helpers';
 import { PlanetApplicationRef } from './planet-application-ref';
 import { PlanetPortalApplication } from './portal-application';
 import { PlanetApplicationService } from './planet-application.service';
@@ -274,14 +274,16 @@ export class PlanetApplicationLoader {
     }
 
     private hideApp(planetApp: PlanetApplication) {
-        const appRootElement = document.querySelector(planetApp.selector);
+        const appRef = getPlanetApplicationRef(planetApp.name);
+        const appRootElement = document.querySelector(appRef.selector || planetApp.selector);
         if (appRootElement) {
             appRootElement.setAttribute('style', 'display:none;');
         }
     }
 
     private showApp(planetApp: PlanetApplication) {
-        const appRootElement = document.querySelector(planetApp.selector);
+        const appRef = getPlanetApplicationRef(planetApp.name);
+        const appRootElement = document.querySelector(appRef.selector || planetApp.selector);
         if (appRootElement) {
             appRootElement.setAttribute('style', '');
         }
@@ -293,7 +295,7 @@ export class PlanetApplicationLoader {
             appRef.destroy();
         }
         const container = getHTMLElement(planetApp.hostParent);
-        const appRootElement = container.querySelector(planetApp.selector);
+        const appRootElement = container.querySelector(appRef.selector || planetApp.selector);
         if (appRootElement) {
             container.removeChild(appRootElement);
         }
@@ -309,9 +311,13 @@ export class PlanetApplicationLoader {
             const container = getHTMLElement(app.hostParent);
             let appRootElement: HTMLElement;
             if (container) {
-                appRootElement = container.querySelector(app.selector);
+                appRootElement = container.querySelector(appRef.selector || app.selector);
                 if (!appRootElement) {
-                    appRootElement = document.createElement(app.selector);
+                    if (appRef.template) {
+                        appRootElement = createElementByTemplate(appRef.template);
+                    } else {
+                        appRootElement = document.createElement(app.selector);
+                    }
                     appRootElement.setAttribute('style', 'display:none;');
                     if (app.hostClass) {
                         appRootElement.classList.add(...coerceArray(app.hostClass));

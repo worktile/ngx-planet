@@ -69,7 +69,7 @@
     "@angular-devkit/architect": "^0.803.21",
     "@angular-devkit/build-angular": "~0.901.11",
     "@angular-devkit/build-ng-packagr": "~0.901.11",
-    "@angular/cli": "~9.1.11",
+    "@angular/cli": "^9.1.11",
     "@angular/compiler-cli": "~9.1.12",
     "@angular/language-service": "~9.1.12",
     "@commitlint/cli": "^7.5.2",
