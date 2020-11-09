@@ -191,13 +191,13 @@ describe('PlanetApplicationLoader', () => {
         loadAppAssets$.next();
         loadAppAssets$.complete();
         appStatusChangeFaker.expectFromAssetsLoadedToActive(2, app1RefFaker, app1);
-
         // 判断是否在宿主元素中创建了应用根节点
         const app1Host = document.querySelector('app1-root');
         expect(app1Host).toBeTruthy();
         expect(app1Host.outerHTML).toEqual(`<app1-root class="app1-root app1-host"></app1-root>`);
-
         tick();
+        planetApplicationLoader['hideApp'](app1);
+        expect(app1Host.getAttribute('style')).toContain('display:none;');
     }));
 
     it(`should not bootstrap app1 which is active`, fakeAsync(() => {
