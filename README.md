@@ -141,21 +141,28 @@ export class AppComponent implements OnInit {
 ### 3. Sub App define how to bootstrap AppModule
 
 ```
-defineApplication('app1', (portalApp: PlanetPortalApplication) => {
-    return platformBrowserDynamic([
-        {
-            provide: PlanetPortalApplication,
-            useValue: portalApp
-        }
-    ])
-        .bootstrapModule(AppModule)
-        .then(appModule => {
-            return appModule;
-        })
-        .catch(error => {
-            console.error(error);
-            return null;
-        });
+defineApplication('app1', {
+    template: `<app1-root class="app1-root"></app1-root>`,
+    bootstrap: (portalApp: PlanetPortalApplication) => {
+        return platformBrowserDynamic([
+            {
+                provide: PlanetPortalApplication,
+                useValue: portalApp
+            },
+            {
+                provide: AppRootContext,
+                useValue: portalApp.data.appRootContext
+            }
+        ])
+            .bootstrapModule(AppModule)
+            .then(appModule => {
+                return appModule;
+            })
+            .catch(error => {
+                console.error(error);
+                return null;
+            });
+    }
 });
 ```
 
