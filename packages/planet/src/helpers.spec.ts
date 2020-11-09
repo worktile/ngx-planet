@@ -6,7 +6,8 @@ import {
     getResourceFileName,
     buildResourceFilePath,
     getScriptsAndStylesFullPaths,
-    getTagNameByTemplate
+    getTagNameByTemplate,
+    createElementByTemplate
 } from './helpers';
 
 describe('helpers', () => {
@@ -126,16 +127,23 @@ describe('helpers', () => {
         });
     });
 
+    describe(`createElementByTemplate`, () => {
+        it('should create html element success', () => {
+            const element = createElementByTemplate(`<app1-root class='app1-root-container'></app1-root>`);
+            expect(element.outerHTML).toBe(`<app1-root class="app1-root-container"></app1-root>`);
+        });
+
+        it('should create html element when template invalid', () => {
+            expect(() => {
+                createElementByTemplate(`app1-root`);
+            }).toThrowError(`invalid template 'app1-root'`);
+        });
+    });
+
     describe(`getTagNameByTemplate`, () => {
         it('should get tagName is APP1-ROOT', () => {
             const tagName = getTagNameByTemplate(`<app1-root></app1-root>`);
             expect(tagName).toBe('APP1-ROOT');
-        });
-
-        it('should get tagName when template invalid', () => {
-            expect(() => {
-                getTagNameByTemplate(`app1-root`);
-            }).toThrowError(`invalid template 'app1-root'`);
         });
     });
 

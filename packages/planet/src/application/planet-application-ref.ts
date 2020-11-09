@@ -22,7 +22,11 @@ export type PlantComponentFactory = <TData>(
 
 export class PlanetApplicationRef {
     public appModuleRef: NgModuleRef<any>;
-    public selector: string;
+    public template: string;
+    public get selector() {
+        return this.template ? getTagNameByTemplate(this.template) : null;
+    }
+
     private get bootstrapped() {
         return !!this.appModuleRef;
     }
@@ -33,7 +37,7 @@ export class PlanetApplicationRef {
 
     constructor(name: string, options: BootstrapOptions) {
         this.name = name;
-        this.selector = getTagNameByTemplate(options.template);
+        this.template = options.template;
         this.appModuleBootstrap = options.bootstrap;
     }
 

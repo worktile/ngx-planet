@@ -25,12 +25,17 @@ export function getHTMLElement(selector: string | HTMLElement): HTMLElement {
 }
 
 export function getTagNameByTemplate(template: string) {
+    const element = createElementByTemplate(template);
+    return element ? element.nodeName : null;
+}
+
+export function createElementByTemplate(template: string) {
     if (!template) {
         return null;
     }
     const element = document.createRange().createContextualFragment(template).firstChild;
     if (element.nodeType === ELEMENT_NODE_TYPE) {
-        return element.nodeName;
+        return element as HTMLElement;
     } else {
         throw new Error(`invalid template '${template}'`);
     }

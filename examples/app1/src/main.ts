@@ -11,7 +11,7 @@ if (environment.production) {
 }
 
 defineApplication('app1', {
-    template: `<app1-root></app1-root>`,
+    template: `<app1-root class="app1-root"></app1-root>`,
     bootstrap: (portalApp: PlanetPortalApplication) => {
         return platformBrowserDynamic([
             {
