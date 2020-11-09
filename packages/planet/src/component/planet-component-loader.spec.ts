@@ -131,7 +131,7 @@ function loadApp1Component(appModuleRef: NgModuleRef<any>, config?: Partial<Plan
         'app1-projects',
         Object.assign({}, { container: hostElement }, config)
     );
-    tick(50);
+    tick(200);
     return result;
 }
 
