@@ -37,8 +37,10 @@ export class PlanetApplicationRef {
 
     constructor(name: string, options: BootstrapOptions) {
         this.name = name;
-        this.template = options.template;
-        this.appModuleBootstrap = options.bootstrap;
+        if (options) {
+            this.template = options.template;
+            this.appModuleBootstrap = options.bootstrap;
+        }
     }
 
     // 子应用路由变化后同步修改 portal 的 Route

@@ -138,12 +138,22 @@ describe('helpers', () => {
                 createElementByTemplate(`app1-root`);
             }).toThrowError(`invalid template 'app1-root'`);
         });
+
+        it('should create html element when template is empty', () => {
+            const element = createElementByTemplate(``);
+            expect(element).toBe(null);
+        });
     });
 
     describe(`getTagNameByTemplate`, () => {
         it('should get tagName is APP1-ROOT', () => {
             const tagName = getTagNameByTemplate(`<app1-root></app1-root>`);
             expect(tagName).toBe('APP1-ROOT');
+        });
+
+        it('should get tagName when template is empty', () => {
+            const tagName = getTagNameByTemplate(``);
+            expect(tagName).toBe(null);
         });
     });
 

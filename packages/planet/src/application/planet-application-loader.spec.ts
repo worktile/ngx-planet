@@ -8,7 +8,7 @@ import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 import { SwitchModes, PlanetApplication } from '../planet.class';
 import { PlanetApplicationService } from './planet-application.service';
 import { NgZone, Injector, ApplicationRef } from '@angular/core';
-import { PlanetApplicationRef } from './planet-application-ref';
+import { BootstrapOptions, PlanetApplicationRef } from './planet-application-ref';
 import { app1, app2 } from '../test/applications';
 import { Planet } from 'ngx-planet/planet';
 import { getApplicationLoader, getApplicationService, clearGlobalPlanet, globalPlanet } from 'ngx-planet/global-planet';
@@ -21,8 +21,8 @@ class PlanetApplicationRefFaker {
     getCurrentRouterStateUrlSpy: jasmine.Spy;
     bootstrap$: Subject<PlanetApplicationRef>;
 
-    constructor(appName: string) {
-        this.planetAppRef = new PlanetApplicationRef(appName, { template: null, bootstrap: null });
+    constructor(appName: string, options?: BootstrapOptions) {
+        this.planetAppRef = new PlanetApplicationRef(appName, options);
         this.bootstrapSpy = spyOn(this.planetAppRef, 'bootstrap');
         this.bootstrap$ = new Subject<PlanetApplicationRef>();
         this.bootstrapSpy.and.returnValues(this.bootstrap$, this.bootstrap$);
@@ -34,8 +34,8 @@ class PlanetApplicationRefFaker {
         (window as any).planet.apps[appName] = this.planetAppRef;
     }
 
-    static create(appName: string) {
-        return new PlanetApplicationRefFaker(appName);
+    static create(appName: string, options?: BootstrapOptions) {
+        return new PlanetApplicationRefFaker(appName, options);
     }
 
     bootstrap() {
@@ -170,6 +170,32 @@ describe('PlanetApplicationLoader', () => {
 
         // 判断是否在宿主元素中创建了应用根节点
         expectApp1Element();
+
+        tick();
+    }));
+
+    it(`should load app1 success when custom template`, fakeAsync(() => {
+        const loadAppAssets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+        const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
+        assetsLoaderSpy.and.returnValue(loadAppAssets$);
+        const app1RefFaker = PlanetApplicationRefFaker.create(app1.name, {
+            template: `<app1-root class="app1-root"></app1-root>`,
+            bootstrap: null
+        });
+        // App state change
+        const appStatusChangeFaker = AppStatusChangeFaker.create(planetApplicationLoader);
+        // Apps loading start
+        const appsLoadingStartSpy = jasmine.createSpy('apps loading start spy');
+        planetApplicationLoader.appsLoadingStart.subscribe(appsLoadingStartSpy);
+        planetApplicationLoader.reroute({ url: '/app1/dashboard' });
+        loadAppAssets$.next();
+        loadAppAssets$.complete();
+        appStatusChangeFaker.expectFromAssetsLoadedToActive(2, app1RefFaker, app1);
+
+        // 判断是否在宿主元素中创建了应用根节点
+        const app1Host = document.querySelector('app1-root');
+        expect(app1Host).toBeTruthy();
+        expect(app1Host.outerHTML).toEqual(`<app1-root class="app1-root app1-host"></app1-root>`);
 
         tick();
     }));
