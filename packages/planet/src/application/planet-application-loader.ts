@@ -438,8 +438,8 @@ export class PlanetApplicationLoader {
                 switchMap(() => {
                     return this.ngZone.runOutsideAngular(() => {
                         return this.takeOneStable().pipe(
-                            tap(() => {
-                                this.bootstrapApp(app, 'hidden').subscribe();
+                            switchMap(() => {
+                                return this.bootstrapApp(app, 'hidden');
                             }),
                             map(() => {
                                 return getPlanetApplicationRef(app.name);
