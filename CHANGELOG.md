@@ -1,6 +1,8 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [1.2.3](https://github.com/worktile/ngx-planet/compare/1.2.2...1.2.3) (2020-11-18)
+
 ### [1.2.2](https://github.com/worktile/ngx-planet/compare/1.2.1...1.2.2) (2020-11-18)
 
 
