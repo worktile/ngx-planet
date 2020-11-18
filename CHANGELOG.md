@@ -1,6 +1,13 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [1.2.2](https://github.com/worktile/ngx-planet/compare/1.2.1...1.2.2) (2020-11-18)
+
+
+### Bug Fixes
+
+* **component-loader:** fix load component error  when  preload app ([edd4ea3](https://github.com/worktile/ngx-planet/commit/edd4ea3489e7a066bf7cbcc2bbcf50288178b1fc))
+
 ### [1.2.1](https://github.com/worktile/ngx-planet/compare/1.1.2...1.2.1) (2020-11-09)
 
 
