@@ -114,7 +114,7 @@ export class PlanetApplicationLoader {
     }
 
     private takeOneStable() {
-        return this.ngZone.onStable.asObservable().pipe(take(1));
+        return this.ngZone.onStable.pipe(take(1));
     }
 
     private setLoadingDone() {
@@ -430,23 +430,27 @@ export class PlanetApplicationLoader {
     /**
      * Preload planet application
      * @param app app
+     * @param directBootstrap bootstrap on stable by default, setting directBootstrap is true, it will bootstrap directly
      */
-    preload(app: PlanetApplication): Observable<PlanetApplicationRef> {
+    preload(app: PlanetApplication, directBootstrap?: boolean): Observable<PlanetApplicationRef> {
         const status = this.appsStatus.get(app);
         if (!status || status === ApplicationStatus.loadError) {
             return this.startLoadAppAssets(app).pipe(
                 switchMap(() => {
                     return this.ngZone.runOutsideAngular(() => {
-                        return this.takeOneStable().pipe(
-                            switchMap(() => {
-                                return this.bootstrapApp(app, 'hidden').pipe(
-                                    map(() => {
-                                        return getPlanetApplicationRef(app.name);
-                                    })
-                                );
-                            })
-                        );
+                        if (directBootstrap) {
+                            return this.bootstrapApp(app, 'hidden');
+                        } else {
+                            return this.takeOneStable().pipe(
+                                switchMap(() => {
+                                    return this.bootstrapApp(app, 'hidden');
+                                })
+                            );
+                        }
                     });
+                }),
+                map(() => {
+                    return getPlanetApplicationRef(app.name);
                 })
             );
         } else if (status === ApplicationStatus.assetsLoading || status === ApplicationStatus.bootstrapping) {
