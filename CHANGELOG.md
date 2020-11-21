@@ -1,6 +1,13 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [1.2.4](https://github.com/worktile/ngx-planet/compare/1.2.3...1.2.4) (2020-11-21)
+
+
+### Bug Fixes
+
+* **application-loader:** when load preloaded component, bootstrap directly ([3a50f1a](https://github.com/worktile/ngx-planet/commit/3a50f1a21350f87d63c769017e238c7e5e42f7fb))
+
 ### [1.2.3](https://github.com/worktile/ngx-planet/compare/1.2.2...1.2.3) (2020-11-18)
 
 ### [1.2.2](https://github.com/worktile/ngx-planet/compare/1.2.1...1.2.2) (2020-11-18)
