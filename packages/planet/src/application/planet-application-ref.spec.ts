@@ -31,8 +31,11 @@ describe('PlanetApplicationRef', () => {
 
     describe('getPlanetApplicationRef', () => {
         it('should get planet application ref success', () => {
-            defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
-                return new Promise(() => {});
+            defineApplication('app1', {
+                template: '<app1-root-container></app1-root-container>',
+                bootstrap: (portalApp?: PlanetPortalApplication) => {
+                    return new Promise(() => {});
+                }
             });
             const planetAppRef = getPlanetApplicationRef('app1');
             expect(planetAppRef).toBeTruthy();
@@ -40,8 +43,11 @@ describe('PlanetApplicationRef', () => {
         });
 
         it('should not get planet appRef which has not exist', () => {
-            defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
-                return new Promise(() => {});
+            defineApplication('app1', {
+                template: '<app1-root-container></app1-root-container>',
+                bootstrap: (portalApp?: PlanetPortalApplication) => {
+                    return new Promise(() => {});
+                }
             });
             const planetAppRef = getPlanetApplicationRef('app2');
             expect(planetAppRef).toBeFalsy();
@@ -65,11 +71,14 @@ describe('PlanetApplicationRef', () => {
             const portalApplication = new PlanetPortalApplication();
             const ngModuleFactory = compiler.compileModuleSync(AppModule);
             const ngModuleRef = ngModuleFactory.create(injector);
-            defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
-                return new Promise(resolve => {
-                    expect(portalApp).toBe(portalApplication);
-                    resolve(ngModuleRef);
-                });
+            defineApplication('app1', {
+                template: '<app1-root-container></app1-root-container>',
+                bootstrap: (portalApp?: PlanetPortalApplication) => {
+                    return new Promise(resolve => {
+                        expect(portalApp).toBe(portalApplication);
+                        resolve(ngModuleRef);
+                    });
+                }
             });
             const appRef = getPlanetApplicationRef('app1');
             expect(appRef).toBeTruthy();
@@ -82,11 +91,14 @@ describe('PlanetApplicationRef', () => {
             const navigateByUrlSpy = spyOn(portalApplication.router, 'navigateByUrl');
             const ngModuleFactory = compiler.compileModuleSync(AppModule);
             const ngModuleRef = ngModuleFactory.create(injector);
-            defineApplication('app1', (portalApp?: PlanetPortalApplication) => {
-                return new Promise(resolve => {
-                    expect(portalApp).toBe(portalApplication);
-                    resolve(ngModuleRef);
-                });
+            defineApplication('app1', {
+                template: '<app1-root-container></app1-root-container>',
+                bootstrap: (portalApp?: PlanetPortalApplication) => {
+                    return new Promise(resolve => {
+                        expect(portalApp).toBe(portalApplication);
+                        resolve(ngModuleRef);
+                    });
+                }
             });
             const appRef = getPlanetApplicationRef('app1');
             expect(appRef).toBeTruthy();

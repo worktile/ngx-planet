@@ -20,10 +20,13 @@ describe('PlanetComponentLoader', () => {
     function defineAndBootstrapApplication(name: string, appModule: Type<any>) {
         const ngModuleFactory = compiler.compileModuleSync(appModule);
         const ngModuleRef = ngModuleFactory.create(injector);
-        defineApplication(name, (portalApp?: PlanetPortalApplication) => {
-            return new Promise(resolve => {
-                resolve(ngModuleRef);
-            });
+        defineApplication(name, {
+            template: '<app1-root-container></app1-root-container>',
+            bootstrap: (portalApp?: PlanetPortalApplication) => {
+                return new Promise(resolve => {
+                    resolve(ngModuleRef);
+                });
+            }
         });
         const appRef = getPlanetApplicationRef(name);
         const portalApplication = new PlanetPortalApplication();
@@ -141,7 +144,7 @@ function loadApp1Component(appModuleRef: NgModuleRef<any>, config?: Partial<Plan
         'app1-projects',
         Object.assign({}, { container: hostElement }, config)
     );
-    tick(50);
+    tick(20);
     return result;
 }
 

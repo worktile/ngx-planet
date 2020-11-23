@@ -68,6 +68,15 @@
         "test",
         "code"
       ]
+    },
+    {
+      "login": "mario56",
+      "name": "mario_ma",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/7720722?v=4",
+      "profile": "https://github.com/mario56",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

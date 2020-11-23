@@ -11,8 +11,12 @@ export interface PlanetApplication<TExtra = any> {
     name: string;
     // 应用加载的宿主元素或者选择器
     hostParent: string | HTMLElement;
+
     // 子应用的选择器
-    selector: string;
+    /**
+     * @deprecated please use new defineApplication to set selector
+     */
+    selector?: string;
     // 子应用路由前缀路径
     routerPathPrefix: string | RegExp;
     // 宿主元素附加样式

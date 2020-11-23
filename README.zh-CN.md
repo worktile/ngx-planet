@@ -9,47 +9,47 @@
 [coveralls-image]: https://coveralls.io/repos/github/worktile/ngx-planet/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/worktile/ngx-planet
 
-A powerful, reliable, fully-featured and production ready Micro Frontend library for Angular.
+一个强大、可靠、完善、完全可用于生产环境的 Angular 微前端库。
+Angular 的 API 风格，目前只支持 Angular 框架，不支持其他 MV* 前端框架。
 
-APIs consistent with angular style, currently only supports Angular, other frameworks are not supported.
+[English README](https://github.com/worktile/ngx-planet/blob/master/README.md)
 
-[中文文档](https://github.com/worktile/ngx-planet/blob/master/README.zh-CN.md)
+## 功能
 
-## Features
+-   支持同时渲染多个子应用
+-   支持并存(coexist)和默认(default)两种模式, 默认模式切换其他子应用销毁当前子应用，并存模式不会销毁，而是隐藏
+-   支持子应用的预加载
+-   内置多个应用之间的通信
+-   支持跨应用组件的渲染
+-   完善的示例，包含路由配置、懒加载等所有功能
 
--   Rendering multiple applications at the same time
--   Support two mode, coexist and default that switch to another app and destroy active apps
--   Support application preload
--   Built-in communication between multiple applications
--   Cross application component rendering
--   Comprehensive examples include routing configuration, lazy loading and all features
-
-## Alternatives
+## 其他方案
 
 -   [single-spa](https://github.com/CanopyTax/single-spa): A javascript front-end framework supports any frameworks.
--   [mooa](https://github.com/phodal/mooa): A independent-deployment micro-frontend Framework for Angular from single-spa, `planet` is very similar to it, but `planet` is more powerful, reliable, productively and more angular.
+-   [mooa](https://github.com/phodal/mooa): A independent-deployment micro-frontend Framework for Angular from single-spa, `planet` 和 `mooa` 非常相似, 但是 `planet` 更加强大、可靠，同时完全用于了生产环境，比如：https://pingcode.com
 
-## Installation
+## 安装
 
 ```bash
 $ npm i @worktile/planet --save
-// or
+// 或者
 $ yarn add @worktile/planet
 ```
 
 ## Dependencies
 
-- `@angular/cdk`, you should install `@angular/cdk`
+- `@angular/cdk`, 确保安装了 Angular 官方的 CDK `npm i @angular/cdk --save` 或者 `yarn add @angular/cdk`
 
-## Demo
+
+## 示例
 
 [Try out our live demo](http://planet.ngnice.com)
 
 ![ngx-planet-micro-front-end.gif](https://cdn.pingcode.com/open-sources/ngx-planet/ngx-planet-micro-front-end.gif)
 
-## Usage
+## 使用说明
 
-### 1. Loading NgxPlanetModule in the portal's AppModule
+### 1. 在主应用的`AppModule`中引入`NgxPlanetModule`
 
 ```
 import { NgxPlanetModule } from '@worktile/planet';
@@ -63,7 +63,7 @@ import { NgxPlanetModule } from '@worktile/planet';
 class AppModule {}
 ```
 
-### 2. Register applications to planet use PlanetService in portal app
+### 2. 通过`Planet`服务在主应用中注册子应用
 
 ```
 @Component({
@@ -138,37 +138,30 @@ export class AppComponent implements OnInit {
 }
 ```
 
-### 3. Sub App define how to bootstrap AppModule
+### 3. 子应用通过`defineApplication`定义如何启动子应用的`AppModule`, 同时可以设置`PlanetPortalApplication`服务为主应用的全局服务。
 
 ```
-defineApplication('app1', {
-    template: `<app1-root class="app1-root"></app1-root>`,
-    bootstrap: (portalApp: PlanetPortalApplication) => {
-        return platformBrowserDynamic([
-            {
-                provide: PlanetPortalApplication,
-                useValue: portalApp
-            },
-            {
-                provide: AppRootContext,
-                useValue: portalApp.data.appRootContext
-            }
-        ])
-            .bootstrapModule(AppModule)
-            .then(appModule => {
-                return appModule;
-            })
-            .catch(error => {
-                console.error(error);
-                return null;
-            });
-    }
+defineApplication('app1', (portalApp: PlanetPortalApplication) => {
+    return platformBrowserDynamic([
+        {
+            provide: PlanetPortalApplication,
+            useValue: portalApp
+        }
+    ])
+        .bootstrapModule(AppModule)
+        .then(appModule => {
+            return appModule;
+        })
+        .catch(error => {
+            console.error(error);
+            return null;
+        });
 });
 ```
 
-## Documents
+## 文档
 
-### Sub app configurations
+### 子应用
 
 | Name               | Type                  | Description                                                                    | 中文描述                                                                                                                                                                |
 | ------------------ | --------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -185,7 +178,7 @@ defineApplication('app1', {
 | loadSerial         | boolean               | serial load scripts                                                            | 是否串行加载脚本静态资源                                                                                                                                                |
 | manifest           | string                | manifest json file path                                                        | manifest.json 文件路径地址，当设置了路径后会先加载这个文件，然后根据 scripts 和 styles 文件名去找到匹配的文件，因为生产环境的静态资文件是 hash 之后的命名，需要动态获取 |
 
-### Communication between applications use GlobalEventDispatcher
+### `GlobalEventDispatcher` 实现应用之间的通信
 
 ```
 import { GlobalEventDispatcher } from "@worktile/planet";
@@ -210,7 +203,7 @@ export class OneComponent {
 }
 ```
 
-### Cross application component rendering
+### 跨应用组件渲染
 
 ```
 import { PlanetComponentLoader } from "@worktile/planet";
@@ -239,8 +232,8 @@ export class OneComponent {
 
 ## FAQ
 
-### infinite loop load portal app's js
-Because the portal app and sub app are packaged through webpack, there will be conflicts in module dependent files, we should set up additional config `runtimeChunk` through `@angular-builders/custom-webpack`, we expect webpack 5 to support micro frontend better.
+### 无限循环加载主应用的js
+因为主应用和子应用都是通过Webpack打包的，打包的版本依赖会有冲突，需要通过`@angular-builders/custom-webpack`插件设置扩展的`Webpack`配置`runtimeChunk`, 期望 Webpack 5 对于微前端支持的更好。
 ```
 // extra-webpack.config.js
 {    
@@ -250,8 +243,8 @@ Because the portal app and sub app are packaged through webpack, there will be c
 };
 ```
 
-### throw error `Cannot read property 'call' of undefined at __webpack_require__ (bootstrap:79)`
-Similar to the reasons above, we should set `vendorChunk` as `false` for `build` and `serve` in `angular.json`
+### 报错 `Cannot read property 'call' of undefined at __webpack_require__ (bootstrap:79)`
+和上面的原因类似，我们需要设置 `vendorChunk` 为 `false`，需要同时设置 `angular.json`中的`build`和`serve`, `serve` 按理说是应该继承 build 的配置的，好像在 Angular 8 中有缺陷，不起作用。
 
 ```
  ...
@@ -281,17 +274,17 @@ Similar to the reasons above, we should set `vendorChunk` as `false` for `build`
 ...
 ```
 
-### throw error `An accessor cannot be declared in an ambient context.`
-this is TypeScript's issue, details see [an-accessor-cannot-be-declared](https://stackoverflow.com/questions/61248058/error-ngx-daterangepicker-material-an-accessor-cannot-be-declared-in-an-ambient
+### 报错 `An accessor cannot be declared in an ambient context.`
+这好像是 TypeScript 某个版本的缺陷，详细情况可以查看 see [an-accessor-cannot-be-declared](https://stackoverflow.com/questions/61248058/error-ngx-daterangepicker-material-an-accessor-cannot-be-declared-in-an-ambient
 )
-should setting `skipLibCheck` as true 
+临时解决通过设置 `skipLibCheck` 为 true，将来升级到高级版本的 TypeScript 可能就自动修复了。
 ```
 "compilerOptions": {
     "skipLibCheck": true
 }
 ```
 
-## Development
+## 开发
 
 ```
 npm run start // open http://localhost:3000
@@ -305,36 +298,3 @@ npm run serve:app2 // 3002
 // test
 npm run test
 ```
-
-## Roadmap
-
--   [ ] Ivy render engine
--   [ ] Supports Other frameworks as React and Vue
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://www.zhihu.com/people/why520crazy/activities"><img src="https://avatars2.githubusercontent.com/u/3959960?v=4" width="100px;" alt=""/><br /><sub><b>why520crazy</b></sub></a><br /><a href="#question-why520crazy" title="Answering Questions">💬</a> <a href="#business-why520crazy" title="Business development">💼</a> <a href="https://github.com/worktile/ngx-planet/commits?author=why520crazy" title="Code">💻</a> <a href="#design-why520crazy" title="Design">🎨</a> <a href="https://github.com/worktile/ngx-planet/commits?author=why520crazy" title="Documentation">📖</a> <a href="#eventOrganizing-why520crazy" title="Event Organizing">📋</a> <a href="#infra-why520crazy" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-why520crazy" title="Maintenance">🚧</a> <a href="#projectManagement-why520crazy" title="Project Management">📆</a> <a href="https://github.com/worktile/ngx-planet/pulls?q=is%3Apr+reviewed-by%3Awhy520crazy" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="https://github.com/walkerkay"><img src="https://avatars1.githubusercontent.com/u/15701592?v=4" width="100px;" alt=""/><br /><sub><b>Walker</b></sub></a><br /><a href="https://github.com/worktile/ngx-planet/commits?author=walkerkay" title="Code">💻</a> <a href="#example-walkerkay" title="Examples">💡</a> <a href="#maintenance-walkerkay" title="Maintenance">🚧</a> <a href="https://github.com/worktile/ngx-planet/pulls?q=is%3Apr+reviewed-by%3Awalkerkay" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="https://whyour.cn"><img src="https://avatars3.githubusercontent.com/u/22700758?v=4" width="100px;" alt=""/><br /><sub><b>whyour</b></sub></a><br /><a href="https://github.com/worktile/ngx-planet/commits?author=whyour" title="Code">💻</a></td>
-    <td align="center"><a href="http://www.231jx.cn"><img src="https://avatars0.githubusercontent.com/u/19969080?v=4" width="100px;" alt=""/><br /><sub><b>张威</b></sub></a><br /><a href="https://github.com/worktile/ngx-planet/commits?author=aoilti" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/luxiaobei"><img src="https://avatars1.githubusercontent.com/u/13583957?v=4" width="100px;" alt=""/><br /><sub><b>luxiaobei</b></sub></a><br /><a href="#infra-luxiaobei" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/worktile/ngx-planet/commits?author=luxiaobei" title="Tests">⚠️</a> <a href="https://github.com/worktile/ngx-planet/commits?author=luxiaobei" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/mario56"><img src="https://avatars2.githubusercontent.com/u/7720722?v=4" width="100px;" alt=""/><br /><sub><b>mario_ma</b></sub></a><br /><a href="https://github.com/worktile/ngx-planet/commits?author=mario56" title="Code">💻</a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
-
-## LICENSE
-
-[MIT License](https://github.com/worktile/ngx-planet/blob/master/LICENSE)

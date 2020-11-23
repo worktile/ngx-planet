@@ -7,7 +7,7 @@ import {
     AppsLoadingStartEvent,
     AppStatusChangeEvent
 } from './application/planet-application-loader';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter, startWith, distinctUntilChanged, map } from 'rxjs/operators';
 import {
     setPortalApplicationData,
@@ -40,6 +40,8 @@ export class Planet {
     public get appsLoadingStart(): Observable<AppsLoadingStartEvent> {
         return this.planetApplicationLoader.appsLoadingStart;
     }
+
+    private subscription: Subscription;
 
     constructor(
         private injector: Injector,
@@ -83,7 +85,7 @@ export class Planet {
     }
 
     start() {
-        this.router.events
+        this.subscription = this.router.events
             .pipe(
                 filter(event => {
                     return event instanceof NavigationEnd;
@@ -99,5 +101,9 @@ export class Planet {
                     url: url
                 });
             });
+    }
+
+    stop() {
+        this.subscription.unsubscribe();
     }
 }
