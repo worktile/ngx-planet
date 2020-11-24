@@ -464,10 +464,12 @@ export class PlanetApplicationLoader {
                 }),
                 take(1),
                 map(() => {
+                    debug(`${app} assets is loading or app is bootstrapped, return appRef`);
                     return getPlanetApplicationRef(app.name);
                 })
             );
         } else {
+            debug(`${app} assets is loaded and app is bootstrapped, return appRef`);
             return of(getPlanetApplicationRef(app.name));
         }
     }
