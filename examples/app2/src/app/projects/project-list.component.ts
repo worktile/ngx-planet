@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, DoCheck, ApplicationRef, HostBinding } from '@angular/core';
 import { GlobalEventDispatcher } from 'ngx-planet';
 import { ProjectService } from './projects.service';
-import { ThyDialog } from 'ngx-tethys/dialog/dialog.service';
+import { ThyDialog } from 'ngx-tethys/dialog';
 import { ProjectDetailComponent } from './detail/detail.component';
 import { Router } from '@angular/router';
 import { ThyGridRowEvent } from 'ngx-tethys/grid';
