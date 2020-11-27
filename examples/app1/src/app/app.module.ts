@@ -10,11 +10,13 @@ import { DemoCommonModule } from '@demo/common';
 import { NgxPlanetModule } from 'ngx-planet';
 import { UserModule } from './user/user.module';
 import { ProjectsComponent } from './projects/projects.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [AppRootComponent, AppActualRootComponent, DashboardComponent, ProjectsComponent],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         RouterModule.forRoot(routers),
         // UserModule,
         NgxTethysModule,

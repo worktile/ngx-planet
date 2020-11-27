@@ -14,6 +14,7 @@ import { DemoCommonModule } from '@demo/common';
 import { ProjectResolver } from './projects/project.resolver';
 import { TasksComponent } from './projects/tasks/tasks.component';
 import { ViewComponent } from './projects/view/view.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routers: Route[] = [
     {
@@ -73,6 +74,7 @@ const routers: Route[] = [
     entryComponents: [AppRootComponent, ProjectDetailComponent],
     imports: [
         CommonModule,
+        BrowserAnimationsModule,
         FormsModule,
         BrowserModule,
         RouterModule.forRoot(routers),
