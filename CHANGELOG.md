@@ -1,6 +1,19 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [9.0.1-beta.0](https://github.com/worktile/ngx-planet/compare/1.2.3...9.0.1-beta.0) (2020-12-09)
+
+
+### Features
+
+* asset-loader,application-loader,component-loader, preload add debug logs ([#142](https://github.com/worktile/ngx-planet/issues/142)) ([2e21ab0](https://github.com/worktile/ngx-planet/commit/2e21ab09d6f9b9ab19825148f586a650704a12b5))
+
+
+### Bug Fixes
+
+* update peerDependencies to 9.0.0 ([a0e3c1b](https://github.com/worktile/ngx-planet/commit/a0e3c1b847faf9cf79b463f6ac993e260897f412))
+* **application-loader:** when load preloaded component, bootstrap directly ([3a50f1a](https://github.com/worktile/ngx-planet/commit/3a50f1a21350f87d63c769017e238c7e5e42f7fb))
+
 ## [9.0.0](https://github.com/worktile/ngx-planet/compare/1.2.3...9.0.0) (2020-12-09)
 
 
