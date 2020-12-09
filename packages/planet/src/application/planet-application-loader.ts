@@ -469,7 +469,7 @@ export class PlanetApplicationLoader {
                 })
             );
         } else {
-            debug(`${app.name} assets is loaded and app is bootstrapped, return appRef`);
+            debug(`${app.name} status is '${status}' , return appRef`);
             return of(getPlanetApplicationRef(app.name));
         }
     }
