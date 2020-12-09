@@ -457,7 +457,11 @@ export class PlanetApplicationLoader {
                     return getPlanetApplicationRef(app.name);
                 })
             );
-        } else if (status === ApplicationStatus.assetsLoading || status === ApplicationStatus.bootstrapping) {
+        } else if (
+            status === ApplicationStatus.assetsLoading ||
+            status === ApplicationStatus.assetsLoaded ||
+            status === ApplicationStatus.bootstrapping
+        ) {
             return this.appStatusChange.pipe(
                 filter(event => {
                     return event.app === app && event.status === ApplicationStatus.bootstrapped;
