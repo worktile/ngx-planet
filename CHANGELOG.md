@@ -1,6 +1,13 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [9.0.1-beta.3](https://github.com/worktile/ngx-planet/compare/9.0.1-beta.2...9.0.1-beta.3) (2020-12-09)
+
+
+### Bug Fixes
+
+* **application-loader:** fix preload error when app assetsLoaded ([e1fba40](https://github.com/worktile/ngx-planet/commit/e1fba402b0e72884f07cd6f7454b224f507c8610))
+
 ### [9.0.1-beta.2](https://github.com/worktile/ngx-planet/compare/1.2.3...9.0.1-beta.2) (2020-12-09)
 
 
