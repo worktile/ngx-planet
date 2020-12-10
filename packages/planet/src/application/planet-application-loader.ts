@@ -441,7 +441,9 @@ export class PlanetApplicationLoader {
             return this.startLoadAppAssets(app).pipe(
                 switchMap(() => {
                     if (directBootstrap) {
-                        return this.bootstrapApp(app, 'hidden');
+                        return this.ngZone.run(() => {
+                            return this.bootstrapApp(app, 'hidden');
+                        });
                     } else {
                         return this.ngZone.runOutsideAngular(() => {
                             return this.takeOneStable().pipe(
