@@ -440,18 +440,18 @@ export class PlanetApplicationLoader {
             debug(`${app.name} start preloading`);
             return this.startLoadAppAssets(app).pipe(
                 switchMap(() => {
-                    return this.ngZone.runOutsideAngular(() => {
-                        if (directBootstrap) {
-                            return this.bootstrapApp(app, 'hidden');
-                        } else {
+                    if (directBootstrap) {
+                        return this.bootstrapApp(app, 'hidden');
+                    } else {
+                        return this.ngZone.runOutsideAngular(() => {
                             return this.takeOneStable().pipe(
                                 switchMap(() => {
                                     debug(`${app.name} start bootstrap on stable`);
                                     return this.bootstrapApp(app, 'hidden');
                                 })
                             );
-                        }
-                    });
+                        });
+                    }
                 }),
                 map(() => {
                     return getPlanetApplicationRef(app.name);
