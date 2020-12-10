@@ -224,12 +224,12 @@ export class PlanetApplicationLoader {
                                 setTimeout(() => {
                                     // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
                                     if (this.startRouteChangeEvent === event) {
-                                        this.ngZone.runOutsideAngular(() => {
-                                            forkJoin(apps$).subscribe(() => {
-                                                this.setLoadingDone();
-                                                this.ensurePreloadApps(apps);
-                                            });
+                                        // this.ngZone.runOutsideAngular(() => {
+                                        forkJoin(apps$).subscribe(() => {
+                                            this.setLoadingDone();
+                                            this.ensurePreloadApps(apps);
                                         });
+                                        // });
                                     }
                                 });
                             } else {
