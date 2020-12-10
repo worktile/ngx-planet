@@ -1,9 +1,6 @@
 import { PlanetApplication } from './planet.class';
-import _debug from 'debug';
 
 const ELEMENT_NODE_TYPE = 1;
-
-export const debug = _debug('planet');
 
 export function hashCode(str: string): number {
     let hash = 0;

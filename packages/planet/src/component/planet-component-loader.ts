@@ -3,7 +3,7 @@ import { ComponentType, DomPortalOutlet, ComponentPortal, PortalInjector } from 
 import { PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
 import { PlantComponentConfig } from './plant-component.config';
-import { coerceArray, debug } from '../helpers';
+import { coerceArray } from '../helpers';
 import { delay, map, shareReplay, finalize } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
@@ -125,7 +125,6 @@ export class PlanetComponentLoader {
                 if (component) {
                     return this.ngZone.run(() => {
                         const componentRef = this.attachComponent<any>(component, appRef.appModuleRef, config);
-                        debug(`${app} component '${componentName}' loaded successfully`);
                         return componentRef;
                     });
                 } else {
@@ -142,7 +141,6 @@ export class PlanetComponentLoader {
     }
 
     load<TData = any>(app: string, componentName: string, config: PlantComponentConfig<TData>) {
-        debug(`start loading the component '${componentName}' of ${app}`);
         const result = this.getPlantAppRef(app).pipe(
             map(appRef => {
                 const componentFactory = appRef.getComponentFactory();

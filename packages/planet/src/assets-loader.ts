@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { hashCode, isEmpty, getScriptsAndStylesFullPaths, debug } from './helpers';
+import { hashCode, isEmpty, getScriptsAndStylesFullPaths } from './helpers';
 import { of, Observable, Observer, forkJoin, concat, merge } from 'rxjs';
 import { tap, shareReplay, map, switchMap, switchAll, concatMap, concatAll, scan, reduce } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -21,10 +21,8 @@ export class AssetsLoader {
     constructor(private http: HttpClient) {}
 
     loadScript(src: string): Observable<AssetsLoadResult> {
-        debug(`load '${src}' start`);
         const id = hashCode(src);
         if (this.loadedSources.includes(id)) {
-            debug(`load '${src}' successfully from cache`);
             return of({
                 src: src,
                 hashCode: id,
@@ -76,15 +74,12 @@ export class AssetsLoader {
                 observer.complete();
             };
             document.body.appendChild(script);
-            debug(`load '${src}' successfully`);
         });
     }
 
     loadStyle(src: string): Observable<AssetsLoadResult> {
-        debug(`load '${src}' start`);
         const id = hashCode(src);
         if (this.loadedSources.includes(id)) {
-            debug(`load '${src}' successfully from cache`);
             return of({
                 src: src,
                 hashCode: id,
@@ -120,7 +115,6 @@ export class AssetsLoader {
                 observer.complete();
             };
             head.appendChild(link);
-            debug(`load '${src}' successfully`);
         });
     }
 
@@ -174,10 +168,8 @@ export class AssetsLoader {
     }
 
     loadManifest(url: string): Observable<{ [key: string]: string }> {
-        debug(`load '${url}' start`);
         return this.http.get(url).pipe(
             map((response: any) => {
-                debug(`load '${url}' successfully`);
                 return response;
             })
         );
