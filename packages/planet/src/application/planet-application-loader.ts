@@ -3,7 +3,7 @@ import { of, Observable, Subject, forkJoin, from } from 'rxjs';
 import { AssetsLoader } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
 import { switchMap, share, map, tap, distinctUntilChanged, take, filter, catchError } from 'rxjs/operators';
-import { getHTMLElement, coerceArray, createElementByTemplate, debug } from '../helpers';
+import { getHTMLElement, coerceArray, createElementByTemplate } from '../helpers';
 import { PlanetApplicationRef } from './planet-application-ref';
 import { PlanetPortalApplication } from './portal-application';
 import { PlanetApplicationService } from './planet-application.service';
@@ -305,7 +305,6 @@ export class PlanetApplicationLoader {
         app: PlanetApplication,
         defaultStatus: 'hidden' | 'display' = 'display'
     ): Observable<PlanetApplicationRef> {
-        debug(`${app.name} start bootstrap`);
         this.setAppStatus(app, ApplicationStatus.bootstrapping);
         const appRef = getPlanetApplicationRef(app.name);
         if (appRef && appRef.bootstrap) {
@@ -333,7 +332,6 @@ export class PlanetApplicationLoader {
             }
             return result.pipe(
                 tap(() => {
-                    debug(`${app.name} bootstrapped`);
                     this.setAppStatus(app, ApplicationStatus.bootstrapped);
                     if (defaultStatus === 'display' && appRootElement) {
                         appRootElement.removeAttribute('style');
@@ -437,18 +435,14 @@ export class PlanetApplicationLoader {
     preload(app: PlanetApplication, directBootstrap?: boolean): Observable<PlanetApplicationRef> {
         const status = this.appsStatus.get(app);
         if (!status || status === ApplicationStatus.loadError) {
-            debug(`${app.name} start preloading`);
             return this.startLoadAppAssets(app).pipe(
                 switchMap(() => {
                     if (directBootstrap) {
-                        return this.ngZone.run(() => {
-                            return this.bootstrapApp(app, 'hidden');
-                        });
+                        return this.bootstrapApp(app, 'hidden');
                     } else {
                         return this.ngZone.runOutsideAngular(() => {
                             return this.takeOneStable().pipe(
                                 switchMap(() => {
-                                    debug(`${app.name} start bootstrap on stable`);
                                     return this.bootstrapApp(app, 'hidden');
                                 })
                             );
@@ -470,12 +464,10 @@ export class PlanetApplicationLoader {
                 }),
                 take(1),
                 map(() => {
-                    debug(`${app.name} assets is loading or app is bootstrapped, return appRef`);
                     return getPlanetApplicationRef(app.name);
                 })
             );
         } else {
-            debug(`${app.name} status is '${status}' , return appRef`);
             return of(getPlanetApplicationRef(app.name));
         }
     }
