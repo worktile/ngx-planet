@@ -249,7 +249,7 @@ describe('PlanetApplicationLoader', () => {
         tick();
     }));
 
-    it(`should not set loadingDone as false when app1 navigateByUrl and app1 is active`, fakeAsync(() => {
+    it(`should not update loadingDone to false when app1 url navigate and app1 has been active`, fakeAsync(() => {
         const loadAppAssets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
         const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
         assetsLoaderSpy.and.returnValue(loadAppAssets$);
