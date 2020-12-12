@@ -92,11 +92,13 @@ export class PlanetApplicationLoader {
     }
 
     private setAppStatus(app: PlanetApplication, status: ApplicationStatus) {
-        this.appStatusChange$.next({
-            app: app,
-            status: status
+        this.ngZone.run(() => {
+            this.appStatusChange$.next({
+                app: app,
+                status: status
+            });
+            this.appsStatus.set(app, status);
         });
-        this.appsStatus.set(app, status);
     }
 
     private switchModeIsCoexist(app: PlanetApplication) {
@@ -224,16 +226,19 @@ export class PlanetApplicationLoader {
 
                             if (apps$.length > 0) {
                                 // 切换到应用后会有闪烁现象，所以使用 setTimeout 后启动应用
+                                // example: redirect to app1's dashboard from portal's about page
                                 // If app's route has redirect, it doesn't work, it ok just in setTimeout, I don't know why.
+                                // TODO:: remove it, it is ok in version Angular 9.x
                                 setTimeout(() => {
                                     // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
                                     if (this.startRouteChangeEvent === event) {
-                                        // this.ngZone.runOutsideAngular(() => {
-                                        forkJoin(apps$).subscribe(() => {
-                                            this.setLoadingDone();
-                                            this.ensurePreloadApps(apps);
+                                        // runOutsideAngular for fix error: `Expected to not be in Angular Zone, but it is!`
+                                        this.ngZone.runOutsideAngular(() => {
+                                            forkJoin(apps$).subscribe(() => {
+                                                this.setLoadingDone();
+                                                this.ensurePreloadApps(apps);
+                                            });
                                         });
-                                        // });
                                     }
                                 });
                             } else {

@@ -41,6 +41,12 @@ export class PlanetApplicationRef {
             this.template = options.template;
             this.appModuleBootstrap = options.bootstrap;
         }
+        // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
+        // See https://github.com/PlaceMe-SAS/single-spa-angular-cli/issues/33,
+        // NgZone.isInAngularZone = () => {
+        //     // @ts-ignore
+        //     return window.Zone.current._properties[`ngx-planet-${name}`] === true;
+        // };
     }
 
     // 子应用路由变化后同步修改 portal 的 Route
