@@ -1,6 +1,13 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [9.0.3](https://github.com/worktile/ngx-planet/compare/9.0.2...9.0.3) (2020-12-12)
+
+
+### Bug Fixes
+
+* **app-loader:** should not set loading when app assets is loaded [#107](https://github.com/worktile/ngx-planet/issues/107) ([09a3f2e](https://github.com/worktile/ngx-planet/commit/09a3f2e8eca2a69d0afbad183aa82390a27bed15))
+
 ### [9.0.2](https://github.com/worktile/ngx-planet/compare/9.0.1-beta.3...9.0.2) (2020-12-10)
 
 
