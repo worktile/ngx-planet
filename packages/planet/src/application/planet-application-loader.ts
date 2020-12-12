@@ -136,7 +136,6 @@ export class PlanetApplicationLoader {
                     return of(event).pipe(
                         // unload apps and return should load apps
                         map(() => {
-                            this.loadingDone = false;
                             this.startRouteChangeEvent = event;
                             const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
                             const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
@@ -149,6 +148,7 @@ export class PlanetApplicationLoader {
                         }),
                         // Load app assets (static resources)
                         switchMap(shouldLoadApps => {
+                            let hasAppsNeedLoadingAssets = false;
                             const loadApps$ = shouldLoadApps.map(app => {
                                 const appStatus = this.appsStatus.get(app);
                                 if (
@@ -156,6 +156,7 @@ export class PlanetApplicationLoader {
                                     appStatus === ApplicationStatus.assetsLoading ||
                                     appStatus === ApplicationStatus.loadError
                                 ) {
+                                    hasAppsNeedLoadingAssets = true;
                                     return this.ngZone.runOutsideAngular(() => {
                                         return this.startLoadAppAssets(app);
                                     });
@@ -163,6 +164,9 @@ export class PlanetApplicationLoader {
                                     return of(app);
                                 }
                             });
+                            if (hasAppsNeedLoadingAssets) {
+                                this.loadingDone = false;
+                            }
                             return loadApps$.length > 0 ? forkJoin(loadApps$) : of([] as PlanetApplication[]);
                         }),
                         // Bootstrap or show apps
