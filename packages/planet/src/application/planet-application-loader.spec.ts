@@ -153,7 +153,6 @@ describe('PlanetApplicationLoader', () => {
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
 
         appStatusChangeFaker.expectHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoading });
-        expect(planetApplicationLoader.loadingDone).toBe(false);
 
         expect(appsLoadingStartSpy).toHaveBeenCalled();
         expect(appsLoadingStartSpy).toHaveBeenCalledWith({
@@ -248,6 +247,35 @@ describe('PlanetApplicationLoader', () => {
         expect(app1RefFaker.navigateByUrlSpy).toHaveBeenCalledTimes(1);
         expect(app1RefFaker.navigateByUrlSpy).toHaveBeenCalledWith('/app1/dashboard2');
         tick();
+    }));
+
+    it(`should not set loadingDone as false when app1 navigateByUrl and app1 is active`, fakeAsync(() => {
+        const loadAppAssets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+        const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
+        assetsLoaderSpy.and.returnValue(loadAppAssets$);
+
+        const appStatusChangeFaker = AppStatusChangeFaker.create(planetApplicationLoader);
+        const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
+
+        planetApplicationLoader.reroute({ url: '/app1/dashboard' });
+        loadAppAssets$.next();
+        loadAppAssets$.complete();
+        flush();
+        app1RefFaker.haveBeenBootstrap();
+        app1RefFaker.bootstrap();
+
+        expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(5);
+        expect(app1RefFaker.navigateByUrlSpy).not.toHaveBeenCalled();
+        planetApplicationLoader.reroute({ url: '/app1/dashboard2' });
+
+        // app1 has been loaded
+        expect(planetApplicationLoader.loadingDone).toEqual(true);
+        flush();
+
+        // app2 has been not loaded
+        planetApplicationLoader.reroute({ url: '/app2/dashboard1' });
+        expect(planetApplicationLoader.loadingDone).toEqual(false);
+        flush();
     }));
 
     it(`should not call app1 navigateByUrl when app1 is active and url is same`, fakeAsync(() => {
