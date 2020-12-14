@@ -2,14 +2,14 @@ import { TestBed } from '@angular/core/testing';
 import { NgxPlanetModule } from './module';
 import { NgModule } from '@angular/core';
 import { Planet } from './planet';
-import { RouterModule } from '@angular/router';
 import { clearGlobalPlanet } from './global-planet';
 import { PlanetApplicationService } from './application/planet-application.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const app1 = {
     name: 'app1',
     hostParent: '.host-selector',
-    selector: 'app1-root-container',
+    selector: 'app1-root',
     routerPathPrefix: '/app1',
     hostClass: 'app1-host',
     preload: false,
@@ -24,12 +24,12 @@ const app1 = {
 };
 
 @NgModule({
-    imports: [NgxPlanetModule, RouterModule.forRoot([])]
+    imports: [NgxPlanetModule, RouterTestingModule.withRoutes([])]
 })
 class AppModule {}
 
 @NgModule({
-    imports: [NgxPlanetModule.forRoot([app1]), RouterModule.forRoot([])]
+    imports: [NgxPlanetModule.forRoot([app1]), RouterTestingModule.withRoutes([])]
 })
 class AppModuleWithApps {}
 

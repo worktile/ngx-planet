@@ -385,7 +385,7 @@ describe('assets-loader', () => {
         const app1 = {
             name: 'app1',
             hostParent: '.host-selector',
-            selector: 'app1-root-container',
+            selector: 'app1-root',
             routerPathPrefix: '/app1',
             hostClass: 'app1-host',
             preload: false,

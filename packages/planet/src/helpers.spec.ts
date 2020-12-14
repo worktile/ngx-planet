@@ -129,8 +129,8 @@ describe('helpers', () => {
 
     describe(`createElementByTemplate`, () => {
         it('should create html element success', () => {
-            const element = createElementByTemplate(`<app1-root class='app1-root-container'></app1-root>`);
-            expect(element.outerHTML).toBe(`<app1-root class="app1-root-container"></app1-root>`);
+            const element = createElementByTemplate(`<app1-root class='app1-root'></app1-root>`);
+            expect(element.outerHTML).toBe(`<app1-root class="app1-root"></app1-root>`);
         });
 
         it('should create html element when template invalid', () => {
@@ -192,7 +192,7 @@ describe('helpers', () => {
         const app = {
             name: 'app1',
             hostParent: '.host-selector',
-            selector: 'app1-root-container',
+            selector: 'app1-root',
             routerPathPrefix: '/app1',
             hostClass: 'app1-host',
             preload: false,

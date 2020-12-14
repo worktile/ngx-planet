@@ -2,7 +2,7 @@ import { SwitchModes } from '../planet.class';
 const app1 = {
     name: 'app1',
     hostParent: '.host-selector',
-    selector: 'app1-root-container',
+    selector: 'app1-root',
     routerPathPrefix: '/app1',
     hostClass: 'app1-host',
     preload: false,
@@ -30,7 +30,7 @@ const app1WithPreload = {
 const app2 = {
     name: 'app2',
     hostParent: '.host-selector',
-    selector: 'app2-root-container',
+    selector: 'app2-root',
     routerPathPrefix: '/app2',
     hostClass: 'app2-host',
     preload: false,

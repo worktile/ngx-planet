@@ -103,7 +103,6 @@ export class AppComponent implements OnInit {
                 hostParent: '#app-host-container',
                 hostClass: 'thy-layout',
                 routerPathPrefix: '/app1',
-                selector: 'app1-root-container',
                 resourcePathPrefix: '/static/app1',
                 preload: true,
                 scripts: [
@@ -118,7 +117,6 @@ export class AppComponent implements OnInit {
                 hostParent: '#app-host-container',
                 hostClass: 'thy-layout',
                 routerPathPrefix: '/app2',
-                selector: 'app2-root-container',
                 preload: true,
                 scripts: [
                     '/static/app2/main.js'
