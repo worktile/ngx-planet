@@ -27,7 +27,7 @@ export class PlanetApplicationRef {
         return this.template ? getTagNameByTemplate(this.template) : null;
     }
 
-    private get bootstrapped() {
+    public get bootstrapped() {
         return !!this.appModuleRef;
     }
     private name: string;
@@ -69,7 +69,7 @@ export class PlanetApplicationRef {
 
     bootstrap(app: PlanetPortalApplication): Observable<this> {
         if (!this.appModuleBootstrap) {
-            throw new Error(`${this.name} app is not define`);
+            throw new Error(`app(${this.name}) is not defined`);
         }
         this.portalApp = app;
         return from(
