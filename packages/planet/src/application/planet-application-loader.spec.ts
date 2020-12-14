@@ -510,6 +510,15 @@ describe('PlanetApplicationLoader', () => {
         tick();
     }));
 
+    it(`should throw specify error when sub app not found in bootstrapApp`, () => {
+        const appNotFound = 'app100';
+        expect(() => {
+            planetApplicationLoader['bootstrapApp']({ name: appNotFound, routerPathPrefix: 'app100', hostParent: '' });
+        }).toThrowError(
+            `[${appNotFound}] not found, make sure that the app has the correct name defined use defineApplication(${appNotFound}) and runtimeChunk and vendorChunk are set to true, details see https://github.com/worktile/ngx-planet#throw-error-cannot-read-property-call-of-undefined-at-__webpack_require__-bootstrap79`
+        );
+    });
+
     describe('preload', () => {
         it(`should preload load app2 when after loaded app1`, fakeAsync(() => {
             const newApp2 = {
