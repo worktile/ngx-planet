@@ -351,35 +351,6 @@
           }
         }
       }
-    },
-    "app3-lib": {
-      "root": "examples/app3-lib",
-      "sourceRoot": "examples/app3-lib/src",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-webpack:webpack",
-          "options": {
-            "webpackConfig": "./examples/app3-lib/webpack.config.js"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "examples/app3-lib/src/test.ts",
-            "tsConfig": "examples/app3-lib/tsconfig.spec.json",
-            "karmaConfig": "examples/app3-lib/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["examples/app3-lib/tsconfig.lib.json", "examples/app3-lib/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
     }
   },
   "defaultProject": "portal",
