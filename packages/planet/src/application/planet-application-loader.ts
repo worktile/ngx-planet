@@ -350,8 +350,11 @@ export class PlanetApplicationLoader {
                     return appRef;
                 })
             );
+        } else {
+            throw new Error(
+                `[${app.name}] not found, make sure that the app has the correct name defined use defineApplication(${app.name}) and runtimeChunk and vendorChunk are set to true, details see https://github.com/worktile/ngx-planet#throw-error-cannot-read-property-call-of-undefined-at-__webpack_require__-bootstrap79`
+            );
         }
-        return of(null);
     }
 
     private getUnloadApps(activeApps: PlanetApplication[]) {
