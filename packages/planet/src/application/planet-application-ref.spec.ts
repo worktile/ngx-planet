@@ -1,10 +1,11 @@
 import { PlanetPortalApplication } from './portal-application';
 import { NgModule, Compiler, Injector, Component, NgZone, Type } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TestBed, inject, tick, fakeAsync, flush } from '@angular/core/testing';
 import { defineApplication, getPlanetApplicationRef, clearGlobalPlanet } from '../global-planet';
 import { Subject } from 'rxjs';
 import { PlanetApplicationRef } from './planet-application-ref';
+import { RouterTestingModule } from '@angular/router/testing';
 
 @Component({
     selector: 'app-root',
@@ -16,7 +17,7 @@ class EmptyComponent {}
 @NgModule({
     declarations: [EmptyComponent],
     imports: [
-        RouterModule.forRoot([
+        RouterTestingModule.withRoutes([
             {
                 path: 'app1',
                 component: EmptyComponent
@@ -38,7 +39,7 @@ describe('PlanetApplicationRef', () => {
     describe('getPlanetApplicationRef', () => {
         it('should get planet application ref success', () => {
             defineApplication('app1', {
-                template: '<app1-root-container></app1-root-container>',
+                template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
                     return new Promise(() => {});
                 }
@@ -50,7 +51,7 @@ describe('PlanetApplicationRef', () => {
 
         it('should not get planet appRef which has not exist', () => {
             defineApplication('app1', {
-                template: '<app1-root-container></app1-root-container>',
+                template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
                     return new Promise(() => {});
                 }
@@ -70,7 +71,7 @@ describe('PlanetApplicationRef', () => {
             const ngModuleRef = ngModuleFactory.create(injector);
             const router = ngModuleRef.injector.get(Router);
             defineApplication('app1', {
-                template: '<app1-root-container></app1-root-container>',
+                template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
                     return new Promise(resolve => {
                         expect(portalApp).toBe(portalApplication);
@@ -103,7 +104,7 @@ describe('PlanetApplicationRef', () => {
             const ngModuleFactory = compiler.compileModuleSync(AppModule);
             const ngModuleRef = ngModuleFactory.create(injector);
             defineApplication('app1', {
-                template: '<app1-root-container></app1-root-container>',
+                template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
                     return new Promise(resolve => {
                         expect(portalApp).toBe(portalApplication);
@@ -131,7 +132,7 @@ describe('PlanetApplicationRef', () => {
             const ngModuleRef = ngModuleFactory.create(injector);
             const router = ngModuleRef.injector.get(Router);
             defineApplication('app1', {
-                template: '<app1-root-container></app1-root-container>',
+                template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
                     return new Promise(resolve => {
                         expect(portalApp).toBe(portalApplication);
@@ -205,7 +206,7 @@ describe('PlanetApplicationRef', () => {
             const ngModuleFactory = compiler.compileModuleSync(AppModule);
             const ngModuleRef = ngModuleFactory.create(injector);
             defineApplication('app1', {
-                template: '<app1-root-container></app1-root-container>',
+                template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
                     return new Promise(resolve => {
                         expect(portalApp).toBe(portalApplication);

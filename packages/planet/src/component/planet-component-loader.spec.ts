@@ -5,12 +5,12 @@ import { app2Name, App2Module } from './test/app2.module';
 import { PlanetPortalApplication } from '../application/portal-application';
 import { PlanetComponentLoader } from './planet-component-loader';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PlantComponentConfig } from './plant-component.config';
 import { defineApplication, getPlanetApplicationRef, getApplicationLoader, clearGlobalPlanet } from '../global-planet';
 import { Planet } from 'ngx-planet/planet';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PlanetComponentLoader', () => {
     let compiler: Compiler;
@@ -21,7 +21,7 @@ describe('PlanetComponentLoader', () => {
         const ngModuleFactory = compiler.compileModuleSync(appModule);
         const ngModuleRef = ngModuleFactory.create(injector);
         defineApplication(name, {
-            template: '<app1-root-container></app1-root-container>',
+            template: '<app1-root></app1-root>',
             bootstrap: (portalApp?: PlanetPortalApplication) => {
                 return new Promise(resolve => {
                     resolve(ngModuleRef);
@@ -36,7 +36,7 @@ describe('PlanetComponentLoader', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, RouterModule.forRoot([])]
+            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])]
         });
         compiler = TestBed.inject(Compiler);
         planet = TestBed.inject(Planet);

@@ -304,7 +304,7 @@ export class PlanetApplicationLoader {
             appRef.destroy();
         }
         const container = getHTMLElement(planetApp.hostParent);
-        const appRootElement = container.querySelector(appRef.selector || planetApp.selector);
+        const appRootElement = container.querySelector((appRef && appRef.selector) || planetApp.selector);
         if (appRootElement) {
             container.removeChild(appRootElement);
         }

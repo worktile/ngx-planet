@@ -23,8 +23,9 @@ export type PlantComponentFactory = <TData>(
 export class PlanetApplicationRef {
     public appModuleRef: NgModuleRef<any>;
     public template: string;
+    private innerSelector: string;
     public get selector() {
-        return this.template ? getTagNameByTemplate(this.template) : null;
+        return this.innerSelector;
     }
 
     public get bootstrapped() {
@@ -39,6 +40,7 @@ export class PlanetApplicationRef {
         this.name = name;
         if (options) {
             this.template = options.template;
+            this.innerSelector = this.template ? getTagNameByTemplate(this.template) : null;
             this.appModuleBootstrap = options.bootstrap;
         }
         // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.

@@ -8,7 +8,7 @@ describe('defineApplication', () => {
 
     it('should define application success', () => {
         defineApplication('app1', {
-            template: '<app1-root-container></app1-root-container>',
+            template: '<app1-root></app1-root>',
             bootstrap: (portalApp?: PlanetPortalApplication) => {
                 return new Promise(() => {});
             }
@@ -25,7 +25,7 @@ describe('defineApplication', () => {
 
     it('should throw error when define application has exist', () => {
         defineApplication('app1', {
-            template: '<app1-root-container></app1-root-container>',
+            template: '<app1-root></app1-root>',
             bootstrap: (portalApp?: PlanetPortalApplication) => {
                 return new Promise(() => {});
             }
