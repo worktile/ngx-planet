@@ -4,7 +4,6 @@ import { NgModule, ApplicationRef, NgModuleRef, NgZone, DoBootstrap } from '@ang
 import { RouterModule, Route } from '@angular/router';
 import { ProjectListComponent } from './projects/project-list.component';
 import { AppRootComponent, AppActualRootComponent } from './root/root.component';
-import { NgxTethysModule } from 'ngx-tethys';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProjectDetailComponent } from './projects/detail/detail.component';
 import { CommonModule } from '@angular/common';
@@ -15,6 +14,7 @@ import { ProjectResolver } from './projects/project.resolver';
 import { TasksComponent } from './projects/tasks/tasks.component';
 import { ViewComponent } from './projects/view/view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedModule } from './shared.module';
 
 const routers: Route[] = [
     {
@@ -78,7 +78,7 @@ const routers: Route[] = [
         FormsModule,
         BrowserModule,
         RouterModule.forRoot(routers),
-        NgxTethysModule,
+        SharedModule,
         DemoCommonModule,
         NgxPlanetModule
     ],

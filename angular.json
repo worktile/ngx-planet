@@ -27,7 +27,8 @@
             "main": "packages/planet/src/test.ts",
             "tsConfig": "packages/planet/tsconfig.spec.json",
             "karmaConfig": "packages/planet/karma.conf.js",
-            "codeCoverage": true
+            "codeCoverage": true,
+            "codeCoverageExclude": ["packages/planet/src/testing/**/*"]
           }
         },
         "lint": {
