@@ -1,7 +1,7 @@
 import { TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
 import { Compiler, Injector, Type, NgModuleRef } from '@angular/core';
-import { app1Name, App1Module, App1ProjectsComponent } from './test/app1.module';
-import { app2Name, App2Module } from './test/app2.module';
+import { app1Name, App1Module, App1ProjectsComponent } from '../testing/app1.module';
+import { app2Name, App2Module } from '../testing/app2.module';
 import { PlanetPortalApplication } from '../application/portal-application';
 import { PlanetComponentLoader } from './planet-component-loader';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

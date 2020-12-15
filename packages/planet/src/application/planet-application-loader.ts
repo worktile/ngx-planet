@@ -407,7 +407,7 @@ export class PlanetApplicationLoader {
                 activeApps ? activeApps.map(item => item.name) : null
             );
             const loadApps$ = toPreloadApps.map(preloadApp => {
-                return this.preload(preloadApp);
+                return this.preloadInternal(preloadApp);
             });
 
             forkJoin(loadApps$).subscribe({
@@ -425,7 +425,7 @@ export class PlanetApplicationLoader {
         }
     }
 
-    setOptions(options: Partial<PlanetOptions>) {
+    public setOptions(options: Partial<PlanetOptions>) {
         this.options = {
             ...this.options,
             ...options
@@ -435,21 +435,16 @@ export class PlanetApplicationLoader {
     /**
      * reset route by current router
      */
-    reroute(event: PlanetRouterEvent) {
+    public reroute(event: PlanetRouterEvent) {
         this.routeChange$.next(event);
     }
 
-    /**
-     * Preload planet application
-     * @param app app
-     * @param directBootstrap bootstrap on stable by default, setting directBootstrap is true, it will bootstrap directly
-     */
-    preload(app: PlanetApplication, directBootstrap?: boolean): Observable<PlanetApplicationRef> {
+    private preloadInternal(app: PlanetApplication, immediate?: boolean): Observable<PlanetApplicationRef> {
         const status = this.appsStatus.get(app);
         if (!status || status === ApplicationStatus.loadError) {
             return this.startLoadAppAssets(app).pipe(
                 switchMap(() => {
-                    if (directBootstrap) {
+                    if (immediate) {
                         return this.bootstrapApp(app, 'hidden');
                     } else {
                         return this.ngZone.runOutsideAngular(() => {
@@ -466,9 +461,9 @@ export class PlanetApplicationLoader {
                 })
             );
         } else if (
-            status === ApplicationStatus.assetsLoading ||
-            status === ApplicationStatus.assetsLoaded ||
-            status === ApplicationStatus.bootstrapping
+            [ApplicationStatus.assetsLoading, ApplicationStatus.assetsLoaded, ApplicationStatus.bootstrapping].includes(
+                status
+            )
         ) {
             return this.appStatusChange.pipe(
                 filter(event => {
@@ -480,7 +475,20 @@ export class PlanetApplicationLoader {
                 })
             );
         } else {
-            return of(getPlanetApplicationRef(app.name));
+            const appRef = getPlanetApplicationRef(app.name);
+            if (!appRef) {
+                throw new Error(`${app.name}'s status is ${ApplicationStatus[status]}, planetApplicationRef is null.`);
+            }
+            return of(appRef);
         }
+    }
+
+    /**
+     * Preload planet application
+     * @param app app
+     * @param immediate bootstrap on stable by default, setting immediate is true, it will bootstrap immediate
+     */
+    public preload(app: PlanetApplication, immediate?: boolean): Observable<PlanetApplicationRef> {
+        return this.preloadInternal(app, immediate);
     }
 }

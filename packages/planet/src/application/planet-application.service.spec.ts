@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { PlanetApplicationService } from './planet-application.service';
 import { SwitchModes } from '../planet.class';
 import { HttpClient } from '@angular/common/http';
-import { app1, app2, app2WithPreload } from '../test/applications';
+import { app1, app2, app2WithPreload } from '../testing/applications';
 import { AssetsLoader } from 'ngx-planet/assets-loader';
 import { Planet } from 'ngx-planet/planet';
 
