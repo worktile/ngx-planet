@@ -833,18 +833,12 @@ describe('PlanetApplicationLoader', () => {
             loadApp2Assets$.next();
             loadApp2Assets$.complete();
 
-            // App2 's assets loaded
-            expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(7);
+            // App2 's assets loaded and bootstrapped
+            expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(8);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp2,
                 status: ApplicationStatus.assetsLoaded
             });
-
-            // onStable
-            ngZone.onStable.next();
-
-            // App2 start bootstrap
-            expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(8);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp2,
                 status: ApplicationStatus.bootstrapping
