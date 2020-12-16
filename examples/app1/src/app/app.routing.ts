@@ -1,3 +1,4 @@
+import { InitializedDataResolver } from './services/initialized-data.resolver';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Route } from '@angular/router';
 import { AppActualRootComponent } from './root/root.component';
@@ -24,6 +25,9 @@ export const routers: Route[] = [
             },
             {
                 path: 'projects',
+                resolve: {
+                    data: InitializedDataResolver
+                },
                 component: ProjectsComponent
             }
             // {

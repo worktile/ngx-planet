@@ -448,11 +448,7 @@ export class PlanetApplicationLoader {
                         return this.bootstrapApp(app, 'hidden');
                     } else {
                         return this.ngZone.runOutsideAngular(() => {
-                            return this.takeOneStable().pipe(
-                                switchMap(() => {
-                                    return this.bootstrapApp(app, 'hidden');
-                                })
-                            );
+                            return this.bootstrapApp(app, 'hidden');
                         });
                     }
                 }),

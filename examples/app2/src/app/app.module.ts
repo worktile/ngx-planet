@@ -85,8 +85,4 @@ const routers: Route[] = [
     providers: [],
     bootstrap: [AppRootComponent]
 })
-export class AppModule {
-    constructor(private planetComponentLoader: PlanetComponentLoader) {
-        this.planetComponentLoader.register([{ name: 'project1', component: ProjectListComponent }]);
-    }
-}
+export class AppModule {}

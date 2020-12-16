@@ -1,4 +1,6 @@
+import { PlanetComponentLoader } from 'ngx-planet';
 import { Component, HostBinding, ComponentFactoryResolver, Injector, ApplicationRef, OnInit } from '@angular/core';
+import { ProjectListComponent } from '../projects/project-list.component';
 @Component({
     selector: 'app2-root-actual',
     templateUrl: './root.component.html',
@@ -18,7 +20,9 @@ export class AppActualRootComponent {
 export class AppRootComponent implements OnInit {
     @HostBinding(`class.thy-layout`) isThyLayout = true;
 
-    constructor() {}
+    constructor(private planetComponentLoader: PlanetComponentLoader) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.planetComponentLoader.register([{ name: 'project1', component: ProjectListComponent }]);
+    }
 }
