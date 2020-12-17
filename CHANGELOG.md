@@ -1,6 +1,17 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [9.0.5](https://github.com/worktile/ngx-planet/compare/9.0.2...9.0.5) (2020-12-17)
+
+
+### Bug Fixes
+
+* **app-loader:** should not set loading when app assets is loaded [#107](https://github.com/worktile/ngx-planet/issues/107) ([09a3f2e](https://github.com/worktile/ngx-planet/commit/09a3f2e8eca2a69d0afbad183aa82390a27bed15))
+* **app-loader:** should throw specify error when sub app not found in bootstrapApp [#113](https://github.com/worktile/ngx-planet/issues/113) ([#158](https://github.com/worktile/ngx-planet/issues/158)) ([20deb37](https://github.com/worktile/ngx-planet/commit/20deb37217fc60804aa7a3331780148ef6fc2e1a))
+* **component:** add TComp generic for component load type ([c53e105](https://github.com/worktile/ngx-planet/commit/c53e10581a2a5bd5bc5e05d3cf88f3629493914a))
+* **component:** move delay to load function and replace delay with delayWhen [#159](https://github.com/worktile/ngx-planet/issues/159) ([fbc5610](https://github.com/worktile/ngx-planet/commit/fbc5610d7451c3c4a5b84f1192b2e5217a8ad327))
+* resolve error Expected to not be in Angular Zone, but it is! ([d51fb8f](https://github.com/worktile/ngx-planet/commit/d51fb8f074012ead1cb7a5ff8ac215c65ce30b28))
+
 ### [9.0.4](https://github.com/worktile/ngx-planet/compare/9.0.2...9.0.4) (2020-12-12)
 
 
