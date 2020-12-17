@@ -15,10 +15,10 @@ export interface BootstrapOptions {
 
 export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
 
-export type PlantComponentFactory = <TData>(
+export type PlantComponentFactory = <TData, TComp>(
     componentName: string,
     config: PlantComponentConfig<TData>
-) => PlanetComponentRef<TData>;
+) => PlanetComponentRef<TComp>;
 
 export class PlanetApplicationRef {
     public appModuleRef: NgModuleRef<any>;

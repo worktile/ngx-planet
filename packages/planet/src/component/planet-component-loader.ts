@@ -140,12 +140,16 @@ export class PlanetComponentLoader {
         });
     }
 
-    load<TData = any>(app: string, componentName: string, config: PlantComponentConfig<TData>) {
+    load<TData = unknown, TComp = unknown>(
+        app: string,
+        componentName: string,
+        config: PlantComponentConfig<TData>
+    ): Observable<PlanetComponentRef<TComp>> {
         const result = this.getPlantAppRef(app).pipe(
             map(appRef => {
                 const componentFactory = appRef.getComponentFactory();
                 if (componentFactory) {
-                    return componentFactory<TData>(componentName, config);
+                    return componentFactory<TData, TComp>(componentName, config);
                 } else {
                     throw new Error(`${app} not registered components`);
                 }
