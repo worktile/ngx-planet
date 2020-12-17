@@ -20,7 +20,7 @@ export class ProjectsComponent implements OnInit {
 
     ngOnInit() {
         this.planetComponentLoader
-            .load<unknown, { click: Observable<unknown> }>('app2', 'project1', {
+            .load<{ click: Observable<unknown> }>('app2', 'project1', {
                 container: this.elementRef
             })
             .subscribe(componentRef => {

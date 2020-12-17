@@ -138,7 +138,7 @@ export class PlanetComponentLoader {
         });
     }
 
-    load<TData = unknown, TComp = unknown>(
+    load<TComp = unknown, TData = unknown>(
         app: string,
         componentName: string,
         config: PlantComponentConfig<TData>
