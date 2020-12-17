@@ -51,11 +51,12 @@ describe('PlanetComponentLoader', () => {
         // mock app1 and app2 bootstrap
         const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
         registerAppComponents(app1ModuleRef);
+        tick();
         const app1Ref = getPlanetApplicationRef(app1Name);
         expect(app1Ref.getComponentFactory()).toBeTruthy();
     }));
 
-    it('should app2 load app1 component', fakeAsync(() => {
+    it('should app2 load app1 component when app1 component has completed the registration', fakeAsync(() => {
         // mock app1 and app2 bootstrap
         const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
@@ -66,6 +67,7 @@ describe('PlanetComponentLoader', () => {
         }).toThrowError(`${app1Name} not registered components`);
 
         registerAppComponents(app1ModuleRef);
+        tick();
 
         expect(() => {
             loadApp1Component(app2ModuleRef, { container: null });
@@ -104,10 +106,11 @@ describe('PlanetComponentLoader', () => {
         expect(applicationLoaderSpy).toHaveBeenCalled();
     }));
 
-    it('should app2 dispose app1 component ', fakeAsync(() => {
+    it('should app2 dispose app1 component', fakeAsync(() => {
         // mock app1 and app2 bootstrap
         const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+        tick();
         registerAppComponents(app1ModuleRef);
         loadApp1Component(app2ModuleRef).subscribe(componentRef => {
             const parent = componentRef.wrapperElement.parentElement;
@@ -120,7 +123,6 @@ describe('PlanetComponentLoader', () => {
 function registerAppComponents(appModuleRef: NgModuleRef<any>) {
     const componentLoader = appModuleRef.injector.get(PlanetComponentLoader);
     componentLoader.register([{ name: 'app1-projects', component: App1ProjectsComponent }]);
-    tick();
 }
 
 function loadApp1Component(appModuleRef: NgModuleRef<any>, config?: Partial<PlantComponentConfig>) {
