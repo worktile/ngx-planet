@@ -157,7 +157,7 @@ export class PlanetComponentLoader {
                 if (componentFactory) {
                     return componentFactory<TData, TComp>(componentName, config);
                 } else {
-                    throw new Error(`${app} not registered components`);
+                    throw new Error(`${app}'s component(${componentName}) is not registered`);
                 }
             }),
             finalize(() => {

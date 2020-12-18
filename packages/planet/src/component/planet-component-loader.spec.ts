@@ -64,7 +64,7 @@ describe('PlanetComponentLoader', () => {
 
         expect(() => {
             loadApp1Component(app2ModuleRef);
-        }).toThrowError(`${app1Name} not registered components`);
+        }).toThrowError(`${app1Name}'s component(app1-projects) is not registered`);
 
         registerAppComponents(app1ModuleRef);
         tick();
