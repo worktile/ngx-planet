@@ -1,16 +1,16 @@
 import { TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
 import { Compiler, Injector, Type, NgModuleRef } from '@angular/core';
-import { app1Name, App1Module, App1ProjectsComponent } from './test/app1.module';
-import { app2Name, App2Module } from './test/app2.module';
+import { app1Name, App1Module, App1ProjectsComponent } from '../testing/app1.module';
+import { app2Name, App2Module } from '../testing/app2.module';
 import { PlanetPortalApplication } from '../application/portal-application';
 import { PlanetComponentLoader } from './planet-component-loader';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PlantComponentConfig } from './plant-component.config';
 import { defineApplication, getPlanetApplicationRef, getApplicationLoader, clearGlobalPlanet } from '../global-planet';
 import { Planet } from 'ngx-planet/planet';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PlanetComponentLoader', () => {
     let compiler: Compiler;
@@ -21,7 +21,7 @@ describe('PlanetComponentLoader', () => {
         const ngModuleFactory = compiler.compileModuleSync(appModule);
         const ngModuleRef = ngModuleFactory.create(injector);
         defineApplication(name, {
-            template: '<app1-root-container></app1-root-container>',
+            template: '<app1-root></app1-root>',
             bootstrap: (portalApp?: PlanetPortalApplication) => {
                 return new Promise(resolve => {
                     resolve(ngModuleRef);
@@ -36,7 +36,7 @@ describe('PlanetComponentLoader', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, RouterModule.forRoot([])]
+            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])]
         });
         compiler = TestBed.inject(Compiler);
         planet = TestBed.inject(Planet);
@@ -51,11 +51,12 @@ describe('PlanetComponentLoader', () => {
         // mock app1 and app2 bootstrap
         const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
         registerAppComponents(app1ModuleRef);
+        tick();
         const app1Ref = getPlanetApplicationRef(app1Name);
         expect(app1Ref.getComponentFactory()).toBeTruthy();
     }));
 
-    it('should app2 load app1 component', fakeAsync(() => {
+    it('should app2 load app1 component when app1 component has completed the registration', fakeAsync(() => {
         // mock app1 and app2 bootstrap
         const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
@@ -63,9 +64,10 @@ describe('PlanetComponentLoader', () => {
 
         expect(() => {
             loadApp1Component(app2ModuleRef);
-        }).toThrowError(`${app1Name} not registered components`);
+        }).toThrowError(`${app1Name}'s component(app1-projects) is not registered`);
 
         registerAppComponents(app1ModuleRef);
+        tick();
 
         expect(() => {
             loadApp1Component(app2ModuleRef, { container: null });
@@ -117,10 +119,11 @@ describe('PlanetComponentLoader', () => {
         expect(applicationLoaderSpy).toHaveBeenCalled();
     }));
 
-    it('should app2 dispose app1 component ', fakeAsync(() => {
+    it('should app2 dispose app1 component', fakeAsync(() => {
         // mock app1 and app2 bootstrap
         const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+        tick();
         registerAppComponents(app1ModuleRef);
         loadApp1Component(app2ModuleRef).subscribe(componentRef => {
             const parent = componentRef.wrapperElement.parentElement;
@@ -133,7 +136,6 @@ describe('PlanetComponentLoader', () => {
 function registerAppComponents(appModuleRef: NgModuleRef<any>) {
     const componentLoader = appModuleRef.injector.get(PlanetComponentLoader);
     componentLoader.register([{ name: 'app1-projects', component: App1ProjectsComponent }]);
-    tick();
 }
 
 function loadApp1Component(appModuleRef: NgModuleRef<any>, config?: Partial<PlantComponentConfig>) {

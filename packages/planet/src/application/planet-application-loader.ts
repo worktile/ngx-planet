@@ -92,11 +92,13 @@ export class PlanetApplicationLoader {
     }
 
     private setAppStatus(app: PlanetApplication, status: ApplicationStatus) {
-        this.appStatusChange$.next({
-            app: app,
-            status: status
+        this.ngZone.run(() => {
+            this.appStatusChange$.next({
+                app: app,
+                status: status
+            });
+            this.appsStatus.set(app, status);
         });
-        this.appsStatus.set(app, status);
     }
 
     private switchModeIsCoexist(app: PlanetApplication) {
@@ -136,7 +138,6 @@ export class PlanetApplicationLoader {
                     return of(event).pipe(
                         // unload apps and return should load apps
                         map(() => {
-                            this.loadingDone = false;
                             this.startRouteChangeEvent = event;
                             const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
                             const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
@@ -149,6 +150,7 @@ export class PlanetApplicationLoader {
                         }),
                         // Load app assets (static resources)
                         switchMap(shouldLoadApps => {
+                            let hasAppsNeedLoadingAssets = false;
                             const loadApps$ = shouldLoadApps.map(app => {
                                 const appStatus = this.appsStatus.get(app);
                                 if (
@@ -156,6 +158,7 @@ export class PlanetApplicationLoader {
                                     appStatus === ApplicationStatus.assetsLoading ||
                                     appStatus === ApplicationStatus.loadError
                                 ) {
+                                    hasAppsNeedLoadingAssets = true;
                                     return this.ngZone.runOutsideAngular(() => {
                                         return this.startLoadAppAssets(app);
                                     });
@@ -163,6 +166,9 @@ export class PlanetApplicationLoader {
                                     return of(app);
                                 }
                             });
+                            if (hasAppsNeedLoadingAssets) {
+                                this.loadingDone = false;
+                            }
                             return loadApps$.length > 0 ? forkJoin(loadApps$) : of([] as PlanetApplication[]);
                         }),
                         // Bootstrap or show apps
@@ -220,10 +226,13 @@ export class PlanetApplicationLoader {
 
                             if (apps$.length > 0) {
                                 // 切换到应用后会有闪烁现象，所以使用 setTimeout 后启动应用
+                                // example: redirect to app1's dashboard from portal's about page
                                 // If app's route has redirect, it doesn't work, it ok just in setTimeout, I don't know why.
+                                // TODO:: remove it, it is ok in version Angular 9.x
                                 setTimeout(() => {
                                     // 此处判断是因为如果静态资源加载完毕还未启动被取消，还是会启动之前的应用，虽然可能性比较小，但是无法排除这种可能性，所以只有当 Event 是最后一个才会启动
                                     if (this.startRouteChangeEvent === event) {
+                                        // runOutsideAngular for fix error: `Expected to not be in Angular Zone, but it is!`
                                         this.ngZone.runOutsideAngular(() => {
                                             forkJoin(apps$).subscribe(() => {
                                                 this.setLoadingDone();
@@ -295,7 +304,7 @@ export class PlanetApplicationLoader {
             appRef.destroy();
         }
         const container = getHTMLElement(planetApp.hostParent);
-        const appRootElement = container.querySelector(appRef.selector || planetApp.selector);
+        const appRootElement = container.querySelector((appRef && appRef.selector) || planetApp.selector);
         if (appRootElement) {
             container.removeChild(appRootElement);
         }
@@ -345,8 +354,11 @@ export class PlanetApplicationLoader {
                     return appRef;
                 })
             );
+        } else {
+            throw new Error(
+                `[${app.name}] not found, make sure that the app has the correct name defined use defineApplication(${app.name}) and runtimeChunk and vendorChunk are set to true, details see https://github.com/worktile/ngx-planet#throw-error-cannot-read-property-call-of-undefined-at-__webpack_require__-bootstrap79`
+            );
         }
-        return of(null);
     }
 
     private getUnloadApps(activeApps: PlanetApplication[]) {
@@ -399,7 +411,7 @@ export class PlanetApplicationLoader {
                 activeApps ? activeApps.map(item => item.name) : null
             );
             const loadApps$ = toPreloadApps.map(preloadApp => {
-                return this.preload(preloadApp);
+                return this.preloadInternal(preloadApp);
             });
 
             forkJoin(loadApps$).subscribe({
@@ -417,7 +429,7 @@ export class PlanetApplicationLoader {
         }
     }
 
-    setOptions(options: Partial<PlanetOptions>) {
+    public setOptions(options: Partial<PlanetOptions>) {
         this.options = {
             ...this.options,
             ...options
@@ -427,37 +439,32 @@ export class PlanetApplicationLoader {
     /**
      * reset route by current router
      */
-    reroute(event: PlanetRouterEvent) {
+    public reroute(event: PlanetRouterEvent) {
         this.routeChange$.next(event);
     }
 
-    /**
-     * Preload planet application
-     * @param app app
-     * @param directBootstrap bootstrap on stable by default, setting directBootstrap is true, it will bootstrap directly
-     */
-    preload(app: PlanetApplication, directBootstrap?: boolean): Observable<PlanetApplicationRef> {
+    private preloadInternal(app: PlanetApplication, immediate?: boolean): Observable<PlanetApplicationRef> {
         const status = this.appsStatus.get(app);
         if (!status || status === ApplicationStatus.loadError) {
             return this.startLoadAppAssets(app).pipe(
                 switchMap(() => {
-                    return this.ngZone.runOutsideAngular(() => {
-                        if (directBootstrap) {
+                    if (immediate) {
+                        return this.bootstrapApp(app, 'hidden');
+                    } else {
+                        return this.ngZone.runOutsideAngular(() => {
                             return this.bootstrapApp(app, 'hidden');
-                        } else {
-                            return this.takeOneStable().pipe(
-                                switchMap(() => {
-                                    return this.bootstrapApp(app, 'hidden');
-                                })
-                            );
-                        }
-                    });
+                        });
+                    }
                 }),
                 map(() => {
                     return getPlanetApplicationRef(app.name);
                 })
             );
-        } else if (status === ApplicationStatus.assetsLoading || status === ApplicationStatus.bootstrapping) {
+        } else if (
+            [ApplicationStatus.assetsLoading, ApplicationStatus.assetsLoaded, ApplicationStatus.bootstrapping].includes(
+                status
+            )
+        ) {
             return this.appStatusChange.pipe(
                 filter(event => {
                     return event.app === app && event.status === ApplicationStatus.bootstrapped;
@@ -468,7 +475,20 @@ export class PlanetApplicationLoader {
                 })
             );
         } else {
-            return of(getPlanetApplicationRef(app.name));
+            const appRef = getPlanetApplicationRef(app.name);
+            if (!appRef) {
+                throw new Error(`${app.name}'s status is ${ApplicationStatus[status]}, planetApplicationRef is null.`);
+            }
+            return of(appRef);
         }
+    }
+
+    /**
+     * Preload planet application
+     * @param app app
+     * @param immediate bootstrap on stable by default, setting immediate is true, it will bootstrap immediate
+     */
+    public preload(app: PlanetApplication, immediate?: boolean): Observable<PlanetApplicationRef> {
+        return this.preloadInternal(app, immediate);
     }
 }

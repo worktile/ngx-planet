@@ -1,14 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterModule, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { PlanetPortalApplication } from './portal-application';
 import { NgZone, ApplicationRef } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PlanetPortalApplication', () => {
     let router: Router;
     let planetPortalApplication: PlanetPortalApplication;
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [RouterModule.forRoot([])]
+            imports: [RouterTestingModule.withRoutes([])]
         });
         router = TestBed.inject(Router);
         planetPortalApplication = new PlanetPortalApplication();

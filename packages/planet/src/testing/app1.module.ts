@@ -1,8 +1,7 @@
 import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { PlanetComponentLoader } from '../planet-component-loader';
-import { of } from 'rxjs';
-import { PlanetApplicationLoader } from '../../application/planet-application-loader';
+import { PlanetComponentLoader } from '../component/planet-component-loader';
+import { PlanetApplicationLoader } from '../application/planet-application-loader';
 
 export const app1Name = 'app1';
 

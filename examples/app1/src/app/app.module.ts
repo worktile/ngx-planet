@@ -14,6 +14,8 @@ import { Overlay, OverlayModule } from '@angular/cdk/overlay';
 import { FormsModule } from '@angular/forms';
 import { AppOverlay } from './overlay';
 import { ProjectsDialogComponent } from './projects/dialog/projects-dialog.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedModule } from './shared.module';
 
 @NgModule({
     declarations: [
@@ -26,10 +28,12 @@ import { ProjectsDialogComponent } from './projects/dialog/projects-dialog.compo
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         RouterModule.forRoot(routers),
         // UserModule,
         NgxTethysModule,
         FormsModule,
+        SharedModule,
         DemoCommonModule,
         NgxPlanetModule,
         OverlayModule

@@ -27,7 +27,8 @@
             "main": "packages/planet/src/test.ts",
             "tsConfig": "packages/planet/tsconfig.spec.json",
             "karmaConfig": "packages/planet/karma.conf.js",
-            "codeCoverage": true
+            "codeCoverage": true,
+            "codeCoverageExclude": ["packages/planet/src/testing/**/*"]
           }
         },
         "lint": {
@@ -350,35 +351,6 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "examples/app1-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "app3-lib": {
-      "root": "examples/app3-lib",
-      "sourceRoot": "examples/app3-lib/src",
-      "projectType": "library",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-webpack:webpack",
-          "options": {
-            "webpackConfig": "./examples/app3-lib/webpack.config.js"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "examples/app3-lib/src/test.ts",
-            "tsConfig": "examples/app3-lib/tsconfig.spec.json",
-            "karmaConfig": "examples/app3-lib/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["examples/app3-lib/tsconfig.lib.json", "examples/app3-lib/tsconfig.spec.json"],
             "exclude": ["**/node_modules/**"]
           }
         }

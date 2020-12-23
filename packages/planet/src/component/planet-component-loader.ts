@@ -4,8 +4,8 @@ import { PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
 import { PlantComponentConfig } from './plant-component.config';
 import { coerceArray } from '../helpers';
-import { delay, map, shareReplay, finalize } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
+import { map, shareReplay, finalize, debounce, filter, take, delay, delayWhen } from 'rxjs/operators';
+import { of, Observable, interval, timer } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { globalPlanet, getApplicationLoader, getApplicationService } from '../global-planet';
 
@@ -43,8 +43,6 @@ export class PlanetComponentLoader {
         } else {
             const app = this.applicationService.getAppByName(name);
             return this.applicationLoader.preload(app, true).pipe(
-                // Because register use 'setTimeout',so delay 20
-                delay(20),
                 map(() => {
                     return globalPlanet.apps[name];
                 })
@@ -129,7 +127,8 @@ export class PlanetComponentLoader {
                 const component = components.find(item => item.name === componentName);
                 if (component) {
                     return this.ngZone.run(() => {
-                        return this.attachComponent<any>(component, appRef.appModuleRef, config);
+                        const componentRef = this.attachComponent<any>(component, appRef.appModuleRef, config);
+                        return componentRef;
                     });
                 } else {
                     throw Error(`unregistered component ${componentName} in app ${app}`);
@@ -144,14 +143,26 @@ export class PlanetComponentLoader {
         });
     }
 
-    load<TData = any>(app: string, componentName: string, config: PlantComponentConfig<TData>) {
+    load<TComp = unknown, TData = unknown>(
+        app: string,
+        componentName: string,
+        config: PlantComponentConfig<TData>
+    ): Observable<PlanetComponentRef<TComp>> {
         const result = this.getPlantAppRef(app).pipe(
+            delayWhen(appRef => {
+                if (appRef.getComponentFactory()) {
+                    return of();
+                } else {
+                    // Because register use 'setTimeout',so timer 20
+                    return timer(20);
+                }
+            }),
             map(appRef => {
                 const componentFactory = appRef.getComponentFactory();
                 if (componentFactory) {
-                    return componentFactory<TData>(componentName, config);
+                    return componentFactory<TData, TComp>(componentName, config);
                 } else {
-                    throw new Error(`${app} not registered components`);
+                    throw new Error(`${app}'s component(${componentName}) is not registered`);
                 }
             }),
             finalize(() => {

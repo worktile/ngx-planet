@@ -150,7 +150,7 @@ export class AssetsLoader {
     }
 
     loadScriptsAndStyles(scripts: string[] = [], styles: string[] = [], serial = false) {
-        return forkJoin(this.loadScripts(scripts, serial), this.loadStyles(styles));
+        return forkJoin([this.loadScripts(scripts, serial), this.loadStyles(styles)]);
     }
 
     loadAppAssets(app: PlanetApplication) {

@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { PlanetComponentLoader } from 'ngx-planet';
 
@@ -19,7 +20,7 @@ export class ProjectsComponent implements OnInit {
 
     ngOnInit() {
         this.planetComponentLoader
-            .load('app2', 'project1', {
+            .load<{ click: Observable<unknown> }>('app2', 'project1', {
                 container: this.elementRef
             })
             .subscribe(componentRef => {

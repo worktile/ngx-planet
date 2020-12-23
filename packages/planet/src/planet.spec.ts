@@ -1,18 +1,19 @@
 import { TestBed, async, tick, fakeAsync } from '@angular/core/testing';
 import { Planet } from './planet';
 import { NgxPlanetModule } from './module';
-import { RouterModule, Router, Event } from '@angular/router';
+import { Router, Event } from '@angular/router';
 import { SwitchModes, PlanetRouterEvent } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { PlanetApplicationLoader } from './application/planet-application-loader';
 import { EmptyComponent } from './empty/empty.component';
 import { NgZone } from '@angular/core';
 import { getApplicationService, getApplicationLoader, clearGlobalPlanet } from './global-planet';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const app1 = {
     name: 'app1',
     hostParent: '.host-selector',
-    selector: 'app1-root-container',
+    selector: 'app1-root',
     routerPathPrefix: '/app1',
     hostClass: 'app1-host',
     preload: false,
@@ -30,7 +31,7 @@ const app1 = {
 const app2 = {
     name: 'app2',
     hostParent: '.host-selector',
-    selector: 'app2-root-container',
+    selector: 'app2-root',
     routerPathPrefix: '/app2',
     hostClass: 'app2-host',
     preload: false,
@@ -53,7 +54,7 @@ describe('Planet', () => {
         TestBed.configureTestingModule({
             imports: [
                 NgxPlanetModule,
-                RouterModule.forRoot([
+                RouterTestingModule.withRoutes([
                     {
                         path: '**',
                         component: EmptyComponent

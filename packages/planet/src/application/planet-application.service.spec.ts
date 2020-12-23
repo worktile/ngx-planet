@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { PlanetApplicationService } from './planet-application.service';
 import { SwitchModes } from '../planet.class';
 import { HttpClient } from '@angular/common/http';
-import { app1, app2, app2WithPreload } from '../test/applications';
+import { app1, app2, app2WithPreload } from '../testing/applications';
 import { AssetsLoader } from 'ngx-planet/assets-loader';
 import { Planet } from 'ngx-planet/planet';
 
@@ -17,7 +17,7 @@ describe('PlanetApplicationService', () => {
         planetApplicationService = TestBed.inject(PlanetApplicationService);
     });
 
-    it(`should repeat injection not allowed`, () => {
+    it(`should throw error when repeat PlanetApplicationService injection`, () => {
         window['planet'].applicationService = TestBed.inject(PlanetApplicationService);
         expect(() => {
             return new PlanetApplicationService(TestBed.inject(HttpClient), TestBed.inject(AssetsLoader));
@@ -89,42 +89,6 @@ describe('PlanetApplicationService', () => {
         });
     });
 
-    describe('getAppByMatchedUrl', () => {
-        it('should get matched app by url app1/dashboard', () => {
-            planetApplicationService.register(app1);
-            planetApplicationService.register(app2);
-            const app = planetApplicationService.getAppByMatchedUrl('/app1/dashboard');
-            expect(app).toBe(app1);
-        });
-
-        it('should not get matched app by url /__/dashboard/app1', () => {
-            planetApplicationService.register(app1);
-            const app = planetApplicationService.getAppByMatchedUrl('/__/dashboard/app1');
-            expect(app).toBe(undefined);
-        });
-
-        it('should get matched app which rule is RegExp("(a\\wp3)|app4") by url app3/dashboard', () => {
-            planetApplicationService.register(app1);
-            planetApplicationService.register(app2);
-            const app3 = {
-                ...app1,
-                name: 'app3',
-                routerPathPrefix: new RegExp('(a\\wp3)|app4')
-            };
-            planetApplicationService.register(app3);
-            const app = planetApplicationService.getAppByMatchedUrl('/app3/dashboard');
-            expect(app).toBeTruthy('app is not found');
-            expect(app).toBe(app3);
-        });
-
-        it('should not get matched app by url /__app1/dashboard', () => {
-            planetApplicationService.register(app1);
-            planetApplicationService.register(app2);
-            const app = planetApplicationService.getAppByMatchedUrl('/__app1/dashboard');
-            expect(app).toBeFalsy();
-        });
-    });
-
     describe('getAppsByMatchedUrl', () => {
         it('should get matched apps(app1) by url app1/dashboard', () => {
             planetApplicationService.register(app1);
@@ -146,6 +110,20 @@ describe('PlanetApplicationService', () => {
             planetApplicationService.register(app2);
             const apps = planetApplicationService.getAppsByMatchedUrl('/__/dashboard/app1');
             expect(apps).toEqual([]);
+        });
+
+        it('should get matched apps which rule is RegExp("(a\\wp3)|app4") by url app3/dashboard', () => {
+            planetApplicationService.register(app1);
+            planetApplicationService.register(app2);
+            const app3 = {
+                ...app1,
+                name: 'app3',
+                routerPathPrefix: new RegExp('(a\\wp3)|app4')
+            };
+            planetApplicationService.register(app3);
+            const apps = planetApplicationService.getAppsByMatchedUrl('/app3/dashboard');
+            expect(apps).toBeTruthy('app is not found');
+            expect(apps[0]).toBe(app3);
         });
     });
 

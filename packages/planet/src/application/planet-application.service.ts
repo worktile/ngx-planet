@@ -72,16 +72,6 @@ export class PlanetApplicationService {
         return this.appsMap[name];
     }
 
-    getAppByMatchedUrl<TExtra>(url: string): PlanetApplication<TExtra> {
-        return this.getApps().find(app => {
-            if (app.routerPathPrefix instanceof RegExp) {
-                return app.routerPathPrefix.test(url);
-            } else {
-                return url.startsWith(app.routerPathPrefix);
-            }
-        });
-    }
-
     getAppsToPreload(excludeAppNames?: string[]) {
         return this.getApps().filter(app => {
             if (excludeAppNames) {

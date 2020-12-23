@@ -3,7 +3,7 @@ import { Planet, SwitchModes, GlobalEventDispatcher, ApplicationStatus, PlanetAp
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
-import { ThyConfirmService, ThyNotifyService } from 'ngx-tethys';
+import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AppRootContext } from '@demo/common';
 import { CustomSettingsService } from './custom-settings.service';
 

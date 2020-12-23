@@ -1,6 +1,129 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+### [9.0.6](https://github.com/worktile/ngx-planet/compare/9.0.2...9.0.6) (2020-12-17)
+
+
+### Bug Fixes
+
+* **app-loader:** should not set loading when app assets is loaded [#107](https://github.com/worktile/ngx-planet/issues/107) ([09a3f2e](https://github.com/worktile/ngx-planet/commit/09a3f2e8eca2a69d0afbad183aa82390a27bed15))
+* **app-loader:** should throw specify error when sub app not found in bootstrapApp [#113](https://github.com/worktile/ngx-planet/issues/113) ([#158](https://github.com/worktile/ngx-planet/issues/158)) ([20deb37](https://github.com/worktile/ngx-planet/commit/20deb37217fc60804aa7a3331780148ef6fc2e1a))
+* **component:** add TComp generic for component load type ([c53e105](https://github.com/worktile/ngx-planet/commit/c53e10581a2a5bd5bc5e05d3cf88f3629493914a))
+* **component:** load component set TComp as first ([a7f79ce](https://github.com/worktile/ngx-planet/commit/a7f79ce7af0978a89b1e2532f34f8d501360aada))
+* **planet-component-loader:** move delay to load function and replace delay with delayWhen [#159](https://github.com/worktile/ngx-planet/issues/159) ([fbc5610](https://github.com/worktile/ngx-planet/commit/fbc5610d7451c3c4a5b84f1192b2e5217a8ad327))
+* resolve error Expected to not be in Angular Zone, but it is! ([d51fb8f](https://github.com/worktile/ngx-planet/commit/d51fb8f074012ead1cb7a5ff8ac215c65ce30b28))
+
+### [9.0.5](https://github.com/worktile/ngx-planet/compare/9.0.2...9.0.5) (2020-12-17)
+
+
+### Bug Fixes
+
+* **app-loader:** should not set loading when app assets is loaded [#107](https://github.com/worktile/ngx-planet/issues/107) ([09a3f2e](https://github.com/worktile/ngx-planet/commit/09a3f2e8eca2a69d0afbad183aa82390a27bed15))
+* **app-loader:** should throw specify error when sub app not found in bootstrapApp [#113](https://github.com/worktile/ngx-planet/issues/113) ([#158](https://github.com/worktile/ngx-planet/issues/158)) ([20deb37](https://github.com/worktile/ngx-planet/commit/20deb37217fc60804aa7a3331780148ef6fc2e1a))
+* **component:** add TComp generic for component load type ([c53e105](https://github.com/worktile/ngx-planet/commit/c53e10581a2a5bd5bc5e05d3cf88f3629493914a))
+* **component:** move delay to load function and replace delay with delayWhen [#159](https://github.com/worktile/ngx-planet/issues/159) ([fbc5610](https://github.com/worktile/ngx-planet/commit/fbc5610d7451c3c4a5b84f1192b2e5217a8ad327))
+* resolve error Expected to not be in Angular Zone, but it is! ([d51fb8f](https://github.com/worktile/ngx-planet/commit/d51fb8f074012ead1cb7a5ff8ac215c65ce30b28))
+
+### [9.0.4](https://github.com/worktile/ngx-planet/compare/9.0.2...9.0.4) (2020-12-12)
+
+
+### Bug Fixes
+
+* resolve error Expected to not be in Angular Zone, but it is! ([d51fb8f](https://github.com/worktile/ngx-planet/commit/d51fb8f074012ead1cb7a5ff8ac215c65ce30b28))
+* **app-loader:** should not set loading when app assets is loaded [#107](https://github.com/worktile/ngx-planet/issues/107) ([09a3f2e](https://github.com/worktile/ngx-planet/commit/09a3f2e8eca2a69d0afbad183aa82390a27bed15))
+
+### [9.0.3](https://github.com/worktile/ngx-planet/compare/9.0.2...9.0.3) (2020-12-12)
+
+
+### Bug Fixes
+
+* **app-loader:** should not set loading when app assets is loaded [#107](https://github.com/worktile/ngx-planet/issues/107) ([09a3f2e](https://github.com/worktile/ngx-planet/commit/09a3f2e8eca2a69d0afbad183aa82390a27bed15))
+
+### [9.0.2](https://github.com/worktile/ngx-planet/compare/9.0.1-beta.3...9.0.2) (2020-12-10)
+
+
+### Bug Fixes
+
+* **application-loader:** fix preload app load component not display ([0a3abd2](https://github.com/worktile/ngx-planet/commit/0a3abd2f139bf66ed08587f87477d201414ddffa))
+* **application-loader:** remove debug logs, fix preload app load component ([#153](https://github.com/worktile/ngx-planet/issues/153)) ([24413e6](https://github.com/worktile/ngx-planet/commit/24413e6a164b0206949335d92faf3bf5df199ead))
+
+### [9.0.1-beta.6](https://github.com/worktile/ngx-planet/compare/9.0.1-beta.3...9.0.1-beta.6) (2020-12-10)
+
+
+### Bug Fixes
+
+* **application-loader:** fix preload app load component not display ([0a3abd2](https://github.com/worktile/ngx-planet/commit/0a3abd2f139bf66ed08587f87477d201414ddffa))
+
+### [9.0.1-beta.5](https://github.com/worktile/ngx-planet/compare/9.0.1-beta.3...9.0.1-beta.5) (2020-12-10)
+
+
+### Bug Fixes
+
+* **application-loader:** fix preload app load component not display ([0a3abd2](https://github.com/worktile/ngx-planet/commit/0a3abd2f139bf66ed08587f87477d201414ddffa))
+
+### [9.0.1-beta.4](https://github.com/worktile/ngx-planet/compare/9.0.1-beta.3...9.0.1-beta.4) (2020-12-10)
+
+
+### Bug Fixes
+
+* **application-loader:** fix preload app load component not display ([0a3abd2](https://github.com/worktile/ngx-planet/commit/0a3abd2f139bf66ed08587f87477d201414ddffa))
+
+### [9.0.1-beta.3](https://github.com/worktile/ngx-planet/compare/9.0.1-beta.2...9.0.1-beta.3) (2020-12-09)
+
+
+### Bug Fixes
+
+* **application-loader:** fix preload error when app assetsLoaded ([e1fba40](https://github.com/worktile/ngx-planet/commit/e1fba402b0e72884f07cd6f7454b224f507c8610))
+
+### [9.0.1-beta.2](https://github.com/worktile/ngx-planet/compare/1.2.3...9.0.1-beta.2) (2020-12-09)
+
+
+### Features
+
+* asset-loader,application-loader,component-loader, preload add debug logs ([#142](https://github.com/worktile/ngx-planet/issues/142)) ([2e21ab0](https://github.com/worktile/ngx-planet/commit/2e21ab09d6f9b9ab19825148f586a650704a12b5))
+* release  9.0.1-beta.0 for debug ([23a305b](https://github.com/worktile/ngx-planet/commit/23a305b85d6cbf9a0ba08b7f6e7c8aa60e4fc66c))
+
+
+### Bug Fixes
+
+* **application-loader:** when load preloaded component, bootstrap directly ([3a50f1a](https://github.com/worktile/ngx-planet/commit/3a50f1a21350f87d63c769017e238c7e5e42f7fb))
+* update peerDependencies to 9.0.0 ([a0e3c1b](https://github.com/worktile/ngx-planet/commit/a0e3c1b847faf9cf79b463f6ac993e260897f412))
+
+### [9.0.1-beta.1](https://github.com/worktile/ngx-planet/compare/1.2.3...9.0.1-beta.1) (2020-12-09)
+
+
+### Features
+
+* asset-loader,application-loader,component-loader, preload add debug logs ([#142](https://github.com/worktile/ngx-planet/issues/142)) ([2e21ab0](https://github.com/worktile/ngx-planet/commit/2e21ab09d6f9b9ab19825148f586a650704a12b5))
+* release  9.0.1-beta.0 for debug ([23a305b](https://github.com/worktile/ngx-planet/commit/23a305b85d6cbf9a0ba08b7f6e7c8aa60e4fc66c))
+
+
+### Bug Fixes
+
+* **application-loader:** when load preloaded component, bootstrap directly ([3a50f1a](https://github.com/worktile/ngx-planet/commit/3a50f1a21350f87d63c769017e238c7e5e42f7fb))
+* update peerDependencies to 9.0.0 ([a0e3c1b](https://github.com/worktile/ngx-planet/commit/a0e3c1b847faf9cf79b463f6ac993e260897f412))
+
+### [9.0.1-beta.0](https://github.com/worktile/ngx-planet/compare/1.2.3...9.0.1-beta.0) (2020-12-09)
+
+
+### Features
+
+* asset-loader,application-loader,component-loader, preload add debug logs ([#142](https://github.com/worktile/ngx-planet/issues/142)) ([2e21ab0](https://github.com/worktile/ngx-planet/commit/2e21ab09d6f9b9ab19825148f586a650704a12b5))
+
+
+### Bug Fixes
+
+* update peerDependencies to 9.0.0 ([a0e3c1b](https://github.com/worktile/ngx-planet/commit/a0e3c1b847faf9cf79b463f6ac993e260897f412))
+* **application-loader:** when load preloaded component, bootstrap directly ([3a50f1a](https://github.com/worktile/ngx-planet/commit/3a50f1a21350f87d63c769017e238c7e5e42f7fb))
+
+## [9.0.0](https://github.com/worktile/ngx-planet/compare/1.2.3...9.0.0) (2020-12-09)
+
+
+### Bug Fixes
+
+* update peerDependencies to 9.0.0 ([a0e3c1b](https://github.com/worktile/ngx-planet/commit/a0e3c1b847faf9cf79b463f6ac993e260897f412))
+* **application-loader:** when load preloaded component, bootstrap directly ([3a50f1a](https://github.com/worktile/ngx-planet/commit/3a50f1a21350f87d63c769017e238c7e5e42f7fb))
+
 ### [1.2.4](https://github.com/worktile/ngx-planet/compare/1.2.3...1.2.4) (2020-11-21)
 
 

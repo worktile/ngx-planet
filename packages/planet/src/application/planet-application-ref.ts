@@ -15,19 +15,20 @@ export interface BootstrapOptions {
 
 export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
 
-export type PlantComponentFactory = <TData>(
+export type PlantComponentFactory = <TData, TComp>(
     componentName: string,
     config: PlantComponentConfig<TData>
-) => PlanetComponentRef<TData>;
+) => PlanetComponentRef<TComp>;
 
 export class PlanetApplicationRef {
     public appModuleRef: NgModuleRef<any>;
     public template: string;
+    private innerSelector: string;
     public get selector() {
-        return this.template ? getTagNameByTemplate(this.template) : null;
+        return this.innerSelector;
     }
 
-    private get bootstrapped() {
+    public get bootstrapped() {
         return !!this.appModuleRef;
     }
     private name: string;
@@ -39,8 +40,15 @@ export class PlanetApplicationRef {
         this.name = name;
         if (options) {
             this.template = options.template;
+            this.innerSelector = this.template ? getTagNameByTemplate(this.template) : null;
             this.appModuleBootstrap = options.bootstrap;
         }
+        // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
+        // See https://github.com/PlaceMe-SAS/single-spa-angular-cli/issues/33,
+        // NgZone.isInAngularZone = () => {
+        //     // @ts-ignore
+        //     return window.Zone.current._properties[`ngx-planet-${name}`] === true;
+        // };
     }
 
     // 子应用路由变化后同步修改 portal 的 Route
@@ -63,7 +71,7 @@ export class PlanetApplicationRef {
 
     bootstrap(app: PlanetPortalApplication): Observable<this> {
         if (!this.appModuleBootstrap) {
-            throw new Error(`${this.name} app is not define`);
+            throw new Error(`app(${this.name}) is not defined`);
         }
         this.portalApp = app;
         return from(
