@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { PlanetComponentLoader } from 'ngx-planet';
 import { ThyDialogRef } from 'ngx-tethys';
 
@@ -20,7 +20,7 @@ export class ProjectsDialogComponent implements OnInit {
 
     ngOnInit() {
         this.planetComponentLoader
-            .load('app2', 'project1', {
+            .load<{ click: EventEmitter<any> }>('app2', 'project1', {
                 container: this.elementRef
             })
             .subscribe(componentRef => {

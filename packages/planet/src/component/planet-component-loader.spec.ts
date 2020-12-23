@@ -153,7 +153,7 @@ function loadApp1Component(appModuleRef: NgModuleRef<any>, config?: Partial<Plan
 function loadApp1ComponentAndExpectHtml(app2ModuleRef: NgModuleRef<any>) {
     loadApp1Component(app2ModuleRef).subscribe(componentRef => {
         expect(componentRef.wrapperElement.outerHTML).toEqual(
-            `<div class="planet-component-wrapper"><app1-projects> projects is work </app1-projects></div>`
+            `<div class="planet-component-wrapper" planet-inline=""><app1-projects> projects is work </app1-projects></div>`
         );
     });
 }
