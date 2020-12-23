@@ -3,6 +3,7 @@ const app1 = {
     name: 'app1',
     hostParent: '.host-selector',
     selector: 'app1-root',
+    stylePrefix: 'app1-prefix',
     routerPathPrefix: '/app1',
     hostClass: 'app1-host',
     preload: false,
