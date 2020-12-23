@@ -1,0 +1,14 @@
+// @import 'ngx-tethys/styles/variables.scss';
+@import 'ngx-tethys/styles/basic.scss';
+@import 'ngx-tethys/styles/modules/reboot.scss';
+@import 'ngx-tethys/styles/modules/cdk/index';
+
+.portal-test {
+    color: #aaa;
+}
+body,
+html {
+    height: 100%;
+}
+
+@import 'ngx-tethys/layout/styles/layout.scss';

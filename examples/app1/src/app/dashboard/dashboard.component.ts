@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { CounterService } from '../counter.service';
 import { AppRootContext } from '@demo/common';
 import { PlanetComponentRef, PlanetComponentLoader, PlanetPortalApplication, GlobalEventDispatcher } from 'ngx-planet';
-import { ThyDialog } from 'ngx-tethys';
+import { ThyDialog, ThyDialogSizes } from 'ngx-tethys';
+import { App1DetailComponent } from '../detail/detail.component';
+import { ProjectsDialogComponent } from '../projects/dialog/projects-dialog.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -11,6 +13,8 @@ import { ThyDialog } from 'ngx-tethys';
 })
 export class DashboardComponent implements OnInit {
     @ViewChild('container', { static: true }) containerElementRef: ElementRef<HTMLDivElement>;
+
+    public size: ThyDialogSizes = ThyDialogSizes.md;
 
     private componentRef: PlanetComponentRef;
 
@@ -28,6 +32,18 @@ export class DashboardComponent implements OnInit {
 
     openADetail() {
         this.globalEventDispatcher.dispatch('openADetail');
+    }
+
+    openApp1Dialog() {
+        this.dialog.open(App1DetailComponent, {
+            size: this.size
+        });
+    }
+
+    openApp2Dialog() {
+        this.dialog.open(ProjectsDialogComponent, {
+            size: ThyDialogSizes.supperLg
+        });
     }
 
     openApp2Component() {

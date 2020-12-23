@@ -40,7 +40,7 @@
       }
     },
     "portal": {
-      "root": "",
+      "root": "examples/portal/src",
       "sourceRoot": "examples/portal/src",
       "projectType": "application",
       "prefix": "app",
@@ -54,7 +54,7 @@
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "customWebpackConfig": {
-              "path": "./extra-webpack.config.js",
+              "path": "examples/portal/src/extra-webpack.config.js",
               "mergeStrategies": {
                 "externals": "replace",
                 "module.rules": "append"
@@ -67,7 +67,7 @@
             "polyfills": "examples/portal/src/polyfills.ts",
             "tsConfig": "examples/portal/src/tsconfig.app.json",
             "assets": ["examples/portal/src/favicon.ico", "examples/portal/src/assets"],
-            "styles": ["examples/portal/src/styles.scss"],
+            "styles": ["examples/portal/src/styles.scss", "examples/portal/src/reboot.scss"],
             "extractCss": true,
             "scripts": [],
             "aot": true

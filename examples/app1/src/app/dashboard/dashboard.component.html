@@ -4,15 +4,38 @@
 </section-card>
 
 <section-card class="mt-4" title="Counter service, it will be cache in coexist mode">
-  <h5 class="red">count: {{ counter.count }}</h5>
+  <h5 class="same-name portal-special">count: {{ counter.count }}</h5>
   <div class="btn-pair">
     <button thyButton="primary-square" (click)="counter.increase()">Increase</button>
     <button thyButton="outline-primary-square" (click)="counter.decrease()">Decrease</button>
   </div>
 </section-card>
 
-<section-card class="mt-4" title="Open portal's detail">
+<section-card class="mt-4" title="Open app1's detail">
+  <form class="mb-2" thyForm thyLayout="inline">
+    <thy-form-group thyLabelText="Size:">
+      <thy-custom-select thyPlaceHolder="选择弹框大小" name="size" [(ngModel)]="size" style="width:500px;">
+        <thy-option thyValue="sm" thyLabelText="小" [thyShowOptionCustom]="true">
+          <span class="same-name">小 </span>
+        </thy-option>
+        <thy-option thyValue="md" thyLabelText="中" [thyShowOptionCustom]="true">
+          <span class="same-name">中 </span>
+        </thy-option>
+        <thy-option thyValue="lg" thyLabelText="大" [thyShowOptionCustom]="true">
+          <span class="same-name">大 </span>
+        </thy-option>
+      </thy-custom-select>
+    </thy-form-group>
+  </form>
+  <button thyButton="primary-square" (click)="openApp1Dialog()">Open app1's detail</button>
+</section-card>
+
+<section-card class="mt-4" title="Open portal's dialog">
   <button thyButton="primary-square" (click)="openADetail()">Open portal's detail</button>
+</section-card>
+
+<section-card class="mt-4" title="Open app1's dialog has app2's component">
+  <button thyButton="primary-square" (click)="openApp2Dialog()">Open app1's dialog has app2's com</button>
 </section-card>
 
 <section-card class="mt-4" title="Render app2's component">

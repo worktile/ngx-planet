@@ -14,7 +14,12 @@ module.exports = {
                     {
                         loader: 'postcss-loader',
                         options: {
-                            plugins: [PrefixWrap('.app2')]
+                            plugins: [
+                                PrefixWrap('.app2', {
+                                    hasAttribute: 'planet-inline',
+                                    prefixRootTags: true
+                                })
+                            ]
                         }
                     },
                     'sass-loader'

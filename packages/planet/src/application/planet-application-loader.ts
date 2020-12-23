@@ -325,6 +325,7 @@ export class PlanetApplicationLoader {
                     if (app.stylePrefix) {
                         appRootElement.classList.add(...coerceArray(app.stylePrefix));
                     }
+                    appRootElement.setAttribute('is-sub-app', '');
                     container.appendChild(appRootElement);
                 }
             }

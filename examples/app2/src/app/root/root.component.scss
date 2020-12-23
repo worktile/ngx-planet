@@ -2,6 +2,11 @@
     margin: 10px 20px;
 }
 
-.red {
+.same-name {
     color: green;
+    :not([planet]) {
+        .aa {
+            color: #aaa;
+        }
+    }
 }
