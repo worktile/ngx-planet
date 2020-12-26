@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone, HostBinding } from '@angular/core';
 import { Planet, SwitchModes, GlobalEventDispatcher, ApplicationStatus, PlanetApplication } from 'ngx-planet';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { ThyDialog } from 'ngx-tethys/dialog';
@@ -12,6 +12,8 @@ import { CustomSettingsService } from './custom-settings.service';
     templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
+    // @HostBinding('class.portal') class = true;
+
     title = 'ngx-planet';
 
     activeAppNames: string[] = [];
@@ -56,12 +58,13 @@ export class AppComponent implements OnInit {
                 preload: settings.app1.preload,
                 switchMode: settings.app1.switchMode,
                 loadSerial: true,
+                stylePrefix: 'app1',
                 // prettier-ignore
                 scripts: [
                     'main.js',
                     // 'polyfills.js'
                 ],
-                styles: ['assets/main.css'],
+                styles: ['styles.css'],
                 manifest: '/static/app1/manifest.json',
                 extra: {
                     name: '应用1',
@@ -73,12 +76,15 @@ export class AppComponent implements OnInit {
                 hostParent: '#app-host-container',
                 hostClass: appHostClass,
                 routerPathPrefix: '/app2',
+                resourcePathPrefix: '/static/app2/',
                 preload: settings.app2.preload,
                 switchMode: settings.app2.switchMode,
+                stylePrefix: 'app2',
                 // prettier-ignore
                 scripts: [
-                    '/static/app2/main.js'
+                    'main.js'
                 ],
+                styles: ['styles.css'],
                 manifest: '/static/app2/manifest.json',
                 extra: {
                     name: '应用2',

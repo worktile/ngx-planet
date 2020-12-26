@@ -23,8 +23,10 @@ import { ThyRadioModule } from 'ngx-tethys/radio';
 import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
 import { ADetailComponent } from './a-detail/a-detail.component';
 import { SettingsComponent } from './settings/settings.component';
-import { AppRootContext, DemoCommonModule } from '@demo/common';
+import { AppRootContext, DemoCommonModule, OVERLAY_PROVIDER } from '@demo/common';
 import { FormsModule } from '@angular/forms';
+import { Overlay } from '@angular/cdk/overlay';
+import { AppOverlay } from './overlay';
 
 @NgModule({
     declarations: [AppComponent, AboutComponent, SettingsComponent, ADetailComponent],
@@ -51,7 +53,7 @@ import { FormsModule } from '@angular/forms';
         NgxPlanetModule,
         DemoCommonModule
     ],
-    providers: [AppRootContext],
+    providers: [AppRootContext, OVERLAY_PROVIDER, { provide: Overlay, useClass: AppOverlay }],
     bootstrap: [AppComponent],
     entryComponents: [ADetailComponent]
 })

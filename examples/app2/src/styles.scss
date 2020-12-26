@@ -9,6 +9,7 @@ $btn-border-radius-xs: 4px;
 
 @import 'ngx-tethys/styles/variables.scss';
 @import 'ngx-tethys/styles/index.scss';
+@import './app/root/root.component.scss';
 
 .section-card {
     display: block;
@@ -24,12 +25,4 @@ $btn-border-radius-xs: 4px;
         left: 5px;
         color: $gray-600; // $gray-500;
     }
-}
-
-.app1-dashboard {
-    display: inline;
-}
-
-.same-name {
-    color: red;
 }

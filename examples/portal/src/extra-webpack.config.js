@@ -15,8 +15,8 @@ module.exports = {
                         loader: 'postcss-loader',
                         options: {
                             plugins: [
-                                PrefixWrap('.app1', {
-                                    hasAttribute: 'planet-inline',
+                                PrefixWrap('.portal', {
+                                    blacklist: ['./reboot.scss'],
                                     prefixRootTags: true
                                 })
                             ]

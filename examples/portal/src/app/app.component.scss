@@ -1,9 +1,14 @@
 $app-nav-width: 70px;
 $app-nav-bg-color: #48525c;
 
+.portal-container {
+    display: contents;
+    height: 100%ß;
+}
 .app-nav {
     width: $app-nav-width;
     background: $app-nav-bg-color;
+    height: 100%;
 
     .logo {
         height: 50px;
@@ -41,4 +46,13 @@ $app-nav-bg-color: #48525c;
     //         border-left-width: 0px;
     //     }
     // }
+}
+
+.same-name {
+    color: blue;
+    font-size: 12px;
+}
+
+.portal-special {
+    font-size: 20px;
 }

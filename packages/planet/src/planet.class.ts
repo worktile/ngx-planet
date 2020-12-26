@@ -27,6 +27,8 @@ export interface PlanetApplication<TExtra = any> {
     switchMode?: SwitchModes;
     // 资源文件路径的前缀
     resourcePathPrefix?: string;
+    // 样式前缀
+    stylePrefix?: string;
     // 样式资源文件
     styles?: string[];
     // 脚本资源文件

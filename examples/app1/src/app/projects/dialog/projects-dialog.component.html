@@ -1,0 +1,10 @@
+<thy-dialog-header thyTitle="a Detail from App1"> </thy-dialog-header>
+<thy-dialog-body>
+  <span class="same-name">this is a app2's component </span>
+  <thy-loading [thyDone]="loadingDone"></thy-loading>
+  <div #container></div>
+</thy-dialog-body>
+<thy-dialog-footer [thyDivided]="true">
+  <button thyButton="primary-square" (click)="ok()">Ok</button>
+  <button thyButton="link-secondary" (click)="close()">Cancel</button>
+</thy-dialog-footer>

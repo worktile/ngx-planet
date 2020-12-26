@@ -8,7 +8,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PlantComponentConfig } from './plant-component.config';
-import { defineApplication, getPlanetApplicationRef, getApplicationLoader, clearGlobalPlanet } from '../global-planet';
+import {
+    defineApplication,
+    getPlanetApplicationRef,
+    getApplicationLoader,
+    clearGlobalPlanet,
+    getApplicationService
+} from '../global-planet';
 import { Planet } from 'ngx-planet/planet';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -88,6 +94,27 @@ describe('PlanetComponentLoader', () => {
         });
     }));
 
+    it('should app2 load app1 component with stylePrefix of app1', fakeAsync(() => {
+        // mock app1 and app2 bootstrap
+        const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
+        const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+        const applicationService = getApplicationService();
+        const applicationServiceSpy = spyOn(applicationService, 'getAppByName');
+        applicationServiceSpy.and.returnValue({
+            stylePrefix: 'app1-prefix',
+            name: 'app1',
+            hostParent: '',
+            routerPathPrefix: ''
+        });
+        tick();
+        registerAppComponents(app1ModuleRef);
+        loadApp1Component(app2ModuleRef, { wrapperClass: 'custom-wrapper' }).subscribe(componentRef => {
+            expect(componentRef.wrapperElement.classList.contains('planet-component-wrapper')).toBeTruthy();
+            expect(componentRef.wrapperElement.classList.contains('custom-wrapper')).toBeTruthy();
+            expect(componentRef.wrapperElement.classList.contains('app1-prefix')).toBeTruthy();
+        });
+    }));
+
     it('should app2 load app1 component and preload app1', fakeAsync(() => {
         // mock app2 bootstrap
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App1Module);
@@ -140,7 +167,7 @@ function loadApp1Component(appModuleRef: NgModuleRef<any>, config?: Partial<Plan
 function loadApp1ComponentAndExpectHtml(app2ModuleRef: NgModuleRef<any>) {
     loadApp1Component(app2ModuleRef).subscribe(componentRef => {
         expect(componentRef.wrapperElement.outerHTML).toEqual(
-            `<div class="planet-component-wrapper"><app1-projects> projects is work </app1-projects></div>`
+            `<div class="planet-component-wrapper" planet-inline=""><app1-projects> projects is work </app1-projects></div>`
         );
     });
 }

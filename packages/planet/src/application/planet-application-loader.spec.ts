@@ -118,7 +118,7 @@ describe('PlanetApplicationLoader', () => {
     let ngZone: NgZone;
     let planet: Planet;
 
-    function expectApp1Element(classesStr = 'app1-host') {
+    function expectApp1Element(classesStr = 'app1-host app1-prefix') {
         const app1Host = document.querySelector(app1.selector);
         expect(app1Host).toBeTruthy();
         expect(app1Host.outerHTML).toEqual(`<app1-root class="${classesStr}"></app1-root>`);
@@ -227,7 +227,7 @@ describe('PlanetApplicationLoader', () => {
         appStatusChangeFaker.expectFromAssetsLoadedToActive(2, app1RefFaker, app1);
 
         // 判断是否在宿主元素中创建了应用根节点
-        expectApp1Element(`app1-root app1-host`);
+        expectApp1Element(`app1-root app1-host app1-prefix`);
 
         tick();
     }));

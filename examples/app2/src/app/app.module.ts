@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ApplicationRef, NgModuleRef, NgZone, DoBootstrap } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import { RouterModule, Route } from '@angular/router';
 import { ProjectListComponent } from './projects/project-list.component';
@@ -8,11 +8,13 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProjectDetailComponent } from './projects/detail/detail.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PlanetComponentLoader, EmptyComponent, NgxPlanetModule } from 'ngx-planet';
-import { DemoCommonModule } from '@demo/common';
+import { EmptyComponent, NgxPlanetModule } from 'ngx-planet';
+import { DemoCommonModule, OVERLAY_PROVIDER } from '@demo/common';
 import { ProjectResolver } from './projects/project.resolver';
 import { TasksComponent } from './projects/tasks/tasks.component';
 import { ViewComponent } from './projects/view/view.component';
+import { Overlay } from '@angular/cdk/overlay';
+import { AppOverlay } from './overlay';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared.module';
 
@@ -82,7 +84,7 @@ const routers: Route[] = [
         DemoCommonModule,
         NgxPlanetModule
     ],
-    providers: [],
+    providers: [OVERLAY_PROVIDER, { provide: Overlay, useClass: AppOverlay }],
     bootstrap: [AppRootComponent]
 })
 export class AppModule {}

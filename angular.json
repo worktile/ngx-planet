@@ -41,7 +41,7 @@
       }
     },
     "portal": {
-      "root": "",
+      "root": "examples/portal/src",
       "sourceRoot": "examples/portal/src",
       "projectType": "application",
       "prefix": "app",
@@ -55,9 +55,10 @@
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "customWebpackConfig": {
-              "path": "./extra-webpack.config.js",
+              "path": "examples/portal/src/extra-webpack.config.js",
               "mergeStrategies": {
-                "externals": "replace"
+                "externals": "replace",
+                "module.rules": "append"
               }
             },
             "baseHref": "/",
@@ -67,7 +68,7 @@
             "polyfills": "examples/portal/src/polyfills.ts",
             "tsConfig": "examples/portal/src/tsconfig.app.json",
             "assets": ["examples/portal/src/favicon.ico", "examples/portal/src/assets"],
-            "styles": ["examples/portal/src/styles.scss"],
+            "styles": ["examples/portal/src/styles.scss", "examples/portal/src/reboot.scss"],
             "extractCss": true,
             "scripts": [],
             "aot": true
@@ -152,7 +153,7 @@
             "customWebpackConfig": {
               "path": "./examples/app1/extra-webpack.config.js",
               "mergeStrategies": {
-                "module.rules": "prepend"
+                "module.rules": "append"
               },
               "replaceDuplicatePlugins": true
             },
@@ -164,7 +165,8 @@
             "styles": ["examples/app1/src/styles.scss"],
             "scripts": [],
             "aot": true,
-            "vendorChunk": false
+            "vendorChunk": false,
+            "extractCss": true
           },
           "configurations": {
             "production": {
@@ -246,7 +248,7 @@
             "customWebpackConfig": {
               "path": "./examples/app2/extra-webpack.config.js",
               "mergeStrategies": {
-                "module.rules": "prepend"
+                "module.rules": "append"
               },
               "replaceDuplicatePlugins": true
             },
@@ -255,10 +257,11 @@
             "main": "examples/app2/src/main.ts",
             "tsConfig": "examples/app2/tsconfig.app.json",
             "assets": ["examples/app2/src/favicon.ico", "examples/app2/src/assets"],
-            "styles": ["examples/app2/src/styles.css"],
+            "styles": ["examples/app2/src/styles.scss"],
             "scripts": [],
             "vendorChunk": false,
-            "aot": true
+            "aot": true,
+            "extractCss": true
           },
           "configurations": {
             "production": {

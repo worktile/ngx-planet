@@ -11,9 +11,4 @@ $btn-border-radius-xs: 4px;
 
 @import './app/app.component.scss';
 
-body,
-html {
-    height: 100%;
-}
-
 @import '../../common/section-card/section-card.component.scss';

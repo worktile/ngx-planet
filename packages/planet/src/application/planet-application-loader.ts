@@ -331,6 +331,9 @@ export class PlanetApplicationLoader {
                     if (app.hostClass) {
                         appRootElement.classList.add(...coerceArray(app.hostClass));
                     }
+                    if (app.stylePrefix) {
+                        appRootElement.classList.add(...coerceArray(app.stylePrefix));
+                    }
                     container.appendChild(appRootElement);
                 }
             }
