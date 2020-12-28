@@ -1,6 +1,13 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+## [9.1.0](https://github.com/worktile/ngx-planet/compare/9.0.6...9.1.0) (2020-12-28)
+
+
+### Features
+
+* support style isolation ([#166](https://github.com/worktile/ngx-planet/issues/166)) ([5a6d6e0](https://github.com/worktile/ngx-planet/commit/5a6d6e0d5aee5e933e2484dae70b82f9ab429cb5))
+
 ### [9.0.6](https://github.com/worktile/ngx-planet/compare/9.0.2...9.0.6) (2020-12-17)
 
 
