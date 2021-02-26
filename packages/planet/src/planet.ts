@@ -16,6 +16,10 @@ import {
     getApplicationLoader,
     getApplicationService
 } from './global-planet';
+import { LocationStrategy } from '@angular/common';
+
+const ABSOLUTE_PATH = '/';
+const RELATIVE_PATH = './';
 
 @Injectable({
     providedIn: 'root'
@@ -46,7 +50,8 @@ export class Planet {
     constructor(
         private injector: Injector,
         private router: Router,
-        @Inject(PLANET_APPLICATIONS) @Optional() planetApplications: PlanetApplication[]
+        @Inject(PLANET_APPLICATIONS) @Optional() planetApplications: PlanetApplication[],
+        private locationStrategy: LocationStrategy
     ) {
         if (!this.planetApplicationLoader) {
             setApplicationLoader(this.injector.get(PlanetApplicationLoader));
@@ -85,6 +90,15 @@ export class Planet {
     }
 
     start() {
+        const baseHref = this.locationStrategy.getBaseHref();
+        let locationPathName;
+        // TODO: The processing of route handoff when the packing prefix is relative path
+        if (baseHref === ABSOLUTE_PATH || baseHref === RELATIVE_PATH) {
+            locationPathName = location.pathname;
+        } else {
+            // fix In the case of packing with prefix, routing handover is abnormal
+            locationPathName = location.pathname.split(this.locationStrategy.getBaseHref())[1];
+        }
         this.subscription = this.router.events
             .pipe(
                 filter(event => {
@@ -93,7 +107,7 @@ export class Planet {
                 map((event: NavigationEnd) => {
                     return event.urlAfterRedirects || event.url;
                 }),
-                startWith(location.pathname),
+                startWith(locationPathName),
                 distinctUntilChanged()
             )
             .subscribe((url: string) => {
