@@ -17,12 +17,13 @@ APIs consistent with angular style, currently only supports Angular, other frame
 
 ## Features
 
--   Rendering multiple applications at the same time
--   Support two mode, coexist and default that switch to another app and destroy active apps
--   Support application preload
--   Built-in communication between multiple applications
--   Cross application component rendering
--   Comprehensive examples include routing configuration, lazy loading and all features
+- Rendering multiple applications at the same time
+- Support two mode, coexist and default that switch to another app and destroy active apps
+- Support application preload
+- Support style isolation
+- Built-in communication between multiple applications
+- Cross application component rendering
+- Comprehensive examples include routing configuration, lazy loading and all features
 
 ## Alternatives
 
