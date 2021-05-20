@@ -1,8 +1,8 @@
-import { createDebug, setDebugFactory, getDebugFactory, Debug, Debugger } from './debug';
+import { createDebug, clearDebugFactory, setDebugFactory, getDebugFactory, Debug, Debugger } from './debug';
 
 describe('debug', () => {
     afterEach(() => {
-        setDebugFactory(undefined);
+        clearDebugFactory();
     });
 
     it('should bypass create debug and log message', () => {
@@ -39,5 +39,19 @@ describe('debug', () => {
         expect(mockDebug).toHaveBeenCalled();
 
         expect(mockDebug).toHaveBeenCalledWith('this is debug message', []);
+    });
+
+    it('should use cache debug for same namespace', () => {
+        const mockDebugFactory = jasmine.createSpy('mock debug factory').and.callFake(namespace => {
+            expect(namespace).toEqual('planet:app-loader');
+            return jasmine.createSpy('mock debug');
+        });
+        setDebugFactory(mockDebugFactory as any);
+        expect(mockDebugFactory).toHaveBeenCalledTimes(0);
+        const debug1 = createDebug('app-loader');
+        const debug2 = createDebug('app-loader');
+        debug1('message1');
+        debug2('message2');
+        expect(mockDebugFactory).toHaveBeenCalledTimes(1);
     });
 });

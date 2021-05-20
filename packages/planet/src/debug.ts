@@ -33,7 +33,7 @@ export interface Debug {
  * Debug factory for debug module
  */
 let _debugFactory: Debug;
-const _debuggerMap: Record<string, Debugger> = {};
+let _debuggerMap: Record<string, Debugger> = {};
 
 export function createDebug(namespace: string): Debugger {
     const key = `planet:${namespace}`;
@@ -54,6 +54,11 @@ export function setDebugFactory(debug: Debug) {
         throw new Error('debug factory type is invalid, must be function');
     }
     _debugFactory = debug;
+}
+
+export function clearDebugFactory() {
+    setDebugFactory(undefined);
+    _debuggerMap = {};
 }
 
 export function getDebugFactory() {
