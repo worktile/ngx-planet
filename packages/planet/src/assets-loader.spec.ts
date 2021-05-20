@@ -1,4 +1,4 @@
-import { TestBed, async, fakeAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AssetsLoader, AssetsLoadResult } from './assets-loader';
 import { hashCode } from './helpers';
@@ -360,25 +360,28 @@ describe('assets-loader', () => {
             httpTestingController.verify();
         });
 
-        it('should load manifest success', async(() => {
-            const testData = {
-                'main.js': 'main1.js'
-            };
-            const loadManifestSpy = jasmine.createSpy('load manifest spy');
-            assetsLoader.loadManifest('/static/assets/manifest.json').subscribe(loadManifestSpy);
-            const req = httpTestingController.expectOne('/static/assets/manifest.json');
+        it(
+            'should load manifest success',
+            waitForAsync(() => {
+                const testData = {
+                    'main.js': 'main1.js'
+                };
+                const loadManifestSpy = jasmine.createSpy('load manifest spy');
+                assetsLoader.loadManifest('/static/assets/manifest.json').subscribe(loadManifestSpy);
+                const req = httpTestingController.expectOne('/static/assets/manifest.json');
 
-            // Assert that the request is a GET.
-            expect(req.request.method).toEqual('GET');
-            expect(loadManifestSpy).not.toHaveBeenCalled();
+                // Assert that the request is a GET.
+                expect(req.request.method).toEqual('GET');
+                expect(loadManifestSpy).not.toHaveBeenCalled();
 
-            // Respond with mock data, causing Observable to resolve.
-            // Subscribe callback asserts that correct data was returned.
-            req.flush(testData);
+                // Respond with mock data, causing Observable to resolve.
+                // Subscribe callback asserts that correct data was returned.
+                req.flush(testData);
 
-            expect(loadManifestSpy).toHaveBeenCalled();
-            expect(loadManifestSpy).toHaveBeenCalledWith(testData);
-        }));
+                expect(loadManifestSpy).toHaveBeenCalled();
+                expect(loadManifestSpy).toHaveBeenCalledWith(testData);
+            })
+        );
     });
 
     describe('loadAppAssets', () => {

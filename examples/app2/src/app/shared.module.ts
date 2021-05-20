@@ -8,7 +8,7 @@ import { ThyDialogModule } from 'ngx-tethys/dialog';
 import { ThyMenuModule } from 'ngx-tethys/menu';
 import { ThyCardModule } from 'ngx-tethys/card';
 import { ThyLoadingModule } from 'ngx-tethys/loading';
-import { ThyGridModule } from 'ngx-tethys/grid';
+import { ThyTableModule } from 'ngx-tethys/table';
 import { ThyNavModule } from 'ngx-tethys/nav';
 import { ThyInputModule } from 'ngx-tethys/input';
 import { ThyIconModule } from 'ngx-tethys/icon';
@@ -28,7 +28,7 @@ import { NgxPlanetModule } from 'ngx-planet';
         ThyMenuModule,
         ThyCardModule,
         ThyLoadingModule,
-        ThyGridModule,
+        ThyTableModule,
         ThyNavModule,
         ThyInputModule,
         ThyIconModule,
@@ -45,7 +45,7 @@ import { NgxPlanetModule } from 'ngx-planet';
         ThyMenuModule,
         ThyCardModule,
         ThyLoadingModule,
-        ThyGridModule,
+        ThyTableModule,
         ThyNavModule,
         ThyInputModule,
         ThyIconModule,

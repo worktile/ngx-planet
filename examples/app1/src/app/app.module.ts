@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
-import { NgxTethysModule } from 'ngx-tethys';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { routers } from './app.routing';
 import { AppRootComponent, AppActualRootComponent } from './root/root.component';
@@ -29,9 +28,8 @@ import { SharedModule } from './shared.module';
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        RouterModule.forRoot(routers),
+        RouterModule.forRoot(routers, { relativeLinkResolution: 'legacy' }),
         // UserModule,
-        NgxTethysModule,
         FormsModule,
         SharedModule,
         DemoCommonModule,

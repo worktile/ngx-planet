@@ -79,7 +79,7 @@ const routers: Route[] = [
         BrowserAnimationsModule,
         FormsModule,
         BrowserModule,
-        RouterModule.forRoot(routers),
+        RouterModule.forRoot(routers, { relativeLinkResolution: 'legacy' }),
         SharedModule,
         DemoCommonModule,
         NgxPlanetModule
