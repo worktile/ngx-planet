@@ -33,16 +33,20 @@ export interface Debug {
  * Debug factory for debug module
  */
 let _debugFactory: Debug;
+const _debuggerMap: Record<string, Debugger> = {};
 
 export function createDebug(namespace: string): Debugger {
-    const debugFactory = getDebugFactory();
-    if (debugFactory) {
-        return debugFactory(`planet:${namespace}`);
-    } else {
-        const fallbackDebugger = function() {};
-        fallbackDebugger.__isNoop = true;
-        return fallbackDebugger as any;
-    }
+    const key = `planet:${namespace}`;
+    return function(formatter: any, ...args: any[]) {
+        if (_debugFactory) {
+            let debugDebugger = _debuggerMap[key];
+            if (!debugDebugger) {
+                debugDebugger = _debugFactory(key);
+                _debuggerMap[key] = debugDebugger;
+            }
+            debugDebugger(formatter, args);
+        }
+    };
 }
 
 export function setDebugFactory(debug: Debug) {

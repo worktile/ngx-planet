@@ -5,10 +5,9 @@ describe('debug', () => {
         setDebugFactory(undefined);
     });
 
-    it('should not throw error when create debug and log message', () => {
+    it('should bypass create debug and log message', () => {
         const debug = createDebug('app-loader');
         debug('this is debug message');
-        expect(debug['__isNoop']).toEqual(true);
     });
 
     it('should set debug factory success', () => {
@@ -28,15 +27,17 @@ describe('debug', () => {
     });
 
     it('should use custom debug factory to debug', () => {
-        const mockDebug = {
-            mock: true
-        };
-        const mockDebugFactory = jasmine.createSpy('mock').and.callFake(namespace => {
+        const mockDebug = jasmine.createSpy('mock debug');
+        const mockDebugFactory = jasmine.createSpy('mock debug factory').and.callFake(namespace => {
             expect(namespace).toEqual('planet:app-loader');
             return mockDebug;
         });
         setDebugFactory(mockDebugFactory as any);
         const debug = createDebug('app-loader');
-        expect(debug).toBe(mockDebug);
+        expect(mockDebug).not.toHaveBeenCalled();
+        debug('this is debug message');
+        expect(mockDebug).toHaveBeenCalled();
+
+        expect(mockDebug).toHaveBeenCalledWith('this is debug message', []);
     });
 });
