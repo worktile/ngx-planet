@@ -16,6 +16,7 @@ import {
     getApplicationLoader,
     getApplicationService
 } from './global-planet';
+import { setDebugFactory } from './debug';
 
 @Injectable({
     providedIn: 'root'
@@ -62,6 +63,9 @@ export class Planet {
 
     setOptions(options: Partial<PlanetOptions>) {
         this.planetApplicationLoader.setOptions(options);
+        if (options.debugFactory) {
+            setDebugFactory(options.debugFactory);
+        }
     }
 
     setPortalAppData<T>(data: T) {
