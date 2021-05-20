@@ -1,6 +1,13 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+## [10.0.0](https://github.com/worktile/ngx-planet/compare/9.1.0...10.0.0) (2021-05-20)
+
+
+### Features
+
+* update angular and ngx-tethys to 10.x ([#167](https://github.com/worktile/ngx-planet/issues/167)) ([dc110df](https://github.com/worktile/ngx-planet/commit/dc110df7459c37edadf5da5c7eed5b22fcae4994))
+
 ## [9.2.0](https://github.com/worktile/ngx-planet/compare/9.1.0...9.2.0) (2021-05-20)
 
 
