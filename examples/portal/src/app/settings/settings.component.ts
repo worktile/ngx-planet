@@ -1,6 +1,6 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
-import { ThyNotifyService } from 'ngx-tethys';
+import { ThyNotifyService } from 'ngx-tethys/notify';
 import { ADetailComponent } from '../a-detail/a-detail.component';
 import { AppRootContext } from '@demo/common';
 import { CustomSettingsService, CustomSettingsInfo } from '../custom-settings.service';

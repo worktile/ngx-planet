@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { PlanetComponentLoader } from 'ngx-planet';
-import { ThyDialogRef } from 'ngx-tethys';
+import { ThyDialogRef } from 'ngx-tethys/dialog';
 
 @Component({
     selector: 'app-projects-dialog',

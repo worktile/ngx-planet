@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
             switchMode: SwitchModes.coexist,
             errorHandler: error => {
                 this.thyNotify.error(`错误`, '加载资源失败');
+                console.error(error);
             }
         });
 

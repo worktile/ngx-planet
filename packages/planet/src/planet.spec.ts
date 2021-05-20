@@ -1,4 +1,4 @@
-import { TestBed, async, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { Planet } from './planet';
 import { NgxPlanetModule } from './module';
 import { Router, Event } from '@angular/router';

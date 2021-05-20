@@ -4,7 +4,7 @@ import { ProjectService } from './projects.service';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ProjectDetailComponent } from './detail/detail.component';
 import { Router } from '@angular/router';
-import { ThyGridRowEvent } from 'ngx-tethys/grid';
+import { ThyTableRowEvent } from 'ngx-tethys/table';
 
 @Component({
     selector: 'app-project-list',
@@ -41,7 +41,7 @@ export class ProjectListComponent implements OnInit, DoCheck {
         }, 500);
     }
 
-    openDetail(event: ThyGridRowEvent) {
+    openDetail(event: ThyTableRowEvent) {
         this.router.navigateByUrl(`/app2/projects/${event.row.id}`);
         this.click.emit();
         // this.dialog.open(ProjectDetailComponent, {
