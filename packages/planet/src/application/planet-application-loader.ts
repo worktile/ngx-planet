@@ -147,14 +147,14 @@ export class PlanetApplicationLoader {
                             debug(`route change, url is: ${event.url}`);
                             this.startRouteChangeEvent = event;
                             const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
-                            debug(`should load apps is: ${this.getAppNames(shouldLoadApps)}`);
+                            debug(`should load apps: ${this.getAppNames(shouldLoadApps)}`);
                             const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
                             this.appsLoadingStart$.next({
                                 shouldLoadApps,
                                 shouldUnloadApps
                             });
                             this.unloadApps(shouldUnloadApps, event);
-                            debug(`unload apps is: ${this.getAppNames(shouldUnloadApps)}`);
+                            debug(`unload apps: ${this.getAppNames(shouldUnloadApps)}`);
                             return shouldLoadApps;
                         }),
                         // Load app assets (static resources)
