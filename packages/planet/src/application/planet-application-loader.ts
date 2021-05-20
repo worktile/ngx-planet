@@ -10,6 +10,8 @@ import { PlanetApplicationService } from './planet-application.service';
 import { GlobalEventDispatcher } from '../global-event-dispatcher';
 import { Router } from '@angular/router';
 import { globalPlanet, getPlanetApplicationRef, getApplicationLoader } from '../global-planet';
+import { createDebug } from '../debug';
+const debug = createDebug('app-loader');
 
 export enum ApplicationStatus {
     assetsLoading = 1,
@@ -115,14 +117,18 @@ export class PlanetApplicationLoader {
         });
     }
 
-    private takeOneStable() {
-        return this.ngZone.onStable.pipe(take(1));
-    }
-
     private setLoadingDone() {
         this.ngZone.run(() => {
             this.loadingDone = true;
         });
+    }
+
+    private getAppNames(apps: PlanetApplication[]): string | string[] {
+        return apps.length === 0
+            ? `[]`
+            : apps.map(item => {
+                  return item.name;
+              });
     }
 
     private setupRouteChange() {
@@ -138,14 +144,17 @@ export class PlanetApplicationLoader {
                     return of(event).pipe(
                         // unload apps and return should load apps
                         map(() => {
+                            debug(`route change, url is: ${event.url}`);
                             this.startRouteChangeEvent = event;
                             const shouldLoadApps = this.planetApplicationService.getAppsByMatchedUrl(event.url);
+                            debug(`should load apps: ${this.getAppNames(shouldLoadApps)}`);
                             const shouldUnloadApps = this.getUnloadApps(shouldLoadApps);
                             this.appsLoadingStart$.next({
                                 shouldLoadApps,
                                 shouldUnloadApps
                             });
                             this.unloadApps(shouldUnloadApps, event);
+                            debug(`unload apps: ${this.getAppNames(shouldUnloadApps)}`);
                             return shouldLoadApps;
                         }),
                         // Load app assets (static resources)
@@ -160,6 +169,7 @@ export class PlanetApplicationLoader {
                                 ) {
                                     hasAppsNeedLoadingAssets = true;
                                     return this.ngZone.runOutsideAngular(() => {
+                                        debug(`start load app(${app.name}) assets`);
                                         return this.startLoadAppAssets(app);
                                     });
                                 } else {
@@ -180,6 +190,7 @@ export class PlanetApplicationLoader {
                                     apps$.push(
                                         of(app).pipe(
                                             tap(() => {
+                                                debug(`app(${app.name}) status is bootstrapped, show app and active`);
                                                 this.showApp(app);
                                                 const appRef = getPlanetApplicationRef(app.name);
                                                 appRef.navigateByUrl(event.url);
@@ -192,8 +203,10 @@ export class PlanetApplicationLoader {
                                     apps$.push(
                                         of(app).pipe(
                                             switchMap(() => {
+                                                debug(`app(${app.name}) status is assetsLoaded, start bootstrapping`);
                                                 return this.bootstrapApp(app).pipe(
                                                     map(() => {
+                                                        debug(`app(${app.name}) bootstrapped success, active it`);
                                                         this.setAppStatus(app, ApplicationStatus.active);
                                                         this.setLoadingDone();
                                                         return app;
@@ -206,6 +219,7 @@ export class PlanetApplicationLoader {
                                     apps$.push(
                                         of(app).pipe(
                                             tap(() => {
+                                                debug(`app(${app.name}) is active, do nothings`);
                                                 const appRef = getPlanetApplicationRef(app.name);
                                                 // Backwards compatibility sub app use old version which has not getCurrentRouterStateUrl
                                                 const currentUrl = appRef.getCurrentRouterStateUrl
@@ -218,13 +232,15 @@ export class PlanetApplicationLoader {
                                         )
                                     );
                                 } else {
+                                    debug(`app(${app.name}) status is ${ApplicationStatus[appStatus]}`);
                                     throw new Error(
-                                        `app(${app.name})'s status is ${appStatus}, can't be show or bootstrap`
+                                        `app(${app.name})'s status is ${ApplicationStatus[appStatus]}, can't be show or bootstrap`
                                     );
                                 }
                             });
 
                             if (apps$.length > 0) {
+                                debug(`start load and active apps: ${this.getAppNames(apps)}`);
                                 // 切换到应用后会有闪烁现象，所以使用 setTimeout 后启动应用
                                 // example: redirect to app1's dashboard from portal's about page
                                 // If app's route has redirect, it doesn't work, it ok just in setTimeout, I don't know why.
@@ -248,6 +264,7 @@ export class PlanetApplicationLoader {
                         }),
                         // Error handler
                         catchError(error => {
+                            debug(`apps loader error: ${error}`);
                             this.errorHandler(error);
                             return [];
                         })
@@ -314,6 +331,7 @@ export class PlanetApplicationLoader {
         app: PlanetApplication,
         defaultStatus: 'hidden' | 'display' = 'display'
     ): Observable<PlanetApplicationRef> {
+        debug(`app(${app.name}) start bootstrapping`);
         this.setAppStatus(app, ApplicationStatus.bootstrapping);
         const appRef = getPlanetApplicationRef(app.name);
         if (appRef && appRef.bootstrap) {
@@ -344,6 +362,7 @@ export class PlanetApplicationLoader {
             }
             return result.pipe(
                 tap(() => {
+                    debug(`app(${app.name}) bootstrapped success`);
                     this.setAppStatus(app, ApplicationStatus.bootstrapped);
                     if (defaultStatus === 'display' && appRootElement) {
                         appRootElement.removeAttribute('style');
@@ -375,6 +394,7 @@ export class PlanetApplicationLoader {
         const destroyApps: PlanetApplication[] = [];
         shouldUnloadApps.forEach(app => {
             if (this.switchModeIsCoexist(app)) {
+                debug(`hide app(${app.name}) for coexist mode`);
                 hideApps.push(app);
                 this.hideApp(app);
                 this.setAppStatus(app, ApplicationStatus.bootstrapped);
@@ -398,6 +418,7 @@ export class PlanetApplicationLoader {
                     }
                 });
                 destroyApps.forEach(app => {
+                    debug(`destroy app(${app.name})`);
                     this.destroyApp(app);
                 });
             });
@@ -409,6 +430,7 @@ export class PlanetApplicationLoader {
             const toPreloadApps = this.planetApplicationService.getAppsToPreload(
                 activeApps ? activeApps.map(item => item.name) : null
             );
+            debug(`start preload apps: ${this.getAppNames(toPreloadApps)}`);
             const loadApps$ = toPreloadApps.map(preloadApp => {
                 return this.preloadInternal(preloadApp);
             });
@@ -445,8 +467,10 @@ export class PlanetApplicationLoader {
     private preloadInternal(app: PlanetApplication, immediate?: boolean): Observable<PlanetApplicationRef> {
         const status = this.appsStatus.get(app);
         if (!status || status === ApplicationStatus.loadError) {
+            debug(`preload app(${app.name}), status is empty, start to load assets`);
             return this.startLoadAppAssets(app).pipe(
                 switchMap(() => {
+                    debug(`preload app(${app.name}), assets loaded, start bootstrap app, immediate: ${!!immediate}`);
                     if (immediate) {
                         return this.bootstrapApp(app, 'hidden');
                     } else {
@@ -464,6 +488,7 @@ export class PlanetApplicationLoader {
                 status
             )
         ) {
+            debug(`preload app(${app.name}), status is ${ApplicationStatus[status]}, return until bootstrapped`);
             return this.appStatusChange.pipe(
                 filter(event => {
                     return event.app === app && event.status === ApplicationStatus.bootstrapped;

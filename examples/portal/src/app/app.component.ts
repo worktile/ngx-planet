@@ -6,6 +6,7 @@ import { ADetailComponent } from './a-detail/a-detail.component';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AppRootContext } from '@demo/common';
 import { CustomSettingsService } from './custom-settings.service';
+import { debug } from 'debug';
 
 @Component({
     selector: 'app-root',
@@ -37,7 +38,8 @@ export class AppComponent implements OnInit {
             errorHandler: error => {
                 this.thyNotify.error(`错误`, '加载资源失败');
                 console.error(error);
-            }
+            },
+            debugFactory: debug
         });
 
         this.appRootContext.setName(`my name is app root context`);
