@@ -23,7 +23,7 @@ describe('assets-loader', () => {
     describe('loadScript', () => {
         it('should load script success when not in IE', fakeAsync(() => {
             const src = 'assets/main.js';
-            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
+            const createElementSpy: jasmine.Spy = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
 
             // 返回 mock script
@@ -64,7 +64,7 @@ describe('assets-loader', () => {
                 }
             };
             const src = 'assets/main.js';
-            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
+            const createElementSpy: jasmine.Spy = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
 
             // 返回 mock script
@@ -107,7 +107,7 @@ describe('assets-loader', () => {
                 }
             };
             const src = 'assets/main.js';
-            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
+            const createElementSpy: jasmine.Spy = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
 
             // 返回 mock script
@@ -150,7 +150,7 @@ describe('assets-loader', () => {
                 }
             };
             const src = 'assets/main.js';
-            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
+            const createElementSpy: jasmine.Spy = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
 
             // 返回 mock script
@@ -181,7 +181,7 @@ describe('assets-loader', () => {
 
         it('should not load script which has been loaded', fakeAsync(() => {
             const src = 'assets/main.js';
-            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
+            const createElementSpy: jasmine.Spy = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
 
             createElementSpy.and.returnValue(mockScript);
@@ -209,7 +209,7 @@ describe('assets-loader', () => {
 
         it('should get error when load script fail', fakeAsync(() => {
             const src = 'assets/main.js';
-            const createElementSpy: jasmine.Spy<InferableFunction> = spyOn(document, 'createElement');
+            const createElementSpy: jasmine.Spy = spyOn(document, 'createElement');
             const appendChildSpy = spyOn(document.body, 'appendChild');
 
             // 返回 mock script
