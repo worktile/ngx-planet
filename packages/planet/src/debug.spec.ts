@@ -8,6 +8,7 @@ describe('debug', () => {
     it('should bypass create debug and log message', () => {
         const debug = createDebug('app-loader');
         debug('this is debug message');
+        expect(true).toBe(true);
     });
 
     it('should set debug factory success', () => {

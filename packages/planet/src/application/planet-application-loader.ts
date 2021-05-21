@@ -95,12 +95,32 @@ export class PlanetApplicationLoader {
 
     private setAppStatus(app: PlanetApplication, status: ApplicationStatus) {
         this.ngZone.run(() => {
+            const fromStatus = this.appsStatus.get(app);
+            debug(
+                `app(${app.name}) status change: ${fromStatus ? ApplicationStatus[fromStatus] : 'empty'} => ${
+                    ApplicationStatus[status]
+                }`
+            );
+            this.appsStatus.set(app, status);
             this.appStatusChange$.next({
                 app: app,
                 status: status
             });
-            this.appsStatus.set(app, status);
         });
+    }
+
+    private getAppStatusChange$(
+        app: PlanetApplication,
+        status = ApplicationStatus.bootstrapped
+    ): Observable<PlanetApplication> {
+        return this.appStatusChange.pipe(
+            filter(event => {
+                return event.app === app && event.status === status;
+            }),
+            map(() => {
+                return app;
+            })
+        );
     }
 
     private switchModeIsCoexist(app: PlanetApplication) {
@@ -167,9 +187,11 @@ export class PlanetApplicationLoader {
                                     appStatus === ApplicationStatus.assetsLoading ||
                                     appStatus === ApplicationStatus.loadError
                                 ) {
+                                    debug(
+                                        `app(${app.name}) status is ${ApplicationStatus[appStatus]}, start load assets`
+                                    );
                                     hasAppsNeedLoadingAssets = true;
                                     return this.ngZone.runOutsideAngular(() => {
-                                        debug(`start load app(${app.name}) assets`);
                                         return this.startLoadAppAssets(app);
                                     });
                                 } else {
@@ -183,60 +205,61 @@ export class PlanetApplicationLoader {
                         }),
                         // Bootstrap or show apps
                         map(apps => {
-                            const apps$: Observable<PlanetApplication>[] = [];
-                            apps.forEach(app => {
-                                const appStatus = this.appsStatus.get(app);
-                                if (appStatus === ApplicationStatus.bootstrapped) {
-                                    apps$.push(
-                                        of(app).pipe(
-                                            tap(() => {
-                                                debug(`app(${app.name}) status is bootstrapped, show app and active`);
-                                                this.showApp(app);
-                                                const appRef = getPlanetApplicationRef(app.name);
+                            const apps$: Observable<PlanetApplication>[] = apps.map(app => {
+                                return of(app).pipe(
+                                    switchMap(app => {
+                                        const appStatus = this.appsStatus.get(app);
+                                        if (appStatus === ApplicationStatus.bootstrapped) {
+                                            debug(
+                                                `[routeChange] app(${app.name}) status is bootstrapped, show app and active`
+                                            );
+                                            this.showApp(app);
+                                            const appRef = getPlanetApplicationRef(app.name);
+                                            appRef.navigateByUrl(event.url);
+                                            this.setAppStatus(app, ApplicationStatus.active);
+                                            this.setLoadingDone();
+                                            return of(app);
+                                        } else if (appStatus === ApplicationStatus.assetsLoaded) {
+                                            debug(
+                                                `[routeChange] app(${app.name}) status is assetsLoaded, start bootstrapping`
+                                            );
+                                            return this.bootstrapApp(app).pipe(
+                                                map(() => {
+                                                    debug(`app(${app.name}) bootstrapped success, active it`);
+                                                    this.setAppStatus(app, ApplicationStatus.active);
+                                                    this.setLoadingDone();
+                                                    return app;
+                                                })
+                                            );
+                                        } else if (appStatus === ApplicationStatus.active) {
+                                            debug(`[routeChange] app(${app.name}) is active, do nothings`);
+                                            const appRef = getPlanetApplicationRef(app.name);
+                                            // Backwards compatibility sub app use old version which has not getCurrentRouterStateUrl
+                                            const currentUrl = appRef.getCurrentRouterStateUrl
+                                                ? appRef.getCurrentRouterStateUrl()
+                                                : '';
+                                            if (currentUrl !== event.url) {
                                                 appRef.navigateByUrl(event.url);
-                                                this.setAppStatus(app, ApplicationStatus.active);
-                                                this.setLoadingDone();
-                                            })
-                                        )
-                                    );
-                                } else if (appStatus === ApplicationStatus.assetsLoaded) {
-                                    apps$.push(
-                                        of(app).pipe(
-                                            switchMap(() => {
-                                                debug(`app(${app.name}) status is assetsLoaded, start bootstrapping`);
-                                                return this.bootstrapApp(app).pipe(
-                                                    map(() => {
-                                                        debug(`app(${app.name}) bootstrapped success, active it`);
-                                                        this.setAppStatus(app, ApplicationStatus.active);
-                                                        this.setLoadingDone();
-                                                        return app;
-                                                    })
-                                                );
-                                            })
-                                        )
-                                    );
-                                } else if (appStatus === ApplicationStatus.active) {
-                                    apps$.push(
-                                        of(app).pipe(
-                                            tap(() => {
-                                                debug(`app(${app.name}) is active, do nothings`);
-                                                const appRef = getPlanetApplicationRef(app.name);
-                                                // Backwards compatibility sub app use old version which has not getCurrentRouterStateUrl
-                                                const currentUrl = appRef.getCurrentRouterStateUrl
-                                                    ? appRef.getCurrentRouterStateUrl()
-                                                    : '';
-                                                if (currentUrl !== event.url) {
-                                                    appRef.navigateByUrl(event.url);
-                                                }
-                                            })
-                                        )
-                                    );
-                                } else {
-                                    debug(`app(${app.name}) status is ${ApplicationStatus[appStatus]}`);
-                                    throw new Error(
-                                        `app(${app.name})'s status is ${ApplicationStatus[appStatus]}, can't be show or bootstrap`
-                                    );
-                                }
+                                            }
+                                            return of(app);
+                                        } else {
+                                            debug(
+                                                `[routeChange] app(${app.name}) status is ${ApplicationStatus[appStatus]}`
+                                            );
+                                            return this.getAppStatusChange$(app).pipe(
+                                                take(1),
+                                                map(() => {
+                                                    debug(
+                                                        `app(${app.name}) status is bootstrapped by subscribe status change, active it`
+                                                    );
+                                                    this.setAppStatus(app, ApplicationStatus.active);
+                                                    this.showApp(app);
+                                                    return app;
+                                                })
+                                            );
+                                        }
+                                    })
+                                );
                             });
 
                             if (apps$.length > 0) {
@@ -258,6 +281,7 @@ export class PlanetApplicationLoader {
                                     }
                                 });
                             } else {
+                                debug(`no apps need to be loaded, ensure preload apps`);
                                 this.ensurePreloadApps(apps);
                                 this.setLoadingDone();
                             }
@@ -362,7 +386,7 @@ export class PlanetApplicationLoader {
             }
             return result.pipe(
                 tap(() => {
-                    debug(`app(${app.name}) bootstrapped success`);
+                    debug(`app(${app.name}) bootstrapped success for ${defaultStatus}`);
                     this.setAppStatus(app, ApplicationStatus.bootstrapped);
                     if (defaultStatus === 'display' && appRootElement) {
                         appRootElement.removeAttribute('style');
@@ -489,10 +513,7 @@ export class PlanetApplicationLoader {
             )
         ) {
             debug(`preload app(${app.name}), status is ${ApplicationStatus[status]}, return until bootstrapped`);
-            return this.appStatusChange.pipe(
-                filter(event => {
-                    return event.app === app && event.status === ApplicationStatus.bootstrapped;
-                }),
+            return this.getAppStatusChange$(app).pipe(
                 take(1),
                 map(() => {
                     return getPlanetApplicationRef(app.name);
