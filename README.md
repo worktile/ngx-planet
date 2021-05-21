@@ -13,7 +13,7 @@ A powerful, reliable, fully-featured and production ready Micro Frontend library
 
 APIs consistent with angular style, currently only supports Angular, other frameworks are not supported.
 
-[中文文档](https://github.com/worktile/ngx-planet/blob/master/README.zh-CN.md)
+English | [中文文档](https://github.com/worktile/ngx-planet/blob/master/README.zh-CN.md)
 
 ## Features
 
