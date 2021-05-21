@@ -1,6 +1,19 @@
 Changelog
 All notable changes to ngx-planet will be documented in this file.
 
+## [11.0.0](https://github.com/worktile/ngx-planet/compare/10.0.0...11.0.0) (2021-05-21)
+
+
+### Features
+
+* **app-loader:** add debug log for app loader #OSP-129 ([#191](https://github.com/worktile/ngx-planet/issues/191)) ([ed2621d](https://github.com/worktile/ngx-planet/commit/ed2621d2702a4b5b5179782de96ca96907e27c77)), closes [#OSP-129](https://github.com/worktile/ngx-planet/issues/OSP-129)
+* **planet:** add debug integration #OSP-128 ([7e653f1](https://github.com/worktile/ngx-planet/commit/7e653f155f73738658b3d0680fd0eb34e75e5cf6)), closes [#OSP-128](https://github.com/worktile/ngx-planet/issues/OSP-128)
+
+
+### Bug Fixes
+
+* **app-loader:** should active subapp when subapp is bootstrapping by preload #OSP-127 ([db1f4f9](https://github.com/worktile/ngx-planet/commit/db1f4f9eea9eb7d98cb9d768ab47fbe50f8cda3b)), closes [#OSP-127](https://github.com/worktile/ngx-planet/issues/OSP-127)
+
 ## [10.0.0](https://github.com/worktile/ngx-planet/compare/9.1.0...10.0.0) (2021-05-20)
 
 
