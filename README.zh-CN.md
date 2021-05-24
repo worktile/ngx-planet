@@ -282,7 +282,14 @@ export class OneComponent {
     "skipLibCheck": true
 }
 ```
+### 使用路由延迟加载生产环境报错 `Cannot read property 'call' of undefined``
 
+在 Webpack 4 中，多个应用的运行时在同一个页面下会有冲突，因为它们使用了相同的全局变量加载 chunk，为了修复这个问题，你需要通过`output.jsonpFunction`配置项提供一个自定义的名字，详细信息参考：[Automatic unique naming](https://webpack.js.org/blog/2020-10-10-webpack-5-release/#automatic-unique-naming).
+
+你需要给每一个子应用的 `extra-webpack.config.js` 文件中配置一个唯一的名字
+```
+output: { jsonpFunction: "app1" }
+```
 ## 开发
 
 ```
