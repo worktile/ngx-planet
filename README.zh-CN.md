@@ -290,6 +290,7 @@ export class OneComponent {
 ```
 output: { jsonpFunction: "app1" }
 ```
+
 ## 开发
 
 ```
