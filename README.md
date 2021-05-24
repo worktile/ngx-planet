@@ -290,6 +290,15 @@ should setting `skipLibCheck` as true
 }
 ```
 
+### Production env throw error `Cannot read property 'call' of undefined` use router lazy load
+
+In webpack 4 multiple webpack runtimes could conflict on the same HTML page, because they use the same global variable for chunk loading. To fix that it was needed to provide a custom name to the output.jsonpFunction configuration, details see [Automatic unique naming](https://webpack.js.org/blog/2020-10-10-webpack-5-release/#automatic-unique-naming).
+
+you should set a unique name for each sub application in `extra-webpack.config.js`
+```
+output: { jsonpFunction: "app1" }
+```
+
 ## Development
 
 ```
