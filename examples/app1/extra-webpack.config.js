@@ -1,5 +1,6 @@
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const PrefixWrap = require('@worktile/planet-postcss-prefixwrap');
+// const PrefixWrap = require('postcss-prefixwrap');
 
 module.exports = {
     optimization: {
@@ -14,12 +15,14 @@ module.exports = {
                     {
                         loader: 'postcss-loader',
                         options: {
-                            plugins: [
-                                PrefixWrap('.app1', {
-                                    hasAttribute: 'planet-inline',
-                                    prefixRootTags: true
-                                })
-                            ]
+                            postcssOptions: {
+                                plugins: [
+                                    PrefixWrap('.app1', {
+                                        hasAttribute: 'planet-inline',
+                                        prefixRootTags: true
+                                    })
+                                ]
+                            }
                         }
                     },
                     'sass-loader'

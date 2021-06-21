@@ -14,12 +14,14 @@ module.exports = {
                     {
                         loader: 'postcss-loader',
                         options: {
-                            plugins: [
-                                PrefixWrap('.portal', {
-                                    blacklist: ['./reboot.scss'],
-                                    prefixRootTags: true
-                                })
-                            ]
+                            postcssOptions: {
+                                plugins: [
+                                    PrefixWrap('.portal', {
+                                        blacklist: ['./reboot.scss'],
+                                        prefixRootTags: true
+                                    })
+                                ]
+                            }
                         }
                     },
                     'sass-loader'
