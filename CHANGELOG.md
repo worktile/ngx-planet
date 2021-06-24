@@ -1,5 +1,23 @@
-Changelog
-All notable changes to ngx-planet will be documented in this file.
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+<a name="11.0.1"></a>
+## [11.0.1](https://github.com/worktile/ngx-planet/compare/10.0.0...11.0.1) (2021-06-24)
+
+
+### Bug Fixes
+
+* **app-loader:** add hack isInAngularZoneisInAngularZone for resolve error  Expected to not be in Angular Zone, but it is! [#197](https://github.com/worktile/ngx-planet/issues/197) ([14c6f9d](https://github.com/worktile/ngx-planet/commit/14c6f9d))
+* **app-loader:** should active subapp when subapp is bootstrapping by preload #OSP-127 ([db1f4f9](https://github.com/worktile/ngx-planet/commit/db1f4f9)), closes [#OSP-127](https://github.com/worktile/ngx-planet/issues/OSP-127)
+
+
+### Features
+
+* **app-loader:** add debug log for app loader #OSP-129 ([#191](https://github.com/worktile/ngx-planet/issues/191)) ([ed2621d](https://github.com/worktile/ngx-planet/commit/ed2621d)), closes [#OSP-129](https://github.com/worktile/ngx-planet/issues/OSP-129)
+* **planet:** add debug integration #OSP-128 ([7e653f1](https://github.com/worktile/ngx-planet/commit/7e653f1)), closes [#OSP-128](https://github.com/worktile/ngx-planet/issues/OSP-128)
+
+
 
 ## [11.0.0](https://github.com/worktile/ngx-planet/compare/10.0.0...11.0.0) (2021-05-21)
 
