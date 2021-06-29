@@ -1,6 +1,6 @@
 import { Component, HostBinding, NgZone } from '@angular/core';
 import { GlobalEventDispatcher } from 'ngx-planet';
-import { ThyDialog } from 'ngx-tethys';
+import { ThyDialog } from 'ngx-tethys/dialog';
 import { UserDetailComponent } from '../user/detail/user-detail.component';
 
 @Component({

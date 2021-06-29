@@ -165,9 +165,6 @@ export class PlanetComponentLoader {
                     throw new Error(`${app}'s component(${componentName}) is not registered`);
                 }
             }),
-            finalize(() => {
-                this.applicationRef.tick();
-            }),
             shareReplay()
         );
         result.subscribe();

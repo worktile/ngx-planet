@@ -7,7 +7,7 @@
     [style.width.px]="300"
     (thyEnter)="getProjects()"
   />
-  <thy-grid
+  <thy-table
     thyClassName="table-hover"
     [thyModel]="projects"
     [thyLoadingDone]="loadingDone"
@@ -15,15 +15,15 @@
     thyTheme="bordered"
     thyRowKey="id"
   >
-    <thy-grid-column thyTitle="名称" thyModelKey="name" thyClassName="same-name"></thy-grid-column>
-    <thy-grid-column thyTitle="描述" thyModelKey="desc"></thy-grid-column>
-    <thy-grid-column thyTitle="操作" thyClassName="thy-operation-links text-center">
+    <thy-table-column thyTitle="名称" thyModelKey="name" thyClassName="same-name"></thy-table-column>
+    <thy-table-column thyTitle="描述" thyModelKey="desc"></thy-table-column>
+    <thy-table-column thyTitle="操作" thyClassName="thy-operation-links text-center">
       <ng-template #cell let-row>
         <a href="javascript:;">设置</a>
         <a class="link-secondary" href="javascript:;">
           <i class="wtf wtf-trash-o"></i>
         </a>
       </ng-template>
-    </thy-grid-column>
-  </thy-grid>
+    </thy-table-column>
+  </thy-table>
 </thy-content>

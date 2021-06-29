@@ -24,6 +24,11 @@ export class PlanetApplicationRef {
     public appModuleRef: NgModuleRef<any>;
     public template: string;
     private innerSelector: string;
+    private name: string;
+    private portalApp: PlanetPortalApplication;
+    private appModuleBootstrap: (app: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
+    private componentFactory: PlantComponentFactory;
+
     public get selector() {
         return this.innerSelector;
     }
@@ -31,10 +36,10 @@ export class PlanetApplicationRef {
     public get bootstrapped() {
         return !!this.appModuleRef;
     }
-    private name: string;
-    private portalApp: PlanetPortalApplication;
-    private appModuleBootstrap: (app: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
-    private componentFactory: PlantComponentFactory;
+
+    public get ngZone(): NgZone {
+        return this.appModuleRef.injector.get(NgZone);
+    }
 
     constructor(name: string, options: BootstrapOptions) {
         this.name = name;
@@ -45,20 +50,19 @@ export class PlanetApplicationRef {
         }
         // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
         // See https://github.com/PlaceMe-SAS/single-spa-angular-cli/issues/33,
-        // NgZone.isInAngularZone = () => {
-        //     // @ts-ignore
-        //     return window.Zone.current._properties[`ngx-planet-${name}`] === true;
-        // };
+        NgZone.isInAngularZone = () => {
+            // @ts-ignore
+            return window.Zone.current._properties[`ngx-planet-${name}`] === true;
+        };
     }
 
     // 子应用路由变化后同步修改 portal 的 Route
     private syncPortalRouteWhenNavigationEnd() {
         const router = this.appModuleRef.injector.get(Router);
-        const ngZone = this.appModuleRef.injector.get(NgZone);
         if (router) {
             router.events.subscribe(event => {
                 if (event instanceof NavigationEnd) {
-                    ngZone.onStable
+                    this.ngZone.onStable
                         .asObservable()
                         .pipe(take(1))
                         .subscribe(() => {
@@ -93,9 +97,8 @@ export class PlanetApplicationRef {
     }
 
     navigateByUrl(url: string): void {
-        const ngZone = this.appModuleRef.injector.get(NgZone);
         const router = this.getRouter();
-        ngZone.run(() => {
+        this.ngZone.run(() => {
             router.navigateByUrl(url);
         });
     }

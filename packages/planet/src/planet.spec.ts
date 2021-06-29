@@ -1,14 +1,16 @@
-import { TestBed, async, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { Planet } from './planet';
 import { NgxPlanetModule } from './module';
 import { Router, Event } from '@angular/router';
-import { SwitchModes, PlanetRouterEvent } from './planet.class';
+import { SwitchModes, PlanetRouterEvent, PlanetOptions } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { PlanetApplicationLoader } from './application/planet-application-loader';
 import { EmptyComponent } from './empty/empty.component';
 import { NgZone } from '@angular/core';
 import { getApplicationService, getApplicationLoader, clearGlobalPlanet } from './global-planet';
 import { RouterTestingModule } from '@angular/router/testing';
+import { debug } from 'debug';
+import { getDebugFactory, setDebugFactory } from './debug';
 
 const app1 = {
     name: 'app1',
@@ -111,13 +113,16 @@ describe('Planet', () => {
     it('should set options success', () => {
         const setOptionsSpy = spyOn(planetApplicationLoader, 'setOptions');
         expect(setOptionsSpy).not.toHaveBeenCalled();
-        const options = {
+        const options: PlanetOptions = {
             switchMode: SwitchModes.coexist,
-            errorHandler: () => {}
+            errorHandler: () => {},
+            debugFactory: debug
         };
         planet.setOptions(options);
         expect(setOptionsSpy).toHaveBeenCalled();
         expect(setOptionsSpy).toHaveBeenCalledWith(options);
+        expect(getDebugFactory()).toEqual(debug);
+        setDebugFactory(undefined);
     });
 
     it('should reroute when start or navigateByUrl', fakeAsync(() => {

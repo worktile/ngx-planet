@@ -1,5 +1,50 @@
-Changelog
-All notable changes to ngx-planet will be documented in this file.
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+<a name="12.0.0"></a>
+# [12.0.0](https://github.com/worktile/ngx-planet/compare/10.0.0...12.0.0) (2021-06-24)
+
+
+### Bug Fixes
+
+* **app-loader:** add hack isInAngularZoneisInAngularZone for resolve error  Expected to not be in Angular Zone, but it is! [#197](https://github.com/worktile/ngx-planet/issues/197) ([14c6f9d](https://github.com/worktile/ngx-planet/commit/14c6f9d))
+* **app-loader:** should active subapp when subapp is bootstrapping by preload #OSP-127 ([db1f4f9](https://github.com/worktile/ngx-planet/commit/db1f4f9)), closes [#OSP-127](https://github.com/worktile/ngx-planet/issues/OSP-127)
+
+
+### Features
+
+* **app-loader:** add debug log for app loader #OSP-129 ([#191](https://github.com/worktile/ngx-planet/issues/191)) ([ed2621d](https://github.com/worktile/ngx-planet/commit/ed2621d)), closes [#OSP-129](https://github.com/worktile/ngx-planet/issues/OSP-129)
+* **planet:** add debug integration #OSP-128 ([7e653f1](https://github.com/worktile/ngx-planet/commit/7e653f1)), closes [#OSP-128](https://github.com/worktile/ngx-planet/issues/OSP-128)
+
+
+
+## [11.0.0](https://github.com/worktile/ngx-planet/compare/10.0.0...11.0.0) (2021-05-21)
+
+
+### Features
+
+* **app-loader:** add debug log for app loader #OSP-129 ([#191](https://github.com/worktile/ngx-planet/issues/191)) ([ed2621d](https://github.com/worktile/ngx-planet/commit/ed2621d2702a4b5b5179782de96ca96907e27c77)), closes [#OSP-129](https://github.com/worktile/ngx-planet/issues/OSP-129)
+* **planet:** add debug integration #OSP-128 ([7e653f1](https://github.com/worktile/ngx-planet/commit/7e653f155f73738658b3d0680fd0eb34e75e5cf6)), closes [#OSP-128](https://github.com/worktile/ngx-planet/issues/OSP-128)
+
+
+### Bug Fixes
+
+* **app-loader:** should active subapp when subapp is bootstrapping by preload #OSP-127 ([db1f4f9](https://github.com/worktile/ngx-planet/commit/db1f4f9eea9eb7d98cb9d768ab47fbe50f8cda3b)), closes [#OSP-127](https://github.com/worktile/ngx-planet/issues/OSP-127)
+
+## [10.0.0](https://github.com/worktile/ngx-planet/compare/9.1.0...10.0.0) (2021-05-20)
+
+
+### Features
+
+* update angular and ngx-tethys to 10.x ([#167](https://github.com/worktile/ngx-planet/issues/167)) ([dc110df](https://github.com/worktile/ngx-planet/commit/dc110df7459c37edadf5da5c7eed5b22fcae4994))
+
+## [9.2.0](https://github.com/worktile/ngx-planet/compare/9.1.0...9.2.0) (2021-05-20)
+
+
+### Features
+
+* update angular and ngx-tethys to 10.x ([#167](https://github.com/worktile/ngx-planet/issues/167)) ([dc110df](https://github.com/worktile/ngx-planet/commit/dc110df7459c37edadf5da5c7eed5b22fcae4994))
 
 ## [9.1.0](https://github.com/worktile/ngx-planet/compare/9.0.6...9.1.0) (2020-12-28)
 

@@ -6,6 +6,7 @@ import { ADetailComponent } from './a-detail/a-detail.component';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { AppRootContext } from '@demo/common';
 import { CustomSettingsService } from './custom-settings.service';
+import { debug } from 'debug';
 
 @Component({
     selector: 'app-root',
@@ -36,7 +37,9 @@ export class AppComponent implements OnInit {
             switchMode: SwitchModes.coexist,
             errorHandler: error => {
                 this.thyNotify.error(`错误`, '加载资源失败');
-            }
+                console.error(error);
+            },
+            debugFactory: debug
         });
 
         this.appRootContext.setName(`my name is app root context`);
@@ -65,7 +68,7 @@ export class AppComponent implements OnInit {
                     // 'polyfills.js'
                 ],
                 styles: ['styles.css'],
-                manifest: '/static/app1/manifest.json',
+                manifest: '/static/app1/assets-manifest.json',
                 extra: {
                     name: '应用1',
                     color: '#ffa415'
@@ -85,7 +88,7 @@ export class AppComponent implements OnInit {
                     'main.js'
                 ],
                 styles: ['styles.css'],
-                manifest: '/static/app2/manifest.json',
+                manifest: '/static/app2/assets-manifest.json',
                 extra: {
                     name: '应用2',
                     color: '#66c060'

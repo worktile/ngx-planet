@@ -11,7 +11,7 @@ import { ThyIconModule, ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyButtonModule } from 'ngx-tethys/button';
 import { ThyDialogModule } from 'ngx-tethys/dialog';
 import { ThyLayoutModule } from 'ngx-tethys/layout';
-import { ThyGridModule } from 'ngx-tethys/grid';
+import { ThyTableModule } from 'ngx-tethys/table';
 import { ThyNotifyModule } from 'ngx-tethys/notify';
 import { ThyLoadingModule } from 'ngx-tethys/loading';
 import { ThyNavModule } from 'ngx-tethys/nav';
@@ -38,7 +38,7 @@ import { AppOverlay } from './overlay';
         ThyIconModule,
         ThyButtonModule,
         ThyDialogModule,
-        ThyGridModule,
+        ThyTableModule,
         ThyLayoutModule,
         ThyNotifyModule,
         ThyLoadingModule,
@@ -59,6 +59,6 @@ import { AppOverlay } from './overlay';
 })
 export class AppModule {
     constructor(iconRegistry: ThyIconRegistry, domSanitizer: DomSanitizer) {
-        iconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('/assets/icons/sprite.defs.svg'));
+        iconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/sprite.defs.svg'));
     }
 }

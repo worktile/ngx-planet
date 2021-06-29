@@ -1,10 +1,10 @@
-import { NgZone, InjectionToken } from '@angular/core';
-import { Router } from '@angular/router';
-import { PlanetPortalApplication } from './application/portal-application';
+import { InjectionToken } from '@angular/core';
+import { Debug } from './debug';
 
 export interface PlanetOptions {
     switchMode?: SwitchModes;
     errorHandler: (error: Error) => void;
+    debugFactory?: Debug;
 }
 
 export interface PlanetApplication<TExtra = any> {
