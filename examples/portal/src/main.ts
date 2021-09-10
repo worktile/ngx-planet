@@ -8,6 +8,11 @@ if (environment.production) {
     enableProdMode();
 }
 
+// 测试沙箱模拟主应用引入版本为3.0.0的lodash
+window['lodash'] = {
+    version: '3.0.0'
+};
+
 platformBrowserDynamic()
     .bootstrapModule(AppModule)
     .catch(err => console.error(err));
