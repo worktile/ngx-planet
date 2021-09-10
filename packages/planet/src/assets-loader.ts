@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { hashCode, isEmpty, getScriptsAndStylesFullPaths } from './helpers';
-import { of, Observable, Observer, forkJoin, concat, merge } from 'rxjs';
-import { tap, shareReplay, map, switchMap, switchAll, concatMap, concatAll, scan, reduce } from 'rxjs/operators';
+import { of, Observable, Observer, forkJoin, concat } from 'rxjs';
+import { map, switchMap, concatAll } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PlanetApplication } from './planet.class';
+import { Sandbox } from './sandbox/sandbox';
 
 export interface AssetsLoadResult {
     src: string;
@@ -77,6 +78,44 @@ export class AssetsLoader {
         });
     }
 
+    loadScriptWithSandbox(app: string, src: string): Observable<AssetsLoadResult> {
+        const id = hashCode(src);
+        if (this.loadedSources.includes(id)) {
+            return of({
+                src: src,
+                hashCode: id,
+                loaded: true,
+                status: 'Loaded'
+            });
+        }
+        return new Observable((observer: Observer<AssetsLoadResult>) => {
+            this.http.get(src, { responseType: 'text' }).subscribe(
+                (code: string) => {
+                    this.loadedSources.push(id);
+                    const sandbox = new Sandbox(app);
+                    sandbox.execScript(code, src);
+                    observer.next({
+                        src: src,
+                        hashCode: id,
+                        loaded: true,
+                        status: 'Loaded'
+                    });
+                    observer.complete();
+                },
+                error => {
+                    observer.error({
+                        src: src,
+                        hashCode: id,
+                        loaded: false,
+                        status: 'Error',
+                        error: error
+                    });
+                    observer.complete();
+                }
+            );
+        });
+    }
+
     loadStyle(src: string): Observable<AssetsLoadResult> {
         const id = hashCode(src);
         if (this.loadedSources.includes(id)) {
@@ -118,14 +157,28 @@ export class AssetsLoader {
         });
     }
 
-    loadScripts(sources: string[], serial = false): Observable<AssetsLoadResult[]> {
+    loadScripts(
+        sources: string[],
+        options: {
+            app?: string;
+            sandbox?: boolean;
+            serial?: boolean;
+        } = {
+            serial: false,
+            sandbox: false
+        }
+    ): Observable<AssetsLoadResult[]> {
         if (isEmpty(sources)) {
             return of(null);
         }
         const observables = sources.map(src => {
-            return this.loadScript(src);
+            if (options.sandbox && window.Proxy) {
+                return this.loadScriptWithSandbox(options.app, src);
+            } else {
+                return this.loadScript(src);
+            }
         });
-        if (serial) {
+        if (options.serial) {
             const a = concat(...observables).pipe(
                 map(item => {
                     return of([item]);
@@ -149,8 +202,16 @@ export class AssetsLoader {
         );
     }
 
-    loadScriptsAndStyles(scripts: string[] = [], styles: string[] = [], serial = false) {
-        return forkJoin([this.loadScripts(scripts, serial), this.loadStyles(styles)]);
+    loadScriptsAndStyles(
+        scripts: string[] = [],
+        styles: string[] = [],
+        options?: {
+            app?: string;
+            sandbox?: boolean;
+            serial?: boolean;
+        }
+    ) {
+        return forkJoin([this.loadScripts(scripts, options), this.loadStyles(styles)]);
     }
 
     loadAppAssets(app: PlanetApplication) {
@@ -158,12 +219,20 @@ export class AssetsLoader {
             return this.loadManifest(`${app.manifest}?t=${new Date().getTime()}`).pipe(
                 switchMap(manifestResult => {
                     const { scripts, styles } = getScriptsAndStylesFullPaths(app, manifestResult);
-                    return this.loadScriptsAndStyles(scripts, styles, app.loadSerial);
+                    return this.loadScriptsAndStyles(scripts, styles, {
+                        app: app.name,
+                        sandbox: app.sandbox,
+                        serial: app.loadSerial
+                    });
                 })
             );
         } else {
             const { scripts, styles } = getScriptsAndStylesFullPaths(app);
-            return this.loadScriptsAndStyles(scripts, styles, app.loadSerial);
+            return this.loadScriptsAndStyles(scripts, styles, {
+                app: app.name,
+                sandbox: app.sandbox,
+                serial: app.loadSerial
+            });
         }
     }
 

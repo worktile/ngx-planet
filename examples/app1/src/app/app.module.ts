@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { routers } from './app.routing';
@@ -40,4 +39,6 @@ import { SharedModule } from './shared.module';
     entryComponents: [App1DetailComponent, ProjectsDialogComponent],
     bootstrap: [AppRootComponent]
 })
-export class AppModule {}
+export class AppModule {
+    constructor() {}
+}

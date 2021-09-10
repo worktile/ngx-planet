@@ -2,11 +2,11 @@ import { NgModuleRef, NgZone } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { Observable, from } from 'rxjs';
-import { PlanetApplication } from '../planet.class';
 import { PlanetPortalApplication } from './portal-application';
 import { PlantComponentConfig } from '../component/plant-component.config';
 import { PlanetComponentRef } from '../component/planet-component-ref';
 import { getTagNameByTemplate } from '../helpers';
+import { getSandboxInstance, Sandbox } from '../sandbox/sandbox';
 
 export interface BootstrapOptions {
     template: string;
@@ -39,6 +39,10 @@ export class PlanetApplicationRef {
 
     public get ngZone(): NgZone {
         return this.appModuleRef.injector.get(NgZone);
+    }
+
+    public get sandbox(): Sandbox {
+        return getSandboxInstance();
     }
 
     constructor(name: string, options: BootstrapOptions) {
@@ -116,6 +120,9 @@ export class PlanetApplicationRef {
             const router = this.appModuleRef.injector.get(Router);
             if (router) {
                 router.dispose();
+            }
+            if (this.sandbox) {
+                this.sandbox.destroy();
             }
             this.appModuleRef.destroy();
             delete this.appModuleRef;

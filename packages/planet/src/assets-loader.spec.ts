@@ -333,7 +333,7 @@ describe('assets-loader', () => {
             };
 
             const loadScriptsSpy = jasmine.createSpy('load scripts spy');
-            assetsLoader.loadScripts([src1, src2], true).subscribe(loadScriptsSpy);
+            assetsLoader.loadScripts([src1, src2], { serial: true }).subscribe(loadScriptsSpy);
 
             loadScriptObservable1.next(result1);
             loadScriptObservable1.complete();
@@ -395,6 +395,7 @@ describe('assets-loader', () => {
             resourcePathPrefix: '/static/app1/',
             styles: ['styles/main.css'],
             scripts: ['vendor.js', 'main.js'],
+            sandbox: false,
             loadSerial: false,
             manifest: '',
             extra: {
@@ -415,7 +416,11 @@ describe('assets-loader', () => {
             expect(loadScriptsAndStylesSpy).toHaveBeenCalledWith(
                 ['/static/app1/vendor.js', '/static/app1/main.js'],
                 ['/static/app1/styles/main.css'],
-                app1.loadSerial
+                {
+                    app: 'app1',
+                    sandbox: false,
+                    serial: app1.loadSerial
+                }
             );
 
             loadScriptsAndStyles$.next('load success' as any);
@@ -449,7 +454,11 @@ describe('assets-loader', () => {
             expect(loadScriptsAndStylesSpy).toHaveBeenCalledWith(
                 [`/static/app1/${manifestResult['vendor.js']}`, `/static/app1/${manifestResult['main.js']}`],
                 [`/static/app1/styles/${manifestResult['main.css']}`],
-                app1.loadSerial
+                {
+                    app: 'app1',
+                    sandbox: false,
+                    serial: app1.loadSerial
+                }
             );
 
             loadScriptsAndStyles$.next('load success' as any);
