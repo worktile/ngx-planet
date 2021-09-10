@@ -53,11 +53,14 @@ export function isEmpty(value: any): boolean {
     }
 }
 
-export function isFunction(value: any) {
+export function isFunction(value: any): value is Function {
     const type = typeof value;
     return !!value && type === 'function';
 }
 
+export function isObject(val: any) {
+    return val && typeof val === 'object';
+}
 /**
  * Get file name from path
  * 1. "main.js" => "main.js"

@@ -23,6 +23,8 @@ export interface PlanetApplication<TExtra = any> {
     hostClass?: string | string[];
     // 是否需要预加载
     preload?: boolean;
+    // 是否开启沙箱
+    sandbox?: boolean;
     // 切换应用的模式
     switchMode?: SwitchModes;
     // 资源文件路径的前缀

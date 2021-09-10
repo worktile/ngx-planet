@@ -28,7 +28,7 @@
             "tsConfig": "packages/planet/tsconfig.spec.json",
             "karmaConfig": "packages/planet/karma.conf.js",
             "codeCoverage": true,
-            "codeCoverageExclude": ["packages/planet/src/testing/**/*"]
+            "codeCoverageExclude": ["packages/planet/src/testing/**/*", "packages/planet/src/sandbox/**/*"]
           }
         },
         "lint": {
@@ -71,7 +71,8 @@
             "styles": ["examples/portal/src/styles.scss", "examples/portal/src/reboot.scss"],
             "extractCss": true,
             "scripts": [],
-            "aot": true
+            "aot": true,
+            "optimization": false
           },
           "configurations": {
             "production": {
@@ -164,7 +165,8 @@
             "assets": ["examples/app1/src/favicon.ico", "examples/app1/src/assets"],
             "styles": ["examples/app1/src/styles.scss"],
             "scripts": [],
-            "vendorChunk": false
+            "vendorChunk": false,
+            "optimization": false
           },
           "configurations": {
             "production": {
@@ -267,7 +269,8 @@
             "scripts": [],
             "vendorChunk": false,
             "aot": true,
-            "extractCss": true
+            "extractCss": true,
+            "optimization": false
           },
           "configurations": {
             "production": {

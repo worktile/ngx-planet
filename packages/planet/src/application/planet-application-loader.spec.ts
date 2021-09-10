@@ -4,7 +4,6 @@ import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PlanetApplicationLoader, ApplicationStatus } from './planet-application-loader';
 import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
-
 import { SwitchModes, PlanetApplication } from '../planet.class';
 import { PlanetApplicationService } from './planet-application.service';
 import { NgZone, Injector, ApplicationRef } from '@angular/core';
