@@ -5,7 +5,7 @@ const rawClearTimeout = window.clearTimeout;
 const rawSetInterval = window.setInterval;
 const rawClearInterval = window.clearInterval;
 
-export function TimerPatch(): SandboxPatchHandler {
+export function timerPatch(): SandboxPatchHandler {
     const timeout = new Set<number>();
     const interval = new Set<number>();
 

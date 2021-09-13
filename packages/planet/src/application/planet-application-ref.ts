@@ -6,7 +6,7 @@ import { PlanetPortalApplication } from './portal-application';
 import { PlantComponentConfig } from '../component/plant-component.config';
 import { PlanetComponentRef } from '../component/planet-component-ref';
 import { getTagNameByTemplate } from '../helpers';
-import { getSandboxInstance, Sandbox } from '../sandbox/sandbox';
+import { getSandboxInstance, Sandbox } from '../sandbox/';
 
 export interface BootstrapOptions {
     template: string;

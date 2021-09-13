@@ -1,5 +1,5 @@
-import { isFunction } from '../../helpers';
-import { DOCUMENT_BIND_FN, PLANET_SANDBOX_DOCUMENT_WHITELIST, RAW_NODE } from '../constants';
+import { isFunction } from '../../../helpers';
+import { DOCUMENT_BIND_FN, PLANET_SANDBOX_DOCUMENT_WHITELIST, RAW_NODE } from '../../constants';
 import {
     hasOwnProp,
     createFakeObject,

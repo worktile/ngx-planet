@@ -1,7 +1,7 @@
-import { ProxyDocument } from '../proxy/document';
+import { ProxyDocument } from '../proxies/document';
 import { SandboxPatchHandler } from '../types';
 
-export function DocumentPatch(): SandboxPatchHandler {
+export function documentPatch(): SandboxPatchHandler {
     const proxyDocument = new ProxyDocument();
     const { document, Document } = proxyDocument.create();
     return {

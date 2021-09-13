@@ -4,7 +4,7 @@ import { of, Observable, Observer, forkJoin, concat } from 'rxjs';
 import { map, switchMap, concatAll } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PlanetApplication } from './planet.class';
-import { Sandbox } from './sandbox/sandbox';
+import { createSandbox } from './sandbox';
 
 export interface AssetsLoadResult {
     src: string;
@@ -92,7 +92,7 @@ export class AssetsLoader {
             this.http.get(src, { responseType: 'text' }).subscribe(
                 (code: string) => {
                     this.loadedSources.push(id);
-                    const sandbox = new Sandbox(app);
+                    const sandbox = createSandbox(app);
                     sandbox.execScript(code, src);
                     observer.next({
                         src: src,
@@ -172,6 +172,7 @@ export class AssetsLoader {
             return of(null);
         }
         const observables = sources.map(src => {
+            // TODO: 暂时只支持Proxy沙箱
             if (options.sandbox && window.Proxy) {
                 return this.loadScriptWithSandbox(options.app, src);
             } else {

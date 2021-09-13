@@ -1,7 +1,7 @@
-import { ISandbox, SandboxPatchHandler } from '../types';
+import { SandboxPatchHandler, ProxySandboxInstance } from '../types';
 import { Observable, Subscription } from 'rxjs';
 
-export function EventListenerPatch(sandbox: ISandbox): SandboxPatchHandler {
+export function eventListenerPatch(sandbox: ProxySandboxInstance): SandboxPatchHandler {
     const rawAddEventListener = window.addEventListener;
     const rawRemoveEventListener = window.removeEventListener;
     const listenerSubscriptions = new Map<EventListenerOrEventListenerObject, Subscription>();

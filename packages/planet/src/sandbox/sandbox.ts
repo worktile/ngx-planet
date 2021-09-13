@@ -1,71 +1,20 @@
-import { ProxyWindow } from './proxy/window';
-import { getSandboxPatchHandlers } from './patches';
-import { Global, ISandbox, SandboxOptions, SandboxPatchHandler } from './types';
-import { SANDBOX_INSTANCE } from './constants';
 import { execScript } from './exec';
+import { Global } from './types';
 
-const defaultOptions: Partial<SandboxOptions> = {
-    strictGlobal: false
-};
-
-export function getSandboxInstance() {
-    return window[SANDBOX_INSTANCE];
+export interface SandboxOptions {
+    strictGlobal?: boolean;
 }
 
-export class Sandbox implements ISandbox {
-    public running = false;
+export abstract class Sandbox {
+    options: SandboxOptions;
 
-    public global: Global;
+    global: Global;
 
-    public rewriteVariables: PropertyKey[];
+    abstract start(): void;
 
-    private patchHandlers: SandboxPatchHandler[] = [];
-
-    constructor(public app: string, public options?: SandboxOptions) {
-        this.options = Object.assign({}, defaultOptions, this.options || {});
-        this.patchHandlers = getSandboxPatchHandlers(this);
-        this.start();
-    }
-
-    start() {
-        this.running = true;
-        this.rewriteVariables = this.getPatchRewriteVariables();
-        const proxyWindow = new ProxyWindow(this);
-        this.global = proxyWindow.create();
-        this.execPatchHandlers();
-    }
-
-    destroy() {
-        this.running = false;
-        this.patchHandlers.forEach(handler => {
-            if (handler.destroy) {
-                handler.destroy();
-            }
-        });
-    }
+    abstract destroy(): void;
 
     execScript(code: string, url = '') {
         execScript(code, url, this.global, this.options.strictGlobal);
-    }
-
-    private getPatchRewriteVariables() {
-        return this.patchHandlers.reduce((pre, cur) => {
-            return [...pre, ...(cur.rewrite ? Object.keys(cur.rewrite) : [])];
-        }, []);
-    }
-
-    private execPatchHandlers() {
-        this.patchHandlers.forEach(handler => {
-            if (handler.rewrite) {
-                for (const key in handler.rewrite) {
-                    if (handler.rewrite[key]) {
-                        this.global[key] = handler.rewrite[key];
-                    }
-                }
-            }
-            if (handler.init) {
-                handler?.init();
-            }
-        });
     }
 }

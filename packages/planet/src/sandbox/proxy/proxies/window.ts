@@ -6,9 +6,9 @@ import {
     isNonWriteableValue,
     isInvalidGetAccessor
 } from './common';
-import { ISandbox } from '../types';
-import { PLANET_SANDBOX_WINDOW_WHITELIST, SANDBOX_INSTANCE, WINDOW_BIND_FN } from '../constants';
-import { isFunction } from '../../helpers';
+import { PLANET_SANDBOX_WINDOW_WHITELIST, SANDBOX_INSTANCE, WINDOW_BIND_FN } from '../../constants';
+import { isFunction } from '../../../helpers';
+import { ProxySandboxInstance } from '../types';
 
 const esGlobalFunctions: PropertyKey[] = (
     'eval,isFinite,isNaN,parseFloat,parseInt,' +
@@ -46,7 +46,7 @@ const unscopables = {
 };
 
 export class ProxyWindow {
-    constructor(private sandbox: ISandbox) {}
+    constructor(private sandbox: ProxySandboxInstance) {}
 
     private definedVariables = new Set();
 

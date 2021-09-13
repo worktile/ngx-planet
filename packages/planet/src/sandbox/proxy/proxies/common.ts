@@ -1,5 +1,5 @@
-import { isObject } from '../../helpers';
-import { RAW_NODE } from '../constants';
+import { isObject } from '../../../helpers';
+import { RAW_NODE } from '../../constants';
 
 const rawHasOwnProperty = Object.prototype.hasOwnProperty;
 export function hasOwnProp(obj: any, key: PropertyKey): boolean {

@@ -1,6 +1,6 @@
-import { ISandbox, SandboxPatchHandler } from '../types';
+import { ProxySandboxInstance, SandboxPatchHandler } from '../types';
 
-const PLANET_STORAGE_PREFIX = 'planet-storage';
+const PLANET_STORAGE_PREFIX = '__planet-storage-';
 
 export class RewriteStorage {
     prefix: string;
@@ -8,7 +8,7 @@ export class RewriteStorage {
 
     constructor(app: string, rawStorage: Storage) {
         this.rawStorage = rawStorage;
-        this.prefix = `[${PLANET_STORAGE_PREFIX}-${app}]`;
+        this.prefix = `${PLANET_STORAGE_PREFIX}${app}__:`;
     }
 
     get length() {
@@ -43,7 +43,7 @@ export class RewriteStorage {
     }
 }
 
-export function StoragePatch(sandbox: ISandbox): SandboxPatchHandler {
+export function storagePatch(sandbox: ProxySandboxInstance): SandboxPatchHandler {
     return {
         rewrite: {
             localStorage: new RewriteStorage(sandbox.app, localStorage),
