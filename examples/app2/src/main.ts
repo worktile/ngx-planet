@@ -10,6 +10,11 @@ if (environment.production) {
     enableProdMode();
 }
 
+// 测试沙箱模拟APP2 引入低版本的 lodash
+window['lodash'] = {
+    version: '1.0.0'
+};
+
 defineApplication('app2', {
     template: `<app2-root></app2-root>`,
     bootstrap: (portalApp: PlanetPortalApplication) => {

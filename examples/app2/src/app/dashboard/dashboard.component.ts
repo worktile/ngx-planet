@@ -9,7 +9,13 @@ import { PlanetPortalApplication, GlobalEventDispatcher } from 'ngx-planet';
 export class DashboardComponent {
     @HostBinding('class') class = 'thy-layout';
 
-    constructor(private portalApp: PlanetPortalApplication, private globalEventDispatcher: GlobalEventDispatcher) {}
+    portalLodashVersion = (0, eval)('window')['lodash'].version;
+
+    app2LodashVersion = window['lodash'].version;
+
+    constructor(private portalApp: PlanetPortalApplication, private globalEventDispatcher: GlobalEventDispatcher) {
+        console.log(window);
+    }
 
     toAbout() {
         this.portalApp.navigateByUrl('/about');
