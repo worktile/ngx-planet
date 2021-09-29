@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [12.1.0](https://github.com/worktile/ngx-planet/compare/12.0.0...12.1.0) (2021-09-29)
+
+
+### Bug Fixes
+
+* update peerDependencies to 12.0.0 ([4ff9f6d](https://github.com/worktile/ngx-planet/commit/4ff9f6d9f3532d9be3aa6f9b66e8b48c0592076a))
+
+
+### Features
+
+* **sandbox:** support proxy sandbox ([#208](https://github.com/worktile/ngx-planet/issues/208)) ([d281bf8](https://github.com/worktile/ngx-planet/commit/d281bf8d7d3ceb0724bcdfbaf0b8c8fb87750961))
+
+
+
 <a name="12.0.0"></a>
 # [12.0.0](https://github.com/worktile/ngx-planet/compare/10.0.0...12.0.0) (2021-06-24)
 
