@@ -1,5 +1,5 @@
 import { Injectable, NgZone, ApplicationRef, Injector } from '@angular/core';
-import { of, Observable, Subject, forkJoin, from } from 'rxjs';
+import { of, Observable, Subject, forkJoin, from, throwError } from 'rxjs';
 import { AssetsLoader } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
 import { switchMap, share, map, tap, distinctUntilChanged, take, filter, catchError } from 'rxjs/operators';
@@ -460,7 +460,9 @@ export class PlanetApplicationLoader {
             });
 
             forkJoin(loadApps$).subscribe({
-                error: error => this.errorHandler(error)
+                error: error => {
+                    this.errorHandler(error);
+                }
             });
         });
     }
@@ -502,6 +504,10 @@ export class PlanetApplicationLoader {
                             return this.bootstrapApp(app, 'hidden');
                         });
                     }
+                }),
+                catchError(error => {
+                    this.errorHandler(error);
+                    return of(null);
                 }),
                 map(() => {
                     return getPlanetApplicationRef(app.name);

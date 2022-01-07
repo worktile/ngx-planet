@@ -1025,5 +1025,78 @@ describe('PlanetApplicationLoader', () => {
             expect(errorHandlerSpy).toHaveBeenCalled();
             expect(errorHandlerSpy).toHaveBeenCalledWith(new Error(`load newApp2 assets error`));
         }));
+
+        it(`should bootstrap app1 when app1 app2 preload is 'true' and app2 asset load fail`, fakeAsync(() => {
+            const newApp1 = {
+                ...app1,
+                preload: true
+            };
+            const newApp2 = {
+                ...app2,
+                preload: true
+            };
+            planetApplicationService.unregister(app1.name);
+            planetApplicationService.unregister(app2.name);
+            planetApplicationService.register(newApp1);
+            planetApplicationService.register(newApp2);
+
+            const loadApp1Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+            const loadApp2Assets$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+            const app1RefFaker = PlanetApplicationRefFaker.create(newApp1.name);
+            const app2RefFaker = PlanetApplicationRefFaker.create(newApp2.name);
+
+            planetApplicationLoader.reroute({ url: '/' });
+            const assetsLoaderSpy = spyOn(assetsLoader, 'loadAppAssets');
+            assetsLoaderSpy.and.returnValues(loadApp1Assets$, loadApp2Assets$);
+            const appStatusChangeFaker = AppStatusChangeFaker.create(planetApplicationLoader);
+
+            // Preload app1 and app2
+            tick();
+
+            expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(2);
+            expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
+                app: newApp1,
+                status: ApplicationStatus.assetsLoading
+            });
+            expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
+                app: newApp2,
+                status: ApplicationStatus.assetsLoading
+            });
+
+            // load app1 asset
+            loadApp1Assets$.next();
+            loadApp1Assets$.complete();
+
+            // load app2 asset and fake load fail
+            loadApp2Assets$.error(new Error(`load newApp2 assets error`));
+            loadApp2Assets$.complete();
+
+            // app1 's assets loaded
+            expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
+                app: newApp1,
+                status: ApplicationStatus.assetsLoaded
+            });
+            // app2 's assets load error
+            expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
+                app: newApp2,
+                status: ApplicationStatus.loadError
+            });
+
+            // app2 bootstrap error
+            app2RefFaker.bootstrap();
+            expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
+                app: newApp2,
+                status: ApplicationStatus.loadError
+            });
+
+            // app1 bootstrapped
+            app1RefFaker.bootstrap();
+            expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
+                app: newApp1,
+                status: ApplicationStatus.bootstrapped
+            });
+
+            tick();
+        }));
     });
 });
