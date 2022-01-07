@@ -1,23 +1,31 @@
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync, inject } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AssetsLoader, AssetsLoadResult } from './assets-loader';
 import { hashCode } from './helpers';
-import { Subject, of, observable, Observable, BehaviorSubject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 describe('assets-loader', () => {
     let assetsLoader: AssetsLoader;
+    let httpTestingController: HttpTestingController;
+
     const mockScript: {
         onload: () => void;
         onerror: (error: string | Event) => void;
     } = { onload: () => {}, onerror: null };
 
-    beforeEach(() => {
+    beforeEach(async () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: []
         });
         assetsLoader = TestBed.inject(AssetsLoader);
+        httpTestingController = TestBed.inject(HttpTestingController);
+    });
+
+    afterEach(() => {
+        // After every test, assert that there are no more pending requests.
+        httpTestingController.verify();
     });
 
     describe('loadScript', () => {
@@ -245,6 +253,79 @@ describe('assets-loader', () => {
         }));
     });
 
+    describe('loadScriptWithSandbox', () => {
+        it('should load script and exec in sandbox', () => {
+            const fetch = {
+                url: '/assets/main.js',
+                content: 'const a = 1;'
+            };
+            const scriptLoaded = jasmine.createSpy('load script');
+            const spyExecScript = jasmine.createSpy('exec script');
+            const spyCreateSandbox = spyOn(assetsLoader, 'createSandbox').and.returnValue({
+                execScript: spyExecScript
+            } as any);
+            assetsLoader.loadScriptWithSandbox('app1', fetch.url).subscribe(scriptLoaded);
+            const req = httpTestingController.expectOne(fetch.url);
+            expect(req.cancelled).toBeFalsy();
+            req.flush(fetch.content);
+            expect(scriptLoaded).toHaveBeenCalled();
+            expect(spyCreateSandbox).toHaveBeenCalledTimes(1);
+            expect(spyCreateSandbox).toHaveBeenCalledOnceWith('app1');
+            expect(spyExecScript).toHaveBeenCalledTimes(1);
+            expect(spyExecScript).toHaveBeenCalledOnceWith(fetch.content, fetch.url);
+        });
+
+        it('should not load script which has been loaded', fakeAsync(() => {
+            const fetch = {
+                url: '/assets/main.js',
+                content: 'const a = 1;'
+            };
+            const scriptLoaded1 = jasmine.createSpy('load script');
+            const spyExecScript = jasmine.createSpy('exec script');
+            const spyCreateSandbox = spyOn(assetsLoader, 'createSandbox').and.returnValue({
+                execScript: spyExecScript
+            } as any);
+            assetsLoader.loadScriptWithSandbox('app1', fetch.url).subscribe(scriptLoaded1);
+            const req = httpTestingController.expectOne(fetch.url);
+            expect(req.cancelled).toBeFalsy();
+            req.flush(fetch.content);
+            expect(scriptLoaded1).toHaveBeenCalledTimes(1);
+            expect(spyCreateSandbox).toHaveBeenCalledTimes(1);
+            expect(spyExecScript).toHaveBeenCalledTimes(1);
+            const scriptLoaded2 = jasmine.createSpy('load script');
+            assetsLoader.loadScriptWithSandbox('app1', fetch.url).subscribe(scriptLoaded2);
+            expect(scriptLoaded2).toHaveBeenCalledWith({
+                src: fetch.url,
+                hashCode: hashCode(fetch.url),
+                loaded: true,
+                status: 'Loaded'
+            });
+        }));
+
+        it('should get error when load script fail', () => {
+            const fetch = {
+                url: '/assets/main.js',
+                content: 'const a = 1;'
+            };
+            const scriptLoaded = jasmine.createSpy('load script');
+            const scriptLoadedError = jasmine.createSpy('load script');
+            assetsLoader.loadScriptWithSandbox('app1', fetch.url).subscribe(scriptLoaded, scriptLoadedError);
+            const req = httpTestingController.expectOne(fetch.url);
+            expect(req.cancelled).toBeFalsy();
+            req.error(null);
+            httpTestingController.verify();
+            expect(scriptLoaded).not.toHaveBeenCalled();
+            expect(scriptLoadedError).toHaveBeenCalled();
+            expect(scriptLoadedError).toHaveBeenCalledWith({
+                src: fetch.url,
+                hashCode: hashCode(fetch.url),
+                loaded: false,
+                status: 'Error',
+                error: `Http failure response for ${fetch.url}: 0 `
+            });
+        });
+    });
+
     describe('loadScripts', () => {
         it('should return null when sources is []', fakeAsync(() => {
             const loadScriptSpy = spyOn(assetsLoader, 'loadScript');
@@ -349,15 +430,8 @@ describe('assets-loader', () => {
 
     describe('loadManifest', () => {
         let httpClient: HttpClient;
-        let httpTestingController: HttpTestingController;
         beforeEach(() => {
             httpClient = TestBed.inject(HttpClient);
-            httpTestingController = TestBed.inject(HttpTestingController);
-        });
-
-        afterEach(() => {
-            // After every test, assert that there are no more pending requests.
-            httpTestingController.verify();
         });
 
         it(

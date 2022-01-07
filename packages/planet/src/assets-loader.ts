@@ -78,6 +78,10 @@ export class AssetsLoader {
         });
     }
 
+    createSandbox(app: string) {
+        return createSandbox(app);
+    }
+
     loadScriptWithSandbox(app: string, src: string): Observable<AssetsLoadResult> {
         const id = hashCode(src);
         if (this.loadedSources.includes(id)) {
@@ -92,7 +96,7 @@ export class AssetsLoader {
             this.http.get(src, { responseType: 'text' }).subscribe(
                 (code: string) => {
                     this.loadedSources.push(id);
-                    const sandbox = createSandbox(app);
+                    const sandbox = this.createSandbox(app);
                     sandbox.execScript(code, src);
                     observer.next({
                         src: src,
@@ -108,7 +112,7 @@ export class AssetsLoader {
                         hashCode: id,
                         loaded: false,
                         status: 'Error',
-                        error: error
+                        error: error.message
                     });
                     observer.complete();
                 }

@@ -8,7 +8,7 @@ export class RewriteStorage {
 
     constructor(app: string, rawStorage: Storage) {
         this.rawStorage = rawStorage;
-        this.prefix = `${PLANET_STORAGE_PREFIX}${app}__:`;
+        this.prefix = `${PLANET_STORAGE_PREFIX}${app}__`;
     }
 
     get length() {

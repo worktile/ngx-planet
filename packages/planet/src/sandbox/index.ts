@@ -22,3 +22,7 @@ export function createSandbox(app: string, options?: SandboxOptions) {
 export function getSandboxInstance() {
     return window[SANDBOX_INSTANCE];
 }
+
+export const sandbox = {
+    createSandbox
+};

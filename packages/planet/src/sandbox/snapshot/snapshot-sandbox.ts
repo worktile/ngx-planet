@@ -6,7 +6,11 @@ export class SnapshotSandbox extends Sandbox {
         this.start();
     }
 
-    start() {}
+    start() {
+        this.running = true;
+    }
 
-    destroy() {}
+    destroy() {
+        this.running = false;
+    }
 }

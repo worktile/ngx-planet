@@ -10,11 +10,13 @@ export abstract class Sandbox {
 
     global: Global;
 
+    running = false;
+
     abstract start(): void;
 
     abstract destroy(): void;
 
     execScript(code: string, url = '') {
-        execScript(code, url, this.global, this.options.strictGlobal);
+        execScript(code, url, this.global, true);
     }
 }

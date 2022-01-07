@@ -5,8 +5,6 @@ import { Global } from '../types';
 import { Sandbox, SandboxOptions } from '../sandbox';
 
 export class ProxySandbox extends Sandbox {
-    public running = false;
-
     public global: Global;
 
     public rewriteVariables: PropertyKey[];
