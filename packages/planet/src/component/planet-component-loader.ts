@@ -151,7 +151,7 @@ export class PlanetComponentLoader {
         const result = this.getPlantAppRef(app).pipe(
             delayWhen(appRef => {
                 if (appRef.getComponentFactory()) {
-                    return of();
+                    return of('');
                 } else {
                     // Because register use 'setTimeout',so timer 20
                     return timer(20);
