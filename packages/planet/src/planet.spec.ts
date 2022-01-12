@@ -122,7 +122,7 @@ describe('Planet', () => {
         expect(setOptionsSpy).toHaveBeenCalled();
         expect(setOptionsSpy).toHaveBeenCalledWith(options);
         expect(getDebugFactory()).toEqual(debug);
-        setDebugFactory(undefined);
+        setDebugFactory(null);
     });
 
     it('should reroute when start or navigateByUrl', fakeAsync(() => {
@@ -175,7 +175,7 @@ describe('Planet', () => {
                 component: EmptyComponent
             }
         ]);
-        let planetRouterEvent: PlanetRouterEvent;
+        let planetRouterEvent!: PlanetRouterEvent;
         rerouteSpy.and.callFake(function(event) {
             planetRouterEvent = event;
         });

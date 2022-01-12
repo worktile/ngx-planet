@@ -9,8 +9,8 @@ declare const window: any;
 export interface GlobalPlanet {
     apps: { [key: string]: PlanetApplicationRef };
     portalApplication?: PlanetPortalApplication;
-    applicationLoader?: PlanetApplicationLoader;
-    applicationService?: PlanetApplicationService;
+    applicationLoader: PlanetApplicationLoader;
+    applicationService: PlanetApplicationService;
 }
 
 export const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
@@ -31,7 +31,7 @@ export function defineApplication(name: string, options: BootstrapAppModule | Bo
     globalPlanet.apps[name] = appRef;
 }
 
-export function getPlanetApplicationRef(appName: string): PlanetApplicationRef {
+export function getPlanetApplicationRef(appName: string): PlanetApplicationRef | null {
     if (globalPlanet && globalPlanet.apps && globalPlanet.apps[appName]) {
         return globalPlanet.apps[appName];
     } else {
@@ -40,11 +40,13 @@ export function getPlanetApplicationRef(appName: string): PlanetApplicationRef {
 }
 
 export function setPortalApplicationData<T>(data: T) {
-    globalPlanet.portalApplication.data = data;
+    if (globalPlanet.portalApplication) {
+        globalPlanet.portalApplication.data = data;
+    }
 }
 
 export function getPortalApplicationData<TData>(): TData {
-    return globalPlanet.portalApplication.data as TData;
+    return globalPlanet.portalApplication?.data as TData;
 }
 
 export function setApplicationLoader(loader: PlanetApplicationLoader) {

@@ -5,7 +5,7 @@ export function roundNumber(minNum: number, maxNum?: number): number {
         case 1:
             return parseInt((Math.random() * minNum + 1) as any, 10);
         case 2:
-            return parseInt((Math.random() * (maxNum - minNum + 1) + minNum) as any, 10);
+            return parseInt((Math.random() * (maxNum! - minNum + 1) + minNum) as any, 10);
         default:
             return 0;
     }

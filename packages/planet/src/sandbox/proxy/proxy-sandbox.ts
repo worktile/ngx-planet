@@ -7,9 +7,9 @@ import { Sandbox, SandboxOptions } from '../sandbox';
 export class ProxySandbox extends Sandbox {
     public running = false;
 
-    public global: Global;
+    public global!: Global;
 
-    public rewriteVariables: PropertyKey[];
+    public rewriteVariables!: PropertyKey[];
 
     private patchHandlers: SandboxPatchHandler[] = [];
 
@@ -37,7 +37,7 @@ export class ProxySandbox extends Sandbox {
     }
 
     private getPatchRewriteVariables() {
-        return this.patchHandlers.reduce((pre, cur) => {
+        return this.patchHandlers.reduce<string[]>((pre, cur) => {
             return [...pre, ...(cur.rewrite ? Object.keys(cur.rewrite) : [])];
         }, []);
     }

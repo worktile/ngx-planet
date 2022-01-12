@@ -81,7 +81,7 @@ export function bind(fn: any, context: any) {
     if (Symbol.hasInstance) {
         Object.defineProperty(bound, Symbol.hasInstance, {
             configurable: true,
-            value(instance) {
+            value(instance: any) {
                 const op = fn.prototype;
                 return isObject(op) || typeof op === 'function' ? instance instanceof fn : false;
             }
@@ -92,7 +92,7 @@ export function bind(fn: any, context: any) {
 
 export function createFakeObject(target: Record<PropertyKey, any>, writableKeys?: PropertyKey[]) {
     const fakeObject = {};
-    const propertyMap = {};
+    const propertyMap: Record<string, string | boolean> = {};
     const storageBox = Object.create(null);
     const propertyNames = Object.getOwnPropertyNames(target);
     const def = (p: string) => {

@@ -16,7 +16,7 @@ export function hashCode(str: string): number {
     return hash;
 }
 
-export function getHTMLElement(selector: string | HTMLElement): HTMLElement {
+export function getHTMLElement(selector: string | HTMLElement): HTMLElement | null {
     if (selector instanceof HTMLElement) {
         return selector;
     } else {
@@ -24,9 +24,9 @@ export function getHTMLElement(selector: string | HTMLElement): HTMLElement {
     }
 }
 
-export function getTagNameByTemplate(template: string) {
+export function getTagNameByTemplate(template: string): string {
     const element = createElementByTemplate(template);
-    return element ? element.nodeName : null;
+    return element ? element.nodeName : '';
 }
 
 export function createElementByTemplate(template: string) {
@@ -34,7 +34,7 @@ export function createElementByTemplate(template: string) {
         return null;
     }
     const element = document.createRange().createContextualFragment(template).firstChild;
-    if (element.nodeType === ELEMENT_NODE_TYPE) {
+    if (element && element.nodeType === ELEMENT_NODE_TYPE) {
         return element as HTMLElement;
     } else {
         throw new Error(`invalid template '${template}'`);

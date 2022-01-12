@@ -22,7 +22,7 @@ import { setDebugFactory } from './debug';
     providedIn: 'root'
 })
 export class Planet {
-    private get planetApplicationLoader() {
+    private get planetApplicationLoader(): PlanetApplicationLoader {
         return getApplicationLoader();
     }
 
@@ -42,7 +42,7 @@ export class Planet {
         return this.planetApplicationLoader.appsLoadingStart;
     }
 
-    private subscription: Subscription;
+    private subscription?: Subscription;
 
     constructor(
         private injector: Injector,
@@ -89,13 +89,13 @@ export class Planet {
     }
 
     start() {
-        this.subscription = this.router.events
+        this.subscription = (this.router.events as Observable<RouterEvent>)
             .pipe(
                 filter(event => {
                     return event instanceof NavigationEnd;
                 }),
-                map((event: NavigationEnd) => {
-                    return event.urlAfterRedirects || event.url;
+                map(event => {
+                    return (event as NavigationEnd).urlAfterRedirects || event.url;
                 }),
                 startWith(location.pathname),
                 distinctUntilChanged()
@@ -108,6 +108,6 @@ export class Planet {
     }
 
     stop() {
-        this.subscription.unsubscribe();
+        this.subscription?.unsubscribe();
     }
 }
