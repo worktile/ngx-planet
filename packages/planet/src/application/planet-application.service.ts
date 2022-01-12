@@ -58,7 +58,7 @@ export class PlanetApplicationService {
         }
     }
 
-    getAppsByMatchedUrl<TExtra>(url: string): PlanetApplication<TExtra>[] {
+    getAppsByMatchedUrl<TExtra = unknown>(url: string): PlanetApplication<TExtra>[] {
         return this.getApps().filter(app => {
             if (app.routerPathPrefix instanceof RegExp) {
                 return app.routerPathPrefix.test(url);

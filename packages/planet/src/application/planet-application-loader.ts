@@ -38,7 +38,7 @@ export interface AppStatusChangeEvent {
 export class PlanetApplicationLoader {
     private firstLoad = true;
 
-    private startRouteChangeEvent: PlanetRouterEvent;
+    private startRouteChangeEvent!: PlanetRouterEvent;
 
     private options: PlanetOptions;
 
@@ -188,7 +188,9 @@ export class PlanetApplicationLoader {
                                     appStatus === ApplicationStatus.loadError
                                 ) {
                                     debug(
-                                        `app(${app.name}) status is ${ApplicationStatus[appStatus]}, start load assets`
+                                        `app(${app.name}) status is ${
+                                            ApplicationStatus[appStatus as ApplicationStatus]
+                                        }, start load assets`
                                     );
                                     hasAppsNeedLoadingAssets = true;
                                     return this.ngZone.runOutsideAngular(() => {
@@ -215,7 +217,7 @@ export class PlanetApplicationLoader {
                                             );
                                             this.showApp(app);
                                             const appRef = getPlanetApplicationRef(app.name);
-                                            appRef.navigateByUrl(event.url);
+                                            appRef?.navigateByUrl(event.url);
                                             this.setAppStatus(app, ApplicationStatus.active);
                                             this.setLoadingDone();
                                             return of(app);
@@ -235,16 +237,18 @@ export class PlanetApplicationLoader {
                                             debug(`[routeChange] app(${app.name}) is active, do nothings`);
                                             const appRef = getPlanetApplicationRef(app.name);
                                             // Backwards compatibility sub app use old version which has not getCurrentRouterStateUrl
-                                            const currentUrl = appRef.getCurrentRouterStateUrl
+                                            const currentUrl = appRef?.getCurrentRouterStateUrl
                                                 ? appRef.getCurrentRouterStateUrl()
                                                 : '';
                                             if (currentUrl !== event.url) {
-                                                appRef.navigateByUrl(event.url);
+                                                appRef?.navigateByUrl(event.url);
                                             }
                                             return of(app);
                                         } else {
                                             debug(
-                                                `[routeChange] app(${app.name}) status is ${ApplicationStatus[appStatus]}`
+                                                `[routeChange] app(${app.name}) status is ${
+                                                    ApplicationStatus[appStatus as ApplicationStatus]
+                                                }`
                                             );
                                             return this.getAppStatusChange$(app).pipe(
                                                 take(1),
@@ -298,7 +302,7 @@ export class PlanetApplicationLoader {
             .subscribe();
     }
 
-    private startLoadAppAssets(app: PlanetApplication) {
+    private startLoadAppAssets(app: PlanetApplication): Observable<PlanetApplication> {
         if (this.inProgressAppAssetsLoads.get(app.name)) {
             return this.inProgressAppAssetsLoads.get(app.name);
         } else {
@@ -325,7 +329,7 @@ export class PlanetApplicationLoader {
 
     private hideApp(planetApp: PlanetApplication) {
         const appRef = getPlanetApplicationRef(planetApp.name);
-        const appRootElement = document.querySelector(appRef.selector || planetApp.selector);
+        const appRootElement = document.querySelector(appRef?.selector || (planetApp.selector as string));
         if (appRootElement) {
             appRootElement.setAttribute('style', 'display:none;');
         }
@@ -333,7 +337,7 @@ export class PlanetApplicationLoader {
 
     private showApp(planetApp: PlanetApplication) {
         const appRef = getPlanetApplicationRef(planetApp.name);
-        const appRootElement = document.querySelector(appRef.selector || planetApp.selector);
+        const appRootElement = document.querySelector(appRef?.selector || (planetApp.selector as string));
         if (appRootElement) {
             appRootElement.setAttribute('style', '');
         }
@@ -345,9 +349,9 @@ export class PlanetApplicationLoader {
             appRef.destroy();
         }
         const container = getHTMLElement(planetApp.hostParent);
-        const appRootElement = container.querySelector((appRef && appRef.selector) || planetApp.selector);
+        const appRootElement = container?.querySelector((appRef && appRef.selector) || (planetApp.selector as string));
         if (appRootElement) {
-            container.removeChild(appRootElement);
+            container?.removeChild(appRootElement);
         }
     }
 
@@ -362,12 +366,12 @@ export class PlanetApplicationLoader {
             const container = getHTMLElement(app.hostParent);
             let appRootElement: HTMLElement;
             if (container) {
-                appRootElement = container.querySelector(appRef.selector || app.selector);
+                appRootElement = container.querySelector(appRef.selector || app.selector!)!;
                 if (!appRootElement) {
                     if (appRef.template) {
-                        appRootElement = createElementByTemplate(appRef.template);
+                        appRootElement = createElementByTemplate(appRef.template)!;
                     } else {
-                        appRootElement = document.createElement(app.selector);
+                        appRootElement = document.createElement(app.selector!);
                     }
                     appRootElement.setAttribute('style', 'display:none;');
                     if (app.hostClass) {
@@ -381,7 +385,7 @@ export class PlanetApplicationLoader {
             }
             let result = appRef.bootstrap(this.portalApp);
             // Backwards compatibility promise for bootstrap
-            if (result['then']) {
+            if ((result as any)['then']) {
                 result = from(result) as Observable<PlanetApplicationRef>;
             }
             return result.pipe(
@@ -452,7 +456,7 @@ export class PlanetApplicationLoader {
     private preloadApps(activeApps?: PlanetApplication[]) {
         setTimeout(() => {
             const toPreloadApps = this.planetApplicationService.getAppsToPreload(
-                activeApps ? activeApps.map(item => item.name) : null
+                activeApps ? activeApps.map(item => item.name) : undefined
             );
             debug(`start preload apps: ${this.getAppNames(toPreloadApps)}`);
             const loadApps$ = toPreloadApps.map(preloadApp => {
@@ -490,7 +494,7 @@ export class PlanetApplicationLoader {
         this.routeChange$.next(event);
     }
 
-    private preloadInternal(app: PlanetApplication, immediate?: boolean): Observable<PlanetApplicationRef> {
+    private preloadInternal(app: PlanetApplication, immediate?: boolean): Observable<PlanetApplicationRef | null> {
         const status = this.appsStatus.get(app);
         if (!status || status === ApplicationStatus.loadError) {
             debug(`preload app(${app.name}), status is empty, start to load assets`);

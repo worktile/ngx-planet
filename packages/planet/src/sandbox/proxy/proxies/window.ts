@@ -29,7 +29,7 @@ function isConstructor(fn: () => void | FunctionConstructor) {
     const fp = fn.prototype;
     const hasConstructor = fp && fp.constructor === fn && Object.getOwnPropertyNames(fp).length > 1;
     const functionStr = !hasConstructor && fn.toString();
-    return hasConstructor || /^function\s+[A-Z]/.test(functionStr) || /^class\b/.test(functionStr);
+    return hasConstructor || /^function\s+[A-Z]/.test(functionStr as string) || /^class\b/.test(functionStr as string);
 }
 
 const unscopables = {
@@ -97,7 +97,7 @@ export class ProxyWindow {
                 whitelistVariables.includes(key) ? window : receiver ? receiver : target,
                 key
             );
-            if (isNonWriteableValue(desc)) {
+            if (desc && isNonWriteableValue(desc)) {
                 if (!Object.is(value, desc.value)) {
                     return false;
                 } else {
@@ -138,7 +138,7 @@ export class ProxyWindow {
     private createDeleteProperty() {
         return (target: Window, p: PropertyKey) => {
             if (hasOwnProp(target, p)) {
-                delete target[p];
+                delete (target as any)[p];
                 if (this.sandbox.running && this.definedVariables.has(p)) {
                     this.definedVariables.delete(p);
                 }

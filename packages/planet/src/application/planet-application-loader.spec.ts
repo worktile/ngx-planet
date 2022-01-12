@@ -405,7 +405,7 @@ describe('PlanetApplicationLoader', () => {
 
         const app1Host = document.querySelector(app1.selector);
         planetApplicationLoader.reroute({ url: '/app2/dashboard' });
-        expect(app1Host.getAttribute('style')).toContain('display:none;');
+        expect(app1Host!.getAttribute('style')).toContain('display:none;');
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(7);
 
         tick();
@@ -732,7 +732,7 @@ describe('PlanetApplicationLoader', () => {
                 name: 'app100',
                 switchMode: SwitchModes.coexist,
                 routerPathPrefix: '',
-                hostParent: undefined
+                hostParent: ''
             });
             expect(result).toEqual(true);
         });

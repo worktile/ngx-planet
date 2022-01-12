@@ -6,15 +6,15 @@ export interface SandboxOptions {
 }
 
 export abstract class Sandbox {
-    options: SandboxOptions;
+    options!: SandboxOptions;
 
-    global: Global;
+    global!: Global;
 
     abstract start(): void;
 
     abstract destroy(): void;
 
     execScript(code: string, url = '') {
-        execScript(code, url, this.global, this.options.strictGlobal);
+        execScript(code, url, this.global, !!this.options.strictGlobal);
     }
 }

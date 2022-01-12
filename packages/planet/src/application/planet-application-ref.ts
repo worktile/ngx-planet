@@ -13,7 +13,7 @@ export interface BootstrapOptions {
     bootstrap: BootstrapAppModule;
 }
 
-export type BootstrapAppModule = (portalApp?: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
+export type BootstrapAppModule = (portalApp: PlanetPortalApplication) => Promise<NgModuleRef<any> | undefined | null>;
 
 export type PlantComponentFactory = <TData, TComp>(
     componentName: string,
@@ -21,13 +21,13 @@ export type PlantComponentFactory = <TData, TComp>(
 ) => PlanetComponentRef<TComp>;
 
 export class PlanetApplicationRef {
-    public appModuleRef: NgModuleRef<any>;
-    public template: string;
-    private innerSelector: string;
+    public appModuleRef?: NgModuleRef<any>;
+    public template?: string;
+    private innerSelector?: string;
     private name: string;
-    private portalApp: PlanetPortalApplication;
-    private appModuleBootstrap: (app: PlanetPortalApplication) => Promise<NgModuleRef<any>>;
-    private componentFactory: PlantComponentFactory;
+    private portalApp!: PlanetPortalApplication;
+    private appModuleBootstrap?: BootstrapAppModule;
+    private componentFactory?: PlantComponentFactory;
 
     public get selector() {
         return this.innerSelector;
@@ -37,19 +37,19 @@ export class PlanetApplicationRef {
         return !!this.appModuleRef;
     }
 
-    public get ngZone(): NgZone {
-        return this.appModuleRef.injector.get(NgZone);
+    public get ngZone(): NgZone | undefined {
+        return this.appModuleRef?.injector.get(NgZone);
     }
 
     public get sandbox(): Sandbox {
         return getSandboxInstance();
     }
 
-    constructor(name: string, options: BootstrapOptions) {
+    constructor(name: string, options?: BootstrapOptions) {
         this.name = name;
         if (options) {
             this.template = options.template;
-            this.innerSelector = this.template ? getTagNameByTemplate(this.template) : null;
+            this.innerSelector = this.template ? getTagNameByTemplate(this.template) : '';
             this.appModuleBootstrap = options.bootstrap;
         }
         // This is a hack, since NgZone doesn't allow you to configure the property that identifies your zone.
@@ -62,15 +62,15 @@ export class PlanetApplicationRef {
 
     // 子应用路由变化后同步修改 portal 的 Route
     private syncPortalRouteWhenNavigationEnd() {
-        const router = this.appModuleRef.injector.get(Router);
+        const router = this.appModuleRef?.injector.get(Router);
         if (router) {
             router.events.subscribe(event => {
                 if (event instanceof NavigationEnd) {
-                    this.ngZone.onStable
+                    this.ngZone?.onStable
                         .asObservable()
                         .pipe(take(1))
                         .subscribe(() => {
-                            this.portalApp.router.navigateByUrl(event.url);
+                            this.portalApp.router!.navigateByUrl(event.url);
                         });
                 }
             });
@@ -84,7 +84,7 @@ export class PlanetApplicationRef {
         this.portalApp = app;
         return from(
             this.appModuleBootstrap(app).then(appModuleRef => {
-                this.appModuleRef = appModuleRef;
+                this.appModuleRef = appModuleRef!;
                 this.appModuleRef.instance.appName = this.name;
                 this.syncPortalRouteWhenNavigationEnd();
                 return this;
@@ -93,17 +93,17 @@ export class PlanetApplicationRef {
     }
 
     getRouter() {
-        return this.appModuleRef.injector.get(Router);
+        return this.appModuleRef?.injector.get(Router);
     }
 
     getCurrentRouterStateUrl() {
-        return this.getRouter().routerState.snapshot.url;
+        return this.getRouter()?.routerState.snapshot.url;
     }
 
     navigateByUrl(url: string): void {
         const router = this.getRouter();
-        this.ngZone.run(() => {
-            router.navigateByUrl(url);
+        this.ngZone?.run(() => {
+            router?.navigateByUrl(url);
         });
     }
 
@@ -125,7 +125,7 @@ export class PlanetApplicationRef {
                 this.sandbox.destroy();
             }
             this.appModuleRef.destroy();
-            delete this.appModuleRef;
+            this.appModuleRef = undefined;
         }
     }
 }

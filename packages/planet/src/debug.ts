@@ -32,7 +32,7 @@ export interface Debug {
 /**
  * Debug factory for debug module
  */
-let _debugFactory: Debug;
+let _debugFactory: Debug | undefined;
 let _debuggerMap: Record<string, Debugger> = {};
 
 export function createDebug(namespace: string): Debugger {
@@ -57,7 +57,7 @@ export function setDebugFactory(debug: Debug) {
 }
 
 export function clearDebugFactory() {
-    setDebugFactory(undefined);
+    _debugFactory = undefined;
     _debuggerMap = {};
 }
 

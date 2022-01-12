@@ -37,7 +37,7 @@ export class ProxyDocument {
                     newValue = bind(value, document);
                 }
                 const desc = Object.getOwnPropertyDescriptor(target, p);
-                if (isNonWriteableValue(desc)) {
+                if (desc && isNonWriteableValue(desc)) {
                     if (!Object.is(newValue, desc.value)) {
                         return value;
                     }
@@ -55,7 +55,7 @@ export class ProxyDocument {
     private createSetter() {
         return (target: any, p: PropertyKey, value: any, receiver: any) => {
             const desc = Object.getOwnPropertyDescriptor(whitelist.includes(p) ? document : receiver || target, p);
-            if (isNonWriteableValue(desc)) {
+            if (desc && isNonWriteableValue(desc)) {
                 if (Object.is(value, desc.value)) {
                     return true;
                 } else {

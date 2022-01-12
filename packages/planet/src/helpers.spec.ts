@@ -153,7 +153,7 @@ describe('helpers', () => {
 
         it('should get tagName when template is empty', () => {
             const tagName = getTagNameByTemplate(``);
-            expect(tagName).toBe(null);
+            expect(tagName).toBe('');
         });
     });
 
