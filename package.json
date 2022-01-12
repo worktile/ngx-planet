@@ -37,7 +37,7 @@
     "e2e": "ng e2e",
     "release": "wpm release",
     "// release": "standard-version",
-    "pub-only": "cd dist/planet && npm publish --access=public",
+    "pub-only": "npm publish dist/planet --access=public",
     "pub": "wpm publish && npm run pub-only",
     "contributors:init": "all-contributors init",
     "contributors:add": "all-contributors add",
