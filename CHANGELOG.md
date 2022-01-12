@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.1.1](https://github.com/worktile/ngx-planet/compare/12.1.0...12.1.1) (2022-01-12)
+
+
+### Bug Fixes
+
+* **app-loader:** load assets error will cause other preloaded apps to fail to bootstrap [#214](https://github.com/worktile/ngx-planet/issues/214) ([609b65d](https://github.com/worktile/ngx-planet/commit/609b65d9808c08208b6d9165f3ccef5a2c73e111))
+* can not reload component without refresh page ([8a9b352](https://github.com/worktile/ngx-planet/commit/8a9b352f98e1b59e9f756615f1652b915369a762))
+
+
+### Features
+
+* **planet:** update type of BootstrapAppModule for ts strict mode #OSP-248 ([2473004](https://github.com/worktile/ngx-planet/commit/2473004b111bc1fac9d531c88f6bec35f73fa603)), closes [#OSP-248](https://github.com/worktile/ngx-planet/issues/OSP-248)
+
+
+
 # [12.1.0](https://github.com/worktile/ngx-planet/compare/12.0.0...12.1.0) (2021-09-29)
 
 
