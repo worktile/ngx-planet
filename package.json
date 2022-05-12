@@ -11,6 +11,11 @@
     "ngx micro front-end",
     "ngx planet"
   ],
+  "engines": {
+    "node": "^14.15.0 || >=16.10.0",
+    "npm": ">=7.0.0",
+    "yarn": "Please use npm instead of yarn to install dependencies"
+  },
   "scripts": {
     "ng": "ng",
     "// start": "run app1 and app2 use webpack dev-server",
@@ -74,8 +79,8 @@
     "@types/debug": "^4.1.5",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
-    "@docgeni/cli": "1.0.0-beta.7",
-    "@docgeni/template": "1.0.0-beta.7",
+    "@docgeni/cli": "1.2.0-next.14",
+    "@docgeni/template": "1.2.0-next.14",
     "@types/node": "^12.11.1",
     "@worktile/planet-postcss-prefixwrap": "1.19.10",
     "@worktile/pkg-manager": "0.0.1-beta.1",
