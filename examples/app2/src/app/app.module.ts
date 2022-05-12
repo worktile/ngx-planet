@@ -73,7 +73,6 @@ const routers: Route[] = [
         TasksComponent,
         ViewComponent
     ],
-    entryComponents: [AppRootComponent, ProjectDetailComponent],
     imports: [
         CommonModule,
         BrowserAnimationsModule,

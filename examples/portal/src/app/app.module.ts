@@ -54,8 +54,7 @@ import { AppOverlay } from './overlay';
         DemoCommonModule
     ],
     providers: [AppRootContext, OVERLAY_PROVIDER, { provide: Overlay, useClass: AppOverlay }],
-    bootstrap: [AppComponent],
-    entryComponents: [ADetailComponent]
+    bootstrap: [AppComponent]
 })
 export class AppModule {
     constructor(iconRegistry: ThyIconRegistry, domSanitizer: DomSanitizer) {

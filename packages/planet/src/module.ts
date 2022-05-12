@@ -5,7 +5,6 @@ import { EmptyComponent } from './empty/empty.component';
 
 @NgModule({
     declarations: [EmptyComponent],
-    entryComponents: [EmptyComponent],
     imports: [HttpClientModule],
     providers: [],
     exports: [HttpClientModule, EmptyComponent]

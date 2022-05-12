@@ -15,7 +15,6 @@ export class App1ProjectsComponent {}
 
 @NgModule({
     declarations: [App1ProjectsComponent],
-    entryComponents: [App1ProjectsComponent],
     imports: [RouterModule.forChild([])],
     providers: [
         PlanetComponentLoader,

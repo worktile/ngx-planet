@@ -36,7 +36,6 @@ import { SharedModule } from './shared.module';
         OverlayModule
     ],
     providers: [OVERLAY_PROVIDER, { provide: Overlay, useClass: AppOverlay }],
-    entryComponents: [App1DetailComponent, ProjectsDialogComponent],
     bootstrap: [AppRootComponent]
 })
 export class AppModule {

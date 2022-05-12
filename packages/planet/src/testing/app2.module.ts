@@ -7,7 +7,6 @@ export const app2Name = 'app2';
 
 @NgModule({
     declarations: [],
-    entryComponents: [],
     imports: [RouterModule.forChild([])],
     providers: [
         PlanetComponentLoader,

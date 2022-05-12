@@ -30,13 +30,6 @@
             "codeCoverage": true,
             "codeCoverageExclude": ["packages/planet/src/testing/**/*", "packages/planet/src/sandbox/**/*"]
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["packages/planet/tsconfig.lib.json", "packages/planet/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     },
@@ -69,9 +62,7 @@
             "tsConfig": "examples/portal/src/tsconfig.app.json",
             "assets": ["examples/portal/src/favicon.ico", "examples/portal/src/assets"],
             "styles": ["examples/portal/src/styles.scss", "examples/portal/src/reboot.scss"],
-            "extractCss": true,
             "scripts": [],
-            "aot": true,
             "optimization": false
           },
           "configurations": {
@@ -85,7 +76,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -131,13 +121,6 @@
             "scripts": [],
             "assets": ["examples/portal/src/favicon.ico", "examples/portal/src/assets"]
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["examples/portal/src/tsconfig.app.json", "examples/portal/src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     },
@@ -166,7 +149,8 @@
             "styles": ["examples/app1/src/styles.scss"],
             "scripts": [],
             "vendorChunk": false,
-            "optimization": false
+            "buildOptimizer": true,
+            "optimization": true
           },
           "configurations": {
             "production": {
@@ -174,7 +158,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -233,13 +217,6 @@
             "scripts": [],
             "assets": ["examples/app1/src/favicon.ico", "examples/app1/src/assets"]
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["examples/app1/tsconfig.app.json", "examples/app1/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     },
@@ -266,11 +243,7 @@
             "tsConfig": "examples/app2/tsconfig.app.json",
             "assets": ["examples/app2/src/favicon.ico", "examples/app2/src/assets"],
             "styles": ["examples/app2/src/styles.scss"],
-            "scripts": [],
-            "vendorChunk": false,
-            "aot": true,
-            "extractCss": true,
-            "optimization": false
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -283,11 +256,9 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
                 {
@@ -303,8 +274,7 @@
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "app2:build",
-            "port": 3002,
-            "vendorChunk": false
+            "port": 3002
           },
           "configurations": {
             "production": {
@@ -329,13 +299,6 @@
             "scripts": [],
             "assets": ["examples/app2/src/favicon.ico", "examples/app2/src/assets"]
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["examples/app2/tsconfig.app.json", "examples/app2/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
         }
       }
     },
@@ -354,13 +317,6 @@
             "production": {
               "devServerTarget": "app1:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "examples/app1-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
           }
         }
       }
