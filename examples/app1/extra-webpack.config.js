@@ -7,6 +7,9 @@ module.exports = {
         runtimeChunk: false
     },
     plugins: [new WebpackAssetsManifest()],
+    output: {
+        publicPath: '/static/app1'
+    },
     module: {
         rules: [
             {

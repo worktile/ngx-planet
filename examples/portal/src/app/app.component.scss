@@ -1,3 +1,5 @@
+@use 'ngx-tethys/styles/variables.scss';
+
 $app-nav-width: 70px;
 $app-nav-bg-color: #48525c;
 
@@ -22,21 +24,21 @@ $app-nav-bg-color: #48525c;
     .nav-link {
         opacity: 0.8;
         min-width: $app-nav-width;
-        color: $white;
+        color: variables.$white;
         height: $app-nav-width;
         text-align: center;
         display: flex;
         align-items: center;
         .thy-icon {
-            color: $white;
-            font-size: $font-size-xlg;
+            color: variables.$white;
+            font-size: variables.$font-size-xlg;
         }
         &.active,
         &:hover {
             background: rgb(57, 65, 76);
-            color: $white;
+            color: variables.$white;
             .thy-icon {
-                color: $white;
+                color: variables.$white;
             }
         }
     }

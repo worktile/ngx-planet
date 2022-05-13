@@ -1,14 +1,8 @@
-$layout-content-background: #fff;
-$primary: #348fe4;
+@use 'ngx-tethys/styles/variables.scss' with (
+    $layout-content-background: #fff,
+);
+@use 'ngx-tethys/styles/index.scss';
 
-$btn-border-radius: 4px;
-$btn-border-radius-lg: 4px;
-$btn-border-radius-sm: 4px;
-$btn-border-radius-xs: 4px;
+@use './app/app.component.scss';
 
-@import 'ngx-tethys/styles/variables.scss';
-@import 'ngx-tethys/styles/index.scss';
-
-@import './app/app.component.scss';
-
-@import '../../common/section-card/section-card.component.scss';
+@use '../../common/section-card/section-card.component.scss';

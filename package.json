@@ -58,12 +58,13 @@
     "@angular/compiler": "~13.3.6",
     "@angular/core": "~13.3.6",
     "@angular/forms": "~13.3.6",
+    "@angular/material": "^13.3.7",
     "@angular/platform-browser": "~13.3.6",
     "@angular/platform-browser-dynamic": "~13.3.6",
     "@angular/router": "~13.3.6",
     "bootstrap": "4.5.0",
     "date-fns": "^2.16.1",
-    "ngx-tethys": "12.0.0-next.0",
+    "ngx-tethys": "13.0.0-next.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"
@@ -76,15 +77,14 @@
     "@angular/language-service": "~13.3.6",
     "@commitlint/cli": "^7.5.2",
     "@commitlint/config-conventional": "^7.5.0",
+    "@docgeni/cli": "1.2.0-next.14",
+    "@docgeni/template": "1.2.0-next.14",
     "@types/debug": "^4.1.5",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
-    "@docgeni/cli": "1.2.0-next.14",
-    "@docgeni/template": "1.2.0-next.14",
     "@types/node": "^12.11.1",
-    "@worktile/planet-postcss-prefixwrap": "1.19.10",
     "@worktile/pkg-manager": "0.0.1-beta.1",
-    "postcss-prefixwrap": "1.22.2",
+    "@worktile/planet-postcss-prefixwrap": "1.19.10",
     "all-contributors-cli": "^6.6.0",
     "autoprefixer": "^10.2.5",
     "conventional-changelog-cli": "^2.0.12",
@@ -99,6 +99,7 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "ng-packagr": "^13.3.1",
     "npm-run-all": "^4.1.5",
+    "postcss-prefixwrap": "1.22.2",
     "prettier": "^1.16.4",
     "pretty-quick": "^1.10.0",
     "protractor": "~7.0.0",
@@ -109,7 +110,8 @@
     "webpack-assets-manifest": "^5.1.0"
   },
   "resolutions": {
-    "webpack": "^5.70.0"
+    "webpack": "^5.70.0",
+    "sass": "^1.51.0"
   },
   "husky": {
     "hooks": {
