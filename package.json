@@ -64,7 +64,7 @@
     "@angular/router": "~13.3.6",
     "bootstrap": "4.5.0",
     "date-fns": "^2.16.1",
-    "ngx-tethys": "13.0.0-next.3",
+    "ngx-tethys": "13.0.0-next.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"
