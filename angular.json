@@ -70,9 +70,7 @@
             "assets": ["examples/portal/src/favicon.ico", "examples/portal/src/assets"],
             "styles": ["examples/portal/src/styles.scss", "examples/portal/src/reboot.scss"],
             "extractCss": true,
-            "scripts": [],
-            "aot": true,
-            "optimization": false
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -191,12 +189,14 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": false,
-              "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "extractCss": true,
+              "namedChunks": true,
+              "aot": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false
             }
           },
           "defaultConfiguration": "development"
@@ -266,11 +266,7 @@
             "tsConfig": "examples/app2/tsconfig.app.json",
             "assets": ["examples/app2/src/favicon.ico", "examples/app2/src/assets"],
             "styles": ["examples/app2/src/styles.scss"],
-            "scripts": [],
-            "vendorChunk": false,
-            "aot": true,
-            "extractCss": true,
-            "optimization": false
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -296,6 +292,16 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractCss": true,
+              "aot": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "namedChunks": true
             }
           }
         },
@@ -309,8 +315,12 @@
           "configurations": {
             "production": {
               "browserTarget": "app2:build:production"
+            },
+            "development": {
+              "browserTarget": "app2:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

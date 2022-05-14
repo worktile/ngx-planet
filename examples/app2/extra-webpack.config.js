@@ -5,6 +5,9 @@ module.exports = {
     optimization: {
         runtimeChunk: false
     },
+    output: {
+        // jsonpFunction: "app2"
+    },
     plugins: [new WebpackAssetsManifest()],
     module: {
         rules: [
