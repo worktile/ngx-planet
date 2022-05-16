@@ -30,6 +30,13 @@
             "codeCoverage": true,
             "codeCoverageExclude": ["packages/planet/src/testing/**/*", "packages/planet/src/sandbox/**/*"]
           }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["packages/planet/tsconfig.lib.json", "packages/planet/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
+          }
         }
       }
     },
@@ -62,8 +69,7 @@
             "tsConfig": "examples/portal/src/tsconfig.app.json",
             "assets": ["examples/portal/src/favicon.ico", "examples/portal/src/assets"],
             "styles": ["examples/portal/src/styles.scss", "examples/portal/src/reboot.scss"],
-            "scripts": [],
-            "optimization": false
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -121,6 +127,13 @@
             "scripts": [],
             "assets": ["examples/portal/src/favicon.ico", "examples/portal/src/assets"]
           }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["examples/portal/src/tsconfig.app.json", "examples/portal/src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
+          }
         }
       }
     },
@@ -147,10 +160,7 @@
             "tsConfig": "examples/app1/tsconfig.app.json",
             "assets": ["examples/app1/src/favicon.ico", "examples/app1/src/assets"],
             "styles": ["examples/app1/src/styles.scss"],
-            "scripts": [],
-            "vendorChunk": false,
-            "buildOptimizer": true,
-            "optimization": true
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -158,7 +168,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "2mb"
+                  "maximumError": "1mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -175,12 +185,13 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": false,
-              "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "aot": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false
             }
           },
           "defaultConfiguration": "development"
@@ -259,6 +270,7 @@
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
+              "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
                 {
@@ -267,6 +279,16 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+
+              "aot": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "namedChunks": true
             }
           }
         },
@@ -279,8 +301,12 @@
           "configurations": {
             "production": {
               "browserTarget": "app2:build:production"
+            },
+            "development": {
+              "browserTarget": "app2:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

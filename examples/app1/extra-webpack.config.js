@@ -8,7 +8,7 @@ module.exports = {
     },
     plugins: [new WebpackAssetsManifest()],
     output: {
-        publicPath: '/static/app1'
+        publicPath: '/static/app1/'
     },
     module: {
         rules: [

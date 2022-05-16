@@ -29,6 +29,10 @@ const routers: Route[] = [
                 pathMatch: 'full'
             },
             {
+                path: 'users',
+                loadChildren: () => import('./user/user.module').then(mod => mod.UserModule)
+            },
+            {
                 path: 'projects',
                 component: ProjectListComponent
             },
