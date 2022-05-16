@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { EmptyComponent } from './empty.component';
 
 @Component({
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'empty-component-basic',
     template: '<empty-component></empty-component>'
 })

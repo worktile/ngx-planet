@@ -6,6 +6,7 @@ import { PlanetApplicationLoader } from '../application/planet-application-loade
 export const app1Name = 'app1';
 
 @Component({
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app1-projects',
     template: `
         projects is work

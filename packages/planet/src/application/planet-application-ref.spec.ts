@@ -8,6 +8,7 @@ import { PlanetApplicationRef } from './planet-application-ref';
 import { RouterTestingModule } from '@angular/router/testing';
 
 @Component({
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-root',
     template: `
         <router-outlet></router-outlet>

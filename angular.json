@@ -32,10 +32,9 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": ["packages/planet/tsconfig.lib.json", "packages/planet/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": ["packages/planet/**/*.ts", "packages/planet/**/*.html"]
           }
         }
       }
@@ -129,10 +128,9 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": ["examples/portal/src/tsconfig.app.json", "examples/portal/src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": ["examples/portal/src/**/*.ts", "examples/portal/src/**/*.html"]
           }
         }
       }
@@ -228,6 +226,12 @@
             "scripts": [],
             "assets": ["examples/app1/src/favicon.ico", "examples/app1/src/assets"]
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["examples/app1//**/*.ts", "examples/app1//**/*.html"]
+          }
         }
       }
     },
@@ -283,7 +287,6 @@
             "development": {
               "optimization": false,
               "sourceMap": true,
-
               "aot": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -325,6 +328,12 @@
             "scripts": [],
             "assets": ["examples/app2/src/favicon.ico", "examples/app2/src/assets"]
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["examples/app2//**/*.ts", "examples/app2//**/*.html"]
+          }
         }
       }
     },
@@ -350,6 +359,7 @@
   },
   "defaultProject": "portal",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }
