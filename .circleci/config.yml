@@ -13,5 +13,6 @@ jobs:
                   key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
                   paths:
                       - 'node_modules'
+            - run: npm run lint
             - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
             - run: npm run report-coverage
