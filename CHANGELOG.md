@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="13.0.0"></a>
+# [13.0.0](https://github.com/worktile/ngx-planet/compare/12.1.2...13.0.0) (2022-05-16)
+
+
+
 <a name="12.1.2"></a>
 ## [12.1.2](https://github.com/worktile/ngx-planet/compare/12.1.0...12.1.2) (2022-01-12)
 
