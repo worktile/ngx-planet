@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file. See [standa
 <a name="14.0.0"></a>
 # [14.0.0](https://github.com/worktile/ngx-planet/compare/14.0.0-next.1...14.0.0) (2022-08-23)
 
-
+- build: upgrade Angular to 14
 
 <a name="14.0.0-next.1"></a>
 # [14.0.0-next.1](https://github.com/worktile/ngx-planet/compare/14.0.0-next.0...14.0.0-next.1) (2022-08-16)
