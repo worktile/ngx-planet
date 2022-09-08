@@ -82,7 +82,7 @@ export class AppComponent implements OnInit {
                 resourcePathPrefix: '/static/app2/',
                 preload: settings.app2.preload,
                 switchMode: settings.app2.switchMode,
-                sandbox: true,
+                // sandbox: true, // 沙箱隔离开启后懒加载报错
                 stylePrefix: 'app2',
                 // prettier-ignore
                 scripts: [

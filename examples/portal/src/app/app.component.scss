@@ -21,7 +21,7 @@ $app-nav-bg-color: #48525c;
         border-right: none;
     }
 
-    .nav-link {
+    .thy-nav-item {
         opacity: 0.8;
         min-width: $app-nav-width;
         color: variables.$white;
@@ -29,9 +29,11 @@ $app-nav-bg-color: #48525c;
         text-align: center;
         display: flex;
         align-items: center;
+        justify-content: center;
         .thy-icon {
             color: variables.$white;
             font-size: variables.$font-size-xlg;
+            margin-left: -2px;
         }
         &.active,
         &:hover {

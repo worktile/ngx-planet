@@ -15,7 +15,7 @@ import { ThyIconModule } from 'ngx-tethys/icon';
 
 import { DemoCommonModule } from '@demo/common';
 import { NgxPlanetModule } from 'ngx-planet';
-import { ThyLabelModule } from 'ngx-tethys';
+import { ThyTagModule } from 'ngx-tethys/tag';
 
 @NgModule({
     declarations: [],
@@ -33,6 +33,7 @@ import { ThyLabelModule } from 'ngx-tethys';
         ThyNavModule,
         ThyInputModule,
         ThyIconModule,
+        ThyTagModule,
         DemoCommonModule,
         NgxPlanetModule
     ],
@@ -50,7 +51,7 @@ import { ThyLabelModule } from 'ngx-tethys';
         ThyNavModule,
         ThyInputModule,
         ThyIconModule,
-        ThyLabelModule,
+        ThyTagModule,
         DemoCommonModule,
         NgxPlanetModule
     ],
