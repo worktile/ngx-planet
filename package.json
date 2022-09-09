@@ -51,7 +51,7 @@
     "contributors:generate": "all-contributors generate",
     "ngcc": "ngcc",
     "start:docs": "docgeni serve --port 4900",
-    "build:docs": "docgeni build --prod"
+    "build:docs": "docgeni build --configuration production"
   },
   "dependencies": {
     "@angular/animations": "^14.1.2",
