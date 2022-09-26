@@ -82,7 +82,7 @@
     "@angular/cli": "^14.1.2",
     "@angular/compiler-cli": "^14.1.2",
     "@angular/language-service": "^14.1.2",
-    "@commitlint/cli": "^7.5.2",
+    "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^7.5.0",
     "@docgeni/cli": "1.2.0-next.14",
     "@docgeni/template": "1.2.0-next.14",
