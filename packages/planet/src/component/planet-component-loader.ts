@@ -1,5 +1,5 @@
-import { Injectable, ApplicationRef, NgModuleRef, NgZone, ElementRef, Inject } from '@angular/core';
-import { ComponentType, DomPortalOutlet, ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+import { Injectable, ApplicationRef, NgModuleRef, NgZone, ElementRef, Inject, Injector } from '@angular/core';
+import { ComponentType, DomPortalOutlet, ComponentPortal } from '@angular/cdk/portal';
 import { PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
 import { PlantComponentConfig } from './plant-component.config';
@@ -50,13 +50,16 @@ export class PlanetComponentLoader {
         }
     }
 
-    private createInjector<TData>(
-        appModuleRef: NgModuleRef<any>,
-        componentRef: PlanetComponentRef<TData>
-    ): PortalInjector {
-        const injectionTokens = new WeakMap<any, any>([[PlanetComponentRef, componentRef]]);
-        const defaultInjector = appModuleRef.injector;
-        return new PortalInjector(defaultInjector, injectionTokens);
+    private createInjector<TData>(appModuleRef: NgModuleRef<any>, componentRef: PlanetComponentRef<TData>): Injector {
+        return Injector.create({
+            providers: [
+                {
+                    provide: PlanetComponentRef,
+                    useValue: componentRef
+                }
+            ],
+            parent: appModuleRef.injector
+        });
     }
 
     private getContainerElement(config: PlantComponentConfig): HTMLElement {
