@@ -12,6 +12,7 @@ import { ThyIconModule } from 'ngx-tethys/icon';
 import { ThyInputModule } from 'ngx-tethys/input';
 import { ThyFormModule } from 'ngx-tethys/form';
 import { ThySelectModule } from 'ngx-tethys/select';
+import { ThyTabsModule } from 'ngx-tethys/tabs';
 
 import { DemoCommonModule } from '@demo/common';
 import { NgxPlanetModule } from 'ngx-planet';
@@ -32,6 +33,7 @@ import { NgxPlanetModule } from 'ngx-planet';
         ThyInputModule,
         ThyFormModule,
         ThySelectModule,
+        ThyTabsModule,
         DemoCommonModule,
         NgxPlanetModule
     ],
@@ -49,6 +51,7 @@ import { NgxPlanetModule } from 'ngx-planet';
         ThyInputModule,
         ThyFormModule,
         ThySelectModule,
+        ThyTabsModule,
         DemoCommonModule,
         NgxPlanetModule
     ],
