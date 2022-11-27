@@ -122,12 +122,13 @@ export class PlanetComponentLoader {
         const componentRef = componentFactory.create(injector);
         appRef.attachView(componentRef.hostView);
         const componentRootNode = this.getComponentRootNode(componentRef);
-        this.insertComponentRootNodeToContainer(container, componentRootNode, config.wrapperClass);
+        this.insertComponentRootNodeToContainer(container, componentRootNode, config.hostClass || config.wrapperClass);
         if (config.initialState) {
             Object.assign(componentRef.instance, config.initialState);
         }
         plantComponentRef.componentInstance = componentRef.instance;
         plantComponentRef.componentRef = componentRef;
+        plantComponentRef.hostElement = componentRootNode;
         plantComponentRef.dispose = () => {
             if (appRef.viewCount > 0) {
                 appRef.detachView(componentRef.hostView);
@@ -190,10 +191,7 @@ export class PlanetComponentLoader {
             }),
             shareReplay()
         );
-        // result.subscribe().add(() => {
-        //     console.log(`termdown`);
-        //     debugger;
-        // });
+        result.subscribe();
         return result;
     }
 }

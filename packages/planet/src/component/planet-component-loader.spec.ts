@@ -80,6 +80,7 @@ describe('PlanetComponentLoader', () => {
         }).toThrowError(`config 'container' cannot be null`);
 
         loadApp1ComponentAndExpectHtml(app2ModuleRef);
+        tick();
     }));
 
     it('should app2 load app1 component with wrapperClass', fakeAsync(() => {
@@ -89,8 +90,8 @@ describe('PlanetComponentLoader', () => {
         tick();
         registerAppComponents(app1ModuleRef);
         loadApp1Component(app2ModuleRef, { wrapperClass: 'custom-wrapper' }).subscribe(componentRef => {
-            expect(componentRef.wrapperElement.classList.contains('planet-component-wrapper')).toBeTruthy();
-            expect(componentRef.wrapperElement.classList.contains('custom-wrapper')).toBeTruthy();
+            expect(componentRef.hostElement.classList.contains('planet-component-wrapper')).toBeTruthy();
+            expect(componentRef.hostElement.classList.contains('custom-wrapper')).toBeTruthy();
         });
     }));
 
@@ -108,10 +109,10 @@ describe('PlanetComponentLoader', () => {
         });
         tick();
         registerAppComponents(app1ModuleRef);
-        loadApp1Component(app2ModuleRef, { wrapperClass: 'custom-wrapper' }).subscribe(componentRef => {
-            expect(componentRef.wrapperElement.classList.contains('planet-component-wrapper')).toBeTruthy();
-            expect(componentRef.wrapperElement.classList.contains('custom-wrapper')).toBeTruthy();
-            expect(componentRef.wrapperElement.classList.contains('app1-prefix')).toBeTruthy();
+        loadApp1Component(app2ModuleRef, { hostClass: 'custom-host' }).subscribe(componentRef => {
+            expect(componentRef.hostElement.classList.contains('planet-component-wrapper')).toBeTruthy();
+            expect(componentRef.hostElement.classList.contains('custom-host')).toBeTruthy();
+            expect(componentRef.hostElement.classList.contains('app1-prefix')).toBeTruthy();
         });
     }));
 
@@ -140,7 +141,7 @@ describe('PlanetComponentLoader', () => {
         tick();
         registerAppComponents(app1ModuleRef);
         loadApp1Component(app2ModuleRef).subscribe(componentRef => {
-            const parent = componentRef.wrapperElement.parentElement;
+            const parent = componentRef.hostElement.parentElement;
             componentRef.dispose();
             expect(parent.innerHTML).toEqual('');
         });
@@ -166,8 +167,8 @@ function loadApp1Component(appModuleRef: NgModuleRef<any>, config?: Partial<Plan
 
 function loadApp1ComponentAndExpectHtml(app2ModuleRef: NgModuleRef<any>) {
     loadApp1Component(app2ModuleRef).subscribe(componentRef => {
-        expect(componentRef.wrapperElement.outerHTML).toEqual(
-            `<div class="planet-component-wrapper" planet-inline=""><app1-projects> projects is work </app1-projects></div>`
+        expect(componentRef.hostElement.outerHTML).toEqual(
+            `<app1-projects class="planet-component-wrapper" planet-inline=""> projects is work </app1-projects>`
         );
     });
 }
