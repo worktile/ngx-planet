@@ -98,6 +98,7 @@
     "autoprefixer": "^10.2.5",
     "conventional-changelog-cli": "^2.0.12",
     "coveralls": "^3.0.6",
+    "cpx": "^1.5.0",
     "eslint": "^8.18.0",
     "husky": "^2.4.1",
     "jasmine-core": "~3.6.0",
@@ -115,8 +116,8 @@
     "standard-version": "^8.0.1",
     "ts-node": "~7.0.0",
     "typescript": "~4.6.4",
-    "webpack-assets-manifest": "^5.1.0",
-    "webpack": "5.73.0"
+    "webpack": "5.73.0",
+    "webpack-assets-manifest": "^5.1.0"
   },
   "husky": {
     "hooks": {
