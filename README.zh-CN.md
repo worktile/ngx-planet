@@ -39,7 +39,7 @@ $ yarn add @worktile/planet
 
 ## Dependencies
 
-- `@angular/cdk`, 确保安装了 Angular 官方的 CDK `npm i @angular/cdk --save` 或者 `yarn add @angular/cdk`
+- 在 `<= 14.0.0`，确保安装了 Angular 官方的 CDK `npm i @angular/cdk --save` 或者 `yarn add @angular/cdk`
 
 
 ## 示例

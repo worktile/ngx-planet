@@ -2,7 +2,7 @@ import { ViewContainerRef, ElementRef } from '@angular/core';
 
 export class PlantComponentConfig<TData = any> {
     /** Load target container */
-    container: HTMLElement | ElementRef<HTMLElement | any>;
+    container: HTMLElement | ElementRef<HTMLElement | any> | Comment;
     /**
      * Wrapper class of plant component
      * @deprecated

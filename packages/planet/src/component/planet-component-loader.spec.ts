@@ -17,6 +17,7 @@ import {
 } from '../global-planet';
 import { Planet } from 'ngx-planet/planet';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PlanetComponentRef } from './planet-component-ref';
 
 describe('PlanetComponentLoader', () => {
     let compiler: Compiler;
@@ -93,6 +94,39 @@ describe('PlanetComponentLoader', () => {
             expect(componentRef.hostElement.classList.contains('planet-component-wrapper')).toBeTruthy();
             expect(componentRef.hostElement.classList.contains('custom-wrapper')).toBeTruthy();
         });
+    }));
+
+    it('should app2 load app1 component with hostClass', fakeAsync(() => {
+        // mock app1 and app2 bootstrap
+        const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
+        const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+        tick();
+        registerAppComponents(app1ModuleRef);
+        loadApp1Component(app2ModuleRef, { hostClass: 'custom-host-class' }).subscribe(componentRef => {
+            expect(componentRef.hostElement.classList.contains('custom-host-class')).toBeTruthy();
+        });
+    }));
+
+    it('should load app1 component with comment container', fakeAsync(() => {
+        // mock app1 and app2 bootstrap
+        const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
+        const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+        tick();
+        registerAppComponents(app1ModuleRef);
+        const componentLoader = app2ModuleRef.injector.get(PlanetComponentLoader);
+        const host = createComponentHostElement();
+        const comment = document.createComment('mock ng container');
+        host.appendChild(comment);
+        let componentRef: PlanetComponentRef;
+        componentLoader
+            .load(app1Name, 'app1-projects', Object.assign({}, { container: comment }))
+            .subscribe(_componentRef => {
+                componentRef = _componentRef;
+            });
+        tick(20);
+        expect(host.innerHTML).toContain(
+            `<app1-projects class="planet-component-wrapper" planet-inline=""> projects is work </app1-projects>`
+        );
     }));
 
     it('should app2 load app1 component with stylePrefix of app1', fakeAsync(() => {

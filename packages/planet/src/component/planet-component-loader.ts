@@ -32,8 +32,6 @@ export interface PlanetComponent<T = any> {
     providedIn: 'root'
 })
 export class PlanetComponentLoader {
-    private domPortalOutletCache = new WeakMap<any, any>();
-
     private get applicationLoader() {
         return getApplicationLoader();
     }

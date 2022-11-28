@@ -40,7 +40,7 @@ $ yarn add @worktile/planet
 
 ## Dependencies
 
-- `@angular/cdk`, you should install `@angular/cdk`
+- `<= 14.0.0` you should install `@angular/cdk`
 
 ## Demo
 

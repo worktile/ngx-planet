@@ -11,6 +11,8 @@ import {
     Output,
     EventEmitter
 } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { PlanetComponentLoader } from './planet-component-loader';
 import { PlanetComponentRef } from './planet-component-ref';
 
@@ -29,8 +31,9 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
 
     private componentRef: PlanetComponentRef<unknown>;
 
+    private destroyed$ = new Subject<void>();
+
     constructor(
-        private viewContainerRef: ViewContainerRef,
         private elementRef: ElementRef,
         private planetComponentLoader: PlanetComponentLoader,
         private ngZone: NgZone
@@ -38,6 +41,7 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
 
     ngOnChanges(changes: SimpleChanges) {
         if (this.planetComponentOutlet && !changes.planetComponentOutlet.isFirstChange()) {
+            console.log(this.planetComponentOutlet);
             this.loadComponent();
         }
     }
@@ -54,6 +58,7 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
                     container: this.elementRef.nativeElement,
                     initialState: this.planetComponentOutletInitialState
                 })
+                .pipe(takeUntil(this.destroyed$))
                 .subscribe(componentRef => {
                     this.componentRef = componentRef;
                     this.ngZone.run(() => {
@@ -67,10 +72,11 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
 
     ngOnDestroy(): void {
         this.clear();
+        this.destroyed$.complete();
     }
 
     clear() {
-        this.viewContainerRef.clear();
         this.componentRef?.dispose();
+        this.destroyed$.next();
     }
 }
