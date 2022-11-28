@@ -32,7 +32,7 @@ export class PlanetComponentOutletBasicTestComponent implements OnInit {
             planetComponentOutlet="project1"
             planetComponentOutletApp="app2"
             planetComponentOutletInitialState="{ term: 'From Test' }"
-            (planetComponentLoad)="componentLoad($event)"
+            (planetComponentLoaded)="componentLoaded($event)"
         ></ng-container>
     `
 })
@@ -41,7 +41,7 @@ export class PlanetComponentOutletGeneralTestComponent {
 
     constructor() {}
 
-    componentLoad($event: PlanetComponentRef) {
+    componentLoaded($event: PlanetComponentRef) {
         this.planetComponentRef = $event;
     }
 }
