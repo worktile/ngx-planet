@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NgxPlanetModule } from '../module';
 
 import { Component, DebugElement, OnInit } from '@angular/core';
@@ -23,6 +23,27 @@ export class PlanetComponentOutletBasicTestComponent implements OnInit {
 
     // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
     ngOnInit(): void {}
+}
+
+@Component({
+    selector: 'planet-component-outlet-general-test',
+    template: `
+        <ng-container
+            planetComponentOutlet="project1"
+            planetComponentOutletApp="app2"
+            planetComponentOutletInitialState="{ term: 'From Test' }"
+            (planetComponentLoad)="componentLoad($event)"
+        ></ng-container>
+    `
+})
+export class PlanetComponentOutletGeneralTestComponent {
+    planetComponentRef: PlanetComponentRef;
+
+    constructor() {}
+
+    componentLoad($event: PlanetComponentRef) {
+        this.planetComponentRef = $event;
+    }
 }
 
 class MockPlanetComponentLoader {
@@ -60,12 +81,11 @@ class MockPlanetComponentLoader {
 
 describe('planet-component-outlet', () => {
     let mockComponentLoader: MockPlanetComponentLoader;
-    let fixture: ComponentFixture<PlanetComponentOutletBasicTestComponent>;
 
     beforeEach(() => {
         mockComponentLoader = new MockPlanetComponentLoader();
         TestBed.configureTestingModule({
-            declarations: [PlanetComponentOutletBasicTestComponent],
+            declarations: [PlanetComponentOutletBasicTestComponent, PlanetComponentOutletGeneralTestComponent],
             imports: [NgxPlanetModule],
             providers: [
                 {
@@ -76,35 +96,58 @@ describe('planet-component-outlet', () => {
         }).compileComponents();
     });
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(PlanetComponentOutletBasicTestComponent);
-        fixture.detectChanges();
+    describe('structural-directive', () => {
+        let fixture: ComponentFixture<PlanetComponentOutletBasicTestComponent>;
+        beforeEach(() => {
+            fixture = TestBed.createComponent(PlanetComponentOutletBasicTestComponent);
+            fixture.detectChanges();
+        });
+
+        it(`should load app2's project1 success`, () => {
+            const rootElement = fixture.debugElement.nativeElement as HTMLElement;
+            mockComponentLoader.mockLoadComponentRefSuccess();
+            expect(rootElement.innerHTML).toContain(`<project1>app2</project1>`);
+        });
+
+        it(`should dispose component when ngOnDestroy`, () => {
+            const rootElement = fixture.debugElement.nativeElement as HTMLElement;
+            mockComponentLoader.mockLoadComponentRefSuccess();
+            expect(rootElement.innerHTML).toContain(`<project1>app2</project1>`);
+            fixture.destroy();
+            expect(mockComponentLoader.disposed).toBe(true);
+            expect(rootElement.innerHTML).not.toContain(`<project1>app2</project1>`);
+        });
+
+        it(`should load component when name change`, () => {
+            const rootElement = fixture.debugElement.nativeElement as HTMLElement;
+            mockComponentLoader.mockLoadComponentRefSuccess();
+            expect(rootElement.innerHTML).toContain(`<project1>app2</project1>`);
+            fixture.componentInstance.componentName = 'other-component';
+            fixture.detectChanges();
+            expect(mockComponentLoader.disposed).toBe(true);
+            mockComponentLoader.mockLoadComponentRefSuccess();
+            expect(rootElement.innerHTML).not.toContain(`<project1>app2</project1>`);
+            expect(rootElement.innerHTML).toContain(`<other-component>app2</other-component>`);
+        });
     });
 
-    it(`should load app2's project1 success`, () => {
-        const rootElement = fixture.debugElement.nativeElement as HTMLElement;
-        mockComponentLoader.mockLoadComponentRefSuccess();
-        expect(rootElement.innerHTML).toContain(`<project1>app2</project1>`);
-    });
+    describe('general-directive', () => {
+        let fixture: ComponentFixture<PlanetComponentOutletGeneralTestComponent>;
+        beforeEach(() => {
+            fixture = TestBed.createComponent(PlanetComponentOutletGeneralTestComponent);
+            fixture.detectChanges();
+        });
 
-    it(`should dispose component when ngOnDestroy`, () => {
-        const rootElement = fixture.debugElement.nativeElement as HTMLElement;
-        mockComponentLoader.mockLoadComponentRefSuccess();
-        expect(rootElement.innerHTML).toContain(`<project1>app2</project1>`);
-        fixture.destroy();
-        expect(mockComponentLoader.disposed).toBe(true);
-        expect(rootElement.innerHTML).not.toContain(`<project1>app2</project1>`);
-    });
+        it(`should load app2's project1 success`, () => {
+            const rootElement = fixture.debugElement.nativeElement as HTMLElement;
+            mockComponentLoader.mockLoadComponentRefSuccess();
+            expect(rootElement.innerHTML).toContain(`<project1>app2</project1>`);
+        });
 
-    it(`should load component when name change`, () => {
-        const rootElement = fixture.debugElement.nativeElement as HTMLElement;
-        mockComponentLoader.mockLoadComponentRefSuccess();
-        expect(rootElement.innerHTML).toContain(`<project1>app2</project1>`);
-        fixture.componentInstance.componentName = 'other-component';
-        fixture.detectChanges();
-        expect(mockComponentLoader.disposed).toBe(true);
-        mockComponentLoader.mockLoadComponentRefSuccess();
-        expect(rootElement.innerHTML).not.toContain(`<project1>app2</project1>`);
-        expect(rootElement.innerHTML).toContain(`<other-component>app2</other-component>`);
+        it(`should call planetComponentLoad with planetComponentRef`, fakeAsync(() => {
+            mockComponentLoader.mockLoadComponentRefSuccess();
+            tick();
+            expect(fixture.componentInstance.planetComponentRef).toBe(mockComponentLoader.mockPlanetComponentRef);
+        }));
     });
 });

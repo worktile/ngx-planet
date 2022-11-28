@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs/operators';
                     <!-- <ng-container
                         planetComponentOutlet="project1"
                         planetComponentOutletApp="app2"
-                        (planetComponentLoad)="planetComponentLoad()"
+                        (planetComponentLoad)="planetComponentLoad($event)"
                     ></ng-container> -->
                 </thy-tab>
                 <thy-tab id="planet-component-loader" thyTitle="PlanetComponentLoader">
@@ -69,7 +69,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             });
     }
 
-    planetComponentLoad = () => {
+    planetComponentLoad = ($event: PlanetComponentRef) => {
         this.loadingDone = true;
     };
 

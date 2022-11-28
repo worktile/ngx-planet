@@ -27,9 +27,9 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
 
     @Input() planetComponentOutletInitialState: any;
 
-    @Output() planetComponentLoad = new EventEmitter();
+    @Output() planetComponentLoad = new EventEmitter<PlanetComponentRef>();
 
-    private componentRef: PlanetComponentRef<unknown>;
+    private componentRef: PlanetComponentRef;
 
     private destroyed$ = new Subject<void>();
 
@@ -41,7 +41,6 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
 
     ngOnChanges(changes: SimpleChanges) {
         if (this.planetComponentOutlet && !changes.planetComponentOutlet.isFirstChange()) {
-            console.log(this.planetComponentOutlet);
             this.loadComponent();
         }
     }
@@ -63,7 +62,7 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
                     this.componentRef = componentRef;
                     this.ngZone.run(() => {
                         Promise.resolve().then(() => {
-                            this.planetComponentLoad.emit();
+                            this.planetComponentLoad.emit(this.componentRef);
                         });
                     });
                 });
