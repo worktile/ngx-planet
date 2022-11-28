@@ -1,5 +1,17 @@
-import { Injectable, ApplicationRef, NgModuleRef, NgZone, ElementRef, Inject, Injector } from '@angular/core';
-import { ComponentType, DomPortalOutlet, ComponentPortal } from '@angular/cdk/portal';
+import {
+    Injectable,
+    ApplicationRef,
+    NgModuleRef,
+    NgZone,
+    ElementRef,
+    Inject,
+    Injector,
+    createComponent,
+    EnvironmentInjector,
+    Type,
+    ComponentRef,
+    EmbeddedViewRef
+} from '@angular/core';
 import { PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
 import { PlantComponentConfig } from './plant-component.config';
@@ -13,15 +25,13 @@ const componentWrapperClass = 'planet-component-wrapper';
 
 export interface PlanetComponent<T = any> {
     name: string;
-    component: ComponentType<T>;
+    component: Type<T>;
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class PlanetComponentLoader {
-    private domPortalOutletCache = new WeakMap<any, DomPortalOutlet>();
-
     private get applicationLoader() {
         return getApplicationLoader();
     }
@@ -74,20 +84,26 @@ export class PlanetComponentLoader {
         }
     }
 
-    private createWrapperElement(config: PlantComponentConfig) {
-        const container = this.getContainerElement(config);
-        const element = this.document.createElement('div');
+    private insertComponentRootNodeToContainer(
+        container: HTMLElement,
+        componentRootNode: HTMLElement,
+        hostClass: string
+    ) {
         const subApp = this.applicationService.getAppByName(this.ngModuleRef.instance.appName);
-        element.classList.add(componentWrapperClass);
-        element.setAttribute('planet-inline', '');
-        if (config.wrapperClass) {
-            element.classList.add(config.wrapperClass);
+        componentRootNode.classList.add(componentWrapperClass);
+        componentRootNode.setAttribute('planet-inline', '');
+        if (hostClass) {
+            componentRootNode.classList.add(hostClass);
         }
         if (subApp && subApp.stylePrefix) {
-            element.classList.add(subApp.stylePrefix);
+            componentRootNode.classList.add(subApp.stylePrefix);
         }
-        container.appendChild(element);
-        return element;
+        // container 是注释则在前方插入，否则在元素内部插入
+        if (container.nodeType === 8) {
+            container.parentElement.insertBefore(componentRootNode, container);
+        } else {
+            container.appendChild(componentRootNode);
+        }
     }
 
     private attachComponent<TData>(
@@ -99,27 +115,30 @@ export class PlanetComponentLoader {
         const componentFactoryResolver = appModuleRef.componentFactoryResolver;
         const appRef = this.applicationRef;
         const injector = this.createInjector<TData>(appModuleRef, plantComponentRef);
-        const wrapper = this.createWrapperElement(config);
-        let portalOutlet = this.domPortalOutletCache.get(wrapper);
-        if (portalOutlet) {
-            portalOutlet.detach();
-        } else {
-            portalOutlet = new DomPortalOutlet(wrapper, componentFactoryResolver, appRef, injector);
-            this.domPortalOutletCache.set(wrapper, portalOutlet);
-        }
-        const componentPortal = new ComponentPortal(plantComponent.component, null);
-        const componentRef = portalOutlet.attachComponentPortal<TData>(componentPortal);
+        const container = this.getContainerElement(config);
+        const componentFactory = componentFactoryResolver.resolveComponentFactory(plantComponent.component);
+        const componentRef = componentFactory.create(injector);
+        appRef.attachView(componentRef.hostView);
+        const componentRootNode = this.getComponentRootNode(componentRef);
+        this.insertComponentRootNodeToContainer(container, componentRootNode, config.hostClass || config.wrapperClass);
         if (config.initialState) {
             Object.assign(componentRef.instance, config.initialState);
         }
         plantComponentRef.componentInstance = componentRef.instance;
         plantComponentRef.componentRef = componentRef;
-        plantComponentRef.wrapperElement = wrapper;
+        plantComponentRef.hostElement = componentRootNode;
         plantComponentRef.dispose = () => {
-            this.domPortalOutletCache.delete(wrapper);
-            portalOutlet.dispose();
+            if (appRef.viewCount > 0) {
+                appRef.detachView(componentRef.hostView);
+            }
+            componentRootNode.remove();
         };
         return plantComponentRef;
+    }
+
+    /** Gets the root HTMLElement for an instantiated component. */
+    private getComponentRootNode(componentRef: ComponentRef<any>): HTMLElement {
+        return (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
     }
 
     private registerComponentFactory(componentOrComponents: PlanetComponent | PlanetComponent[]) {
