@@ -5,7 +5,7 @@ export class PlantComponentConfig<TData = any> {
     container: HTMLElement | ElementRef<HTMLElement | any> | Comment;
     /**
      * Wrapper class of plant component
-     * @deprecated
+     * @deprecated please use hostClass
      */
     wrapperClass?: string;
     /**
