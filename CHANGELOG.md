@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [14.1.0](https://github.com/worktile/ngx-planet/compare/14.0.0...14.1.0) (2022-11-28)
+
+
+### Features
+
+* add planetComponentOutlet and refactor attachComponent, remove wrapper element and cdk ([#261](https://github.com/worktile/ngx-planet/issues/261)) ([516ba55](https://github.com/worktile/ngx-planet/commit/516ba55ffaa42de18fb52426682b74c6b9375220))
+
+
+
 <a name="14.0.0"></a>
 # [14.0.0](https://github.com/worktile/ngx-planet/compare/14.0.0-next.1...14.0.0) (2022-08-23)
 
