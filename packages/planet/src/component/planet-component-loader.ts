@@ -112,12 +112,13 @@ export class PlanetComponentLoader {
         config: PlantComponentConfig
     ): PlanetComponentRef<TData> {
         const plantComponentRef = new PlanetComponentRef();
-        const componentFactoryResolver = appModuleRef.componentFactoryResolver;
         const appRef = this.applicationRef;
         const injector = this.createInjector<TData>(appModuleRef, plantComponentRef);
         const container = this.getContainerElement(config);
-        const componentFactory = componentFactoryResolver.resolveComponentFactory(plantComponent.component);
-        const componentRef = componentFactory.create(injector);
+        const componentRef = createComponent(plantComponent.component, {
+            environmentInjector: appModuleRef.injector,
+            elementInjector: injector
+        });
         appRef.attachView(componentRef.hostView);
         const componentRootNode = this.getComponentRootNode(componentRef);
         this.insertComponentRootNodeToContainer(container, componentRootNode, config.hostClass || config.wrapperClass);

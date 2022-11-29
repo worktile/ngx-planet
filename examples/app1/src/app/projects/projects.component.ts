@@ -19,6 +19,7 @@ import { takeUntil } from 'rxjs/operators';
                     <!-- <ng-container
                         planetComponentOutlet="project1"
                         planetComponentOutletApp="app2"
+                        [planetComponentOutletInitialState]="{ search: 'From PlanetComponentOutlet' }"
                         (planetComponentLoaded)="planetComponentLoaded($event)"
                     ></ng-container> -->
                 </thy-tab>

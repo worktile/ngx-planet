@@ -220,9 +220,30 @@ export class AppModule {
         this.planetComponentLoader.register([{ name: 'app1-project-list', component: App1ProjectListComponent }]);
     }
 }
+```
 
-// in other apps
+Load `app1-project-list` component of app1 in other app via `PlanetComponentOutlet`
+
+```html
+<ng-container *planetComponentOutlet="'app1-project-list'; app: 'app1'; initialState: { search: 'xxx' }"></ng-container>
+
+// or 
+<ng-container planetComponentOutlet="app1-project-list"
+              planetComponentOutletApp="app1"
+              [planetComponentOutletInitialState]="{ term: 'xxx' }"
+              (planetComponentLoaded)="planetComponentLoaded($event)">
+</ng-container>
+```
+
+Load `app1-project-list` component of app1 in other app via `PlanetComponentLoader`, must be call `dispose`
+
+```ts
+@Component({
+  ...
+})
 export class OneComponent {
+    private componentRef: PlanetComponentRef;
+
     constructor(private planetComponentLoader: PlanetComponentLoader) {
     }
 
@@ -230,10 +251,15 @@ export class OneComponent {
         this.planetComponentLoader.load('app1', 'app1-project-list', {
             container: this.containerElementRef,
             initialState: {}
+        }).subscribe((componentRef) => { 
+            this.componentRef = componentRef;
         });
     }
-}
 
+    ngOnDestroy() {
+       this.componentRef?.dispose();
+    }
+}
 ```
 
 ## FAQ

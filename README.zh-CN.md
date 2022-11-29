@@ -213,9 +213,29 @@ export class AppModule {
         this.planetComponentLoader.register([{ name: 'app1-project-list', component: App1ProjectListComponent }]);
     }
 }
+```
+通过`PlanetComponentOutlet`渲染`app1`的`app1-project-list`组件
 
-// in other apps
+```html
+<ng-container *planetComponentOutlet="'app1-project-list'; app: 'app1'; initialState: { search: 'xxx' }"></ng-container>
+
+// or 
+<ng-container planetComponentOutlet="app1-project-list"
+              planetComponentOutletApp="app1"
+              [planetComponentOutletInitialState]="{ term: 'xxx' }"
+              (planetComponentLoaded)="planetComponentLoaded($event)">
+</ng-container>
+```
+
+通过`PlanetComponentLoader`渲染`app1`的`app1-project-list`组件，记得要`dispose`销毁。
+
+```ts
+@Component({
+  ...
+})
 export class OneComponent {
+    private componentRef: PlanetComponentRef;
+
     constructor(private planetComponentLoader: PlanetComponentLoader) {
     }
 
@@ -223,10 +243,15 @@ export class OneComponent {
         this.planetComponentLoader.load('app1', 'app1-project-list', {
             container: this.containerElementRef,
             initialState: {}
+        }).subscribe((componentRef) => { 
+            this.componentRef = componentRef;
         });
     }
-}
 
+    ngOnDestroy() {
+       this.componentRef?.dispose();
+    }
+}
 ```
 
 ## FAQ
