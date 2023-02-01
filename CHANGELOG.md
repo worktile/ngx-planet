@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [14.1.1](https://github.com/worktile/ngx-planet/compare/14.1.0...14.1.1) (2023-02-01)
+
+
+### Bug Fixes
+
+* **planet-component:** invoke componentRef's destroy when plantComponentRef dispose ([#270](https://github.com/worktile/ngx-planet/issues/270)) ([73ace3c](https://github.com/worktile/ngx-planet/commit/73ace3c11b3529e8df23ec6c775c94423af35ceb))
+
+
+
 # [14.1.0](https://github.com/worktile/ngx-planet/compare/14.0.0...14.1.0) (2022-11-28)
 
 
