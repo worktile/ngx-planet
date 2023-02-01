@@ -176,8 +176,10 @@ describe('PlanetComponentLoader', () => {
         registerAppComponents(app1ModuleRef);
         loadApp1Component(app2ModuleRef).subscribe(componentRef => {
             const parent = componentRef.hostElement.parentElement;
+            expect(App1ProjectsComponent.state).toEqual('initialized');
             componentRef.dispose();
             expect(parent.innerHTML).toEqual('');
+            expect(App1ProjectsComponent.state).toEqual('destroyed');
         });
     }));
 });

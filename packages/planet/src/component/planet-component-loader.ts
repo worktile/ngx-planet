@@ -132,6 +132,7 @@ export class PlanetComponentLoader {
             if (appRef.viewCount > 0) {
                 appRef.detachView(componentRef.hostView);
             }
+            componentRef?.destroy();
             componentRootNode.remove();
         };
         return plantComponentRef;
