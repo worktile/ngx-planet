@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, NgModule, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { PlanetComponentLoader } from '../component/planet-component-loader';
 import { PlanetApplicationLoader } from '../application/planet-application-loader';
@@ -12,7 +12,17 @@ export const app1Name = 'app1';
         projects is work
     `
 })
-export class App1ProjectsComponent {}
+export class App1ProjectsComponent implements OnDestroy {
+    static state: 'initialized' | 'destroyed' | '' = '';
+
+    constructor() {
+        App1ProjectsComponent.state = 'initialized';
+    }
+
+    ngOnDestroy(): void {
+        App1ProjectsComponent.state = 'destroyed';
+    }
+}
 
 @NgModule({
     declarations: [App1ProjectsComponent],

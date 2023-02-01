@@ -130,6 +130,7 @@ export class PlanetComponentLoader {
         plantComponentRef.hostElement = componentRootNode;
         plantComponentRef.dispose = () => {
             if (appRef.viewCount > 0) {
+                componentRef?.destroy();
                 appRef.detachView(componentRef.hostView);
             }
             componentRootNode.remove();
