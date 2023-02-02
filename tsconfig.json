@@ -10,14 +10,15 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2020",
+    "target": "ES2022",
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2018", "dom"],
     "paths": {
       "@demo/common": ["examples/common"],
       "ngx-planet": ["packages/planet/src/public-api.ts"],
       "ngx-planet/*": ["packages/planet/src/*"]
-    }
+    },
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {}
 }
