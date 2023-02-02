@@ -27,7 +27,7 @@ import { SharedModule } from './shared.module';
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        RouterModule.forRoot(routers, { relativeLinkResolution: 'legacy' }),
+        RouterModule.forRoot(routers, {}),
         // UserModule,
         FormsModule,
         SharedModule,
