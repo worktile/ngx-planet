@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [15.0.0-next.0](https://github.com/worktile/ngx-planet/compare/14.1.1...15.0.0-next.0) (2023-02-02)
+
+
+### Features
+
+* upgrade ng to 15 ([#272](https://github.com/worktile/ngx-planet/issues/272)) ([e6f1978](https://github.com/worktile/ngx-planet/commit/e6f1978c1374088e635fe754f0f9edd822da829c))
+
+
+
 ## [14.1.1](https://github.com/worktile/ngx-planet/compare/14.1.0...14.1.1) (2023-02-01)
 
 
