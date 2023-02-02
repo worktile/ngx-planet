@@ -4,7 +4,6 @@
   "private": false,
   "peerDependencies": {
     "@angular/common": "^15.0.0",
-    "@angular/core": "^15.0.0",
-    "@angular/cdk": "^15.0.0"
+    "@angular/core": "^15.0.0"
   }
 }
