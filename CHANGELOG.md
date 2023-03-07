@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [15.0.0-next.1](https://github.com/worktile/ngx-planet/compare/15.0.0-next.0...15.0.0-next.1) (2023-03-07)
+
+
+### Features
+
+* support standalone component for empty-component and planetComponentOutlet ([a2eacb5](https://github.com/worktile/ngx-planet/commit/a2eacb5d8a3abeb9e2455b0c7a59fb98e16f6bbd))
+
+
+
 # [15.0.0-next.0](https://github.com/worktile/ngx-planet/compare/14.1.1...15.0.0-next.0) (2023-02-02)
 
 
