@@ -17,7 +17,8 @@ import { PlanetComponentLoader } from './planet-component-loader';
 import { PlanetComponentRef } from './planet-component-ref';
 
 @Directive({
-    selector: '[planetComponentOutlet]'
+    selector: '[planetComponentOutlet]',
+    standalone: true
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewInit {

@@ -5,8 +5,8 @@ import { EmptyComponent } from './empty/empty.component';
 import { PlanetComponentOutlet } from './component/planet-component-outlet';
 
 @NgModule({
-    declarations: [EmptyComponent, PlanetComponentOutlet],
-    imports: [HttpClientModule],
+    declarations: [],
+    imports: [HttpClientModule, PlanetComponentOutlet, EmptyComponent],
     providers: [],
     exports: [HttpClientModule, EmptyComponent, PlanetComponentOutlet]
 })
