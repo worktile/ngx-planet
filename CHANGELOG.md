@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [15.0.0](https://github.com/worktile/ngx-planet/compare/15.0.0-next.1...15.0.0) (2023-03-09)
+
+
+### Features
+
+* bump ngx-tethys to ngx-tethys and @angular/* to 15.2.2 ([e2a4c55](https://github.com/worktile/ngx-planet/commit/e2a4c5505316214b5b01c6b6f54e757368136e3d))
+
+
+
 # [15.0.0-next.1](https://github.com/worktile/ngx-planet/compare/15.0.0-next.0...15.0.0-next.1) (2023-03-07)
 
 
