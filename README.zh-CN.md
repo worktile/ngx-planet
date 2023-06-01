@@ -210,11 +210,11 @@ import { PlanetComponentLoader } from "@worktile/planet";
 // in app1
 export class AppModule {
     constructor(private planetComponentLoader: PlanetComponentLoader) {
-        this.planetComponentLoader.register([{ name: 'app1-project-list', component: App1ProjectListComponent }]);
+        this.planetComponentLoader.register([App1ProjectListComponent]);
     }
 }
 ```
-通过`PlanetComponentOutlet`渲染`app1`的`app1-project-list`组件
+通过 `PlanetComponentOutlet` 传入 `app1` 组件的选择器 `app1-project-list` 渲染组件，
 
 ```html
 <ng-container *planetComponentOutlet="'app1-project-list'; app: 'app1'; initialState: { search: 'xxx' }"></ng-container>

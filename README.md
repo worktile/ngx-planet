@@ -217,12 +217,12 @@ import { PlanetComponentLoader } from "@worktile/planet";
 // in app1
 export class AppModule {
     constructor(private planetComponentLoader: PlanetComponentLoader) {
-        this.planetComponentLoader.register([{ name: 'app1-project-list', component: App1ProjectListComponent }]);
+        this.planetComponentLoader.register([App1ProjectListComponent]);
     }
 }
 ```
 
-Load `app1-project-list` component of app1 in other app via `PlanetComponentOutlet`
+Load `app1-project-list` (selector) component of app1 in other app via `PlanetComponentOutlet`
 
 ```html
 <ng-container *planetComponentOutlet="'app1-project-list'; app: 'app1'; initialState: { search: 'xxx' }"></ng-container>

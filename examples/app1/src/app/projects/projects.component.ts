@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
                 <thy-tab id="planet-component-outlet" thyTitle="PlanetComponentOutlet">
                     <ng-container
                         *planetComponentOutlet="
-                            'project1';
+                            'app-project-list';
                             app: 'app2';
                             initialState: { search: 'From PlanetComponentOutlet' }
                         "
@@ -53,7 +53,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     loadManual() {
         this.componentRef?.dispose();
         this.planetComponentLoader
-            .load<{ click: Observable<unknown> }>('app2', 'project1', {
+            .load<{ click: Observable<unknown> }>('app2', 'app-project-list', {
                 container: this.container,
                 initialState: {
                     search: 'From PlanetComponentLoader'
