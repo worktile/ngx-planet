@@ -7,7 +7,7 @@ export const app1Name = 'app1';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
-    selector: 'app1-projects',
+    selector: 'app1-projects,[app1Projects]',
     template: `
         projects is work
     `

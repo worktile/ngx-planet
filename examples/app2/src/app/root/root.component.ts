@@ -23,6 +23,6 @@ export class AppRootComponent implements OnInit {
     constructor(private planetComponentLoader: PlanetComponentLoader) {}
 
     ngOnInit() {
-        this.planetComponentLoader.register([{ name: 'project1', component: ProjectListComponent }]);
+        this.planetComponentLoader.register(ProjectListComponent);
     }
 }

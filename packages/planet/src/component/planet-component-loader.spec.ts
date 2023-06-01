@@ -1,4 +1,4 @@
-import { TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { Compiler, Injector, Type, NgModuleRef } from '@angular/core';
 import { app1Name, App1Module, App1ProjectsComponent } from '../testing/app1.module';
 import { app2Name, App2Module } from '../testing/app2.module';
@@ -105,6 +105,21 @@ describe('PlanetComponentLoader', () => {
         loadApp1Component(app2ModuleRef, { hostClass: 'custom-host-class' }).subscribe(componentRef => {
             expect(componentRef.hostElement.classList.contains('custom-host-class')).toBeTruthy();
         });
+    }));
+
+    it('should app2 load app1 component using the component selector', fakeAsync(() => {
+        const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
+        const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+        app1ModuleRef.injector.get(PlanetComponentLoader).register(App1ProjectsComponent);
+        tick();
+        const callbackSpy = jasmine.createSpy('component loaded', componentRef => {
+            expect(componentRef.hostElement.innerHTML).toContain('projects is work');
+        });
+        app2ModuleRef.injector
+            .get(PlanetComponentLoader)
+            .load(app1Name, 'app1Projects', { container: createComponentHostElement() })
+            .subscribe(callbackSpy);
+        expect(callbackSpy).toHaveBeenCalled();
     }));
 
     it('should load app1 component with comment container', fakeAsync(() => {

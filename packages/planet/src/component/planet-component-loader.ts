@@ -7,26 +7,32 @@ import {
     Inject,
     Injector,
     createComponent,
-    EnvironmentInjector,
     Type,
     ComponentRef,
-    EmbeddedViewRef
+    EmbeddedViewRef,
+    reflectComponentType
 } from '@angular/core';
 import { PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
 import { PlantComponentConfig } from './plant-component.config';
 import { coerceArray } from '../helpers';
-import { map, shareReplay, finalize, debounce, filter, take, delay, delayWhen } from 'rxjs/operators';
-import { of, Observable, interval, timer } from 'rxjs';
+import { map, shareReplay, delayWhen } from 'rxjs/operators';
+import { of, Observable, timer } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { globalPlanet, getApplicationLoader, getApplicationService } from '../global-planet';
 
 const componentWrapperClass = 'planet-component-wrapper';
 
-export interface PlanetComponent<T = any> {
-    name: string;
-    component: Type<T>;
+function isComponentType<T>(component: PlanetComponent<T>): component is Type<T> {
+    return typeof component === 'function' && component.constructor === Function;
 }
+
+export type PlanetComponent<T = unknown> =
+    | {
+          name: string;
+          component: Type<T>;
+      }
+    | Type<T>;
 
 @Injectable({
     providedIn: 'root'
@@ -107,15 +113,15 @@ export class PlanetComponentLoader {
     }
 
     private attachComponent<TData>(
-        plantComponent: PlanetComponent,
-        appModuleRef: NgModuleRef<any>,
+        component: Type<unknown>,
+        appModuleRef: NgModuleRef<unknown>,
         config: PlantComponentConfig
     ): PlanetComponentRef<TData> {
         const plantComponentRef = new PlanetComponentRef();
         const appRef = this.applicationRef;
         const injector = this.createInjector<TData>(appModuleRef, plantComponentRef);
         const container = this.getContainerElement(config);
-        const componentRef = createComponent(plantComponent.component, {
+        const componentRef = createComponent(component, {
             environmentInjector: appModuleRef.injector,
             elementInjector: injector
         });
@@ -148,10 +154,18 @@ export class PlanetComponentLoader {
         this.getPlantAppRef(app).subscribe(appRef => {
             appRef.registerComponentFactory((componentName: string, config: PlantComponentConfig<any>) => {
                 const components = coerceArray(componentOrComponents);
-                const component = components.find(item => item.name === componentName);
-                if (component) {
+                const planetComponent = components.find(item => {
+                    return isComponentType(item)
+                        ? reflectComponentType(item).selector.includes(componentName)
+                        : item.name === componentName;
+                });
+                if (planetComponent) {
                     return this.ngZone.run(() => {
-                        const componentRef = this.attachComponent<any>(component, appRef.appModuleRef, config);
+                        const componentRef = this.attachComponent<any>(
+                            isComponentType(planetComponent) ? planetComponent : planetComponent.component,
+                            appRef.appModuleRef,
+                            config
+                        );
                         return componentRef;
                     });
                 } else {

@@ -48,7 +48,7 @@ export class DashboardComponent implements OnInit {
 
     openApp2Component() {
         this.planetComponentLoader
-            .load('app2', 'project1', {
+            .load('app2', 'app-project-list', {
                 container: this.containerElementRef,
                 initialState: {}
             })
