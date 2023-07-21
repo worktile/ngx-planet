@@ -4,7 +4,11 @@ jobs:
         working_directory: ~/ngx-planet
         docker:
             - image: cimg/node:18.16-browsers
+        environment:
+            - CHROME_BIN: /usr/bin/google-chrome
         steps:
+            -  command: |
+              echo 'export PATH=/path/to/foo/bin:"$PATH"' >> "$BASH_ENV"
             - checkout
             - restore_cache:
                   key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
@@ -13,6 +17,6 @@ jobs:
                   key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
                   paths:
                       - 'node_modules'
-            - run: npm run lint
             - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+            - run: npm run lint
             - run: npm run report-coverage
