@@ -14,5 +14,5 @@ jobs:
                   paths:
                       - 'node_modules'
             - run: npm run lint
-            - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+            - run: npm run test -- --no-watch --no-progress
             - run: npm run report-coverage
