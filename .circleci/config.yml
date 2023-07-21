@@ -7,8 +7,6 @@ jobs:
         environment:
             - CHROME_BIN: /usr/bin/google-chrome
         steps:
-            -  command: |
-              echo 'export PATH=/path/to/foo/bin:"$PATH"' >> "$BASH_ENV"
             - checkout
             - restore_cache:
                   key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
