@@ -1,14 +1,17 @@
 version: 2.1
+orbs:
+    browser-tools: circleci/browser-tools@1.1.0
 jobs:
     build:
         working_directory: ~/ngx-planet
         docker:
             - image: cimg/node:18.16-browsers
         steps:
+            - browser-tools/install-browser-tools
             - checkout
-            - run:
-                  command: |
-                      echo 'chrome $(which google-chrome)'
+            - run: node --version
+                  google-chrome --version
+                  which google-chrome
             - restore_cache:
                   key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
             - run: npm install --force
