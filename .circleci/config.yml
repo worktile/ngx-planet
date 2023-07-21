@@ -3,12 +3,12 @@ jobs:
     build:
         working_directory: ~/ngx-planet
         docker:
-            - image: cimg/node:16.20.1-browsers
+            - image: cimg/node:16.20-browsers
         steps:
             - checkout
             - restore_cache:
                   key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
-            - run: npm install
+            - run: npm install --force
             - save_cache:
                   key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
                   paths:
