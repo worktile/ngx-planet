@@ -3,7 +3,7 @@ jobs:
     build:
         working_directory: ~/ngx-planet
         docker:
-            - image: circleci/node:18-browsers
+            - image: circleci/cimg/node:16.15.0-browsers
         steps:
             - checkout
             - restore_cache:
