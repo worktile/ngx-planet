@@ -3,7 +3,7 @@ jobs:
     build:
         working_directory: ~/ngx-planet
         docker:
-            - image: cimg/node:16.20-browsers
+            - image: cimg/node:18.16-browsers
         steps:
             - checkout
             - restore_cache:
