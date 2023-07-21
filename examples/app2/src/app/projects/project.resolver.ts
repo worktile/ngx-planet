@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import { ProjectService } from './projects.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ProjectResolver implements Resolve<any> {
+export class ProjectResolver {
     constructor(private projectService: ProjectService, private router: Router) {}
 
     resolve(route: ActivatedRouteSnapshot) {
