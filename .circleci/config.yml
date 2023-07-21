@@ -6,6 +6,9 @@ jobs:
             - image: circleci/node:18.16-browsers
         steps:
             - checkout
+            - run:
+                  command: |
+                      echo 'chrome $(which google-chrome)'
             - restore_cache:
                   key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
             - run: npm install --force
