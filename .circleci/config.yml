@@ -9,7 +9,8 @@ jobs:
         steps:
             - browser-tools/install-browser-tools
             - checkout
-            - run: node --version
+            - run: |
+                  node --version
                   google-chrome --version
                   which google-chrome
             - restore_cache:
