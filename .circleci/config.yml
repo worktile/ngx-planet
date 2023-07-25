@@ -7,7 +7,7 @@ jobs:
         docker:
             - image: cimg/node:18.16-browsers
         steps:
-            - browser-tools/install-browser-tools
+            - browser-tools/install-chrome
             - checkout
             - run: |
                   node --version
