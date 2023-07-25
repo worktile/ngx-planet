@@ -336,25 +336,6 @@
           }
         }
       }
-    },
-    "app1-e2e": {
-      "root": "examples/app1-e2e/",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "examples/app1-e2e/protractor.conf.js",
-            "devServerTarget": "app1:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "app1:serve:production"
-            }
-          }
-        }
-      }
     }
   },
   "cli": {
