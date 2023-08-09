@@ -30,6 +30,5 @@ describe('route-redirect', () => {
         const activatedComponent = await harness.navigateByUrl('/');
         expect(activatedComponent).toBeInstanceOf(HelloComponent);
         expect(harness.routeNativeElement?.innerHTML).toContain('hello world');
-        console.log(router.lastSuccessfulNavigation);
     });
 });
