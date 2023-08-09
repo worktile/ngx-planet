@@ -27,6 +27,7 @@ import { AppRootContext, DemoCommonModule, OVERLAY_PROVIDER } from '@demo/common
 import { FormsModule } from '@angular/forms';
 import { Overlay } from '@angular/cdk/overlay';
 import { AppOverlay } from './overlay';
+import { NavigationStart, Router } from '@angular/router';
 
 @NgModule({
     declarations: [AppComponent, AboutComponent, SettingsComponent, ADetailComponent],
@@ -57,7 +58,15 @@ import { AppOverlay } from './overlay';
     bootstrap: [AppComponent]
 })
 export class AppModule {
-    constructor(iconRegistry: ThyIconRegistry, domSanitizer: DomSanitizer) {
+    constructor(iconRegistry: ThyIconRegistry, domSanitizer: DomSanitizer, private router: Router) {
         iconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/sprite.defs.svg'));
+
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+                console.log(
+                    `[Portal] url: ${event.url}, id: ${event.id}, navigationTrigger: ${event.navigationTrigger}`
+                );
+            }
+        });
     }
 }

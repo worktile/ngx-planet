@@ -1,5 +1,5 @@
-import { Component, HostBinding, NgZone } from '@angular/core';
-import { GlobalEventDispatcher } from 'ngx-planet';
+import { Component, HostBinding, NgZone, inject, ChangeDetectorRef, Injectable, OnInit, ViewRef } from '@angular/core';
+import { GlobalEventDispatcher, routeRedirect } from 'ngx-planet';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { UserDetailComponent } from '../user/detail/user-detail.component';
 
@@ -10,6 +10,10 @@ import { UserDetailComponent } from '../user/detail/user-detail.component';
 })
 export class AppActualRootComponent {
     @HostBinding(`class.thy-layout`) isLayout = true;
+
+    redirect = routeRedirect('dashboard');
+
+    constructor() {}
 }
 
 @Component({
