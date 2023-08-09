@@ -17,3 +17,4 @@ export { PlanetComponentRef } from './component/planet-component-ref';
 export { PlanetComponentOutlet } from './component/planet-component-outlet';
 export { PlantComponentConfig } from './component/plant-component.config';
 export * from './empty/empty.component';
+export * from './router/route-redirect';

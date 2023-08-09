@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { routers } from './app.routing';
 import { AppRootComponent, AppActualRootComponent } from './root/root.component';
@@ -39,5 +39,11 @@ import { SharedModule } from './shared.module';
     bootstrap: [AppRootComponent]
 })
 export class AppModule {
-    constructor() {}
+    constructor(private router: Router) {
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+                console.log(`[App1] url: ${event.url}, id: ${event.id}, navigationTrigger: ${event.navigationTrigger}`);
+            }
+        });
+    }
 }
