@@ -10,11 +10,11 @@ export const routers: Route[] = [
         path: 'app1',
         component: AppActualRootComponent,
         children: [
-            {
-                path: '',
-                redirectTo: 'dashboard',
-                pathMatch: 'full'
-            },
+            // {
+            //     path: '',
+            //     redirectTo: 'dashboard',
+            //     pathMatch: 'full'
+            // },
             {
                 path: 'dashboard',
                 component: DashboardComponent

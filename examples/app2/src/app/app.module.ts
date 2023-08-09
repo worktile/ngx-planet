@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { RouterModule, Route } from '@angular/router';
+import { RouterModule, Route, Router, NavigationStart } from '@angular/router';
 import { ProjectListComponent } from './projects/project-list.component';
 import { AppRootComponent, AppActualRootComponent } from './root/root.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -23,11 +23,11 @@ const routers: Route[] = [
         path: 'app2',
         component: AppActualRootComponent,
         children: [
-            {
-                path: '',
-                redirectTo: 'dashboard',
-                pathMatch: 'full'
-            },
+            // {
+            //     path: '',
+            //     redirectTo: 'dashboard',
+            //     pathMatch: 'full'
+            // },
             {
                 path: 'users',
                 loadChildren: () => import('./user/user.module').then(mod => mod.UserModule)
@@ -90,4 +90,12 @@ const routers: Route[] = [
     providers: [OVERLAY_PROVIDER, { provide: Overlay, useClass: AppOverlay }],
     bootstrap: [AppRootComponent]
 })
-export class AppModule {}
+export class AppModule {
+    constructor(private router: Router) {
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+                console.log(`[App2] url: ${event.url}, id: ${event.id}, navigationTrigger: ${event.navigationTrigger}`);
+            }
+        });
+    }
+}
