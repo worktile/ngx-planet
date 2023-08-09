@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [15.1.0](https://github.com/worktile/ngx-planet/compare/15.0.0...15.1.0) (2023-08-09)
+
+
+### Features
+
+* add routeRedirect function redirect to relative url instead of route definition redirectTo ([#291](https://github.com/worktile/ngx-planet/issues/291)) ([16dd203](https://github.com/worktile/ngx-planet/commit/16dd20394ef8c353bf5b0dfaaa79514bb43c5923))
+* planetComponentLoader supports direct register of component types and load with component selector [#286](https://github.com/worktile/ngx-planet/issues/286) ([e10fae4](https://github.com/worktile/ngx-planet/commit/e10fae433932258e2b2bbf5ea059156deb06ed6c))
+
+
+
 # [15.0.0](https://github.com/worktile/ngx-planet/compare/15.0.0-next.1...15.0.0) (2023-03-09)
 
 
