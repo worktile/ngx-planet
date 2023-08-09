@@ -1,5 +1,5 @@
 module.exports = {
-    allowBranch: ['master', 'v0.*'],
+    allowBranch: ['master', 'v*'],
     bumpFiles: ['package.json', 'package-lock.json', 'packages/planet/package.json'],
     tagPrefix: '',
     commitAll: true,
