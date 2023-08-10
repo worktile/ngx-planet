@@ -1,6 +1,6 @@
 {
   "name": "@worktile/planet",
-  "version": "15.1.0",
+  "version": "15.1.1",
   "description": "A powerful, reliable, fully-featured and production ready Micro Frontend library for Angular.",
   "keywords": [
     "micro front-end",

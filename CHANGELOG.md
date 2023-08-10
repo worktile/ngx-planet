@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [15.1.1](https://github.com/worktile/ngx-planet/compare/15.1.0...15.1.1) (2023-08-10)
+
+
+### Features
+
+* add redirectToRoute empty route ([918c026](https://github.com/worktile/ngx-planet/commit/918c026c5bbc6402dc3bb60328a0e904a8dec7cf))
+
+
+
 # [15.1.0](https://github.com/worktile/ngx-planet/compare/15.0.0...15.1.0) (2023-08-09)
 
 
