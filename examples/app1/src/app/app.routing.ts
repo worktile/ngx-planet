@@ -2,7 +2,7 @@ import { InitializedDataResolver } from './services/initialized-data.resolver';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Route } from '@angular/router';
 import { AppActualRootComponent } from './root/root.component';
-import { EmptyComponent } from 'ngx-planet';
+import { EmptyComponent, redirectToRoute } from 'ngx-planet';
 import { ProjectsComponent } from './projects/projects.component';
 
 export const routers: Route[] = [
@@ -10,11 +10,7 @@ export const routers: Route[] = [
         path: 'app1',
         component: AppActualRootComponent,
         children: [
-            // {
-            //     path: '',
-            //     redirectTo: 'dashboard',
-            //     pathMatch: 'full'
-            // },
+            redirectToRoute('dashboard'),
             {
                 path: 'dashboard',
                 component: DashboardComponent

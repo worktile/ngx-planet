@@ -8,7 +8,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProjectDetailComponent } from './projects/detail/detail.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { EmptyComponent, NgxPlanetModule } from 'ngx-planet';
+import { EmptyComponent, NgxPlanetModule, redirectToRoute } from 'ngx-planet';
 import { DemoCommonModule, OVERLAY_PROVIDER } from '@demo/common';
 import { ProjectResolver } from './projects/project.resolver';
 import { TasksComponent } from './projects/tasks/tasks.component';
@@ -23,11 +23,7 @@ const routers: Route[] = [
         path: 'app2',
         component: AppActualRootComponent,
         children: [
-            // {
-            //     path: '',
-            //     redirectTo: 'dashboard',
-            //     pathMatch: 'full'
-            // },
+            redirectToRoute('dashboard'),
             {
                 path: 'users',
                 loadChildren: () => import('./user/user.module').then(mod => mod.UserModule)
@@ -35,6 +31,9 @@ const routers: Route[] = [
             {
                 path: 'projects',
                 component: ProjectListComponent
+                // children: [
+                //     redirectToRoute('./1'),
+                // ]
             },
             {
                 path: 'projects/:id',

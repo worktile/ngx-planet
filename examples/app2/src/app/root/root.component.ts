@@ -11,8 +11,6 @@ export class AppActualRootComponent {
     @HostBinding(`class.thy-layout`) isThyLayout = true;
     @HostBinding(`class.thy-layout--has-sidebar`) isThyHasSidebarLayout = true;
 
-    routeRedirect = routeRedirect('dashboard');
-
     constructor() {}
 }
 
