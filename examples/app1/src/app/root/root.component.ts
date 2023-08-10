@@ -11,8 +11,6 @@ import { UserDetailComponent } from '../user/detail/user-detail.component';
 export class AppActualRootComponent {
     @HostBinding(`class.thy-layout`) isLayout = true;
 
-    redirect = routeRedirect('dashboard');
-
     constructor() {}
 }
 
