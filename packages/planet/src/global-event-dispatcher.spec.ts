@@ -46,7 +46,7 @@ describe('GlobalEventDispatcher', () => {
             .subscribe();
         expect(removeEventListenerSpy).not.toHaveBeenCalled();
         expect(globalEventDispatcher.getSubscriptionCount()).toEqual(1);
-        unsubscribe$.next();
+        unsubscribe$.next(undefined);
         unsubscribe$.complete();
         expect(removeEventListenerSpy).toHaveBeenCalled();
         expect(globalEventDispatcher.getSubscriptionCount()).toEqual(0);

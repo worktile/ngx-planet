@@ -40,7 +40,7 @@ class PlanetApplicationRefFaker {
     }
 
     bootstrap() {
-        this.bootstrap$.next();
+        this.bootstrap$.next(undefined);
         this.bootstrap$.complete();
     }
 
@@ -185,7 +185,7 @@ describe('PlanetApplicationLoader', () => {
             shouldLoadApps: [app1],
             shouldUnloadApps: []
         });
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
 
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(2);
@@ -215,7 +215,7 @@ describe('PlanetApplicationLoader', () => {
         const appsLoadingStartSpy = jasmine.createSpy('apps loading start spy');
         planetApplicationLoader.appsLoadingStart.subscribe(appsLoadingStartSpy);
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
         appStatusChangeFaker.expectFromAssetsLoadedToActive(2, app1RefFaker, app1);
 
@@ -242,7 +242,7 @@ describe('PlanetApplicationLoader', () => {
         });
         expect(planetApplicationLoader.loadingDone).toEqual(true);
 
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
 
         expect(planetApplicationLoader.loadingDone).toEqual(true);
@@ -260,7 +260,7 @@ describe('PlanetApplicationLoader', () => {
         const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
 
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
         flush();
         app1RefFaker.haveBeenBootstrap();
@@ -290,7 +290,7 @@ describe('PlanetApplicationLoader', () => {
 
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
 
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
 
         flush();
@@ -324,7 +324,7 @@ describe('PlanetApplicationLoader', () => {
         const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
 
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
 
         flush();
@@ -360,7 +360,7 @@ describe('PlanetApplicationLoader', () => {
 
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
 
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
 
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(2);
@@ -396,7 +396,7 @@ describe('PlanetApplicationLoader', () => {
 
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
 
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
 
         appStatusChangeFaker.expectFromAssetsLoadedToActive(2, app1RefFaker, app1);
@@ -424,7 +424,7 @@ describe('PlanetApplicationLoader', () => {
         const appStatusChangeFaker = AppStatusChangeFaker.create(planetApplicationLoader);
         const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
         flush();
         app1RefFaker.haveBeenBootstrap();
@@ -481,10 +481,10 @@ describe('PlanetApplicationLoader', () => {
         planetApplicationLoader.reroute({ url: '/app2' });
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(2);
         expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.assetsLoading });
-        loadApp1Assets$.next();
+        loadApp1Assets$.next(undefined);
         loadApp1Assets$.complete();
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(2);
-        loadApp2Assets$.next();
+        loadApp2Assets$.next(undefined);
         loadApp2Assets$.complete();
 
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(3);
@@ -514,7 +514,7 @@ describe('PlanetApplicationLoader', () => {
         expect(appStatusChangeFaker.spy).toHaveBeenCalled();
         expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoading });
 
-        loadApp1Assets$.next();
+        loadApp1Assets$.next(undefined);
         loadApp1Assets$.complete();
 
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(2);
@@ -524,7 +524,7 @@ describe('PlanetApplicationLoader', () => {
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(3);
         expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.assetsLoading });
 
-        loadApp2Assets$.next();
+        loadApp2Assets$.next(undefined);
         loadApp2Assets$.complete();
 
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(4);
@@ -549,7 +549,7 @@ describe('PlanetApplicationLoader', () => {
 
         planetApplicationLoader.reroute({ url: '/app2' });
 
-        loadAppAssets$.next();
+        loadAppAssets$.next(undefined);
         loadAppAssets$.complete();
 
         appStatusChangeFaker.expectFromAssetsLoadedToActive(2, appRefFaker, app2);
@@ -605,7 +605,7 @@ describe('PlanetApplicationLoader', () => {
         expect(appStatusChangeSpy).toHaveBeenCalledTimes(3);
         expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app2, status: ApplicationStatus.assetsLoading });
 
-        loadApp2Assets$.next();
+        loadApp2Assets$.next(undefined);
         loadApp2Assets$.complete();
 
         expect(appStatusChangeSpy).toHaveBeenCalledTimes(4);
@@ -664,7 +664,7 @@ describe('PlanetApplicationLoader', () => {
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(3);
         expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoading });
 
-        loadApp1AginAssets$.next();
+        loadApp1AginAssets$.next(undefined);
         loadApp1AginAssets$.complete();
 
         expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(4);
@@ -777,7 +777,7 @@ describe('PlanetApplicationLoader', () => {
                 status: ApplicationStatus.assetsLoading
             });
 
-            loadApp1Assets$.next();
+            loadApp1Assets$.next(undefined);
             loadApp1Assets$.complete();
 
             // App1 assets loaded
@@ -823,7 +823,7 @@ describe('PlanetApplicationLoader', () => {
             });
 
             // App2 静态资源加载完毕
-            loadApp2Assets$.next();
+            loadApp2Assets$.next(undefined);
             loadApp2Assets$.complete();
 
             // App2 's assets loaded and bootstrapped
@@ -870,7 +870,7 @@ describe('PlanetApplicationLoader', () => {
             planetApplicationLoader.reroute({ url: '/dashboard' });
 
             flush();
-            loadApp1Assets$.next();
+            loadApp1Assets$.next(undefined);
             loadApp1Assets$.complete();
 
             planetApplicationLoader.reroute({ url: '/app1' });
@@ -906,7 +906,7 @@ describe('PlanetApplicationLoader', () => {
             planetApplicationLoader.reroute({ url: '/dashboard' });
 
             flush();
-            loadApp1Assets$.next();
+            loadApp1Assets$.next(undefined);
             loadApp1Assets$.complete();
 
             planetApplicationLoader.reroute({ url: '/app1' });
@@ -960,7 +960,7 @@ describe('PlanetApplicationLoader', () => {
 
             expect(preloadAppSpy).not.toHaveBeenCalled();
 
-            loadAppAssets$.next();
+            loadAppAssets$.next(undefined);
             loadAppAssets$.complete();
 
             ngZone.run(() => {
@@ -1003,7 +1003,7 @@ describe('PlanetApplicationLoader', () => {
             expect(appStatusChangeSpy).toHaveBeenCalledTimes(1);
             expect(appStatusChangeSpy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.assetsLoading });
 
-            loadApp1Assets$.next();
+            loadApp1Assets$.next(undefined);
             loadApp1Assets$.complete();
 
             expect(appStatusChangeSpy).toHaveBeenCalledTimes(2);
@@ -1064,7 +1064,7 @@ describe('PlanetApplicationLoader', () => {
             });
 
             // load app1 asset
-            loadApp1Assets$.next();
+            loadApp1Assets$.next(undefined);
             loadApp1Assets$.complete();
 
             // load app2 asset and fake load fail
