@@ -225,7 +225,7 @@ describe('PlanetApplicationRef', () => {
                 router.navigateByUrl('/app1');
             });
             expect(navigateByUrlSpy).not.toHaveBeenCalled();
-            ngZone.onStable.next(undefined);
+            ngZone.onStable.next(null);
             tick();
             expect(navigateByUrlSpy).toHaveBeenCalled();
             expect(navigateByUrlSpy).toHaveBeenCalledWith('/app1');
