@@ -36,7 +36,7 @@
         <a
           thyNavItem
           href="javascript:;"
-          [thyPopover]="more"
+          [thyDropdown]="more"
           thyPlacement="right"
           thyTooltip="More"
           thyTooltipPlacement="right"
@@ -44,22 +44,20 @@
           <thy-icon thyIconName="more"></thy-icon>
         </a>
 
-        <ng-template #more>
-          <thy-action-menu>
-            <a thyActionMenuItem routerLinkActive="active" [routerLink]="['/app1/dashboard']">
-              <span thyActionMenuItemIcon>
-                <thy-icon thyIconName="house"></thy-icon>
-              </span>
-              <span thyActionMenuItemName>To App1's dashboard</span>
-            </a>
-            <a thyActionMenuItem routerLinkActive="active" [routerLink]="['/app1/users']">
-              <span thyActionMenuItemIcon>
-                <thy-icon thyIconName="user-group"></thy-icon>
-              </span>
-              <span thyActionMenuItemName>To App1's users</span>
-            </a>
-          </thy-action-menu>
-        </ng-template>
+        <thy-dropdown-menu #more>
+          <a thyDropdownMenuItem routerLinkActive="active" [routerLink]="['/app1/dashboard']">
+            <span thyDropdownMenuItemIcon>
+              <thy-icon thyIconName="house"></thy-icon>
+            </span>
+            <span thyDropdownMenuItemName>To App1's dashboard</span>
+          </a>
+          <a thyDropdownMenuItem routerLinkActive="active" [routerLink]="['/app1/users']">
+            <span thyDropdownMenuItemIcon>
+              <thy-icon thyIconName="user-group"></thy-icon>
+            </span>
+            <span thyDropdownMenuItemName>To App1's users</span>
+          </a>
+        </thy-dropdown-menu>
       </thy-nav>
     </thy-sidebar>
   </div>

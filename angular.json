@@ -64,7 +64,7 @@
             "outputPath": "dist/portal",
             "index": "examples/portal/src/index.html",
             "main": "examples/portal/src/main.ts",
-            "polyfills": "examples/portal/src/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "examples/portal/src/tsconfig.app.json",
             "assets": ["examples/portal/src/favicon.ico", "examples/portal/src/assets"],
             "styles": ["examples/portal/src/styles.scss", "examples/portal/src/reboot.scss"],
@@ -78,41 +78,98 @@
                   "with": "examples/portal/src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
                 }
-              ]
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "portal:build",
+            "buildTarget": "portal:build",
             "proxyConfig": "proxy.conf.js",
             "port": 3000
           },
           "configurations": {
             "production": {
-              "browserTarget": "portal:build:production"
+              "buildTarget": "portal:build:production"
+            },
+            "development": {
+              "buildTarget": "portal:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
+        },
+        "build1": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/ng17",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve1": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "ng17:build:production"
+            },
+            "development": {
+              "buildTarget": "ng17:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "portal:build"
+            "buildTarget": "portal:build"
           }
         },
         "test": {
@@ -212,7 +269,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "app1:build"
+            "buildTarget": "app1:build"
           }
         },
         "test": {
@@ -314,7 +371,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "app2:build"
+            "buildTarget": "app2:build"
           }
         },
         "test": {
