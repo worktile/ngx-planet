@@ -20,7 +20,7 @@ export class ProjectsDialogComponent implements OnInit {
 
     ngOnInit() {
         this.planetComponentLoader
-            .load<{ click: EventEmitter<any> }>('app2', 'project1', {
+            .load<{ click: EventEmitter<any> }>('app2', 'app-project-list', {
                 container: this.elementRef
             })
             .subscribe(componentRef => {
