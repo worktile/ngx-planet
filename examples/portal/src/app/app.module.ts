@@ -15,7 +15,7 @@ import { ThyTableModule } from 'ngx-tethys/table';
 import { ThyNotifyModule } from 'ngx-tethys/notify';
 import { ThyLoadingModule } from 'ngx-tethys/loading';
 import { ThyNavModule } from 'ngx-tethys/nav';
-import { ThyActionMenuModule } from 'ngx-tethys/action-menu';
+import { ThyDropdownModule } from 'ngx-tethys/dropdown';
 import { ThyTooltipModule } from 'ngx-tethys/tooltip';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
 import { ThyFormModule } from 'ngx-tethys/form';
@@ -44,7 +44,7 @@ import { NavigationStart, Router } from '@angular/router';
         ThyNotifyModule,
         ThyLoadingModule,
         ThyNavModule,
-        ThyActionMenuModule,
+        ThyDropdownModule,
         ThyTooltipModule,
         ThyPopoverModule,
         ThyFormModule,
