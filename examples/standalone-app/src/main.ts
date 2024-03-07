@@ -3,8 +3,6 @@ import { appConfig } from './app/app.config';
 import { AppRootComponent } from './app/app.component';
 import { defineApplication, PlanetPortalApplication } from '@worktile/planet';
 
-console.log('defineApplication standalone-app');
-
 defineApplication('standalone-app', {
     template: `<standalone-app-root></standalone-app-root>`,
     bootstrap: (portalApp: PlanetPortalApplication) => {
