@@ -22,7 +22,10 @@ export const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
     apps: {},
 });
 
-export function defineApplication(name: string, options: NgBootstrapAppModule | NgBootstrapOptions) {
+export function defineApplication<TOptions extends NgBootstrapAppModule | NgBootstrapOptions>(
+    name: string,
+    options: TOptions,
+) {
     if (globalPlanet.apps[name]) {
         throw new Error(`${name} application has exist.`);
     }
@@ -30,7 +33,7 @@ export function defineApplication(name: string, options: NgBootstrapAppModule | 
         options = {
             template: '',
             bootstrap: options as NgBootstrapAppModule,
-        };
+        } as TOptions;
     }
     const appRef = new NgPlanetApplicationRef(name, options as NgBootstrapOptions);
     console.log(`App ${name} defined`, appRef);

@@ -9,9 +9,9 @@ import { getTagNameByTemplate } from '../helpers';
 import { getSandboxInstance, Sandbox } from '../sandbox/';
 import { PlanetApplicationRef } from './planet-application-ref';
 
-export type NgBootstrapAppModule =
-    | ((portalApp: PlanetPortalApplication) => Promise<void | ApplicationRef>)
-    | ((portalApp: PlanetPortalApplication) => Promise<NgModuleRef<any> | undefined | null>);
+export type NgBootstrapAppModule = (
+    portalApp: PlanetPortalApplication,
+) => Promise<NgModuleRef<any> | void | ApplicationRef | undefined | null>;
 
 export interface NgBootstrapOptions {
     template: string;
@@ -98,7 +98,7 @@ export class NgPlanetApplicationRef implements PlanetApplicationRef {
         this.portalApp = app;
         return from(
             this.appModuleBootstrap(app).then((appModuleRef) => {
-                if (appModuleRef.instance) {
+                if (appModuleRef['instance']) {
                     this.appModuleRef = appModuleRef as NgModuleRef<any>;
                     this.appModuleRef.instance.appName = this.name;
                     this.injector = this.appModuleRef.injector;
