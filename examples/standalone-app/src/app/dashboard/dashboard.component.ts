@@ -10,7 +10,7 @@ import { ThyContent, ThyLayoutDirective } from 'ngx-tethys/layout';
     templateUrl: './dashboard.component.html',
     standalone: true,
     imports: [ThyContent],
-    hostDirectives: [ThyLayoutDirective],
+    hostDirectives: [ThyLayoutDirective]
 })
 export class DashboardComponent implements OnInit {
     @ViewChild('container', { static: true }) containerElementRef: ElementRef<HTMLDivElement>;
@@ -18,9 +18,8 @@ export class DashboardComponent implements OnInit {
     private componentRef: PlanetComponentRef;
 
     constructor(
-        // private planetPortal: PlanetPortalApplication,
         private router: Router,
-        private globalEventDispatcher: GlobalEventDispatcher, // public appRootContext: AppRootContext, // private dialog: ThyDialog, // private planetComponentLoader: PlanetComponentLoader
+        private globalEventDispatcher: GlobalEventDispatcher
     ) {}
 
     ngOnInit() {}

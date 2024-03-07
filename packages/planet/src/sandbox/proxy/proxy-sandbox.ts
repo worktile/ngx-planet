@@ -15,7 +15,7 @@ export class ProxySandbox extends Sandbox {
 
     constructor(
         public app: string,
-        public override options: SandboxOptions,
+        public override options: SandboxOptions
     ) {
         super();
         this.patchHandlers = getSandboxPatchHandlers(this);
@@ -32,7 +32,7 @@ export class ProxySandbox extends Sandbox {
 
     destroy() {
         this.running = false;
-        this.patchHandlers.forEach((handler) => {
+        this.patchHandlers.forEach(handler => {
             if (handler.destroy) {
                 handler.destroy();
             }
@@ -46,7 +46,7 @@ export class ProxySandbox extends Sandbox {
     }
 
     private execPatchHandlers() {
-        this.patchHandlers.forEach((handler) => {
+        this.patchHandlers.forEach(handler => {
             if (handler.rewrite) {
                 for (const key in handler.rewrite) {
                     if (handler.rewrite[key]) {

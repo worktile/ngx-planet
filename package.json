@@ -40,6 +40,7 @@
     "build:demo:prod": "npm run build:app1:prod && npm run build:app2:prod && npm run build:portal:prod",
     "test": "ng test planet",
     "lint": "ng lint planet",
+    "pretty": "pretty-quick",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "e2e": "ng e2e",
     "release": "wpm release",

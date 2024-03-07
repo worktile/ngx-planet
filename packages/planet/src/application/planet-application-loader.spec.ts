@@ -63,7 +63,7 @@ class AppStatusChangeFaker {
     constructor(planetApplicationLoader: PlanetApplicationLoader) {
         this.planetApplicationLoader = planetApplicationLoader;
         this.spy = jasmine.createSpy('app status change spy');
-        planetApplicationLoader.appStatusChange.subscribe((data) => {
+        planetApplicationLoader.appStatusChange.subscribe(data => {
             this.spy(data);
             this.status.set(data.app.name, data.status);
         });
@@ -80,11 +80,7 @@ class AppStatusChangeFaker {
     }
 
     // 封装从资源加载完毕到应用的启动和激活过程，简化每个测试用例重复写很多逻辑
-    expectFromAssetsLoadedToActive(
-        fromCalledTimes: number,
-        appRefFaker: PlanetApplicationRefFaker,
-        expectedApp: PlanetApplication,
-    ) {
+    expectFromAssetsLoadedToActive(fromCalledTimes: number, appRefFaker: PlanetApplicationRefFaker, expectedApp: PlanetApplication) {
         appRefFaker.haveNotBeenBootstrap();
         flush();
         appRefFaker.haveBeenBootstrap();
@@ -126,7 +122,7 @@ describe('PlanetApplicationLoader', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
+            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])]
         });
         planet = TestBed.inject(Planet);
         planetApplicationLoader = getApplicationLoader();
@@ -157,7 +153,7 @@ describe('PlanetApplicationLoader', () => {
                 TestBed.inject(NgZone),
                 TestBed.inject(Router),
                 TestBed.inject(Injector),
-                TestBed.inject(ApplicationRef),
+                TestBed.inject(ApplicationRef)
             );
         }).toThrowError('PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed');
     });
@@ -184,7 +180,7 @@ describe('PlanetApplicationLoader', () => {
         expect(appsLoadingStartSpy).toHaveBeenCalled();
         expect(appsLoadingStartSpy).toHaveBeenCalledWith({
             shouldLoadApps: [app1],
-            shouldUnloadApps: [],
+            shouldUnloadApps: []
         });
         loadAppAssets$.next(null);
         loadAppAssets$.complete();
@@ -206,7 +202,7 @@ describe('PlanetApplicationLoader', () => {
         assetsLoaderSpy.and.returnValue(loadAppAssets$);
         const app1RefFaker = PlanetApplicationRefFaker.create(app1.name, {
             template: `<app1-root class="app1-root"></app1-root>`,
-            bootstrap: null,
+            bootstrap: null
         });
 
         // App state change
@@ -239,7 +235,7 @@ describe('PlanetApplicationLoader', () => {
         expect(appsLoadingStartSpy).toHaveBeenCalledTimes(1);
         expect(appsLoadingStartSpy).toHaveBeenCalledWith({
             shouldLoadApps: [],
-            shouldUnloadApps: [],
+            shouldUnloadApps: []
         });
         expect(planetApplicationLoader.loadingDone).toEqual(true);
 
@@ -455,7 +451,7 @@ describe('PlanetApplicationLoader', () => {
         expect(appsLoadingStartSpy).toHaveBeenCalled();
         expect(appsLoadingStartSpy).toHaveBeenCalledWith({
             shouldLoadApps: [app1],
-            shouldUnloadApps: [],
+            shouldUnloadApps: []
         });
         planetApplicationLoader.reroute({ url: '/app1/dashboard' });
         expect(appsLoadingStartSpy).toHaveBeenCalledTimes(1);
@@ -576,7 +572,7 @@ describe('PlanetApplicationLoader', () => {
 
         const errorHandlerSpy = jasmine.createSpy(`error handler spy`);
         planetApplicationLoader.setOptions({
-            errorHandler: errorHandlerSpy,
+            errorHandler: errorHandlerSpy
         });
 
         const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
@@ -634,7 +630,7 @@ describe('PlanetApplicationLoader', () => {
 
         const errorHandlerSpy = jasmine.createSpy(`error handler spy`);
         planetApplicationLoader.setOptions({
-            errorHandler: errorHandlerSpy,
+            errorHandler: errorHandlerSpy
         });
 
         const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
@@ -686,7 +682,7 @@ describe('PlanetApplicationLoader', () => {
         expect(() => {
             planetApplicationLoader['bootstrapApp']({ name: appNotFound, routerPathPrefix: 'app100', hostParent: '' });
         }).toThrowError(
-            `[${appNotFound}] not found, make sure that the app has the correct name defined use defineApplication(${appNotFound}) and runtimeChunk and vendorChunk are set to true, details see https://github.com/worktile/ngx-planet#throw-error-cannot-read-property-call-of-undefined-at-__webpack_require__-bootstrap79`,
+            `[${appNotFound}] not found, make sure that the app has the correct name defined use defineApplication(${appNotFound}) and runtimeChunk and vendorChunk are set to true, details see https://github.com/worktile/ngx-planet#throw-error-cannot-read-property-call-of-undefined-at-__webpack_require__-bootstrap79`
         );
     });
 
@@ -710,7 +706,7 @@ describe('PlanetApplicationLoader', () => {
 
             const errorHandlerSpy = jasmine.createSpy(`error handler spy`);
             planetApplicationLoader.setOptions({
-                errorHandler: errorHandlerSpy,
+                errorHandler: errorHandlerSpy
             });
 
             const error = new Error(`load app assets error`);
@@ -733,14 +729,14 @@ describe('PlanetApplicationLoader', () => {
                 name: 'app100',
                 switchMode: SwitchModes.coexist,
                 routerPathPrefix: '',
-                hostParent: '',
+                hostParent: ''
             });
             expect(result).toEqual(true);
         });
 
         it('default switchModeIsCoexist = true', () => {
             planetApplicationLoader.setOptions({
-                switchMode: SwitchModes.coexist,
+                switchMode: SwitchModes.coexist
             });
             const result = planetApplicationLoader['switchModeIsCoexist'](undefined);
             expect(result).toEqual(true);
@@ -751,7 +747,7 @@ describe('PlanetApplicationLoader', () => {
         it(`should auto preload load app2 when after loaded app1`, fakeAsync(() => {
             const newApp2 = {
                 ...app2,
-                preload: true,
+                preload: true
             };
 
             planetApplicationService.unregister(app2.name);
@@ -775,7 +771,7 @@ describe('PlanetApplicationLoader', () => {
             expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(1);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: app1,
-                status: ApplicationStatus.assetsLoading,
+                status: ApplicationStatus.assetsLoading
             });
 
             loadApp1Assets$.next(null);
@@ -785,7 +781,7 @@ describe('PlanetApplicationLoader', () => {
             expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(2);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: app1,
-                status: ApplicationStatus.assetsLoaded,
+                status: ApplicationStatus.assetsLoaded
             });
 
             // bootstrap app1 in setTimeout
@@ -795,7 +791,7 @@ describe('PlanetApplicationLoader', () => {
             expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(3);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: app1,
-                status: ApplicationStatus.bootstrapping,
+                status: ApplicationStatus.bootstrapping
             });
             expect(planetApplicationLoader.loadingDone).toBe(false);
 
@@ -807,7 +803,7 @@ describe('PlanetApplicationLoader', () => {
             expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(5);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: app1,
-                status: ApplicationStatus.bootstrapped,
+                status: ApplicationStatus.bootstrapped
             });
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({ app: app1, status: ApplicationStatus.active });
 
@@ -820,7 +816,7 @@ describe('PlanetApplicationLoader', () => {
             expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(6);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp2,
-                status: ApplicationStatus.assetsLoading,
+                status: ApplicationStatus.assetsLoading
             });
 
             // App2 静态资源加载完毕
@@ -831,11 +827,11 @@ describe('PlanetApplicationLoader', () => {
             expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(8);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp2,
-                status: ApplicationStatus.assetsLoaded,
+                status: ApplicationStatus.assetsLoaded
             });
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp2,
-                status: ApplicationStatus.bootstrapping,
+                status: ApplicationStatus.bootstrapping
             });
 
             // App2 bootstrapped
@@ -843,7 +839,7 @@ describe('PlanetApplicationLoader', () => {
             expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(9);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp2,
-                status: ApplicationStatus.bootstrapped,
+                status: ApplicationStatus.bootstrapped
             });
             tick();
         }));
@@ -851,7 +847,7 @@ describe('PlanetApplicationLoader', () => {
         it(`should active app1 success when app1 is bootstrapping by preload`, fakeAsync(() => {
             const newApp1 = {
                 ...app1,
-                preload: true,
+                preload: true
             };
 
             planetApplicationService.unregister(app1.name);
@@ -887,7 +883,7 @@ describe('PlanetApplicationLoader', () => {
         it(`should active app1 success when app1 is bootstrapping by preload and bootstrapped in setTimeout`, fakeAsync(() => {
             const newApp1 = {
                 ...app1,
-                preload: true,
+                preload: true
             };
 
             planetApplicationService.unregister(app1.name);
@@ -924,24 +920,22 @@ describe('PlanetApplicationLoader', () => {
         }));
 
         it('should preload app when status is in assetsLoading, assetsLoaded or bootstrapping', fakeAsync(() => {
-            [ApplicationStatus.assetsLoading, ApplicationStatus.assetsLoaded, ApplicationStatus.bootstrapping].forEach(
-                (status) => {
-                    const preloadAppSpy = jasmine.createSpy('preload app spy');
-                    planetApplicationLoader['setAppStatus'](app1, status);
-                    const appRefFaker = PlanetApplicationRefFaker.create(app1.name);
+            [ApplicationStatus.assetsLoading, ApplicationStatus.assetsLoaded, ApplicationStatus.bootstrapping].forEach(status => {
+                const preloadAppSpy = jasmine.createSpy('preload app spy');
+                planetApplicationLoader['setAppStatus'](app1, status);
+                const appRefFaker = PlanetApplicationRefFaker.create(app1.name);
 
-                    planetApplicationLoader.preload(app1).subscribe((data) => {
-                        // expect(NgZone.isInAngularZone()).toEqual(true);
-                        preloadAppSpy(data);
-                    });
+                planetApplicationLoader.preload(app1).subscribe(data => {
+                    // expect(NgZone.isInAngularZone()).toEqual(true);
+                    preloadAppSpy(data);
+                });
 
-                    expect(preloadAppSpy).not.toHaveBeenCalled();
-                    planetApplicationLoader['setAppStatus'](app1, ApplicationStatus.bootstrapped);
-                    expect(preloadAppSpy).toHaveBeenCalled();
-                    expect(preloadAppSpy).toHaveBeenCalledWith(appRefFaker.planetAppRef);
-                    expect(NgZone.isInAngularZone()).toEqual(false);
-                },
-            );
+                expect(preloadAppSpy).not.toHaveBeenCalled();
+                planetApplicationLoader['setAppStatus'](app1, ApplicationStatus.bootstrapped);
+                expect(preloadAppSpy).toHaveBeenCalled();
+                expect(preloadAppSpy).toHaveBeenCalledWith(appRefFaker.planetAppRef);
+                expect(NgZone.isInAngularZone()).toEqual(false);
+            });
         }));
 
         it('should preload app when status is empty or error', fakeAsync(() => {
@@ -954,7 +948,7 @@ describe('PlanetApplicationLoader', () => {
 
             const preloadAppSpy = jasmine.createSpy('preload app spy');
             planetApplicationLoader['setAppStatus'](app1, status);
-            planetApplicationLoader.preload(app1, true).subscribe((data) => {
+            planetApplicationLoader.preload(app1, true).subscribe(data => {
                 // expect(NgZone.isInAngularZone()).toEqual(true);
                 preloadAppSpy(data);
             });
@@ -976,7 +970,7 @@ describe('PlanetApplicationLoader', () => {
         it(`should throw error when preload load app2 error`, fakeAsync(() => {
             const newApp2 = {
                 ...app2,
-                preload: true,
+                preload: true
             };
 
             planetApplicationService.unregister(app2.name);
@@ -987,7 +981,7 @@ describe('PlanetApplicationLoader', () => {
 
             const errorHandlerSpy = jasmine.createSpy(`error handler spy`);
             planetApplicationLoader.setOptions({
-                errorHandler: errorHandlerSpy,
+                errorHandler: errorHandlerSpy
             });
 
             const app1RefFaker = PlanetApplicationRefFaker.create(app1.name);
@@ -1030,11 +1024,11 @@ describe('PlanetApplicationLoader', () => {
         it(`should bootstrap app1 when app1 app2 preload is 'true' and app2 asset load fail`, fakeAsync(() => {
             const newApp1 = {
                 ...app1,
-                preload: true,
+                preload: true
             };
             const newApp2 = {
                 ...app2,
-                preload: true,
+                preload: true
             };
             planetApplicationService.unregister(app1.name);
             planetApplicationService.unregister(app2.name);
@@ -1057,11 +1051,11 @@ describe('PlanetApplicationLoader', () => {
             expect(appStatusChangeFaker.spy).toHaveBeenCalledTimes(2);
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp1,
-                status: ApplicationStatus.assetsLoading,
+                status: ApplicationStatus.assetsLoading
             });
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp2,
-                status: ApplicationStatus.assetsLoading,
+                status: ApplicationStatus.assetsLoading
             });
 
             // load app1 asset
@@ -1075,26 +1069,26 @@ describe('PlanetApplicationLoader', () => {
             // app1 's assets loaded
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp1,
-                status: ApplicationStatus.assetsLoaded,
+                status: ApplicationStatus.assetsLoaded
             });
             // app2 's assets load error
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp2,
-                status: ApplicationStatus.loadError,
+                status: ApplicationStatus.loadError
             });
 
             // app2 bootstrap error
             app2RefFaker.bootstrap();
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp2,
-                status: ApplicationStatus.loadError,
+                status: ApplicationStatus.loadError
             });
 
             // app1 bootstrapped
             app1RefFaker.bootstrap();
             expect(appStatusChangeFaker.spy).toHaveBeenCalledWith({
                 app: newApp1,
-                status: ApplicationStatus.bootstrapped,
+                status: ApplicationStatus.bootstrapped
             });
 
             tick();

@@ -11,7 +11,7 @@ import {
     ComponentRef,
     EmbeddedViewRef,
     reflectComponentType,
-    EnvironmentInjector,
+    EnvironmentInjector
 } from '@angular/core';
 import { PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
@@ -24,7 +24,7 @@ import {
     getApplicationLoader,
     getApplicationService,
     getPlanetApplicationRef,
-    getBootstrappedPlanetApplicationRef,
+    getBootstrappedPlanetApplicationRef
 } from '../global-planet';
 import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
 
@@ -42,7 +42,7 @@ export type PlanetComponent<T = unknown> =
     | Type<T>;
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 export class PlanetComponentLoader {
     private get applicationLoader() {
@@ -57,7 +57,7 @@ export class PlanetComponentLoader {
         private applicationRef: ApplicationRef,
         private ngModuleRef: NgModuleRef<any>,
         private ngZone: NgZone,
-        @Inject(DOCUMENT) private document: any,
+        @Inject(DOCUMENT) private document: any
     ) {}
 
     private getPlantAppRef(name: string): Observable<PlanetApplicationRef> {
@@ -69,7 +69,7 @@ export class PlanetComponentLoader {
             return this.applicationLoader.preload(app, true).pipe(
                 map(() => {
                     return getPlanetApplicationRef(name);
-                }),
+                })
             );
         }
     }
@@ -79,10 +79,10 @@ export class PlanetComponentLoader {
             providers: [
                 {
                     provide: PlanetComponentRef,
-                    useValue: componentRef,
-                },
+                    useValue: componentRef
+                }
             ],
-            parent: parentInjector,
+            parent: parentInjector
         });
     }
 
@@ -98,11 +98,7 @@ export class PlanetComponentLoader {
         }
     }
 
-    private insertComponentRootNodeToContainer(
-        container: HTMLElement,
-        componentRootNode: HTMLElement,
-        hostClass: string,
-    ) {
+    private insertComponentRootNodeToContainer(container: HTMLElement, componentRootNode: HTMLElement, hostClass: string) {
         const subApp = this.applicationService.getAppByName(this.ngModuleRef.instance.appName);
         componentRootNode.classList.add(componentWrapperClass);
         componentRootNode.setAttribute('planet-inline', '');
@@ -123,7 +119,7 @@ export class PlanetComponentLoader {
     private attachComponent<TData>(
         component: Type<unknown>,
         environmentInjector: EnvironmentInjector,
-        config: PlantComponentConfig,
+        config: PlantComponentConfig
     ): PlanetComponentRef<TData> {
         const plantComponentRef = new PlanetComponentRef();
         const appRef = this.applicationRef;
@@ -131,7 +127,7 @@ export class PlanetComponentLoader {
         const container = this.getContainerElement(config);
         const componentRef = createComponent(component, {
             environmentInjector: environmentInjector,
-            elementInjector: injector,
+            elementInjector: injector
         });
         appRef.attachView(componentRef.hostView);
         const componentRootNode = this.getComponentRootNode(componentRef);
@@ -162,7 +158,7 @@ export class PlanetComponentLoader {
         this.getPlantAppRef(app).subscribe((appRef: NgPlanetApplicationRef) => {
             appRef.registerComponentFactory((componentName: string, config: PlantComponentConfig<any>) => {
                 const components = coerceArray(componentOrComponents);
-                const planetComponent = components.find((item) => {
+                const planetComponent = components.find(item => {
                     return isComponentType(item)
                         ? reflectComponentType(item).selector.includes(componentName)
                         : item.name === componentName;
@@ -172,7 +168,7 @@ export class PlanetComponentLoader {
                         const componentRef = this.attachComponent<any>(
                             isComponentType(planetComponent) ? planetComponent : planetComponent.component,
                             appRef.appModuleRef.injector,
-                            config,
+                            config
                         );
                         return componentRef;
                     });
@@ -192,7 +188,7 @@ export class PlanetComponentLoader {
     load<TComp = unknown, TData = unknown>(
         app: string,
         componentName: string,
-        config: PlantComponentConfig<TData>,
+        config: PlantComponentConfig<TData>
     ): Observable<PlanetComponentRef<TComp>> {
         const result = this.getPlantAppRef(app).pipe(
             delayWhen((appRef: NgPlanetApplicationRef) => {
@@ -203,7 +199,7 @@ export class PlanetComponentLoader {
                     return timer(20);
                 }
             }),
-            map((appRef) => {
+            map(appRef => {
                 const componentFactory = appRef.getComponentFactory();
                 if (componentFactory) {
                     return componentFactory<TData, TComp>(componentName, config);
@@ -211,7 +207,7 @@ export class PlanetComponentLoader {
                     throw new Error(`${app}'s component(${componentName}) is not registered`);
                 }
             }),
-            shareReplay(),
+            shareReplay()
         );
         result.subscribe();
         return result;

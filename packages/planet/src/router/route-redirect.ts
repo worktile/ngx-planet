@@ -9,10 +9,10 @@ class RouteRedirect {
         const finalRedirectTo = redirectTo || this.activatedRoute.snapshot.data['redirectTo'];
         if (finalRedirectTo) {
             const activatedRouteUrl = this.activatedRoute.pathFromRoot
-                .filter((route) => {
+                .filter(route => {
                     return route.snapshot.url?.length > 0;
                 })
-                .map((route) => {
+                .map(route => {
                     return route.snapshot.url.join('/');
                 })
                 .join('/');
@@ -21,7 +21,7 @@ class RouteRedirect {
                     matrixParams: 'exact',
                     paths: 'exact',
                     queryParams: 'exact',
-                    fragment: 'exact',
+                    fragment: 'exact'
                 })
             ) {
                 this.router.navigate(
@@ -31,8 +31,8 @@ class RouteRedirect {
                     // to the previous URL without getting caught in a redirect.
                     {
                         replaceUrl: true,
-                        relativeTo: this.activatedRoute,
-                    },
+                        relativeTo: this.activatedRoute
+                    }
                 );
             }
         }
@@ -46,7 +46,7 @@ export function routeRedirect(redirectTo?: string) {
 @Component({
     selector: 'planet-redirect-to-route',
     template: '',
-    standalone: true,
+    standalone: true
 })
 export class RedirectToRouteComponent {
     routeRedirect = routeRedirect();
@@ -57,7 +57,7 @@ export function redirectToRoute(redirectTo: string): Route {
         path: '',
         component: RedirectToRouteComponent,
         data: {
-            redirectTo: redirectTo,
-        },
+            redirectTo: redirectTo
+        }
     };
 }

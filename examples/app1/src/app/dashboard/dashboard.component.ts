@@ -9,7 +9,7 @@ import { ProjectsDialogComponent } from '../projects/dialog/projects-dialog.comp
 
 @Component({
     selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
+    templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
     @ViewChild('container', { static: true }) containerElementRef: ElementRef<HTMLDivElement>;
@@ -25,7 +25,7 @@ export class DashboardComponent {
         private globalEventDispatcher: GlobalEventDispatcher,
         public appRootContext: AppRootContext,
         private dialog: ThyDialog,
-        private planetComponentLoader: PlanetComponentLoader,
+        private planetComponentLoader: PlanetComponentLoader
     ) {}
 
     openADetail() {
@@ -34,13 +34,13 @@ export class DashboardComponent {
 
     openApp1Dialog() {
         this.dialog.open(App1DetailComponent, {
-            size: this.size,
+            size: this.size
         });
     }
 
     openApp2Dialog() {
         this.dialog.open(ProjectsDialogComponent, {
-            size: ThyDialogSizes.supperLg,
+            size: ThyDialogSizes.superLg
         });
     }
 
@@ -48,9 +48,9 @@ export class DashboardComponent {
         this.planetComponentLoader
             .load('app2', 'app-project-list', {
                 container: this.containerElementRef,
-                initialState: {},
+                initialState: {}
             })
-            .subscribe((componentRef) => {
+            .subscribe(componentRef => {
                 this.componentRef = componentRef;
             });
     }

@@ -8,15 +8,15 @@ const routes: Routes = [
     {
         path: '',
         redirectTo: 'about',
-        pathMatch: 'full',
+        pathMatch: 'full'
     },
     {
         path: 'about',
-        component: AboutComponent,
+        component: AboutComponent
     },
     {
         path: 'settings',
-        component: SettingsComponent,
+        component: SettingsComponent
     },
     {
         path: 'app1',
@@ -24,9 +24,9 @@ const routes: Routes = [
         children: [
             {
                 path: '**',
-                component: EmptyComponent,
-            },
-        ],
+                component: EmptyComponent
+            }
+        ]
     },
     {
         path: 'app2',
@@ -34,9 +34,9 @@ const routes: Routes = [
         children: [
             {
                 path: '**',
-                component: EmptyComponent,
-            },
-        ],
+                component: EmptyComponent
+            }
+        ]
     },
     {
         path: 'standalone-app',
@@ -44,14 +44,14 @@ const routes: Routes = [
         children: [
             {
                 path: '**',
-                component: EmptyComponent,
-            },
-        ],
-    },
+                component: EmptyComponent
+            }
+        ]
+    }
 ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, { paramsInheritanceStrategy: 'always' })],
-    exports: [RouterModule],
+    exports: [RouterModule]
 })
 export class AppRoutingModule {}

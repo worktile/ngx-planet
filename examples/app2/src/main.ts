@@ -12,7 +12,7 @@ if (environment.production) {
 
 // 测试沙箱模拟APP2 引入低版本的 lodash
 window['lodash'] = {
-    version: '1.0.0',
+    version: '1.0.0'
 };
 
 defineApplication('app2', {
@@ -21,16 +21,16 @@ defineApplication('app2', {
         return platformBrowserDynamic([
             {
                 provide: PlanetPortalApplication,
-                useValue: portalApp,
-            },
+                useValue: portalApp
+            }
         ])
             .bootstrapModule(AppModule)
-            .then((appModule) => {
+            .then(appModule => {
                 return appModule;
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error(error);
                 return null;
             });
-    },
+    }
 });

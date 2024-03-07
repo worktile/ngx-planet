@@ -9,7 +9,7 @@ import {
     ElementRef,
     NgZone,
     Output,
-    EventEmitter,
+    EventEmitter
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { PlanetComponentRef } from './planet-component-ref';
 
 @Directive({
     selector: '[planetComponentOutlet]',
-    standalone: true,
+    standalone: true
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewInit {
@@ -37,7 +37,7 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
     constructor(
         private elementRef: ElementRef,
         private planetComponentLoader: PlanetComponentLoader,
-        private ngZone: NgZone,
+        private ngZone: NgZone
     ) {}
 
     ngOnChanges(changes: SimpleChanges) {
@@ -56,10 +56,10 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
             this.planetComponentLoader
                 .load(this.planetComponentOutletApp, this.planetComponentOutlet, {
                     container: this.elementRef.nativeElement,
-                    initialState: this.planetComponentOutletInitialState,
+                    initialState: this.planetComponentOutletInitialState
                 })
                 .pipe(takeUntil(this.destroyed$))
-                .subscribe((componentRef) => {
+                .subscribe(componentRef => {
                     this.componentRef = componentRef;
                     this.ngZone.run(() => {
                         Promise.resolve().then(() => {

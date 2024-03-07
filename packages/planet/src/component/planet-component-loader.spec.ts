@@ -13,7 +13,7 @@ import {
     getPlanetApplicationRef,
     getApplicationLoader,
     clearGlobalPlanet,
-    getApplicationService,
+    getApplicationService
 } from '../global-planet';
 import { Planet } from 'ngx-planet/planet';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -31,10 +31,10 @@ describe('PlanetComponentLoader', () => {
         defineApplication(name, {
             template: '<app1-root></app1-root>',
             bootstrap: (portalApp?: PlanetPortalApplication) => {
-                return new Promise((resolve) => {
+                return new Promise(resolve => {
                     resolve(ngModuleRef);
                 });
-            },
+            }
         });
         const appRef = getPlanetApplicationRef(name);
         const portalApplication = new PlanetPortalApplication();
@@ -44,7 +44,7 @@ describe('PlanetComponentLoader', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
+            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])]
         });
         compiler = TestBed.inject(Compiler);
         planet = TestBed.inject(Planet);
@@ -91,7 +91,7 @@ describe('PlanetComponentLoader', () => {
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
         tick();
         registerAppComponents(app1ModuleRef);
-        loadApp1Component(app2ModuleRef, { wrapperClass: 'custom-wrapper' }).subscribe((componentRef) => {
+        loadApp1Component(app2ModuleRef, { wrapperClass: 'custom-wrapper' }).subscribe(componentRef => {
             expect(componentRef.hostElement.classList.contains('planet-component-wrapper')).toBeTruthy();
             expect(componentRef.hostElement.classList.contains('custom-wrapper')).toBeTruthy();
         });
@@ -103,7 +103,7 @@ describe('PlanetComponentLoader', () => {
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
         tick();
         registerAppComponents(app1ModuleRef);
-        loadApp1Component(app2ModuleRef, { hostClass: 'custom-host-class' }).subscribe((componentRef) => {
+        loadApp1Component(app2ModuleRef, { hostClass: 'custom-host-class' }).subscribe(componentRef => {
             expect(componentRef.hostElement.classList.contains('custom-host-class')).toBeTruthy();
         });
     }));
@@ -113,7 +113,7 @@ describe('PlanetComponentLoader', () => {
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
         app1ModuleRef.injector.get(PlanetComponentLoader).register(App1ProjectsComponent);
         tick();
-        const callbackSpy = jasmine.createSpy('component loaded', (componentRef) => {
+        const callbackSpy = jasmine.createSpy('component loaded', componentRef => {
             expect(componentRef.hostElement.innerHTML).toContain('projects is work');
         });
         app2ModuleRef.injector
@@ -134,14 +134,12 @@ describe('PlanetComponentLoader', () => {
         const comment = document.createComment('mock ng container');
         host.appendChild(comment);
         let componentRef: PlanetComponentRef;
-        componentLoader
-            .load(app1Name, 'app1-projects', Object.assign({}, { container: comment }))
-            .subscribe((_componentRef) => {
-                componentRef = _componentRef;
-            });
+        componentLoader.load(app1Name, 'app1-projects', Object.assign({}, { container: comment })).subscribe(_componentRef => {
+            componentRef = _componentRef;
+        });
         tick(20);
         expect(host.innerHTML).toContain(
-            `<app1-projects class="planet-component-wrapper" planet-inline=""> projects is work </app1-projects>`,
+            `<app1-projects class="planet-component-wrapper" planet-inline=""> projects is work </app1-projects>`
         );
     }));
 
@@ -155,11 +153,11 @@ describe('PlanetComponentLoader', () => {
             stylePrefix: 'app1-prefix',
             name: 'app1',
             hostParent: '',
-            routerPathPrefix: '',
+            routerPathPrefix: ''
         });
         tick();
         registerAppComponents(app1ModuleRef);
-        loadApp1Component(app2ModuleRef, { hostClass: 'custom-host' }).subscribe((componentRef) => {
+        loadApp1Component(app2ModuleRef, { hostClass: 'custom-host' }).subscribe(componentRef => {
             expect(componentRef.hostElement.classList.contains('planet-component-wrapper')).toBeTruthy();
             expect(componentRef.hostElement.classList.contains('custom-host')).toBeTruthy();
             expect(componentRef.hostElement.classList.contains('app1-prefix')).toBeTruthy();
@@ -176,7 +174,7 @@ describe('PlanetComponentLoader', () => {
             tap(() => {
                 const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
                 registerAppComponents(app1ModuleRef);
-            }),
+            })
         );
         applicationLoaderSpy.and.returnValue(preload$);
         expect(applicationLoaderSpy).not.toHaveBeenCalled();
@@ -190,7 +188,7 @@ describe('PlanetComponentLoader', () => {
         const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
         tick();
         registerAppComponents(app1ModuleRef);
-        loadApp1Component(app2ModuleRef).subscribe((componentRef) => {
+        loadApp1Component(app2ModuleRef).subscribe(componentRef => {
             const parent = componentRef.hostElement.parentElement;
             expect(App1ProjectsComponent.state).toEqual('initialized');
             componentRef.dispose();
@@ -208,19 +206,15 @@ function registerAppComponents(appModuleRef: NgModuleRef<any>) {
 function loadApp1Component(appModuleRef: NgModuleRef<any>, config?: Partial<PlantComponentConfig>) {
     const componentLoader = appModuleRef.injector.get(PlanetComponentLoader);
     const hostElement = createComponentHostElement();
-    const result = componentLoader.load(
-        app1Name,
-        'app1-projects',
-        Object.assign({}, { container: hostElement }, config),
-    );
+    const result = componentLoader.load(app1Name, 'app1-projects', Object.assign({}, { container: hostElement }, config));
     tick(20);
     return result;
 }
 
 function loadApp1ComponentAndExpectHtml(app2ModuleRef: NgModuleRef<any>) {
-    loadApp1Component(app2ModuleRef).subscribe((componentRef) => {
+    loadApp1Component(app2ModuleRef).subscribe(componentRef => {
         expect(componentRef.hostElement.outerHTML).toEqual(
-            `<app1-projects class="planet-component-wrapper" planet-inline=""> projects is work </app1-projects>`,
+            `<app1-projects class="planet-component-wrapper" planet-inline=""> projects is work </app1-projects>`
         );
     });
 }

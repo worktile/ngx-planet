@@ -3,53 +3,22 @@
     <thy-sidebar class="app-nav">
       <img class="logo" src="/assets/images/logo.svg" />
       <thy-nav [thyVertical]="'true'" class="mt-2" [thyType]="'pulled'">
-        <a
-          thyNavItem
-          thyTooltip="App1"
-          [routerLink]="['/app1']"
-          routerLinkActive="active"
-          thyTooltip="App1"
-          thyTooltipPlacement="right"
-        >
+        <a thyNavItem thyTooltip="App1" [routerLink]="['/app1']" routerLinkActive="active" thyTooltip="App1" thyTooltipPlacement="right">
           <thy-icon thyIconName="application"></thy-icon>
         </a>
         <a thyNavItem [routerLink]="['/app2']" routerLinkActive="active" thyTooltip="App2" thyTooltipPlacement="right">
           <thy-icon thyIconName="app-agile"></thy-icon>
         </a>
-        <a
-          thyNavItem
-          [routerLink]="['/standalone-app']"
-          routerLinkActive="active"
-          thyTooltip="Standalone App"
-          thyTooltipPlacement="right"
-        >
+        <a thyNavItem [routerLink]="['/standalone-app']" routerLinkActive="active" thyTooltip="Standalone App" thyTooltipPlacement="right">
           <thy-icon thyIconName="app-leave"></thy-icon>
         </a>
-        <a
-          thyNavItem
-          [routerLink]="['/about']"
-          routerLinkActive="active"
-          thyTooltip="About"
-          thyTooltipPlacement="right"
-        >
+        <a thyNavItem [routerLink]="['/about']" routerLinkActive="active" thyTooltip="About" thyTooltipPlacement="right">
           <thy-icon thyIconName="smile"></thy-icon>
         </a>
-        <a
-          thyNavItem
-          [routerLink]="['/settings']"
-          routerLinkActive="active"
-          thyTooltip="Settings"
-          thyTooltipPlacement="right"
+        <a thyNavItem [routerLink]="['/settings']" routerLinkActive="active" thyTooltip="Settings" thyTooltipPlacement="right"
           ><thy-icon thyIconName="settings"></thy-icon
         ></a>
-        <a
-          thyNavItem
-          href="javascript:;"
-          [thyDropdown]="more"
-          thyPlacement="right"
-          thyTooltip="More"
-          thyTooltipPlacement="right"
-        >
+        <a thyNavItem href="javascript:;" [thyDropdown]="more" thyPlacement="right" thyTooltip="More" thyTooltipPlacement="right">
           <thy-icon thyIconName="more"></thy-icon>
         </a>
 

@@ -10,7 +10,7 @@ import { getSandboxInstance, Sandbox } from '../sandbox/';
 import { PlanetApplicationRef } from './planet-application-ref';
 
 export type NgBootstrapAppModule = (
-    portalApp: PlanetPortalApplication,
+    portalApp: PlanetPortalApplication
 ) => Promise<NgModuleRef<any> | void | ApplicationRef | undefined | null>;
 
 export interface NgBootstrapOptions {
@@ -27,10 +27,7 @@ export type BootstrapAppModule = NgBootstrapAppModule;
  */
 export interface BootstrapOptions extends NgBootstrapOptions {}
 
-export type PlantComponentFactory = <TData, TComp>(
-    componentName: string,
-    config: PlantComponentConfig<TData>,
-) => PlanetComponentRef<TComp>;
+export type PlantComponentFactory = <TData, TComp>(componentName: string, config: PlantComponentConfig<TData>) => PlanetComponentRef<TComp>;
 
 export class NgPlanetApplicationRef implements PlanetApplicationRef {
     private injector?: EnvironmentInjector;
@@ -78,7 +75,7 @@ export class NgPlanetApplicationRef implements PlanetApplicationRef {
     private syncPortalRouteWhenNavigationEnd() {
         const router = (this.injector || this.appModuleRef?.injector)?.get(Router);
         if (router) {
-            router.events.subscribe((event) => {
+            router.events.subscribe(event => {
                 if (event instanceof NavigationEnd) {
                     this.ngZone?.onStable
                         .asObservable()
@@ -97,7 +94,7 @@ export class NgPlanetApplicationRef implements PlanetApplicationRef {
         }
         this.portalApp = app;
         return from(
-            this.appModuleBootstrap(app).then((appModuleRef) => {
+            this.appModuleBootstrap(app).then(appModuleRef => {
                 if (appModuleRef['instance']) {
                     this.appModuleRef = appModuleRef as NgModuleRef<any>;
                     this.appModuleRef.instance.appName = this.name;
@@ -110,7 +107,7 @@ export class NgPlanetApplicationRef implements PlanetApplicationRef {
                 }
                 this.syncPortalRouteWhenNavigationEnd();
                 return this;
-            }),
+            })
         );
     }
 

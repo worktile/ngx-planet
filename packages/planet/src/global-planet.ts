@@ -3,11 +3,7 @@ import { PlanetPortalApplication } from './application/portal-application';
 import { PlanetApplicationLoader } from './application/planet-application-loader';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { isFunction } from './helpers';
-import {
-    NgBootstrapAppModule,
-    NgBootstrapOptions,
-    NgPlanetApplicationRef,
-} from './application/ng-planet-application-ref';
+import { NgBootstrapAppModule, NgBootstrapOptions, NgPlanetApplicationRef } from './application/ng-planet-application-ref';
 
 declare const window: any;
 
@@ -19,20 +15,17 @@ export interface GlobalPlanet {
 }
 
 export const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
-    apps: {},
+    apps: {}
 });
 
-export function defineApplication<TOptions extends NgBootstrapAppModule | NgBootstrapOptions>(
-    name: string,
-    options: TOptions,
-) {
+export function defineApplication<TOptions extends NgBootstrapAppModule | NgBootstrapOptions>(name: string, options: TOptions) {
     if (globalPlanet.apps[name]) {
         throw new Error(`${name} application has exist.`);
     }
     if (isFunction(options)) {
         options = {
             template: '',
-            bootstrap: options as NgBootstrapAppModule,
+            bootstrap: options as NgBootstrapAppModule
         } as TOptions;
     }
     const appRef = new NgPlanetApplicationRef(name, options as NgBootstrapOptions);

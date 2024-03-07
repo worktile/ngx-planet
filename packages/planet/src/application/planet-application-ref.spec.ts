@@ -11,7 +11,7 @@ import { NgPlanetApplicationRef } from './ng-planet-application-ref';
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-root',
-    template: ` <router-outlet></router-outlet> `,
+    template: ` <router-outlet></router-outlet> `
 })
 class EmptyComponent {}
 @NgModule({
@@ -20,14 +20,14 @@ class EmptyComponent {}
         RouterTestingModule.withRoutes([
             {
                 path: 'app1',
-                component: EmptyComponent,
+                component: EmptyComponent
             },
             {
                 path: 'app1/test',
-                component: EmptyComponent,
-            },
-        ]),
-    ],
+                component: EmptyComponent
+            }
+        ])
+    ]
 })
 class AppModule {}
 
@@ -42,7 +42,7 @@ describe('PlanetApplicationRef', () => {
                 template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
                     return new Promise(() => {});
-                },
+                }
             });
             const planetAppRef = getPlanetApplicationRef('app1');
             expect(planetAppRef).toBeTruthy();
@@ -54,7 +54,7 @@ describe('PlanetApplicationRef', () => {
                 template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
                     return new Promise(() => {});
-                },
+                }
             });
             const planetAppRef = getPlanetApplicationRef('app2');
             expect(planetAppRef).toBeFalsy();
@@ -73,11 +73,11 @@ describe('PlanetApplicationRef', () => {
             defineApplication('app1', {
                 template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
-                    return new Promise((resolve) => {
+                    return new Promise(resolve => {
                         expect(portalApp).toBe(portalApplication);
                         resolve(ngModuleRef);
                     });
-                },
+                }
             });
 
             const appRef = getPlanetApplicationRef('app1') as NgPlanetApplicationRef;
@@ -86,7 +86,7 @@ describe('PlanetApplicationRef', () => {
             flush();
             return {
                 router,
-                appRef,
+                appRef
             };
         }
 
@@ -106,11 +106,11 @@ describe('PlanetApplicationRef', () => {
             defineApplication('app1', {
                 template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
-                    return new Promise((resolve) => {
+                    return new Promise(resolve => {
                         expect(portalApp).toBe(portalApplication);
                         resolve(ngModuleRef);
                     });
-                },
+                }
             });
             const appRef = getPlanetApplicationRef('app1');
             expect(appRef).toBeTruthy();
@@ -134,11 +134,11 @@ describe('PlanetApplicationRef', () => {
             defineApplication('app1', {
                 template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
-                    return new Promise((resolve) => {
+                    return new Promise(resolve => {
                         expect(portalApp).toBe(portalApplication);
                         resolve(ngModuleRef);
                     });
-                },
+                }
             });
 
             const appRef = getPlanetApplicationRef('app1') as NgPlanetApplicationRef;
@@ -165,9 +165,9 @@ describe('PlanetApplicationRef', () => {
                 events: new Subject(),
                 routerState: {
                     snapshot: {
-                        url: 'app1/hello',
-                    },
-                },
+                        url: 'app1/hello'
+                    }
+                }
             };
             @NgModule({
                 declarations: [],
@@ -175,9 +175,9 @@ describe('PlanetApplicationRef', () => {
                 providers: [
                     {
                         provide: Router,
-                        useValue: routerSpy,
-                    },
-                ],
+                        useValue: routerSpy
+                    }
+                ]
             })
             class AppModuleWithSpyRouter {}
             const { appRef } = bootstrapApp1(AppModuleWithSpyRouter);
@@ -208,11 +208,11 @@ describe('PlanetApplicationRef', () => {
             defineApplication('app1', {
                 template: '<app1-root></app1-root>',
                 bootstrap: (portalApp?: PlanetPortalApplication) => {
-                    return new Promise((resolve) => {
+                    return new Promise(resolve => {
                         expect(portalApp).toBe(portalApplication);
                         resolve(ngModuleRef);
                     });
-                },
+                }
             });
             const appRef = getPlanetApplicationRef('app1');
             expect(appRef).toBeTruthy();

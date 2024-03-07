@@ -6,11 +6,7 @@ export function eventListenerPatch(sandbox: ProxySandboxInstance): SandboxPatchH
     const rawRemoveEventListener = window.removeEventListener;
     const listenerSubscriptions = new Map<EventListenerOrEventListenerObject, Subscription>();
 
-    function addEventListener(
-        type: string,
-        listener: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions,
-    ) {
+    function addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) {
         const observable = new Observable(() => {
             rawAddEventListener.call(this, type, listener, options);
             return () => {
@@ -32,7 +28,7 @@ export function eventListenerPatch(sandbox: ProxySandboxInstance): SandboxPatchH
     return {
         rewrite: {
             addEventListener: addEventListener.bind(window),
-            removeEventListener: removeEventListener.bind(window),
+            removeEventListener: removeEventListener.bind(window)
         },
         init() {
             const fakeDocument = sandbox.global['document'];
@@ -42,8 +38,8 @@ export function eventListenerPatch(sandbox: ProxySandboxInstance): SandboxPatchH
             }
         },
         destroy() {
-            listenerSubscriptions.forEach((subscription) => subscription.unsubscribe());
+            listenerSubscriptions.forEach(subscription => subscription.unsubscribe());
             listenerSubscriptions.clear();
-        },
+        }
     };
 }
