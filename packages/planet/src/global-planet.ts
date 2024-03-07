@@ -1,8 +1,13 @@
-import { PlanetApplicationRef, BootstrapAppModule, BootstrapOptions } from './application/planet-application-ref';
+import { PlanetApplicationRef } from './application/planet-application-ref';
 import { PlanetPortalApplication } from './application/portal-application';
 import { PlanetApplicationLoader } from './application/planet-application-loader';
 import { PlanetApplicationService } from './application/planet-application.service';
 import { isFunction } from './helpers';
+import {
+    NgBootstrapAppModule,
+    NgBootstrapOptions,
+    NgPlanetApplicationRef
+} from './application/ng-planet-application-ref';
 
 declare const window: any;
 
@@ -17,17 +22,18 @@ export const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
     apps: {}
 });
 
-export function defineApplication(name: string, options: BootstrapAppModule | BootstrapOptions) {
+export function defineApplication(name: string, options: NgBootstrapAppModule | NgBootstrapOptions) {
     if (globalPlanet.apps[name]) {
         throw new Error(`${name} application has exist.`);
     }
     if (isFunction(options)) {
         options = {
             template: '',
-            bootstrap: options as BootstrapAppModule
+            bootstrap: options as NgBootstrapAppModule
         };
     }
-    const appRef = new PlanetApplicationRef(name, options as BootstrapOptions);
+    const appRef = new NgPlanetApplicationRef(name, options as NgBootstrapOptions);
+    console.log(`App ${name} defined`, appRef)
     globalPlanet.apps[name] = appRef;
 }
 
@@ -37,6 +43,17 @@ export function getPlanetApplicationRef(appName: string): PlanetApplicationRef |
     } else {
         return null;
     }
+}
+
+export function getBootstrappedPlanetApplicationRef(appName: string): PlanetApplicationRef | null {
+    const plantAppRef = getPlanetApplicationRef(appName);
+    if (plantAppRef) {
+        // 兼容之前的版本，之前是通过 appModuleRef 来判断是否启用的
+        if (plantAppRef.bootstrapped || plantAppRef['appModuleRef']) {
+            return plantAppRef;
+        }
+    }
+    return null;
 }
 
 export function setPortalApplicationData<T>(data: T) {

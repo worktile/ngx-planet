@@ -18,6 +18,15 @@
         </a>
         <a
           thyNavItem
+          [routerLink]="['/standalone-app']"
+          routerLinkActive="active"
+          thyTooltip="Standalone App"
+          thyTooltipPlacement="right"
+        >
+          <thy-icon thyIconName="app-leave"></thy-icon>
+        </a>
+        <a
+          thyNavItem
           [routerLink]="['/about']"
           routerLinkActive="active"
           thyTooltip="About"

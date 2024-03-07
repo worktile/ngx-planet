@@ -41,7 +41,7 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
     ) {}
 
     ngOnChanges(changes: SimpleChanges) {
-        if (this.planetComponentOutlet && !changes.planetComponentOutlet.isFirstChange()) {
+        if (this.planetComponentOutlet && !changes['planetComponentOutlet'].isFirstChange()) {
             this.loadComponent();
         }
     }

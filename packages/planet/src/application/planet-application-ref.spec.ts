@@ -6,6 +6,7 @@ import { defineApplication, getPlanetApplicationRef, clearGlobalPlanet } from '.
 import { Subject } from 'rxjs';
 import { PlanetApplicationRef } from './planet-application-ref';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NgPlanetApplicationRef } from './ng-planet-application-ref';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -81,7 +82,7 @@ describe('PlanetApplicationRef', () => {
                 }
             });
 
-            const appRef = getPlanetApplicationRef('app1');
+            const appRef = getPlanetApplicationRef('app1') as NgPlanetApplicationRef;
             appRef.bootstrap(portalApplication).subscribe();
 
             flush();
@@ -120,8 +121,8 @@ describe('PlanetApplicationRef', () => {
             expect(appRef.bootstrapped).toEqual(false);
             flush();
             expect(appRef.bootstrapped).toEqual(true);
-            expect(appRef.appModuleRef).toEqual(ngModuleRef);
-            expect(appRef.appModuleRef.instance.appName).toEqual('app1');
+            expect(appRef['appModuleRef']).toEqual(ngModuleRef);
+            expect(appRef['appModuleRef'].instance.appName).toEqual('app1');
             expect(bootstrapSpy.calls.count()).toEqual(1);
             expect(bootstrapSpy).toHaveBeenCalled();
             expect(bootstrapSpy).toHaveBeenCalledWith(appRef);
@@ -142,7 +143,7 @@ describe('PlanetApplicationRef', () => {
                 }
             });
 
-            const appRef = getPlanetApplicationRef('app1');
+            const appRef = getPlanetApplicationRef('app1') as NgPlanetApplicationRef;
             appRef.bootstrap(portalApplication).subscribe();
 
             flush();
@@ -195,7 +196,7 @@ describe('PlanetApplicationRef', () => {
 
         it(`should throw error when app is not defined`, () => {
             expect(() => {
-                const appRef = new PlanetApplicationRef('app3', {} as any);
+                const appRef = new NgPlanetApplicationRef('app3', {} as any);
                 appRef.bootstrap(undefined);
             }).toThrowError(`app(app3) is not defined`);
         });

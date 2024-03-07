@@ -18,6 +18,7 @@ import {
 import { Planet } from 'ngx-planet/planet';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlanetComponentRef } from './planet-component-ref';
+import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
 
 describe('PlanetComponentLoader', () => {
     let compiler: Compiler;
@@ -59,7 +60,7 @@ describe('PlanetComponentLoader', () => {
         const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
         registerAppComponents(app1ModuleRef);
         tick();
-        const app1Ref = getPlanetApplicationRef(app1Name);
+        const app1Ref = getPlanetApplicationRef(app1Name) as NgPlanetApplicationRef;
         expect(app1Ref.getComponentFactory()).toBeTruthy();
     }));
 

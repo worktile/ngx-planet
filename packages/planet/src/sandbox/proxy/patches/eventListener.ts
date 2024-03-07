@@ -35,7 +35,7 @@ export function eventListenerPatch(sandbox: ProxySandboxInstance): SandboxPatchH
             removeEventListener: removeEventListener.bind(window)
         },
         init() {
-            const fakeDocument = sandbox.global.document;
+            const fakeDocument = sandbox.global["document"];
             if (fakeDocument) {
                 fakeDocument.addEventListener = addEventListener.bind(document);
                 fakeDocument.removeEventListener = removeEventListener.bind(document);

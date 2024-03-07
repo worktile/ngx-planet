@@ -7,12 +7,13 @@ import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 import { SwitchModes, PlanetApplication } from '../planet.class';
 import { PlanetApplicationService } from './planet-application.service';
 import { NgZone, Injector, ApplicationRef } from '@angular/core';
-import { BootstrapOptions, PlanetApplicationRef } from './planet-application-ref';
+import { PlanetApplicationRef } from './planet-application-ref';
 import { app1, app2 } from '../testing/applications';
 import { Planet } from 'ngx-planet/planet';
 import { getApplicationLoader, getApplicationService, clearGlobalPlanet } from 'ngx-planet/global-planet';
 import { RouterTestingModule } from '@angular/router/testing';
 import { sample } from '../testing/utils';
+import { NgBootstrapOptions, NgPlanetApplicationRef } from './ng-planet-application-ref';
 
 class PlanetApplicationRefFaker {
     planetAppRef: PlanetApplicationRef;
@@ -22,8 +23,8 @@ class PlanetApplicationRefFaker {
     getCurrentRouterStateUrlSpy: jasmine.Spy;
     bootstrap$: Subject<PlanetApplicationRef>;
 
-    constructor(appName: string, options?: BootstrapOptions) {
-        this.planetAppRef = new PlanetApplicationRef(appName, options);
+    constructor(appName: string, options?: NgBootstrapOptions) {
+        this.planetAppRef = new NgPlanetApplicationRef(appName, options);
         this.bootstrapSpy = spyOn(this.planetAppRef, 'bootstrap');
         this.bootstrap$ = new Subject<PlanetApplicationRef>();
         this.bootstrapSpy.and.returnValues(this.bootstrap$, this.bootstrap$);
@@ -35,7 +36,7 @@ class PlanetApplicationRefFaker {
         (window as any).planet.apps[appName] = this.planetAppRef;
     }
 
-    static create(appName: string, options?: BootstrapOptions) {
+    static create(appName: string, options?: NgBootstrapOptions) {
         return new PlanetApplicationRefFaker(appName, options);
     }
 

@@ -39,7 +39,7 @@ const routes: Routes = [
         ]
     },
     {
-        path: 'app4',
+        path: 'standalone-app',
         component: EmptyComponent,
         children: [
             {
