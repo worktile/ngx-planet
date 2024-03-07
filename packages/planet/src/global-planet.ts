@@ -6,7 +6,7 @@ import { isFunction } from './helpers';
 import {
     NgBootstrapAppModule,
     NgBootstrapOptions,
-    NgPlanetApplicationRef
+    NgPlanetApplicationRef,
 } from './application/ng-planet-application-ref';
 
 declare const window: any;
@@ -19,7 +19,7 @@ export interface GlobalPlanet {
 }
 
 export const globalPlanet: GlobalPlanet = (window.planet = window.planet || {
-    apps: {}
+    apps: {},
 });
 
 export function defineApplication(name: string, options: NgBootstrapAppModule | NgBootstrapOptions) {
@@ -29,11 +29,11 @@ export function defineApplication(name: string, options: NgBootstrapAppModule | 
     if (isFunction(options)) {
         options = {
             template: '',
-            bootstrap: options as NgBootstrapAppModule
+            bootstrap: options as NgBootstrapAppModule,
         };
     }
     const appRef = new NgPlanetApplicationRef(name, options as NgBootstrapOptions);
-    console.log(`App ${name} defined`, appRef)
+    console.log(`App ${name} defined`, appRef);
     globalPlanet.apps[name] = appRef;
 }
 

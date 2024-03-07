@@ -12,16 +12,16 @@ export const routes: Routes = [
             redirectToRoute('dashboard'),
             {
                 path: 'dashboard',
-                component: DashboardComponent
+                component: DashboardComponent,
             },
             {
                 path: 'about',
-                component: AboutComponent
-            }
-        ]
+                component: AboutComponent,
+            },
+        ],
     },
     {
         path: '**',
-        component: EmptyComponent
-    }
+        component: EmptyComponent,
+    },
 ];

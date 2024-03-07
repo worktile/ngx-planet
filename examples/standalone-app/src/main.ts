@@ -9,7 +9,7 @@ defineApplication('standalone-app', {
     template: `<standalone-app-root></standalone-app-root>`,
     bootstrap: (portalApp: PlanetPortalApplication) => {
         return bootstrapApplication(AppRootComponent, appConfig);
-    }
+    },
 });
 
 // bootstrapApplication(AppRootComponent, appConfig);

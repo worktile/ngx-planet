@@ -29,7 +29,7 @@ export interface BootstrapOptions extends NgBootstrapOptions {}
 
 export type PlantComponentFactory = <TData, TComp>(
     componentName: string,
-    config: PlantComponentConfig<TData>
+    config: PlantComponentConfig<TData>,
 ) => PlanetComponentRef<TComp>;
 
 export class NgPlanetApplicationRef implements PlanetApplicationRef {
@@ -78,7 +78,7 @@ export class NgPlanetApplicationRef implements PlanetApplicationRef {
     private syncPortalRouteWhenNavigationEnd() {
         const router = (this.injector || this.appModuleRef?.injector)?.get(Router);
         if (router) {
-            router.events.subscribe(event => {
+            router.events.subscribe((event) => {
                 if (event instanceof NavigationEnd) {
                     this.ngZone?.onStable
                         .asObservable()
@@ -97,20 +97,20 @@ export class NgPlanetApplicationRef implements PlanetApplicationRef {
         }
         this.portalApp = app;
         return from(
-            this.appModuleBootstrap(app).then(appModuleRef => {
+            this.appModuleBootstrap(app).then((appModuleRef) => {
                 if (appModuleRef.instance) {
                     this.appModuleRef = appModuleRef as NgModuleRef<any>;
                     this.appModuleRef.instance.appName = this.name;
                     this.injector = this.appModuleRef.injector;
                 } else {
-                    this.appRef = (appModuleRef as unknown) as ApplicationRef;
+                    this.appRef = appModuleRef as unknown as ApplicationRef;
                     this.injector = this.appRef.injector;
                     const moduleRef = this.appRef.injector.get(NgModuleRef);
                     (moduleRef as any).instance = { appName: this.name };
                 }
                 this.syncPortalRouteWhenNavigationEnd();
                 return this;
-            })
+            }),
         );
     }
 

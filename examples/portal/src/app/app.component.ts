@@ -10,7 +10,7 @@ import { debug } from 'debug';
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html'
+    templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
     // @HostBinding('class.portal') class = true;
@@ -29,23 +29,23 @@ export class AppComponent implements OnInit {
         private globalEventDispatcher: GlobalEventDispatcher,
         private thyDialog: ThyDialog,
         private thyNotify: ThyNotifyService,
-        public appRootContext: AppRootContext
+        public appRootContext: AppRootContext,
     ) {}
 
     ngOnInit() {
         this.planet.setOptions({
             switchMode: SwitchModes.coexist,
-            errorHandler: error => {
+            errorHandler: (error) => {
                 this.thyNotify.error(`错误`, '加载资源失败');
                 console.error(error);
             },
-            debugFactory: debug
+            debugFactory: debug,
         });
 
         this.appRootContext.setName(`my name is app root context`);
 
         this.planet.setPortalAppData({
-            appRootContext: this.appRootContext
+            appRootContext: this.appRootContext,
         });
 
         const appHostClass = 'thy-layout';
@@ -71,8 +71,8 @@ export class AppComponent implements OnInit {
                 manifest: '/static/app1/assets-manifest.json',
                 extra: {
                     name: '应用1',
-                    color: '#ffa415'
-                }
+                    color: '#ffa415',
+                },
             },
             {
                 name: 'app2',
@@ -92,8 +92,8 @@ export class AppComponent implements OnInit {
                 manifest: '/static/app2/assets-manifest.json',
                 extra: {
                     name: '应用2',
-                    color: '#66c060'
-                }
+                    color: '#66c060',
+                },
             },
             {
                 name: 'standalone-app',
@@ -112,19 +112,19 @@ export class AppComponent implements OnInit {
                 manifest: '/static/standalone-app/assets-manifest.json',
                 extra: {
                     name: '独立应用',
-                    color: '#66c060'
-                }
-            }
+                    color: '#66c060',
+                },
+            },
         ]);
 
         this.planet.start();
 
-        this.globalEventDispatcher.register('openADetail').subscribe(event => {
+        this.globalEventDispatcher.register('openADetail').subscribe((event) => {
             this.thyDialog.open(ADetailComponent);
         });
 
-        this.planet.appsLoadingStart.subscribe(event => {
-            this.activeAppNames = event.shouldLoadApps.map(item => item.name);
+        this.planet.appsLoadingStart.subscribe((event) => {
+            this.activeAppNames = event.shouldLoadApps.map((item) => item.name);
             console.log(`active app names: ${this.activeAppNames.join(',')}`);
         });
     }

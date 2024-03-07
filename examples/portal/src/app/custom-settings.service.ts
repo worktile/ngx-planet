@@ -21,20 +21,20 @@ export interface CustomSettingsInfo {
 const DEFAULT_SETTINGS: CustomSettingsInfo = {
     app1: {
         preload: true,
-        switchMode: SwitchModes.coexist
+        switchMode: SwitchModes.coexist,
     },
     app2: {
         preload: true,
-        switchMode: SwitchModes.coexist
+        switchMode: SwitchModes.coexist,
     },
     standaloneApp: {
         preload: true,
-        switchMode: SwitchModes.coexist
-    }
+        switchMode: SwitchModes.coexist,
+    },
 };
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class CustomSettingsService {
     get(): CustomSettingsInfo {
