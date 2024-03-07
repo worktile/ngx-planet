@@ -5,6 +5,8 @@
     "singleQuote": true,
     "semi": true,
     "printWidth": 120,
+    "arrowParens": "avoid",
+    "bracketSameLine": true,
     "overrides": [
         {
             "files": "*.json",
