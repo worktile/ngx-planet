@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [17.0.0-next.0](https://github.com/worktile/ngx-planet/compare/16.0.0...17.0.0-next.0) (2024-03-08)
+
+
+### Features
+
+* support load standalone app #INFR-11810 ([#305](https://github.com/worktile/ngx-planet/issues/305)) ([9a750ad](https://github.com/worktile/ngx-planet/commit/9a750ad15c4c036640ee44861ca1b8698bec7e3a)), closes [#INFR-11810](https://github.com/worktile/ngx-planet/issues/INFR-11810)
+* upgrade ng to 17 ([#302](https://github.com/worktile/ngx-planet/issues/302)) ([acc1525](https://github.com/worktile/ngx-planet/commit/acc152587860f65551fde5c7b73a056d8b543f47))
+
+
+
 # [16.0.0](https://github.com/worktile/ngx-planet/compare/16.0.0-next.0...16.0.0) (2023-08-22)
 
 
