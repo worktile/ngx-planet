@@ -29,7 +29,6 @@ export function defineApplication<TOptions extends NgBootstrapAppModule | NgBoot
         } as TOptions;
     }
     const appRef = new NgPlanetApplicationRef(name, options as NgBootstrapOptions);
-    console.log(`App ${name} defined`, appRef);
     globalPlanet.apps[name] = appRef;
 }
 
