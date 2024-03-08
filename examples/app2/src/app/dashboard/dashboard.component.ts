@@ -13,8 +13,11 @@ export class DashboardComponent {
 
     app2LodashVersion = window['lodash'].version;
 
-    constructor(private portalApp: PlanetPortalApplication, private globalEventDispatcher: GlobalEventDispatcher) {
-        console.log(window);
+    constructor(
+        private portalApp: PlanetPortalApplication,
+        private globalEventDispatcher: GlobalEventDispatcher
+    ) {
+        // console.log(window);
     }
 
     toAbout() {

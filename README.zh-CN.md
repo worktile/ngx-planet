@@ -137,26 +137,60 @@ export class AppComponent implements OnInit {
 }
 ```
 
-### 3. 子应用通过`defineApplication`定义如何启动子应用的`AppModule`, 同时可以设置`PlanetPortalApplication`服务为主应用的全局服务。
+### 3. 子应用通过`defineApplication`定义如何启动子应用, 同时可以设置`PlanetPortalApplication`服务为主应用的全局服务。
 
+启动模块应用(>= 17.0.0):
+```ts
+defineApplication('app1', {
+    template: `<app1-root class="app1-root"></app1-root>`,
+    bootstrap: (portalApp: PlanetPortalApplication) => {
+        return platformBrowserDynamic([
+            {
+                provide: PlanetPortalApplication,
+                useValue: portalApp
+            },
+            {
+                provide: AppRootContext,
+                useValue: portalApp.data.appRootContext
+            }
+        ])
+            .bootstrapModule(AppModule)
+            .then(appModule => {
+                return appModule;
+            })
+            .catch(error => {
+                console.error(error);
+                return null;
+            });
+    }
+});
 ```
-defineApplication('app1', (portalApp: PlanetPortalApplication) => {
-    return platformBrowserDynamic([
-        {
-            provide: PlanetPortalApplication,
-            useValue: portalApp
-        }
-    ])
-        .bootstrapModule(AppModule)
-        .then(appModule => {
-            return appModule;
-        })
-        .catch(error => {
+
+启动独立应用:
+
+```ts
+defineApplication('standalone-app', {
+    template: `<standalone-app-root></standalone-app-root>`,
+    bootstrap: (portalApp: PlanetPortalApplication) => {
+        return bootstrapApplication(AppRootComponent, {
+            providers: [
+                {
+                    provide: PlanetPortalApplication,
+                    useValue: portalApp
+                },
+                {
+                    provide: AppRootContext,
+                    useValue: portalApp.data.appRootContext
+                }
+            ]
+        }).catch(error => {
             console.error(error);
             return null;
         });
+    }
 });
 ```
+
 
 ## 文档
 

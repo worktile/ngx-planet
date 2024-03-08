@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+
+@use 'ngx-tethys/styles/variables.scss' with (
+    $layout-content-background: #fff
+);
+@use 'ngx-tethys/styles/index.scss';
+@use 'ngx-tethys/styles/basic.scss';
+
+.section-card {
+    display: block;
+    position: relative;
+    padding: 15px;
+    border: 2px variables.$gray-300 dashed;
+
+    .section-card-header {
+        position: absolute;
+        padding: 0 10px;
+        background: variables.$white;
+        top: -10px;
+        left: 5px;
+        color: variables.$gray-600; // $gray-500;
+    }
+}

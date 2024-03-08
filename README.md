@@ -137,9 +137,10 @@ export class AppComponent implements OnInit {
 }
 ```
 
-### 3. Sub App define how to bootstrap AppModule
+### 3. Sub App define how to bootstrap application
 
-```
+for NgModule application:
+```ts
 defineApplication('app1', {
     template: `<app1-root class="app1-root"></app1-root>`,
     bootstrap: (portalApp: PlanetPortalApplication) => {
@@ -161,6 +162,31 @@ defineApplication('app1', {
                 console.error(error);
                 return null;
             });
+    }
+});
+```
+
+for Standalone application: (>= 17.0.0)
+
+```ts
+defineApplication('standalone-app', {
+    template: `<standalone-app-root></standalone-app-root>`,
+    bootstrap: (portalApp: PlanetPortalApplication) => {
+        return bootstrapApplication(AppRootComponent, {
+            providers: [
+                {
+                    provide: PlanetPortalApplication,
+                    useValue: portalApp
+                },
+                {
+                    provide: AppRootContext,
+                    useValue: portalApp.data.appRootContext
+                }
+            ]
+        }).catch(error => {
+            console.error(error);
+            return null;
+        });
     }
 });
 ```
