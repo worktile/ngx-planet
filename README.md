@@ -66,17 +66,17 @@ class AppModule {}
 
 ### 2. Register applications to planet use PlanetService in portal app
 
-```
+```ts
 @Component({
     selector: 'app-portal-root',
     template: `
-<nav>
-    <a [routerLink]="['/app1']" routerLinkActive="active">应用1</a>
-    <a [routerLink]="['/app2']" routerLinkActive="active">应用2</a>
-</nav>
-<router-outlet></router-outlet>
-<div id="app-host-container"></div>
-<div *ngIf="!loadingDone">加载中...</div>
+        <nav>
+            <a [routerLink]="['/app1']" routerLinkActive="active">应用1</a>
+            <a [routerLink]="['/app2']" routerLinkActive="active">应用2</a>
+        </nav>
+        <router-outlet></router-outlet>
+        <div id="app-host-container"></div>
+        <div *ngIf="!loadingDone">加载中...</div>
     `
 })
 export class AppComponent implements OnInit {
