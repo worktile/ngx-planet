@@ -94,6 +94,26 @@ export class AppComponent implements OnInit {
                     name: '应用2',
                     color: '#66c060'
                 }
+            },
+            {
+                name: 'standalone-app',
+                hostParent: '#app-host-container',
+                hostClass: appHostClass,
+                routerPathPrefix: '/standalone-app',
+                resourcePathPrefix: '/static/standalone-app/',
+                preload: settings.standaloneApp?.preload,
+                switchMode: settings.standaloneApp?.switchMode,
+                stylePrefix: 'standalone-app',
+                // prettier-ignore
+                scripts: [
+                    'main.js'
+                ],
+                styles: ['styles.css'],
+                manifest: '/static/standalone-app/assets-manifest.json',
+                extra: {
+                    name: '独立应用',
+                    color: '#66c060'
+                }
             }
         ]);
 

@@ -10,7 +10,8 @@ import {
     Type,
     ComponentRef,
     EmbeddedViewRef,
-    reflectComponentType
+    reflectComponentType,
+    EnvironmentInjector
 } from '@angular/core';
 import { PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
@@ -19,7 +20,13 @@ import { coerceArray } from '../helpers';
 import { map, shareReplay, delayWhen } from 'rxjs/operators';
 import { of, Observable, timer } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
-import { globalPlanet, getApplicationLoader, getApplicationService } from '../global-planet';
+import {
+    getApplicationLoader,
+    getApplicationService,
+    getPlanetApplicationRef,
+    getBootstrappedPlanetApplicationRef
+} from '../global-planet';
+import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
 
 const componentWrapperClass = 'planet-component-wrapper';
 
@@ -54,19 +61,20 @@ export class PlanetComponentLoader {
     ) {}
 
     private getPlantAppRef(name: string): Observable<PlanetApplicationRef> {
-        if (globalPlanet.apps[name] && globalPlanet.apps[name].appModuleRef) {
-            return of(globalPlanet.apps[name]);
+        const plantAppRef = getBootstrappedPlanetApplicationRef(name);
+        if (plantAppRef) {
+            return of(plantAppRef);
         } else {
             const app = this.applicationService.getAppByName(name);
             return this.applicationLoader.preload(app, true).pipe(
                 map(() => {
-                    return globalPlanet.apps[name];
+                    return getPlanetApplicationRef(name);
                 })
             );
         }
     }
 
-    private createInjector<TData>(appModuleRef: NgModuleRef<any>, componentRef: PlanetComponentRef<TData>): Injector {
+    private createInjector<TData>(parentInjector: Injector, componentRef: PlanetComponentRef<TData>): Injector {
         return Injector.create({
             providers: [
                 {
@@ -74,7 +82,7 @@ export class PlanetComponentLoader {
                     useValue: componentRef
                 }
             ],
-            parent: appModuleRef.injector
+            parent: parentInjector
         });
     }
 
@@ -90,11 +98,7 @@ export class PlanetComponentLoader {
         }
     }
 
-    private insertComponentRootNodeToContainer(
-        container: HTMLElement,
-        componentRootNode: HTMLElement,
-        hostClass: string
-    ) {
+    private insertComponentRootNodeToContainer(container: HTMLElement, componentRootNode: HTMLElement, hostClass: string) {
         const subApp = this.applicationService.getAppByName(this.ngModuleRef.instance.appName);
         componentRootNode.classList.add(componentWrapperClass);
         componentRootNode.setAttribute('planet-inline', '');
@@ -114,15 +118,15 @@ export class PlanetComponentLoader {
 
     private attachComponent<TData>(
         component: Type<unknown>,
-        appModuleRef: NgModuleRef<unknown>,
+        environmentInjector: EnvironmentInjector,
         config: PlantComponentConfig
     ): PlanetComponentRef<TData> {
         const plantComponentRef = new PlanetComponentRef();
         const appRef = this.applicationRef;
-        const injector = this.createInjector<TData>(appModuleRef, plantComponentRef);
+        const injector = this.createInjector<TData>(environmentInjector, plantComponentRef);
         const container = this.getContainerElement(config);
         const componentRef = createComponent(component, {
-            environmentInjector: appModuleRef.injector,
+            environmentInjector: environmentInjector,
             elementInjector: injector
         });
         appRef.attachView(componentRef.hostView);
@@ -151,7 +155,7 @@ export class PlanetComponentLoader {
 
     private registerComponentFactory(componentOrComponents: PlanetComponent | PlanetComponent[]) {
         const app = this.ngModuleRef.instance.appName;
-        this.getPlantAppRef(app).subscribe(appRef => {
+        this.getPlantAppRef(app).subscribe((appRef: NgPlanetApplicationRef) => {
             appRef.registerComponentFactory((componentName: string, config: PlantComponentConfig<any>) => {
                 const components = coerceArray(componentOrComponents);
                 const planetComponent = components.find(item => {
@@ -163,7 +167,7 @@ export class PlanetComponentLoader {
                     return this.ngZone.run(() => {
                         const componentRef = this.attachComponent<any>(
                             isComponentType(planetComponent) ? planetComponent : planetComponent.component,
-                            appRef.appModuleRef,
+                            appRef.appModuleRef.injector,
                             config
                         );
                         return componentRef;
@@ -187,7 +191,7 @@ export class PlanetComponentLoader {
         config: PlantComponentConfig<TData>
     ): Observable<PlanetComponentRef<TComp>> {
         const result = this.getPlantAppRef(app).pipe(
-            delayWhen(appRef => {
+            delayWhen((appRef: NgPlanetApplicationRef) => {
                 if (appRef.getComponentFactory()) {
                     return of('');
                 } else {

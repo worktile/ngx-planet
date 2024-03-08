@@ -12,6 +12,10 @@ export interface CustomSettingsInfo {
         preload: boolean;
         switchMode?: SwitchModes;
     };
+    standaloneApp: {
+        preload: boolean;
+        switchMode?: SwitchModes;
+    };
 }
 
 const DEFAULT_SETTINGS: CustomSettingsInfo = {
@@ -20,6 +24,10 @@ const DEFAULT_SETTINGS: CustomSettingsInfo = {
         switchMode: SwitchModes.coexist
     },
     app2: {
+        preload: true,
+        switchMode: SwitchModes.coexist
+    },
+    standaloneApp: {
         preload: true,
         switchMode: SwitchModes.coexist
     }

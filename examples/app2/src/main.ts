@@ -1,9 +1,9 @@
-import { enableProdMode, NgModuleRef, Type, NgZone } from '@angular/core';
+import { enableProdMode } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { Router } from '@angular/router';
 import { PlanetPortalApplication, PlanetRouterEvent, GlobalEventDispatcher, defineApplication } from 'ngx-planet';
 
 if (environment.production) {

@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
+  "newProjectRoot": "examples",
   "projects": {
     "planet": {
       "root": "packages/planet",
@@ -393,11 +393,95 @@
           }
         }
       }
+    },
+    "standalone-app": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "examples/standalone-app",
+      "sourceRoot": "examples/standalone-app/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-esbuild:application",
+          "options": {
+            "plugins": ["./examples/standalone-app/plugin-manifest.js"],
+            "outputPath": {
+              "base": "dist/standalone-app",
+              "browser": ""
+            },
+            "index": "examples/standalone-app/src/index.html",
+            "browser": "examples/standalone-app/src/main.ts",
+            "polyfills": [],
+            "tsConfig": "examples/standalone-app/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": ["examples/standalone-app/src/favicon.ico", "examples/standalone-app/src/assets"],
+            "styles": ["examples/standalone-app/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-esbuild:dev-server",
+          "options": {
+            "port": 3003
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "standalone-app:build:production"
+            },
+            "development": {
+              "buildTarget": "standalone-app:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "standalone-app:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["examples/standalone-app/**/*.ts", "examples/standalone-app/**/*.html"]
+          }
+        }
+      }
     }
   },
   "cli": {
     "analytics": false,
-    "schematicCollections": ["@angular-eslint/schematics"]
+    "schematicCollections": ["@angular-eslint/schematics"],
+    "cache": {
+      "enabled": false
+    }
   },
   "schematics": {
     "@angular-eslint/schematics:application": {

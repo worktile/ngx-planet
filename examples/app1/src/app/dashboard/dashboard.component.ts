@@ -11,7 +11,7 @@ import { ProjectsDialogComponent } from '../projects/dialog/projects-dialog.comp
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
     @ViewChild('container', { static: true }) containerElementRef: ElementRef<HTMLDivElement>;
 
     public size: ThyDialogSizes = ThyDialogSizes.md;
@@ -28,8 +28,6 @@ export class DashboardComponent implements OnInit {
         private planetComponentLoader: PlanetComponentLoader
     ) {}
 
-    ngOnInit() {}
-
     openADetail() {
         this.globalEventDispatcher.dispatch('openADetail');
     }
@@ -42,7 +40,7 @@ export class DashboardComponent implements OnInit {
 
     openApp2Dialog() {
         this.dialog.open(ProjectsDialogComponent, {
-            size: ThyDialogSizes.supperLg
+            size: ThyDialogSizes.superLg
         });
     }
 

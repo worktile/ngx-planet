@@ -1,23 +1,29 @@
 import { PlanetPortalApplication } from './portal-application';
-import { NgModule, Compiler, Injector, Component, NgZone, Type } from '@angular/core';
-import { Router } from '@angular/router';
+import { NgModule, Compiler, Injector, Component, NgZone, Type, ApplicationConfig, ApplicationRef } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { Router, RouterOutlet, provideRouter } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { TestBed, inject, tick, fakeAsync, flush } from '@angular/core/testing';
 import { defineApplication, getPlanetApplicationRef, clearGlobalPlanet } from '../global-planet';
 import { Subject } from 'rxjs';
 import { PlanetApplicationRef } from './planet-application-ref';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NgPlanetApplicationRef } from './ng-planet-application-ref';
+import { createElementByTemplate } from '../helpers';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-root',
-    template: `
-        <router-outlet></router-outlet>
-    `
+    template: ` <router-outlet></router-outlet>`,
+    standalone: true,
+    imports: [RouterOutlet]
 })
 class EmptyComponent {}
+
 @NgModule({
-    declarations: [EmptyComponent],
+    declarations: [],
     imports: [
+        EmptyComponent,
         RouterTestingModule.withRoutes([
             {
                 path: 'app1',
@@ -31,6 +37,34 @@ class EmptyComponent {}
     ]
 })
 class AppModule {}
+
+@Component({
+    // eslint-disable-next-line @angular-eslint/component-selector
+    selector: 'app-standalone-root',
+    template: ` <router-outlet></router-outlet>`,
+    imports: [RouterOutlet],
+    standalone: true
+})
+class AppComponent {}
+
+export const appConfig: ApplicationConfig = {
+    providers: [
+        // provideRouter([
+        //     {
+        //         path: 'app1',
+        //         component: EmptyComponent
+        //     },
+        //     {
+        //         path: 'app1/test',
+        //         component: EmptyComponent
+        //     }
+        // ])
+    ]
+};
+
+export function bootstrapStandaloneApplication() {
+    return bootstrapApplication(AppComponent, appConfig);
+}
 
 describe('PlanetApplicationRef', () => {
     afterEach(() => {
@@ -65,6 +99,7 @@ describe('PlanetApplicationRef', () => {
     describe('ApplicationRef', () => {
         let compiler: Compiler;
         let injector: Injector;
+        let routerHarness: RouterTestingHarness;
 
         function bootstrapApp1<T>(moduleType?: Type<T>) {
             const portalApplication = new PlanetPortalApplication();
@@ -81,7 +116,7 @@ describe('PlanetApplicationRef', () => {
                 }
             });
 
-            const appRef = getPlanetApplicationRef('app1');
+            const appRef = getPlanetApplicationRef('app1') as NgPlanetApplicationRef;
             appRef.bootstrap(portalApplication).subscribe();
 
             flush();
@@ -91,8 +126,9 @@ describe('PlanetApplicationRef', () => {
             };
         }
 
-        beforeEach(() => {
+        beforeEach(async () => {
             TestBed.configureTestingModule({});
+            routerHarness = await RouterTestingHarness.create('/');
         });
 
         beforeEach(inject([Compiler, Injector], (_compiler: Compiler, _injector: Injector) => {
@@ -120,8 +156,8 @@ describe('PlanetApplicationRef', () => {
             expect(appRef.bootstrapped).toEqual(false);
             flush();
             expect(appRef.bootstrapped).toEqual(true);
-            expect(appRef.appModuleRef).toEqual(ngModuleRef);
-            expect(appRef.appModuleRef.instance.appName).toEqual('app1');
+            expect(appRef['appModuleRef']).toEqual(ngModuleRef);
+            expect(appRef['appModuleRef'].instance.appName).toEqual('app1');
             expect(bootstrapSpy.calls.count()).toEqual(1);
             expect(bootstrapSpy).toHaveBeenCalled();
             expect(bootstrapSpy).toHaveBeenCalledWith(appRef);
@@ -142,7 +178,7 @@ describe('PlanetApplicationRef', () => {
                 }
             });
 
-            const appRef = getPlanetApplicationRef('app1');
+            const appRef = getPlanetApplicationRef('app1') as NgPlanetApplicationRef;
             appRef.bootstrap(portalApplication).subscribe();
 
             flush();
@@ -152,6 +188,62 @@ describe('PlanetApplicationRef', () => {
             appRef.destroy();
             expect(appRef.bootstrapped).toEqual(false);
             expect(appRef.appModuleRef).toEqual(undefined);
+        }));
+
+        it(`should bootstrap standalone application ref`, fakeAsync(() => {
+            const portalApplication = new PlanetPortalApplication();
+            const element = createElementByTemplate('<app-standalone-root></app-standalone-root>');
+            document.body.appendChild(element);
+            defineApplication('app-standalone', {
+                template: '<app-standalone-root></app-standalone-root>',
+                bootstrap: (portalApp?: PlanetPortalApplication) => {
+                    return bootstrapStandaloneApplication();
+                }
+            });
+            routerHarness.navigateByUrl('/');
+            const planetAppRef = getPlanetApplicationRef('app-standalone');
+            expect(planetAppRef).toBeTruthy();
+            const bootstrapSpy = jasmine.createSpy('bootstrap spy');
+            planetAppRef.bootstrap(portalApplication).subscribe(bootstrapSpy);
+            expect(planetAppRef.bootstrapped).toEqual(false);
+            flush();
+            expect(planetAppRef.bootstrapped).toEqual(true);
+            const appRef: ApplicationRef = planetAppRef['appRef'];
+            expect(appRef).toBeTruthy();
+            expect(appRef instanceof ApplicationRef).toEqual(true);
+            expect(bootstrapSpy.calls.count()).toEqual(1);
+            expect(bootstrapSpy).toHaveBeenCalled();
+            expect(bootstrapSpy).toHaveBeenCalledWith(planetAppRef);
+            planetAppRef.destroy();
+        }));
+
+        it(`should destroy standalone application ref success`, fakeAsync(() => {
+            const portalApplication = new PlanetPortalApplication();
+            const element = createElementByTemplate('<app-standalone-root></app-standalone-root>');
+            document.body.appendChild(element);
+            defineApplication('app-standalone', {
+                template: '<app-standalone-root></app-standalone-root>',
+                bootstrap: (portalApp?: PlanetPortalApplication) => {
+                    return bootstrapStandaloneApplication();
+                }
+            });
+            routerHarness.navigateByUrl('/');
+            const planetAppRef = getPlanetApplicationRef('app-standalone');
+            expect(planetAppRef).toBeTruthy();
+            const bootstrapSpy = jasmine.createSpy('bootstrap spy');
+            planetAppRef.bootstrap(portalApplication).subscribe(bootstrapSpy);
+            expect(planetAppRef.bootstrapped).toEqual(false);
+            flush();
+            expect(planetAppRef.bootstrapped).toEqual(true);
+            const appRef: ApplicationRef = planetAppRef['appRef'];
+            expect(appRef).toBeTruthy();
+            expect(appRef instanceof ApplicationRef).toEqual(true);
+            expect(bootstrapSpy.calls.count()).toEqual(1);
+            expect(bootstrapSpy).toHaveBeenCalled();
+            expect(bootstrapSpy).toHaveBeenCalledWith(planetAppRef);
+            planetAppRef.destroy();
+            expect(planetAppRef.bootstrapped).toEqual(false);
+            expect(planetAppRef['appRef']).toEqual(undefined);
         }));
 
         it(`should get router success`, fakeAsync(() => {
@@ -195,7 +287,7 @@ describe('PlanetApplicationRef', () => {
 
         it(`should throw error when app is not defined`, () => {
             expect(() => {
-                const appRef = new PlanetApplicationRef('app3', {} as any);
+                const appRef = new NgPlanetApplicationRef('app3', {} as any);
                 appRef.bootstrap(undefined);
             }).toThrowError(`app(app3) is not defined`);
         });

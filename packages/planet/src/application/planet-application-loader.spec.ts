@@ -7,12 +7,13 @@ import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 import { SwitchModes, PlanetApplication } from '../planet.class';
 import { PlanetApplicationService } from './planet-application.service';
 import { NgZone, Injector, ApplicationRef } from '@angular/core';
-import { BootstrapOptions, PlanetApplicationRef } from './planet-application-ref';
+import { PlanetApplicationRef } from './planet-application-ref';
 import { app1, app2 } from '../testing/applications';
 import { Planet } from 'ngx-planet/planet';
 import { getApplicationLoader, getApplicationService, clearGlobalPlanet } from 'ngx-planet/global-planet';
 import { RouterTestingModule } from '@angular/router/testing';
 import { sample } from '../testing/utils';
+import { NgBootstrapOptions, NgPlanetApplicationRef } from './ng-planet-application-ref';
 
 class PlanetApplicationRefFaker {
     planetAppRef: PlanetApplicationRef;
@@ -22,8 +23,8 @@ class PlanetApplicationRefFaker {
     getCurrentRouterStateUrlSpy: jasmine.Spy;
     bootstrap$: Subject<PlanetApplicationRef>;
 
-    constructor(appName: string, options?: BootstrapOptions) {
-        this.planetAppRef = new PlanetApplicationRef(appName, options);
+    constructor(appName: string, options?: NgBootstrapOptions) {
+        this.planetAppRef = new NgPlanetApplicationRef(appName, options);
         this.bootstrapSpy = spyOn(this.planetAppRef, 'bootstrap');
         this.bootstrap$ = new Subject<PlanetApplicationRef>();
         this.bootstrapSpy.and.returnValues(this.bootstrap$, this.bootstrap$);
@@ -35,7 +36,7 @@ class PlanetApplicationRefFaker {
         (window as any).planet.apps[appName] = this.planetAppRef;
     }
 
-    static create(appName: string, options?: BootstrapOptions) {
+    static create(appName: string, options?: NgBootstrapOptions) {
         return new PlanetApplicationRefFaker(appName, options);
     }
 
@@ -79,11 +80,7 @@ class AppStatusChangeFaker {
     }
 
     // 封装从资源加载完毕到应用的启动和激活过程，简化每个测试用例重复写很多逻辑
-    expectFromAssetsLoadedToActive(
-        fromCalledTimes: number,
-        appRefFaker: PlanetApplicationRefFaker,
-        expectedApp: PlanetApplication
-    ) {
+    expectFromAssetsLoadedToActive(fromCalledTimes: number, appRefFaker: PlanetApplicationRefFaker, expectedApp: PlanetApplication) {
         appRefFaker.haveNotBeenBootstrap();
         flush();
         appRefFaker.haveBeenBootstrap();
@@ -923,24 +920,22 @@ describe('PlanetApplicationLoader', () => {
         }));
 
         it('should preload app when status is in assetsLoading, assetsLoaded or bootstrapping', fakeAsync(() => {
-            [ApplicationStatus.assetsLoading, ApplicationStatus.assetsLoaded, ApplicationStatus.bootstrapping].forEach(
-                status => {
-                    const preloadAppSpy = jasmine.createSpy('preload app spy');
-                    planetApplicationLoader['setAppStatus'](app1, status);
-                    const appRefFaker = PlanetApplicationRefFaker.create(app1.name);
+            [ApplicationStatus.assetsLoading, ApplicationStatus.assetsLoaded, ApplicationStatus.bootstrapping].forEach(status => {
+                const preloadAppSpy = jasmine.createSpy('preload app spy');
+                planetApplicationLoader['setAppStatus'](app1, status);
+                const appRefFaker = PlanetApplicationRefFaker.create(app1.name);
 
-                    planetApplicationLoader.preload(app1).subscribe(data => {
-                        // expect(NgZone.isInAngularZone()).toEqual(true);
-                        preloadAppSpy(data);
-                    });
+                planetApplicationLoader.preload(app1).subscribe(data => {
+                    // expect(NgZone.isInAngularZone()).toEqual(true);
+                    preloadAppSpy(data);
+                });
 
-                    expect(preloadAppSpy).not.toHaveBeenCalled();
-                    planetApplicationLoader['setAppStatus'](app1, ApplicationStatus.bootstrapped);
-                    expect(preloadAppSpy).toHaveBeenCalled();
-                    expect(preloadAppSpy).toHaveBeenCalledWith(appRefFaker.planetAppRef);
-                    expect(NgZone.isInAngularZone()).toEqual(false);
-                }
-            );
+                expect(preloadAppSpy).not.toHaveBeenCalled();
+                planetApplicationLoader['setAppStatus'](app1, ApplicationStatus.bootstrapped);
+                expect(preloadAppSpy).toHaveBeenCalled();
+                expect(preloadAppSpy).toHaveBeenCalledWith(appRefFaker.planetAppRef);
+                expect(NgZone.isInAngularZone()).toEqual(false);
+            });
         }));
 
         it('should preload app when status is empty or error', fakeAsync(() => {

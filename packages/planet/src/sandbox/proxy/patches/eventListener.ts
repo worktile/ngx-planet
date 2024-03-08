@@ -6,11 +6,7 @@ export function eventListenerPatch(sandbox: ProxySandboxInstance): SandboxPatchH
     const rawRemoveEventListener = window.removeEventListener;
     const listenerSubscriptions = new Map<EventListenerOrEventListenerObject, Subscription>();
 
-    function addEventListener(
-        type: string,
-        listener: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
-    ) {
+    function addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) {
         const observable = new Observable(() => {
             rawAddEventListener.call(this, type, listener, options);
             return () => {
@@ -35,7 +31,7 @@ export function eventListenerPatch(sandbox: ProxySandboxInstance): SandboxPatchH
             removeEventListener: removeEventListener.bind(window)
         },
         init() {
-            const fakeDocument = sandbox.global.document;
+            const fakeDocument = sandbox.global['document'];
             if (fakeDocument) {
                 fakeDocument.addEventListener = addEventListener.bind(document);
                 fakeDocument.removeEventListener = removeEventListener.bind(document);

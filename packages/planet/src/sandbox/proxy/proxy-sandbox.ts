@@ -7,13 +7,16 @@ import { Sandbox, SandboxOptions } from '../sandbox';
 export class ProxySandbox extends Sandbox {
     public running = false;
 
-    public global!: Global;
+    public override global!: Global;
 
     public rewriteVariables!: PropertyKey[];
 
     private patchHandlers: SandboxPatchHandler[] = [];
 
-    constructor(public app: string, public options: SandboxOptions) {
+    constructor(
+        public app: string,
+        public override options: SandboxOptions
+    ) {
         super();
         this.patchHandlers = getSandboxPatchHandlers(this);
         this.start();

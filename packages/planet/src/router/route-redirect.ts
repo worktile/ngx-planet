@@ -6,7 +6,7 @@ class RouteRedirect {
     router = inject(Router);
 
     constructor(redirectTo: string) {
-        const finalRedirectTo = redirectTo || this.activatedRoute.snapshot.data.redirectTo;
+        const finalRedirectTo = redirectTo || this.activatedRoute.snapshot.data['redirectTo'];
         if (finalRedirectTo) {
             const activatedRouteUrl = this.activatedRoute.pathFromRoot
                 .filter(route => {
