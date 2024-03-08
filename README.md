@@ -137,7 +137,7 @@ export class AppComponent implements OnInit {
 }
 ```
 
-### 3. Sub App define how to bootstrap application
+### 3. Sub App define how to bootstrap
 
 for NgModule application:
 ```ts
