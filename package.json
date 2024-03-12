@@ -50,6 +50,7 @@
     "pub-only-next": "cd dist/planet && npm publish --tag next --access=public",
     "pub": "wpm publish && npm run pub-only",
     "pub-next": "wpm publish && npm run pub-only-next",
+    "pub-demo-git": "cp ./package.json ./dist & wpm git-publish --source ./dist --name ngx-planet-demo-site --organization worktile",
     "contributors:init": "all-contributors init",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
