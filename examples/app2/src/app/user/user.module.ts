@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserListComponent } from './user-list.component';
 import { DemoCommonModule } from '@demo/common';
-import { NgxPlanetModule } from 'ngx-planet';
+import { NgxPlanetModule } from '@worktile/planet';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared.module';
 

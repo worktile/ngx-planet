@@ -1,5 +1,5 @@
 import { Component, HostBinding, NgZone, inject, ChangeDetectorRef, Injectable, OnInit, ViewRef } from '@angular/core';
-import { GlobalEventDispatcher, routeRedirect } from 'ngx-planet';
+import { GlobalEventDispatcher, routeRedirect } from '@worktile/planet';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { UserDetailComponent } from '../user/detail/user-detail.component';
 

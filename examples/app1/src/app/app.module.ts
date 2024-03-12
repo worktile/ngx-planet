@@ -5,7 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { routers } from './app.routing';
 import { AppRootComponent, AppActualRootComponent } from './root/root.component';
 import { DemoCommonModule, OVERLAY_PROVIDER } from '@demo/common';
-import { NgxPlanetModule } from 'ngx-planet';
+import { NgxPlanetModule } from '@worktile/planet';
 import { ProjectsComponent } from './projects/projects.component';
 import { App1DetailComponent } from './detail/detail.component';
 import { Overlay, OverlayModule } from '@angular/cdk/overlay';

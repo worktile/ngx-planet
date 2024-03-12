@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, DoCheck, ApplicationRef, HostBinding } from '@angular/core';
-import { GlobalEventDispatcher, routeRedirect } from 'ngx-planet';
+import { GlobalEventDispatcher, routeRedirect } from '@worktile/planet';
 import { ProjectService } from './projects.service';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ProjectDetailComponent } from './detail/detail.component';

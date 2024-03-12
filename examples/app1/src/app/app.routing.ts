@@ -2,7 +2,7 @@ import { InitializedDataResolver } from './services/initialized-data.resolver';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Route } from '@angular/router';
 import { AppActualRootComponent } from './root/root.component';
-import { EmptyComponent, redirectToRoute } from 'ngx-planet';
+import { EmptyComponent, redirectToRoute } from '@worktile/planet';
 import { ProjectsComponent } from './projects/projects.component';
 
 export const routers: Route[] = [

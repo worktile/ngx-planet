@@ -8,7 +8,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProjectDetailComponent } from './projects/detail/detail.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { EmptyComponent, NgxPlanetModule, redirectToRoute } from 'ngx-planet';
+import { EmptyComponent, NgxPlanetModule, redirectToRoute } from '@worktile/planet';
 import { DemoCommonModule, OVERLAY_PROVIDER } from '@demo/common';
 import { ProjectResolver } from './projects/project.resolver';
 import { TasksComponent } from './projects/tasks/tasks.component';

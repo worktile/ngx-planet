@@ -2,7 +2,7 @@ import { Component, Inject, ViewChild, ElementRef, OnInit } from '@angular/core'
 import { Router } from '@angular/router';
 import { CounterService } from '../counter.service';
 import { AppRootContext } from '@demo/common';
-import { PlanetComponentRef, PlanetComponentLoader, PlanetPortalApplication, GlobalEventDispatcher } from 'ngx-planet';
+import { PlanetComponentRef, PlanetComponentLoader, PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet';
 import { ThyDialog, ThyDialogSizes } from 'ngx-tethys/dialog';
 import { App1DetailComponent } from '../detail/detail.component';
 import { ProjectsDialogComponent } from '../projects/dialog/projects-dialog.component';

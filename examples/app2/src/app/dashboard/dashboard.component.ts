@@ -1,6 +1,6 @@
 import { Component, Inject, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
-import { PlanetPortalApplication, GlobalEventDispatcher } from 'ngx-planet';
+import { PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet';
 
 @Component({
     selector: 'app-dashboard',

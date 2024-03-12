@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { cache } from '@demo/common';
-import { SwitchModes } from 'ngx-planet';
+import { SwitchModes } from '@worktile/planet';
 const SETTINGS_KEY = 'custom-settings';
 
 export interface CustomSettingsInfo {

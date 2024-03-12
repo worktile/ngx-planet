@@ -15,7 +15,7 @@ import { ThySelectModule } from 'ngx-tethys/select';
 import { ThyTabsModule } from 'ngx-tethys/tabs';
 
 import { DemoCommonModule } from '@demo/common';
-import { NgxPlanetModule } from 'ngx-planet';
+import { NgxPlanetModule } from '@worktile/planet';
 
 @NgModule({
     declarations: [],

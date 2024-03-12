@@ -1,4 +1,4 @@
-import { PlanetComponentLoader, routeRedirect } from 'ngx-planet';
+import { PlanetComponentLoader, routeRedirect } from '@worktile/planet';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { ProjectListComponent } from '../projects/project-list.component';
 

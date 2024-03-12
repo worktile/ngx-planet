@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AboutComponent } from './about/about.component';
-import { NgxPlanetModule } from 'ngx-planet';
+import { NgxPlanetModule } from '@worktile/planet';
 import { ThyIconModule, ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyButtonModule } from 'ngx-tethys/button';
 import { ThyDialogModule } from 'ngx-tethys/dialog';
@@ -58,14 +58,16 @@ import { NavigationStart, Router } from '@angular/router';
     bootstrap: [AppComponent]
 })
 export class AppModule {
-    constructor(iconRegistry: ThyIconRegistry, domSanitizer: DomSanitizer, private router: Router) {
+    constructor(
+        iconRegistry: ThyIconRegistry,
+        domSanitizer: DomSanitizer,
+        private router: Router
+    ) {
         iconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/sprite.defs.svg'));
 
         this.router.events.subscribe(event => {
             if (event instanceof NavigationStart) {
-                console.log(
-                    `[Portal] url: ${event.url}, id: ${event.id}, navigationTrigger: ${event.navigationTrigger}`
-                );
+                console.log(`[Portal] url: ${event.url}, id: ${event.id}, navigationTrigger: ${event.navigationTrigger}`);
             }
         });
     }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone, HostBinding } from '@angular/core';
-import { Planet, SwitchModes, GlobalEventDispatcher, ApplicationStatus, PlanetApplication } from 'ngx-planet';
+import { Planet, SwitchModes, GlobalEventDispatcher, ApplicationStatus, PlanetApplication } from '@worktile/planet';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from './a-detail/a-detail.component';
@@ -15,7 +15,7 @@ import { debug } from 'debug';
 export class AppComponent implements OnInit {
     // @HostBinding('class.portal') class = true;
 
-    title = 'ngx-planet';
+    title = '@worktile/planet';
 
     activeAppNames: string[] = [];
 

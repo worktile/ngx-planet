@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { PlanetPortalApplication, defineApplication } from 'ngx-planet';
+import { PlanetPortalApplication, defineApplication } from '@worktile/planet';
 import { AppRootContext } from '@demo/common';
 
 if (environment.production) {

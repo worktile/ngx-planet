@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { PlanetComponentLoader, PlanetComponentRef } from 'ngx-planet';
+import { PlanetComponentLoader, PlanetComponentRef } from '@worktile/planet';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -14,8 +14,7 @@ import { takeUntil } from 'rxjs/operators';
                             'app-project-list';
                             app: 'app2';
                             initialState: { search: 'From PlanetComponentOutlet' }
-                        "
-                    ></ng-container>
+                        "></ng-container>
                     <!-- <ng-container
                         planetComponentOutlet="project1"
                         planetComponentOutletApp="app2"

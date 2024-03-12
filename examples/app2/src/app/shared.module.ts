@@ -14,7 +14,7 @@ import { ThyInputModule } from 'ngx-tethys/input';
 import { ThyIconModule } from 'ngx-tethys/icon';
 
 import { DemoCommonModule } from '@demo/common';
-import { NgxPlanetModule } from 'ngx-planet';
+import { NgxPlanetModule } from '@worktile/planet';
 import { ThyTagModule } from 'ngx-tethys/tag';
 
 @NgModule({

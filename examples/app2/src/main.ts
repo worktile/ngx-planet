@@ -4,7 +4,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { PlanetPortalApplication, PlanetRouterEvent, GlobalEventDispatcher, defineApplication } from 'ngx-planet';
+import { PlanetPortalApplication, PlanetRouterEvent, GlobalEventDispatcher, defineApplication } from '@worktile/planet';
 
 if (environment.production) {
     enableProdMode();

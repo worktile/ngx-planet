@@ -1,7 +1,7 @@
 import { Component, Inject, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AppRootContext } from '@demo/common';
-import { PlanetComponentRef, PlanetComponentLoader, PlanetPortalApplication, GlobalEventDispatcher } from 'ngx-planet';
+import { PlanetComponentRef, PlanetComponentLoader, PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ThyContent, ThyLayoutDirective } from 'ngx-tethys/layout';
 import { DemoCommonModule } from '../../../../common/module';
