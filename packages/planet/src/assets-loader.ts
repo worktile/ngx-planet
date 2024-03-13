@@ -232,7 +232,6 @@ export class AssetsLoader {
                 if (splitIndex > -1) {
                     const name = hashName.slice(0, splitIndex);
                     const ext = getExtName(hashName);
-                    console.log(`ext`, ext, name);
                     result[ext ? `${name}.${ext}` : name] = src;
                 }
             }
