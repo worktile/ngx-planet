@@ -422,6 +422,7 @@ describe('assets-loader', () => {
             app: Partial<PlanetApplication>,
             manifestContent: string | Record<string, string>,
             expected: {
+                url?: string;
                 scripts: string[];
                 styles: string[];
             }
@@ -431,7 +432,13 @@ describe('assets-loader', () => {
             loadScriptsAndStylesSpy.and.returnValue(loadScriptsAndStyles$);
 
             const loadManifestSpy = spyOn(assetsLoader, 'loadManifest');
-            loadManifestSpy.and.returnValue(of(manifestContent));
+            loadManifestSpy.and.callFake((url, responseType) => {
+                if (expected.url) {
+                    expect(url).toContain(expected.url);
+                }
+                expect(responseType).toEqual(url.includes('.html') ? 'text' : 'json');
+                return of(manifestContent);
+            });
 
             const loadAssetsSpy = jasmine.createSpy('load assets spy');
             assetsLoader.loadAppAssets(app as PlanetApplication).subscribe(loadAssetsSpy);
@@ -541,6 +548,7 @@ describe('assets-loader', () => {
                 },
                 html,
                 {
+                    url: '/static/app1/index.html',
                     scripts: ['/static/app1/main.js', '/static/app1/vendor.2344ee.js'],
                     styles: ['/static/app1/main.1234.css']
                 }
@@ -561,6 +569,7 @@ describe('assets-loader', () => {
                 },
                 html,
                 {
+                    url: '/static/app1/index.html',
                     scripts: ['main.js', 'polyfills-VNHXLSD3.js', 'vendor.2344ee.js'],
                     styles: ['styles.css', 'main.1234.css']
                 }
