@@ -1,20 +1,12 @@
 <thy-content>
-  <input
-    thyInput
-    class="mt-2 mb-2"
-    [(ngModel)]="search"
-    placeholder="搜索项目"
-    [style.width.px]="300"
-    (thyEnter)="getProjects()"
-  />
+  <input thyInput class="mt-2 mb-2" [(ngModel)]="search" placeholder="搜索项目" [style.width.px]="300" (thyEnter)="getProjects()" />
   <thy-table
     thyClassName="table-hover"
     [thyModel]="projects"
     [thyLoadingDone]="loadingDone"
     (thyOnRowClick)="openDetail($event)"
     thyTheme="bordered"
-    thyRowKey="id"
-  >
+    thyRowKey="id">
     <thy-table-column thyTitle="名称" thyModelKey="name" thyClassName="same-name"></thy-table-column>
     <thy-table-column thyTitle="描述" thyModelKey="desc"></thy-table-column>
     <thy-table-column thyTitle="操作" thyClassName="thy-operation-links text-center">
@@ -28,4 +20,4 @@
   </thy-table>
 </thy-content>
 
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->

@@ -81,7 +81,9 @@ export class NgPlanetApplicationRef implements PlanetApplicationRef {
                         .asObservable()
                         .pipe(take(1))
                         .subscribe(() => {
-                            this.portalApp.router!.navigateByUrl(event.url);
+                            this.portalApp.ngZone.run(() => {
+                                this.portalApp.router!.navigateByUrl(event.url);
+                            });
                         });
                 }
             });
