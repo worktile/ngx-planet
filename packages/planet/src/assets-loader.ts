@@ -1,14 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-    hashCode,
-    isEmpty,
-    getScriptsAndStylesFullPaths,
-    getResourceFileName,
-    getExtName,
-    isObject,
-    getAssetsBasePath,
-    buildFullPath
-} from './helpers';
+import { hashCode, isEmpty, getScriptsAndStylesFullPaths, getResourceFileName, getExtName, isObject, getAssetsBasePath } from './helpers';
 import { of, Observable, Observer, forkJoin, concat } from 'rxjs';
 import { map, switchMap, concatAll } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -253,8 +244,9 @@ export class AssetsLoader {
         const manifest = app.entry ? (isObject<PlanetApplicationEntry>(app.entry) ? app.entry.manifest : app.entry) : app.manifest;
         if (manifest) {
             const manifestExt = getExtName(manifest);
-            const responseType = manifestExt === 'html' ? 'text' : 'json';
-            return this.loadManifest(`${buildFullPath(manifest, basePath)}?t=${new Date().getTime()}`, responseType).pipe(
+            const isHtml = manifestExt === 'html';
+            const responseType = isHtml ? 'text' : 'json';
+            return this.loadManifest(`${manifest}?t=${new Date().getTime()}`, responseType).pipe(
                 switchMap(manifestResult => {
                     if (responseType === 'text') {
                         manifestResult = this.parseManifestFromHTML(manifestResult as string);
