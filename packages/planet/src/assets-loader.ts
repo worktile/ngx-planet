@@ -1,9 +1,18 @@
 import { Injectable } from '@angular/core';
-import { hashCode, isEmpty, getScriptsAndStylesFullPaths, getResourceFileName, getExtName } from './helpers';
+import {
+    hashCode,
+    isEmpty,
+    getScriptsAndStylesFullPaths,
+    getResourceFileName,
+    getExtName,
+    isObject,
+    getAssetsBasePath,
+    buildFullPath
+} from './helpers';
 import { of, Observable, Observer, forkJoin, concat } from 'rxjs';
 import { map, switchMap, concatAll } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { PlanetApplication } from './planet.class';
+import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 import { createSandbox } from './sandbox';
 
 const STYLE_LINK_OR_SCRIPT_REG = /<[script|link].*?">/gi;
@@ -240,14 +249,17 @@ export class AssetsLoader {
     }
 
     loadAppAssets(app: PlanetApplication) {
-        if (app.manifest) {
-            const responseType = app.manifest.endsWith('.html') ? 'text' : 'json';
-            return this.loadManifest(`${app.manifest}?t=${new Date().getTime()}`, responseType).pipe(
+        const basePath = getAssetsBasePath(app);
+        const manifest = app.entry ? (isObject<PlanetApplicationEntry>(app.entry) ? app.entry.manifest : app.entry) : app.manifest;
+        if (manifest) {
+            const manifestExt = getExtName(manifest);
+            const responseType = manifestExt === 'html' ? 'text' : 'json';
+            return this.loadManifest(`${buildFullPath(manifest, basePath)}?t=${new Date().getTime()}`, responseType).pipe(
                 switchMap(manifestResult => {
                     if (responseType === 'text') {
                         manifestResult = this.parseManifestFromHTML(manifestResult as string);
                     }
-                    const { scripts, styles } = getScriptsAndStylesFullPaths(app, manifestResult as Record<string, string>);
+                    const { scripts, styles } = getScriptsAndStylesFullPaths(app, basePath, manifestResult as Record<string, string>);
                     return this.loadScriptsAndStyles(scripts, styles, {
                         app: app.name,
                         sandbox: app.sandbox,
@@ -256,7 +268,7 @@ export class AssetsLoader {
                 })
             );
         } else {
-            const { scripts, styles } = getScriptsAndStylesFullPaths(app);
+            const { scripts, styles } = getScriptsAndStylesFullPaths(app, basePath);
             return this.loadScriptsAndStyles(scripts, styles, {
                 app: app.name,
                 sandbox: app.sandbox,

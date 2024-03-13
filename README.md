@@ -104,14 +104,8 @@ export class AppComponent implements OnInit {
                 hostParent: '#app-host-container',
                 hostClass: 'thy-layout',
                 routerPathPrefix: '/app1',
-                resourcePathPrefix: '/static/app1',
                 preload: true,
-                scripts: [
-                    'main.js'
-                ],
-                styles: [
-                    'styles.css'
-                ]
+                entry: "/static/app2/index.html"
             },
             {
                 name: 'app2',
@@ -119,12 +113,16 @@ export class AppComponent implements OnInit {
                 hostClass: 'thy-layout',
                 routerPathPrefix: '/app2',
                 preload: true,
-                scripts: [
-                    '/static/app2/main.js'
-                ],
-                styles: [
-                    '/static/app2/styles.css'
-                ]
+                entry: {
+                  basePath: "/static/app1/"
+                  manifest: "index.html"
+                  scripts: [
+                    'main.js'
+                  ],
+                  styles: [
+                    'styles.css'
+                  ]
+                }
             }
         ]);
 

@@ -100,16 +100,17 @@ export class AppComponent implements OnInit {
                 hostParent: '#app-host-container',
                 hostClass: appHostClass,
                 routerPathPrefix: '/standalone-app',
-                resourcePathPrefix: '/static/standalone-app/',
                 preload: settings.standaloneApp?.preload,
                 switchMode: settings.standaloneApp?.switchMode,
                 stylePrefix: 'standalone-app',
-                // prettier-ignore
-                scripts: [
-                    'main.js'
-                ],
-                styles: ['styles.css'],
-                manifest: '/static/standalone-app/index.html',
+                entry: '/static/standalone-app/index.html',
+                // resourcePathPrefix: '/static/standalone-app/',
+                // // prettier-ignore
+                // scripts: [
+                //     'main.js'
+                // ],
+                // styles: ['styles.css'],
+                // manifest: '/static/standalone-app/index.html',
                 extra: {
                     name: '独立应用',
                     color: '#66c060'

@@ -4,6 +4,7 @@ import { AssetsLoader, AssetsLoadResult } from './assets-loader';
 import { hashCode } from './helpers';
 import { Subject, of, observable, Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 
 describe('assets-loader', () => {
     let assetsLoader: AssetsLoader;
@@ -417,6 +418,37 @@ describe('assets-loader', () => {
             }
         };
 
+        function assertAndLoadAppAssets(
+            app: Partial<PlanetApplication>,
+            manifestContent: string | Record<string, string>,
+            expected: {
+                scripts: string[];
+                styles: string[];
+            }
+        ) {
+            const loadScriptsAndStyles$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+            const loadScriptsAndStylesSpy = spyOn(assetsLoader, 'loadScriptsAndStyles');
+            loadScriptsAndStylesSpy.and.returnValue(loadScriptsAndStyles$);
+
+            const loadManifestSpy = spyOn(assetsLoader, 'loadManifest');
+            loadManifestSpy.and.returnValue(of(manifestContent));
+
+            const loadAssetsSpy = jasmine.createSpy('load assets spy');
+            assetsLoader.loadAppAssets(app as PlanetApplication).subscribe(loadAssetsSpy);
+
+            expect(loadAssetsSpy).not.toHaveBeenCalled();
+            expect(loadScriptsAndStylesSpy).toHaveBeenCalled();
+            expect(loadScriptsAndStylesSpy).toHaveBeenCalledWith(expected.scripts, expected.styles, {
+                app: app.name,
+                sandbox: app.sandbox,
+                serial: app.loadSerial
+            });
+
+            loadScriptsAndStyles$.next('load success' as any);
+            expect(loadAssetsSpy).toHaveBeenCalled();
+            expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
+        }
+
         it('load assets success without manifest', () => {
             const loadScriptsAndStyles$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
             const loadScriptsAndStylesSpy = spyOn(assetsLoader, 'loadScriptsAndStyles');
@@ -443,74 +475,96 @@ describe('assets-loader', () => {
         });
 
         it('load assets success with manifest', () => {
-            const loadScriptsAndStyles$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
-            const loadScriptsAndStylesSpy = spyOn(assetsLoader, 'loadScriptsAndStyles');
-            loadScriptsAndStylesSpy.and.returnValue(loadScriptsAndStyles$);
-
-            const loadManifestSpy = spyOn(assetsLoader, 'loadManifest');
             const manifestResult = {
                 'main.js': 'main.123455.js',
                 'vendor.js': 'vendor.23221.js',
                 'main.css': 'main.s1223.css'
             };
-            loadManifestSpy.and.returnValue(of(manifestResult));
-
-            const loadAssetsSpy = jasmine.createSpy('load assets spy');
-            assetsLoader
-                .loadAppAssets({
-                    ...app1,
-                    manifest: '/app1/manifest.json'
-                })
-                .subscribe(loadAssetsSpy);
-
-            expect(loadAssetsSpy).not.toHaveBeenCalled();
-            expect(loadScriptsAndStylesSpy).toHaveBeenCalled();
-            expect(loadScriptsAndStylesSpy).toHaveBeenCalledWith(
-                [`/static/app1/${manifestResult['vendor.js']}`, `/static/app1/${manifestResult['main.js']}`],
-                [`/static/app1/styles/${manifestResult['main.css']}`],
+            assertAndLoadAppAssets(
                 {
-                    app: 'app1',
-                    sandbox: false,
-                    serial: app1.loadSerial
+                    ...app1,
+                    manifest: '/static/app1/manifest.json'
+                },
+                manifestResult,
+                {
+                    scripts: [`/static/app1/${manifestResult['vendor.js']}`, `/static/app1/${manifestResult['main.js']}`],
+                    styles: [`/static/app1/styles/${manifestResult['main.css']}`]
                 }
             );
-
-            loadScriptsAndStyles$.next('load success' as any);
-            expect(loadAssetsSpy).toHaveBeenCalled();
-            expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
         });
 
-        it('load assets success with manifest html', () => {
-            const loadScriptsAndStyles$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
-            const loadScriptsAndStylesSpy = spyOn(assetsLoader, 'loadScriptsAndStyles');
-            loadScriptsAndStylesSpy.and.returnValue(loadScriptsAndStyles$);
-
-            const loadManifestSpy = spyOn(assetsLoader, 'loadManifest');
-            loadManifestSpy.and.returnValue(of(html));
-
-            const loadAssetsSpy = jasmine.createSpy('load assets spy');
-            assetsLoader
-                .loadAppAssets({
-                    ...app1,
-                    manifest: '/app1/index.html'
-                })
-                .subscribe(loadAssetsSpy);
-
-            expect(loadAssetsSpy).not.toHaveBeenCalled();
-            expect(loadScriptsAndStylesSpy).toHaveBeenCalled();
-            expect(loadScriptsAndStylesSpy).toHaveBeenCalledWith(
-                ['/static/app1/vendor.2344ee.js', '/static/app1/main.js'],
-                [`/static/app1/styles/main.1234.css`],
+        it('load assets success with entry html', () => {
+            assertAndLoadAppAssets(
                 {
-                    app: 'app1',
-                    sandbox: false,
-                    serial: app1.loadSerial
+                    ...app1,
+                    entry: '/static/app1/index.html'
+                },
+                html,
+                {
+                    scripts: ['/static/app1/main.js', '/static/app1/polyfills-VNHXLSD3.js', '/static/app1/vendor.2344ee.js'],
+                    styles: ['/static/app1/styles.css', '/static/app1/main.1234.css']
                 }
             );
+        });
 
-            loadScriptsAndStyles$.next('load success' as any);
-            expect(loadAssetsSpy).toHaveBeenCalled();
-            expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
+        it('load assets success with entry object', () => {
+            assertAndLoadAppAssets(
+                {
+                    ...app1,
+                    entry: {
+                        basePath: '/static/app1/',
+                        manifest: 'index.html'
+                    }
+                },
+                html,
+                {
+                    scripts: ['/static/app1/main.js', '/static/app1/polyfills-VNHXLSD3.js', '/static/app1/vendor.2344ee.js'],
+                    styles: ['/static/app1/styles.css', '/static/app1/main.1234.css']
+                }
+            );
+        });
+
+        it('load assets success with scripts and styles of entry', () => {
+            assertAndLoadAppAssets(
+                {
+                    name: app1.name,
+                    routerPathPrefix: app1.routerPathPrefix,
+                    hostParent: app1.hostParent,
+                    sandbox: app1.sandbox,
+                    loadSerial: app1.loadSerial,
+                    entry: {
+                        basePath: '/static/app1/',
+                        scripts: ['main.js', 'vendor.js'],
+                        styles: ['main.css'],
+                        manifest: '/static/app1/index.html'
+                    }
+                },
+                html,
+                {
+                    scripts: ['/static/app1/main.js', '/static/app1/vendor.2344ee.js'],
+                    styles: ['/static/app1/main.1234.css']
+                }
+            );
+        });
+
+        it('load assets success with entry empty basePath', () => {
+            assertAndLoadAppAssets(
+                {
+                    name: app1.name,
+                    routerPathPrefix: app1.routerPathPrefix,
+                    hostParent: app1.hostParent,
+                    sandbox: app1.sandbox,
+                    loadSerial: app1.loadSerial,
+                    entry: {
+                        manifest: '/static/app1/index.html'
+                    }
+                },
+                html,
+                {
+                    scripts: ['main.js', 'polyfills-VNHXLSD3.js', 'vendor.2344ee.js'],
+                    styles: ['styles.css', 'main.1234.css']
+                }
+            );
         });
     });
 
