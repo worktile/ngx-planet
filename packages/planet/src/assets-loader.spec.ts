@@ -12,6 +12,23 @@ describe('assets-loader', () => {
         onerror: (error: string | Event) => void;
     } = { onload: () => {}, onerror: null };
 
+    const html = `<!doctype html>
+    <html lang="en">
+      <head>
+        <script type="module" src="/static/standalone-app/@vite/client"></script>
+
+        <meta charset="utf-8"/>
+        <title>StandaloneApp</title>
+        <base href="/"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+      <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="main.1234.css"></head>
+      <body>
+        <standalone-app-root></standalone-app-root>
+      <script src="main.js" type="module"></script> <script src="polyfills-VNHXLSD3.js" type="module"><script src="vendor.2344ee.js" type="module"></body>
+    </html>
+    `;
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
@@ -360,28 +377,25 @@ describe('assets-loader', () => {
             httpTestingController.verify();
         });
 
-        it(
-            'should load manifest success',
-            waitForAsync(() => {
-                const testData = {
-                    'main.js': 'main1.js'
-                };
-                const loadManifestSpy = jasmine.createSpy('load manifest spy');
-                assetsLoader.loadManifest('/static/assets/manifest.json').subscribe(loadManifestSpy);
-                const req = httpTestingController.expectOne('/static/assets/manifest.json');
+        it('should load manifest success', waitForAsync(() => {
+            const testData = {
+                'main.js': 'main1.js'
+            };
+            const loadManifestSpy = jasmine.createSpy('load manifest spy');
+            assetsLoader.loadManifest('/static/assets/manifest.json').subscribe(loadManifestSpy);
+            const req = httpTestingController.expectOne('/static/assets/manifest.json');
 
-                // Assert that the request is a GET.
-                expect(req.request.method).toEqual('GET');
-                expect(loadManifestSpy).not.toHaveBeenCalled();
+            // Assert that the request is a GET.
+            expect(req.request.method).toEqual('GET');
+            expect(loadManifestSpy).not.toHaveBeenCalled();
 
-                // Respond with mock data, causing Observable to resolve.
-                // Subscribe callback asserts that correct data was returned.
-                req.flush(testData);
+            // Respond with mock data, causing Observable to resolve.
+            // Subscribe callback asserts that correct data was returned.
+            req.flush(testData);
 
-                expect(loadManifestSpy).toHaveBeenCalled();
-                expect(loadManifestSpy).toHaveBeenCalledWith(testData);
-            })
-        );
+            expect(loadManifestSpy).toHaveBeenCalled();
+            expect(loadManifestSpy).toHaveBeenCalledWith(testData);
+        }));
     });
 
     describe('loadAppAssets', () => {
@@ -465,6 +479,39 @@ describe('assets-loader', () => {
             expect(loadAssetsSpy).toHaveBeenCalled();
             expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
         });
+
+        it('load assets success with manifest html', () => {
+            const loadScriptsAndStyles$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
+            const loadScriptsAndStylesSpy = spyOn(assetsLoader, 'loadScriptsAndStyles');
+            loadScriptsAndStylesSpy.and.returnValue(loadScriptsAndStyles$);
+
+            const loadManifestSpy = spyOn(assetsLoader, 'loadManifest');
+            loadManifestSpy.and.returnValue(of(html));
+
+            const loadAssetsSpy = jasmine.createSpy('load assets spy');
+            assetsLoader
+                .loadAppAssets({
+                    ...app1,
+                    manifest: '/app1/index.html'
+                })
+                .subscribe(loadAssetsSpy);
+
+            expect(loadAssetsSpy).not.toHaveBeenCalled();
+            expect(loadScriptsAndStylesSpy).toHaveBeenCalled();
+            expect(loadScriptsAndStylesSpy).toHaveBeenCalledWith(
+                ['/static/app1/vendor.2344ee.js', '/static/app1/main.js'],
+                [`/static/app1/styles/main.1234.css`],
+                {
+                    app: 'app1',
+                    sandbox: false,
+                    serial: app1.loadSerial
+                }
+            );
+
+            loadScriptsAndStyles$.next('load success' as any);
+            expect(loadAssetsSpy).toHaveBeenCalled();
+            expect(loadAssetsSpy).toHaveBeenCalledWith('load success');
+        });
     });
 
     describe('loadStyle', () => {
@@ -537,6 +584,19 @@ describe('assets-loader', () => {
                 error: 'load style error'
             });
         }));
+    });
+
+    describe('parseManifestFromHTML', () => {
+        it('should parse manifest from HTML', () => {
+            const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
+            expect(result).toEqual({
+                'styles.css': 'styles.css',
+                'main.css': 'main.1234.css',
+                'main.js': 'main.js',
+                'polyfills.js': 'polyfills-VNHXLSD3.js',
+                'vendor.js': 'vendor.2344ee.js'
+            });
+        });
     });
 
     describe('loadStyles', () => {

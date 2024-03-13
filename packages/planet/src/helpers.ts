@@ -76,6 +76,15 @@ export function getResourceFileName(path: string) {
     }
 }
 
+export function getExtName(name: string) {
+    const lastDotIndex = name.lastIndexOf('.');
+    if (lastDotIndex >= 0) {
+        return name.slice(lastDotIndex + 1);
+    } else {
+        return '';
+    }
+}
+
 /**
  * Build resource path by manifest
  * if manifest is { "main.js": "main.h2sh23abee.js"}

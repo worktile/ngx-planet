@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
                     'main.js'
                 ],
                 styles: ['styles.css'],
-                manifest: '/static/standalone-app/assets-manifest.json',
+                manifest: '/static/standalone-app/index.html',
                 extra: {
                     name: '独立应用',
                     color: '#66c060'

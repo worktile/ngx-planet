@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { hashCode, isEmpty, getScriptsAndStylesFullPaths } from './helpers';
+import { hashCode, isEmpty, getScriptsAndStylesFullPaths, getResourceFileName, getExtName } from './helpers';
 import { of, Observable, Observer, forkJoin, concat } from 'rxjs';
 import { map, switchMap, concatAll } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PlanetApplication } from './planet.class';
 import { createSandbox } from './sandbox';
+
+const STYLE_LINK_OR_SCRIPT_REG = /<[script|link].*?">/gi;
+const LINK_OR_SRC_REG = /(src|href)=["'](.*?)["']/i;
 
 export interface AssetsLoadResult {
     src: string;
@@ -215,11 +218,37 @@ export class AssetsLoader {
         return forkJoin([this.loadScripts(scripts, options), this.loadStyles(styles)]);
     }
 
+    parseManifestFromHTML(html: string): Record<string, string> {
+        const result = {};
+        const matchResult = html.match(STYLE_LINK_OR_SCRIPT_REG);
+        matchResult.forEach(item => {
+            const linkOrSrcResult = item.match(LINK_OR_SRC_REG);
+            if (linkOrSrcResult[2]) {
+                const src = linkOrSrcResult[2];
+                const hashName = getResourceFileName(src);
+                let barSplitIndex = hashName.indexOf('-');
+                let dotSplitIndex = hashName.indexOf('.');
+                const splitIndex = barSplitIndex > -1 ? barSplitIndex : dotSplitIndex;
+                if (splitIndex > -1) {
+                    const name = hashName.slice(0, splitIndex);
+                    const ext = getExtName(hashName);
+                    console.log(`ext`, ext, name);
+                    result[ext ? `${name}.${ext}` : name] = src;
+                }
+            }
+        });
+        return result;
+    }
+
     loadAppAssets(app: PlanetApplication) {
         if (app.manifest) {
-            return this.loadManifest(`${app.manifest}?t=${new Date().getTime()}`).pipe(
+            const responseType = app.manifest.endsWith('.html') ? 'text' : 'json';
+            return this.loadManifest(`${app.manifest}?t=${new Date().getTime()}`, responseType).pipe(
                 switchMap(manifestResult => {
-                    const { scripts, styles } = getScriptsAndStylesFullPaths(app, manifestResult);
+                    if (responseType === 'text') {
+                        manifestResult = this.parseManifestFromHTML(manifestResult as string);
+                    }
+                    const { scripts, styles } = getScriptsAndStylesFullPaths(app, manifestResult as Record<string, string>);
                     return this.loadScriptsAndStyles(scripts, styles, {
                         app: app.name,
                         sandbox: app.sandbox,
@@ -237,11 +266,15 @@ export class AssetsLoader {
         }
     }
 
-    loadManifest(url: string): Observable<{ [key: string]: string }> {
-        return this.http.get(url).pipe(
-            map((response: any) => {
-                return response;
+    loadManifest(url: string, responseType: 'text' | 'json' = 'json'): Observable<Record<string, string> | string> {
+        return this.http
+            .get(url, {
+                responseType: responseType as 'json'
             })
-        );
+            .pipe(
+                map((response: any) => {
+                    return response;
+                })
+            );
     }
 }
