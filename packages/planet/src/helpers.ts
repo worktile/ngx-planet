@@ -1,4 +1,4 @@
-import { PlanetApplication } from './planet.class';
+import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 
 const ELEMENT_NODE_TYPE = 1;
 
@@ -58,8 +58,8 @@ export function isFunction(value: any): value is Function {
     return !!value && type === 'function';
 }
 
-export function isObject(val: any) {
-    return val && typeof val === 'object';
+export function isObject<T extends object>(value: any): value is T {
+    return value && typeof value === 'object';
 }
 /**
  * Get file name from path
@@ -73,6 +73,15 @@ export function getResourceFileName(path: string) {
         return path.slice(lastSlashIndex + 1);
     } else {
         return path;
+    }
+}
+
+export function getExtName(name: string) {
+    const lastDotIndex = name.lastIndexOf('.');
+    if (lastDotIndex >= 0) {
+        return name.slice(lastDotIndex + 1);
+    } else {
+        return '';
     }
 }
 
@@ -93,33 +102,89 @@ export function buildResourceFilePath(resourceFilePath: string, manifestResult: 
     }
 }
 
+export function buildFullPath(path: string, basePath?: string) {
+    if (basePath) {
+        if (path.startsWith(basePath)) {
+            return path;
+        } else {
+            return `${basePath}${path}`;
+        }
+    }
+    return path;
+}
+
+function getDefinedAssets(app: PlanetApplication) {
+    if (app.entry) {
+        return {
+            scripts: isObject<PlanetApplicationEntry>(app.entry) ? app.entry.scripts : undefined,
+            styles: isObject<PlanetApplicationEntry>(app.entry) ? app.entry.styles : undefined
+        };
+    }
+    return {
+        scripts: app.scripts,
+        styles: app.styles
+    };
+}
+
+export function getAssetsBasePath(app: PlanetApplication): string {
+    let basePath: string;
+    if (app.entry) {
+        if (isObject<PlanetApplicationEntry>(app.entry)) {
+            basePath = app.entry.basePath;
+        } else {
+            const lastDotIndex = app.entry.lastIndexOf('/');
+            basePath = lastDotIndex > 0 ? app.entry.slice(0, lastDotIndex + 1) : undefined;
+        }
+    }
+    return basePath || app.resourcePathPrefix;
+}
+
 /**
  * Get static resource full path
  * @param app PlanetApplication
  * @param manifestResult manifest
  */
-export function getScriptsAndStylesFullPaths(app: PlanetApplication, manifestResult?: { [key: string]: string }) {
-    let scripts = app.scripts || [];
-    let styles = app.styles || [];
+export function getScriptsAndStylesFullPaths(app: PlanetApplication, basePath: string, manifestResult?: { [key: string]: string }) {
+    let { scripts, styles } = getDefinedAssets(app);
     // combine resource path by manifest
     if (manifestResult) {
-        scripts = scripts.map(script => {
-            return buildResourceFilePath(script, manifestResult);
-        });
-        styles = styles.map(style => {
-            return buildResourceFilePath(style, manifestResult);
-        });
+        if (scripts) {
+            scripts = scripts.map(script => {
+                return buildResourceFilePath(script, manifestResult);
+            });
+        } else {
+            scripts = Object.keys(manifestResult)
+                .filter(key => {
+                    return getExtName(key) === 'js';
+                })
+                .map(key => {
+                    return manifestResult[key];
+                });
+        }
+        if (styles) {
+            styles = styles.map(style => {
+                return buildResourceFilePath(style, manifestResult);
+            });
+        } else {
+            styles = Object.keys(manifestResult)
+                .filter(key => {
+                    return getExtName(key) === 'css';
+                })
+                .map(key => {
+                    return manifestResult[key];
+                });
+        }
     }
-    if (app.resourcePathPrefix) {
+    if (basePath) {
         scripts = scripts.map(script => {
-            return `${app.resourcePathPrefix}${script}`;
+            return buildFullPath(script, basePath);
         });
         styles = styles.map(style => {
-            return `${app.resourcePathPrefix}${style}`;
+            return buildFullPath(style, basePath);
         });
     }
     return {
-        scripts: scripts,
-        styles: styles
+        scripts: scripts || [],
+        styles: styles || []
     };
 }

@@ -205,7 +205,7 @@ describe('helpers', () => {
         };
 
         it('should get correct full path without resourcePathPrefix', () => {
-            const result = getScriptsAndStylesFullPaths({ ...app });
+            const result = getScriptsAndStylesFullPaths({ ...app }, undefined);
             expect(result).toEqual({
                 scripts: ['vendor.js', 'main.js'],
                 styles: ['styles/main.css']
@@ -213,7 +213,7 @@ describe('helpers', () => {
         });
 
         it('should get correct full path with resourcePathPrefix', () => {
-            const result = getScriptsAndStylesFullPaths({ ...app, resourcePathPrefix: '/static/app1/' });
+            const result = getScriptsAndStylesFullPaths({ ...app }, '/static/app1/');
             expect(result).toEqual({
                 scripts: ['/static/app1/vendor.js', '/static/app1/main.js'],
                 styles: ['/static/app1/styles/main.css']
@@ -226,7 +226,7 @@ describe('helpers', () => {
                 'main.js': `main.${randomString()}.js`,
                 'main.css': `main.${randomString()}.css`
             };
-            const result = getScriptsAndStylesFullPaths({ ...app, resourcePathPrefix: '/static/app1/' }, manifest);
+            const result = getScriptsAndStylesFullPaths({ ...app, resourcePathPrefix: '/static/app1/' }, '/static/app1/', manifest);
             expect(result).toEqual({
                 scripts: [`/static/app1/${manifest['vendor.js']}`, `/static/app1/${manifest['main.js']}`],
                 styles: [`/static/app1/styles/${manifest['main.css']}`]
@@ -236,7 +236,5 @@ describe('helpers', () => {
 });
 
 function randomString() {
-    return Math.random()
-        .toString(36)
-        .slice(-8);
+    return Math.random().toString(36).slice(-8);
 }
