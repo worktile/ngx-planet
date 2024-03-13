@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [17.0.0-next.1](https://github.com/worktile/ngx-planet/compare/17.0.0-next.0...17.0.0-next.1) (2024-03-13)
+
+
+### Bug Fixes
+
+* sync portal router navigate in ngZone ([20259f9](https://github.com/worktile/ngx-planet/commit/20259f9945313aee7904d42274d7dd94a5a2afa0))
+
+
+### Features
+
+* support index.html as assets manifest and add entry instead of manifest, scripts, styles and resourcePathPrefix ([#308](https://github.com/worktile/ngx-planet/issues/308)) ([0670411](https://github.com/worktile/ngx-planet/commit/067041162ff7908f6cd950338e197847fa562308))
+
+
+
 # [17.0.0-next.0](https://github.com/worktile/ngx-planet/compare/16.0.0...17.0.0-next.0) (2024-03-08)
 
 
