@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [17.0.0-next.2](https://github.com/worktile/ngx-planet/compare/17.0.0-next.1...17.0.0-next.2) (2024-03-14)
+
+
+### Bug Fixes
+
+* should parse script without "> end ([#312](https://github.com/worktile/ngx-planet/issues/312)) ([634d08b](https://github.com/worktile/ngx-planet/commit/634d08ba7f763beb368916b0c7846d091461dc16))
+
+
+
 # [17.0.0-next.1](https://github.com/worktile/ngx-planet/compare/17.0.0-next.0...17.0.0-next.1) (2024-03-13)
 
 
