@@ -19,7 +19,7 @@
   "scripts": {
     "ng": "ng",
     "// start": "run app1 and app2 use webpack dev-server",
-    "start": "npm-run-all --parallel serve:portal serve:app1 serve:app2",
+    "start": "npm-run-all --parallel serve:portal serve:app1 serve:app2 serve:standalone",
     "serve:portal": "ng serve portal --configuration development",
     "serve:app1": "ng serve app1 --serve-path=/static/app1/ --configuration development",
     "serve:app2": "ng serve app2 --serve-path=/static/app2/ --configuration development",

@@ -57,18 +57,11 @@ export class AppComponent implements OnInit {
                 hostParent: '#app-host-container',
                 hostClass: appHostClass,
                 routerPathPrefix: /\/app1|app4/, // '/app1',
-                resourcePathPrefix: '/static/app1/',
                 preload: settings.app1.preload,
                 switchMode: settings.app1.switchMode,
                 loadSerial: true,
                 stylePrefix: 'app1',
-                // prettier-ignore
-                scripts: [
-                    'main.js',
-                    // 'polyfills.js'
-                ],
-                styles: ['styles.css'],
-                manifest: '/static/app1/assets-manifest.json',
+                entry: '/static/app1/index.html',
                 extra: {
                     name: '应用1',
                     color: '#ffa415'
@@ -79,17 +72,17 @@ export class AppComponent implements OnInit {
                 hostParent: '#app-host-container',
                 hostClass: appHostClass,
                 routerPathPrefix: '/app2',
-                resourcePathPrefix: '/static/app2/',
                 preload: settings.app2.preload,
                 switchMode: settings.app2.switchMode,
                 // sandbox: true, // 沙箱隔离开启后懒加载报错
                 stylePrefix: 'app2',
+                manifest: '/static/app2/assets-manifest.json',
+                resourcePathPrefix: '/static/app2/',
                 // prettier-ignore
                 scripts: [
                     'main.js'
                 ],
                 styles: ['styles.css'],
-                manifest: '/static/app2/assets-manifest.json',
                 extra: {
                     name: '应用2',
                     color: '#66c060'
@@ -104,13 +97,6 @@ export class AppComponent implements OnInit {
                 switchMode: settings.standaloneApp?.switchMode,
                 stylePrefix: 'standalone-app',
                 entry: '/static/standalone-app/index.html',
-                // resourcePathPrefix: '/static/standalone-app/',
-                // // prettier-ignore
-                // scripts: [
-                //     'main.js'
-                // ],
-                // styles: ['styles.css'],
-                // manifest: '/static/standalone-app/index.html',
                 extra: {
                     name: '独立应用',
                     color: '#66c060'
