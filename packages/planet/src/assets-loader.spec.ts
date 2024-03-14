@@ -661,7 +661,7 @@ describe('assets-loader', () => {
             });
         });
 
-        it('should parse manifest from html with type="module" script', () => {
+        it('should parse script from html after <script src="styles.js" defer>', () => {
             const html = `<!DOCTYPE html>
             <html lang="en">
                 <head>
