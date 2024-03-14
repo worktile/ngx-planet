@@ -6,8 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 import { createSandbox } from './sandbox';
 
-const STYLE_LINK_OR_SCRIPT_REG = /<[script|link].*?">/gi;
-const LINK_OR_SRC_REG = /(src|href)=["'](.*?)["']/i;
+const STYLE_LINK_OR_SCRIPT_REG = /<[script|link].*?>/gi;
+const LINK_OR_SRC_REG = /(src|href)=["'](.*?[\.js|\.css])["']/i;
 
 export interface AssetsLoadResult {
     src: string;
@@ -221,9 +221,10 @@ export class AssetsLoader {
     parseManifestFromHTML(html: string): Record<string, string> {
         const result = {};
         const matchResult = html.match(STYLE_LINK_OR_SCRIPT_REG);
+        console.log(matchResult);
         matchResult.forEach(item => {
             const linkOrSrcResult = item.match(LINK_OR_SRC_REG);
-            if (linkOrSrcResult[2]) {
+            if (linkOrSrcResult && linkOrSrcResult[2]) {
                 const src = linkOrSrcResult[2];
                 const hashName = getResourceFileName(src);
                 let barSplitIndex = hashName.indexOf('-');
