@@ -221,7 +221,6 @@ export class AssetsLoader {
     parseManifestFromHTML(html: string): Record<string, string> {
         const result = {};
         const matchResult = html.match(STYLE_LINK_OR_SCRIPT_REG);
-        console.log(matchResult);
         matchResult.forEach(item => {
             const linkOrSrcResult = item.match(LINK_OR_SRC_REG);
             if (linkOrSrcResult && linkOrSrcResult[2]) {
