@@ -1,10 +1,19 @@
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AssetsLoader, AssetsLoadResult } from './assets-loader';
-import { hashCode } from './helpers';
+import { hashCode, toAssetsTagItem, toAssetsTagItems } from './helpers';
 import { Subject, of, observable, Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
+import { AssetsTagItem } from './inner-types';
+
+function toAssetsTagItemRecord(input: Record<string, string>): Record<string, AssetsTagItem> {
+    const result: Record<string, AssetsTagItem> = {};
+    Object.keys(input).forEach(key => {
+        result[key] = toAssetsTagItem(input[key]);
+    });
+    return result;
+}
 
 describe('assets-loader', () => {
     let assetsLoader: AssetsLoader;
@@ -26,7 +35,7 @@ describe('assets-loader', () => {
       <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="main.1234.css"></head>
       <body>
         <standalone-app-root></standalone-app-root>
-      <script src="main.js" type="module"></script> <script src="polyfills-VNHXLSD3.js" type="module"><script src="vendor.2344ee.js" type="module"></body>
+      <script src="main.js"></script> <script src="polyfills-VNHXLSD3.js"><script src="vendor.2344ee.js" type="module"></body>
     </html>
     `;
 
@@ -317,7 +326,7 @@ describe('assets-loader', () => {
             };
 
             const loadScriptsSpy = jasmine.createSpy('load scripts spy');
-            assetsLoader.loadScripts([src1, src2]).subscribe(loadScriptsSpy);
+            assetsLoader.loadScripts([{ src: src1 }, { src: src2 }]).subscribe(loadScriptsSpy);
 
             loadScriptObservable2.next(result2);
             loadScriptObservable2.complete();
@@ -351,7 +360,7 @@ describe('assets-loader', () => {
             };
 
             const loadScriptsSpy = jasmine.createSpy('load scripts spy');
-            assetsLoader.loadScripts([src1, src2], { serial: true }).subscribe(loadScriptsSpy);
+            assetsLoader.loadScripts([{ src: src1 }, { src: src2 }], { serial: true }).subscribe(loadScriptsSpy);
 
             loadScriptObservable1.next(result1);
             loadScriptObservable1.complete();
@@ -395,7 +404,11 @@ describe('assets-loader', () => {
             req.flush(testData);
 
             expect(loadManifestSpy).toHaveBeenCalled();
-            expect(loadManifestSpy).toHaveBeenCalledWith(testData);
+            expect(loadManifestSpy).toHaveBeenCalledWith({
+                'main.js': {
+                    src: 'main1.js'
+                }
+            });
         }));
     });
 
@@ -420,11 +433,11 @@ describe('assets-loader', () => {
 
         function assertAndLoadAppAssets(
             app: Partial<PlanetApplication>,
-            manifestContent: string | Record<string, string>,
+            manifestContent: Record<string, AssetsTagItem>,
             expected: {
                 url?: string;
-                scripts: string[];
-                styles: string[];
+                scripts: AssetsTagItem[];
+                styles: AssetsTagItem[];
             }
         ) {
             const loadScriptsAndStyles$ = new Subject<[AssetsLoadResult[], AssetsLoadResult[]]>();
@@ -467,8 +480,8 @@ describe('assets-loader', () => {
             expect(loadAssetsSpy).not.toHaveBeenCalled();
             expect(loadScriptsAndStylesSpy).toHaveBeenCalled();
             expect(loadScriptsAndStylesSpy).toHaveBeenCalledWith(
-                ['/static/app1/vendor.js', '/static/app1/main.js'],
-                ['/static/app1/styles/main.css'],
+                toAssetsTagItems(['/static/app1/vendor.js', '/static/app1/main.js']),
+                toAssetsTagItems(['/static/app1/styles/main.css']),
                 {
                     app: 'app1',
                     sandbox: false,
@@ -482,7 +495,7 @@ describe('assets-loader', () => {
         });
 
         it('load assets success with manifest', () => {
-            const manifestResult = {
+            const manifest = {
                 'main.js': 'main.123455.js',
                 'vendor.js': 'vendor.23221.js',
                 'main.css': 'main.s1223.css'
@@ -492,10 +505,10 @@ describe('assets-loader', () => {
                     ...app1,
                     manifest: '/static/app1/manifest.json'
                 },
-                manifestResult,
+                toAssetsTagItemRecord(manifest),
                 {
-                    scripts: [`/static/app1/${manifestResult['vendor.js']}`, `/static/app1/${manifestResult['main.js']}`],
-                    styles: [`/static/app1/styles/${manifestResult['main.css']}`]
+                    scripts: toAssetsTagItems([`/static/app1/${manifest['vendor.js']}`, `/static/app1/${manifest['main.js']}`]),
+                    styles: toAssetsTagItems([`/static/app1/styles/${manifest['main.css']}`])
                 }
             );
         });
@@ -506,10 +519,14 @@ describe('assets-loader', () => {
                     ...app1,
                     entry: '/static/app1/index.html'
                 },
-                html,
+                new AssetsLoader(undefined).parseManifestFromHTML(html),
                 {
-                    scripts: ['/static/app1/main.js', '/static/app1/polyfills-VNHXLSD3.js', '/static/app1/vendor.2344ee.js'],
-                    styles: ['/static/app1/styles.css', '/static/app1/main.1234.css']
+                    scripts: [
+                        { src: '/static/app1/main.js' },
+                        { src: '/static/app1/polyfills-VNHXLSD3.js' },
+                        { src: '/static/app1/vendor.2344ee.js', attributes: { type: 'module' } }
+                    ],
+                    styles: toAssetsTagItems(['/static/app1/styles.css', '/static/app1/main.1234.css'])
                 }
             );
         });
@@ -523,10 +540,14 @@ describe('assets-loader', () => {
                         manifest: 'index.html'
                     }
                 },
-                html,
+                new AssetsLoader(undefined).parseManifestFromHTML(html),
                 {
-                    scripts: ['/static/app1/main.js', '/static/app1/polyfills-VNHXLSD3.js', '/static/app1/vendor.2344ee.js'],
-                    styles: ['/static/app1/styles.css', '/static/app1/main.1234.css']
+                    scripts: [
+                        { src: '/static/app1/main.js' },
+                        { src: '/static/app1/polyfills-VNHXLSD3.js' },
+                        { src: '/static/app1/vendor.2344ee.js', attributes: { type: 'module' } }
+                    ],
+                    styles: toAssetsTagItems(['/static/app1/styles.css', '/static/app1/main.1234.css'])
                 }
             );
         });
@@ -546,11 +567,11 @@ describe('assets-loader', () => {
                         manifest: '/static/app1/index.html'
                     }
                 },
-                html,
+                new AssetsLoader(undefined).parseManifestFromHTML(html),
                 {
                     url: '/static/app1/index.html',
-                    scripts: ['/static/app1/main.js', '/static/app1/vendor.2344ee.js'],
-                    styles: ['/static/app1/main.1234.css']
+                    scripts: [{ src: '/static/app1/main.js' }, { src: '/static/app1/vendor.2344ee.js', attributes: { type: 'module' } }],
+                    styles: toAssetsTagItems(['/static/app1/main.1234.css'])
                 }
             );
         });
@@ -567,11 +588,15 @@ describe('assets-loader', () => {
                         manifest: '/static/app1/index.html'
                     }
                 },
-                html,
+                new AssetsLoader(undefined).parseManifestFromHTML(html),
                 {
                     url: '/static/app1/index.html',
-                    scripts: ['main.js', 'polyfills-VNHXLSD3.js', 'vendor.2344ee.js'],
-                    styles: ['styles.css', 'main.1234.css']
+                    scripts: [
+                        { src: 'main.js' },
+                        { src: 'polyfills-VNHXLSD3.js' },
+                        { src: 'vendor.2344ee.js', attributes: { type: 'module' } }
+                    ],
+                    styles: toAssetsTagItems(['styles.css', 'main.1234.css'])
                 }
             );
         });
@@ -652,13 +677,17 @@ describe('assets-loader', () => {
     describe('parseManifestFromHTML', () => {
         it('should parse manifest from HTML', () => {
             const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
-            expect(result).toEqual({
+            const expected = toAssetsTagItemRecord({
                 'styles.css': 'styles.css',
                 'main.css': 'main.1234.css',
                 'main.js': 'main.js',
-                'polyfills.js': 'polyfills-VNHXLSD3.js',
-                'vendor.js': 'vendor.2344ee.js'
+                'polyfills.js': 'polyfills-VNHXLSD3.js'
             });
+            expected['vendor.js'] = {
+                src: 'vendor.2344ee.js',
+                attributes: { type: 'module' }
+            };
+            expect(result).toEqual(expected);
         });
 
         it('should parse script from html after <script src="styles.js" defer>', () => {
@@ -679,9 +708,16 @@ describe('assets-loader', () => {
             "`;
             const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
             expect(result).toEqual({
-                'styles.css': 'styles.css',
-                'styles.js': 'styles.js',
-                'main.js': 'main.js'
+                'styles.css': {
+                    src: 'styles.css'
+                },
+                'styles.js': {
+                    src: 'styles.js'
+                },
+                'main.js': {
+                    src: 'main.js',
+                    attributes: { type: 'module' }
+                }
             });
         });
     });
@@ -727,7 +763,15 @@ describe('assets-loader', () => {
 
             const loadedStyles = jasmine.createSpy('loaded styles success');
             const loadedStylesFail = jasmine.createSpy('loaded styles fail');
-            assetsLoader.loadStyles(stylesSrc).subscribe(loadedStyles, loadedStylesFail);
+            assetsLoader
+                .loadStyles(
+                    stylesSrc.map(item => {
+                        return {
+                            src: item
+                        };
+                    })
+                )
+                .subscribe(loadedStyles, loadedStylesFail);
 
             expect(loadStyletSpy).toHaveBeenCalledTimes(2);
             expect(loadedStyles).not.toHaveBeenCalled();
@@ -787,7 +831,10 @@ describe('assets-loader', () => {
 
             const loadedSuccess = jasmine.createSpy('loaded scripts and styles success');
             const loadedFail = jasmine.createSpy('loaded scripts and styles fail');
-            assetsLoader.loadScriptsAndStyles(scripts, styles).subscribe(loadedSuccess, loadedFail);
+            assetsLoader.loadScriptsAndStyles(toAssetsTagItems(scripts), toAssetsTagItems(styles)).subscribe({
+                next: loadedSuccess,
+                error: loadedFail
+            });
 
             expect(loadScriptsSpy).toHaveBeenCalledTimes(1);
             expect(loadStylesSpy).toHaveBeenCalledTimes(1);
