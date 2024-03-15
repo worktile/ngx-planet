@@ -225,11 +225,16 @@ export class AssetsLoader {
         return forkJoin([this.loadScripts(scripts, options), this.loadStyles(styles)]);
     }
 
+    /**
+     * <script type="module" src="http://127.0.0.1:3001/main.js" async defer></script>
+     * => [`type="module"`, "async ", "defer>"] as attributeStrMatchArr
+     * => { type: "module", async: "async", defer: "defer" } as attributes
+     */
     parseTagAttributes(tag: string): Record<string, string> {
-        const attributesResult = tag.match(TAG_ATTRS_REG);
-        if (attributesResult) {
+        const attributeStrMatchArr = tag.match(TAG_ATTRS_REG);
+        if (attributeStrMatchArr) {
             const attributes: Record<string, string> = {};
-            attributesResult.forEach(item => {
+            attributeStrMatchArr.forEach(item => {
                 const equalSignIndex = item.indexOf('=');
                 if (equalSignIndex > 0) {
                     // 'type="module"' => { type: "module" }
