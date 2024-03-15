@@ -1,6 +1,7 @@
 export interface ScriptTagAttributes {
     type: 'module' | 'text/script' | undefined;
-    async?: boolean;
+    async?: string;
+    defer?: string;
 }
 
 export interface StyleTagAttributes {}

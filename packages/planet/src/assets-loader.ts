@@ -9,7 +9,7 @@ import { AssetsTagItem, ScriptTagAttributes } from './inner-types';
 
 const STYLE_LINK_OR_SCRIPT_REG = /<[script|link].*?>/gi;
 const LINK_OR_SRC_REG = /(src|href)=["'](.*?[\.js|\.css])["']/i;
-const TAG_TYPE_REG = /type=["'](.*)["']/i;
+const TAG_ATTRS_REG = /(type|defer|async)((=["'].*?["'])|\s|\>)/gi;
 
 export interface AssetsLoadResult {
     src: string;
@@ -40,7 +40,12 @@ export class AssetsLoader {
             const script: HTMLScriptElement = document.createElement('script');
             script.type = tagAttributes?.type || 'text/javascript';
             script.src = src;
-            script.async = typeof tagAttributes?.async === 'undefined' ? true : tagAttributes?.async;
+            if (!tagAttributes?.defer || tagAttributes?.defer !== 'false') {
+                script.defer = true;
+            }
+            if (!tagAttributes?.async && tagAttributes?.async === 'false') {
+                script.async = true;
+            }
             if (script['readyState']) {
                 // IE
                 script['onreadystatechange'] = () => {
@@ -220,6 +225,28 @@ export class AssetsLoader {
         return forkJoin([this.loadScripts(scripts, options), this.loadStyles(styles)]);
     }
 
+    parseTagAttributes(tag: string): Record<string, string> {
+        const attributesResult = tag.match(TAG_ATTRS_REG);
+        if (attributesResult) {
+            const attributes: Record<string, string> = {};
+            attributesResult.forEach(item => {
+                const equalSignIndex = item.indexOf('=');
+                if (equalSignIndex > 0) {
+                    // 'type="module"' => { type: "module" }
+                    const key = item.slice(0, equalSignIndex);
+                    attributes[key] = item.slice(equalSignIndex + 2, item.length - 1);
+                } else {
+                    // 'async ' => 'async'
+                    // 'defer>' => 'defer'
+                    const key = item.slice(0, item.length - 1);
+                    attributes[key] = key;
+                }
+            });
+            return attributes;
+        }
+        return undefined;
+    }
+
     parseManifestFromHTML(html: string): Record<string, AssetsTagItem> {
         const result: Record<string, AssetsTagItem> = {};
         const matchResult = html.match(STYLE_LINK_OR_SCRIPT_REG);
@@ -238,12 +265,17 @@ export class AssetsLoader {
                         src: src
                     };
                     result[ext ? `${name}.${ext}` : name] = assetsTag;
-                    const typeTagResult = item.match(TAG_TYPE_REG);
-                    if (typeTagResult && typeTagResult[1]) {
-                        assetsTag.attributes = {
-                            type: typeTagResult[1]
-                        };
+
+                    const attributes = this.parseTagAttributes(item);
+                    if (attributes) {
+                        assetsTag.attributes = attributes;
                     }
+                    // const typeTagResult = item.match(TAG_TYPE_REG);
+                    // if (typeTagResult && typeTagResult[1]) {
+                    //     assetsTag.attributes = {
+                    //         type: typeTagResult[1]
+                    //     };
+                    // }
                 }
             }
         });

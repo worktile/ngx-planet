@@ -712,11 +712,48 @@ describe('assets-loader', () => {
                     src: 'styles.css'
                 },
                 'styles.js': {
-                    src: 'styles.js'
+                    src: 'styles.js',
+                    attributes: {
+                        defer: 'defer'
+                    }
                 },
                 'main.js': {
                     src: 'main.js',
                     attributes: { type: 'module' }
+                }
+            });
+        });
+
+        it('should parse async script', () => {
+            const html = `<!DOCTYPE html>
+            <html lang="en">
+                <head>
+                    <meta charset="utf-8"/>
+                    <title>Agile - PingCode</title>
+                    <base href="/"/>
+
+                    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+                <link rel="stylesheet" href="styles.css"></head>
+                <body>
+                    <app-agile-root></app-agile-root>
+                <script src="styles.js" async></script><script src="main.js" async type="module" ></script></body>
+            </html>
+            "`;
+            const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
+            expect(result).toEqual({
+                'styles.css': {
+                    src: 'styles.css'
+                },
+                'styles.js': {
+                    src: 'styles.js',
+                    attributes: {
+                        async: 'async'
+                    }
+                },
+                'main.js': {
+                    src: 'main.js',
+                    attributes: { type: 'module', async: 'async' }
                 }
             });
         });
