@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [17.0.0-next.3](https://github.com/worktile/ngx-planet/compare/17.0.0-next.2...17.0.0-next.3) (2024-03-15)
+
+
+### Features
+
+* load script use type module when html script has type="module" ([#314](https://github.com/worktile/ngx-planet/issues/314)) ([4f50364](https://github.com/worktile/ngx-planet/commit/4f50364e718235fd5cbfd1258f72e37d1fa844c5))
+
+
+
 # [17.0.0-next.2](https://github.com/worktile/ngx-planet/compare/17.0.0-next.1...17.0.0-next.2) (2024-03-14)
 
 
