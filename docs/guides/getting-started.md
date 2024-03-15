@@ -3,18 +3,15 @@ title: 快速上手
 order: 30
 ---
 
-> 我们的 [产品](https://worktile.com) 正式发布已有一段时间，验证了 ngx-planet 在生产环境的可行性。在 ngx-planet 框架开源后，不断有团队尝试使用 ngx-planet 框架的。为了让大家可以快速上手添加应用，这里给提供一些说明。
-
-## 使用 ngx-planet 框架的应用间结构
-
-多个应用间是主从结构，主应用为 portal，在主应用中注册、管理多个子应用 app1、app2。在运行时，首先启动主应用，子应用在运行时动态加载。那么主应用是如何注册子应用，子应用在运行时是如何启动的呢？
+Planet 是一个主从架构下的微前端框架，主应用又可以叫宿主应用，我们称之为`Portal`，子应用又叫微应用，Micro App
+- Portal: 负责注册、加载、启动、卸载微应用等所有管理工作
+- Micro App: 微应用被主应用加载后启动
 
 ## 主应用
 
-### 准备工作
-首先有一个 Angular 应用我们作为 portal 主应用（可以通过 https://angular.cn/cli 快速创建应用）
+主应用必须是 Angular 应用（可以通过 https://angular.cn/cli 快速创建一个主应用）
 
-### 安装 ngx-planet
+### 安装包
 
 ```bash
 $ npm i @worktile/planet --save
@@ -22,47 +19,45 @@ $ npm i @worktile/planet --save
 $ yarn add @worktile/planet
 ```
 
-### 在主应用中加载 NgxPlanetModule
+### 在主应用中导入 NgxPlanetModule
+
+目前 Planet 内置了`EmptyComponent`和`PlanetComponentOutlet`组件，如需使用需要导入`NgxPlanetModule`
 
 ```ts
 import { NgxPlanetModule } from '@worktile/planet';
 
 @NgModule({
   imports: [
-    CommonModule,
+    ...
     NgxPlanetModule
   ]
 })
 class AppModule {}
 ```
 
+独立应用无需导入`NgxPlanetModule`，可以单独导入`EmptyComponent`和`PlanetComponentOutlet`组件。
+
+
 ### 在主应用中注册子应用
-我们需要在主应用 portal 中，将子应用通过 Planet 服务注册到微前端框架中。注册时，需配置应用的的名称、应用将要渲染的父节点、路由前缀、应用跟组件名称、静态资源文件等信息。在运行时，ngx-planet 会根据当前的 URL 找到对应的子应用，并加载应用的静态资源，启动应用。
+
+我们需要在主应用的根组件或者模块中，将子应用通过`Planet`服务注册到微前端框架中。注册时，需配置应用的的名称、应用将要渲染的父节点、路由前缀、入口等信息，运行时，会根据当前的`URL`匹配到对应的子应用，加载应用的静态资源并启动子应用。
 
 注册子应用配置如下：
 
 ```ts
-constructor(
-    private planet: Planet
-) {}
-
-ngOnInit() {
+@Component({
+  ...
+})
+class AppComponent {
+  constructor(private planet: Planet) {}
+  
+  ngOnInit() {
     this.planet.registerApps([
         {
             name: 'app1',
             hostParent: '#app-host-container',
-            hostClass: appHostClass,
-            routerPathPrefix: /\/app1|app4/, // '/app1',
-            selector: 'app1-root',
-            resourcePathPrefix: '/static/app1/',
-            preload: settings.app1.preload,
-            switchMode: settings.app1.switchMode,
-            loadSerial: true,
-            scripts: [
-                'main.js',
-            ],
-            styles: ['assets/main.css'],
-            manifest: '/static/app1/manifest.json',
+            routerPathPrefix: '/app1',
+            entry: "static/app1/index.html"
             extra: {
                 name: '应用1',
                 color: '#ffa415'
@@ -75,21 +70,19 @@ ngOnInit() {
     // load static resources which contains javascript and css
     // bootstrap angular sub app module and show it
     this.planet.start();
+  }
 }
+
 ```
 
+`planet.start()` 函数主要启动监听路由变化，根据当前路由找到需要激活的子应用，加载样式和脚本静态资源，并启动子应用展示在配置的`hostParent`元素容器内。
+
 ### 在主应用路由中添加子应用路由
+主应用和子应用都是独立的 Angular 应用，在进入到子应用的路由时如果主应用路由发现不匹配会报错，所以需要在主应用中添加子应用路由配置，指向`EmptyComponent`。
+
 ```ts
 const routes: Routes = [
-    {
-        path: '',
-        redirectTo: 'about',
-        pathMatch: 'full'
-    },
-    {
-        path: 'about',
-        component: AboutComponent
-    },
+    ...
     {
         path: 'app1',
         component: EmptyComponent,
@@ -111,21 +104,13 @@ const routes: Routes = [
         ]
     }
 ];
-
-@NgModule({
-    imports: [RouterModule.forRoot(routes, { paramsInheritanceStrategy: 'always' })],
-    exports: [RouterModule]
-})
-export class AppRoutingModule {}
 ```
 
 ## 子应用
 
-### 准备工作
-
 首先有一个 Angular 子应用（可以通过 https://angular.cn/cli 快速创建应用）
 
-### 安装 ngx-planet
+### 安装包
 
 ```bash
 $ npm i @worktile/planet --save
@@ -133,42 +118,49 @@ $ npm i @worktile/planet --save
 $ yarn add @worktile/planet
 ```
 
-### 启动子应用
+### 定义子应用
 
-在 Angular 中，启动应用是以下几步：
-
-1. 根据 angular.json 中的配置的启动脚本和启动页面
-1. 根据启动脚本中的配置，启动主模块 AppModule，加载 AppModule 中其他 import 的模块并将组件渲染到页面中
-
+在微前端架构下，子应用的启动是由主应用调用的，所以需要修改`main.ts`入口启动文件，使用`defineApplication`定义元数据和启动函数。
+模块应用定义子应用：
+```ts
+defineApplication('app1', {
+    template: `<app1-root class="app1-root"></app1-root>`,
+    bootstrap: (portalApp: PlanetPortalApplication) => {
+        return platformBrowserDynamic([
+            {
+                provide: PlanetPortalApplication,
+                useValue: portalApp
+            }
+        ])
+            .bootstrapModule(AppModule)
+            .then(appModule => {
+                return appModule;
+            })
+            .catch(error => {
+                console.error(error);
+                return null;
+            });
+    }
+});
 ```
-platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-```
-
-1. 加载 AppModule 中其他 import 的模块
-1. 将组件渲染到页面中
-
-所以，ngx-planet 启动子应用同样需要这些步骤。ngx-planet 提供了 defineApplication 方法，我们需要在子应用中，定义如何启动子应用。当需要启动子应用的时候，ngx-planet 调用注册的方法，启动应用。
-
-定义启动信息如下：
-
-```
-defineApplication('app1', (portalApp: PlanetPortalApplication) => {
-    return platformBrowserDynamic([
-        {
-            provide: PlanetPortalApplication,
-            useValue: portalApp
-        }
-    ])
-        .bootstrapModule(AppModule)
-        .then(appModule => {
-            return appModule;
-        })
-        .catch(error => {
+独立应用定义子应用：(>= 17.0.0)
+```ts
+defineApplication('standalone-app', {
+    template: `<standalone-app-root></standalone-app-root>`,
+    bootstrap: (portalApp: PlanetPortalApplication) => {
+        return bootstrapApplication(AppRootComponent, {
+            providers: [
+                {
+                    provide: PlanetPortalApplication,
+                    useValue: portalApp
+                }
+            ]
+        }).catch(error => {
             console.error(error);
             return null;
         });
+    }
 });
 ```
 
-第一个参数 app1 为应用名称，名称与注册子应用时一致，第二个参数为启动应用时执行的方法。
+### 修改启动配置
