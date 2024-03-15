@@ -5,7 +5,7 @@ import {
     getHTMLElement,
     getResourceFileName,
     buildResourceFilePath,
-    getScriptsAndStylesFullPaths,
+    getScriptsAndStylesAssets,
     getTagNameByTemplate,
     createElementByTemplate
 } from './helpers';
@@ -173,7 +173,11 @@ describe('helpers', () => {
 
     describe('buildResourceFilePath', () => {
         it('should get correct path input "main.js"', () => {
-            const result = buildResourceFilePath('main.js', { 'main.js': 'main.h2d3f2232.js' });
+            const result = buildResourceFilePath('main.js', {
+                'main.js': {
+                    src: 'main.h2d3f2232.js'
+                }
+            });
             expect(result).toBe('main.h2d3f2232.js');
         });
 
@@ -183,12 +187,16 @@ describe('helpers', () => {
         });
 
         it('should get correct path input "assets/scripts/main.js"', () => {
-            const result = buildResourceFilePath('assets/scripts/main.js', { 'main.js': 'main.h2d3f2232.js' });
+            const result = buildResourceFilePath('assets/scripts/main.js', {
+                'main.js': {
+                    src: 'main.h2d3f2232.js'
+                }
+            });
             expect(result).toBe('assets/scripts/main.h2d3f2232.js');
         });
     });
 
-    describe('getScriptsAndStylesFullPaths', () => {
+    describe('getScriptsAndStylesAssets', () => {
         const app = {
             name: 'app1',
             hostParent: '.host-selector',
@@ -205,31 +213,71 @@ describe('helpers', () => {
         };
 
         it('should get correct full path without resourcePathPrefix', () => {
-            const result = getScriptsAndStylesFullPaths({ ...app }, undefined);
+            const result = getScriptsAndStylesAssets({ ...app }, undefined);
             expect(result).toEqual({
-                scripts: ['vendor.js', 'main.js'],
-                styles: ['styles/main.css']
+                scripts: [
+                    {
+                        src: 'vendor.js'
+                    },
+                    {
+                        src: 'main.js'
+                    }
+                ],
+                styles: [
+                    {
+                        src: 'styles/main.css'
+                    }
+                ]
             });
         });
 
         it('should get correct full path with resourcePathPrefix', () => {
-            const result = getScriptsAndStylesFullPaths({ ...app }, '/static/app1/');
+            const result = getScriptsAndStylesAssets({ ...app }, '/static/app1/');
+            console.log(result);
             expect(result).toEqual({
-                scripts: ['/static/app1/vendor.js', '/static/app1/main.js'],
-                styles: ['/static/app1/styles/main.css']
+                scripts: [
+                    {
+                        src: '/static/app1/vendor.js'
+                    },
+                    {
+                        src: '/static/app1/main.js'
+                    }
+                ],
+                styles: [
+                    {
+                        src: '/static/app1/styles/main.css'
+                    }
+                ]
             });
         });
 
         it('should get correct full path with manifest', () => {
             const manifest = {
-                'vendor.js': `vendor.${randomString()}.js`,
-                'main.js': `main.${randomString()}.js`,
-                'main.css': `main.${randomString()}.css`
+                'vendor.js': {
+                    src: `vendor.${randomString()}.js`
+                },
+                'main.js': {
+                    src: `main.${randomString()}.js`
+                },
+                'main.css': {
+                    src: `main.${randomString()}.css`
+                }
             };
-            const result = getScriptsAndStylesFullPaths({ ...app, resourcePathPrefix: '/static/app1/' }, '/static/app1/', manifest);
+            const result = getScriptsAndStylesAssets({ ...app, resourcePathPrefix: '/static/app1/' }, '/static/app1/', manifest);
             expect(result).toEqual({
-                scripts: [`/static/app1/${manifest['vendor.js']}`, `/static/app1/${manifest['main.js']}`],
-                styles: [`/static/app1/styles/${manifest['main.css']}`]
+                scripts: [
+                    {
+                        src: `/static/app1/${manifest['vendor.js'].src}`
+                    },
+                    {
+                        src: `/static/app1/${manifest['main.js'].src}`
+                    }
+                ],
+                styles: [
+                    {
+                        src: `/static/app1/styles/${manifest['main.css'].src}`
+                    }
+                ]
             });
         });
     });

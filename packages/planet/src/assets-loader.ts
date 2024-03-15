@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { hashCode, isEmpty, getScriptsAndStylesFullPaths, getResourceFileName, getExtName, isObject, getAssetsBasePath } from './helpers';
+import { hashCode, isEmpty, getResourceFileName, getExtName, isObject, getAssetsBasePath, getScriptsAndStylesAssets } from './helpers';
 import { of, Observable, Observer, forkJoin, concat } from 'rxjs';
 import { map, switchMap, concatAll } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 import { createSandbox } from './sandbox';
+import { AssetsTagItem, ScriptTagAttributes } from './inner-types';
 
 const STYLE_LINK_OR_SCRIPT_REG = /<[script|link].*?>/gi;
 const LINK_OR_SRC_REG = /(src|href)=["'](.*?[\.js|\.css])["']/i;
+const TAG_ATTRS_REG = /(type|defer|async)((=["'].*?["'])|\s|\>)/gi;
 
 export interface AssetsLoadResult {
     src: string;
@@ -24,7 +26,7 @@ export class AssetsLoader {
 
     constructor(private http: HttpClient) {}
 
-    loadScript(src: string): Observable<AssetsLoadResult> {
+    loadScript(src: string, tagAttributes?: ScriptTagAttributes): Observable<AssetsLoadResult> {
         const id = hashCode(src);
         if (this.loadedSources.includes(id)) {
             return of({
@@ -36,9 +38,14 @@ export class AssetsLoader {
         }
         return new Observable((observer: Observer<AssetsLoadResult>) => {
             const script: HTMLScriptElement = document.createElement('script');
-            script.type = 'text/javascript';
+            script.type = tagAttributes?.type || 'text/javascript';
             script.src = src;
-            script.async = true;
+            if (!tagAttributes?.defer || tagAttributes?.defer !== 'false') {
+                script.defer = true;
+            }
+            if (!tagAttributes?.async && tagAttributes?.async === 'false') {
+                script.async = true;
+            }
             if (script['readyState']) {
                 // IE
                 script['onreadystatechange'] = () => {
@@ -161,7 +168,7 @@ export class AssetsLoader {
     }
 
     loadScripts(
-        sources: string[],
+        sources: AssetsTagItem[],
         options: {
             app?: string;
             sandbox?: boolean;
@@ -174,12 +181,12 @@ export class AssetsLoader {
         if (isEmpty(sources)) {
             return of(null);
         }
-        const observables = sources.map(src => {
+        const observables = sources.map(source => {
             // TODO: 暂时只支持Proxy沙箱
             if (options.sandbox && window.Proxy) {
-                return this.loadScriptWithSandbox(options.app, src);
+                return this.loadScriptWithSandbox(options.app, source.src);
             } else {
-                return this.loadScript(src);
+                return this.loadScript(source.src, source.attributes as ScriptTagAttributes);
             }
         });
         if (options.serial) {
@@ -195,20 +202,20 @@ export class AssetsLoader {
         }
     }
 
-    loadStyles(sources: string[]): Observable<AssetsLoadResult[]> {
+    loadStyles(sources: AssetsTagItem[]): Observable<AssetsLoadResult[]> {
         if (isEmpty(sources)) {
             return of(null);
         }
         return forkJoin(
-            sources.map(src => {
-                return this.loadStyle(src);
+            sources.map(source => {
+                return this.loadStyle(source.src);
             })
         );
     }
 
     loadScriptsAndStyles(
-        scripts: string[] = [],
-        styles: string[] = [],
+        scripts: AssetsTagItem[] = [],
+        styles: AssetsTagItem[] = [],
         options?: {
             app?: string;
             sandbox?: boolean;
@@ -218,8 +225,35 @@ export class AssetsLoader {
         return forkJoin([this.loadScripts(scripts, options), this.loadStyles(styles)]);
     }
 
-    parseManifestFromHTML(html: string): Record<string, string> {
-        const result = {};
+    /**
+     * <script type="module" src="http://127.0.0.1:3001/main.js" async defer></script>
+     * => [`type="module"`, "async ", "defer>"] as attributeStrMatchArr
+     * => { type: "module", async: "async", defer: "defer" } as attributes
+     */
+    parseTagAttributes(tag: string): Record<string, string> {
+        const attributeStrMatchArr = tag.match(TAG_ATTRS_REG);
+        if (attributeStrMatchArr) {
+            const attributes: Record<string, string> = {};
+            attributeStrMatchArr.forEach(item => {
+                const equalSignIndex = item.indexOf('=');
+                if (equalSignIndex > 0) {
+                    // 'type="module"' => { type: "module" }
+                    const key = item.slice(0, equalSignIndex);
+                    attributes[key] = item.slice(equalSignIndex + 2, item.length - 1);
+                } else {
+                    // 'async ' => 'async'
+                    // 'defer>' => 'defer'
+                    const key = item.slice(0, item.length - 1);
+                    attributes[key] = key;
+                }
+            });
+            return attributes;
+        }
+        return undefined;
+    }
+
+    parseManifestFromHTML(html: string): Record<string, AssetsTagItem> {
+        const result: Record<string, AssetsTagItem> = {};
         const matchResult = html.match(STYLE_LINK_OR_SCRIPT_REG);
         matchResult.forEach(item => {
             const linkOrSrcResult = item.match(LINK_OR_SRC_REG);
@@ -232,7 +266,21 @@ export class AssetsLoader {
                 if (splitIndex > -1) {
                     const name = hashName.slice(0, splitIndex);
                     const ext = getExtName(hashName);
-                    result[ext ? `${name}.${ext}` : name] = src;
+                    const assetsTag: AssetsTagItem = {
+                        src: src
+                    };
+                    result[ext ? `${name}.${ext}` : name] = assetsTag;
+
+                    const attributes = this.parseTagAttributes(item);
+                    if (attributes) {
+                        assetsTag.attributes = attributes;
+                    }
+                    // const typeTagResult = item.match(TAG_TYPE_REG);
+                    // if (typeTagResult && typeTagResult[1]) {
+                    //     assetsTag.attributes = {
+                    //         type: typeTagResult[1]
+                    //     };
+                    // }
                 }
             }
         });
@@ -248,10 +296,7 @@ export class AssetsLoader {
             const responseType = isHtml ? 'text' : 'json';
             return this.loadManifest(`${manifest}?t=${new Date().getTime()}`, responseType).pipe(
                 switchMap(manifestResult => {
-                    if (responseType === 'text') {
-                        manifestResult = this.parseManifestFromHTML(manifestResult as string);
-                    }
-                    const { scripts, styles } = getScriptsAndStylesFullPaths(app, basePath, manifestResult as Record<string, string>);
+                    const { scripts, styles } = getScriptsAndStylesAssets(app, basePath, manifestResult);
                     return this.loadScriptsAndStyles(scripts, styles, {
                         app: app.name,
                         sandbox: app.sandbox,
@@ -260,7 +305,7 @@ export class AssetsLoader {
                 })
             );
         } else {
-            const { scripts, styles } = getScriptsAndStylesFullPaths(app, basePath);
+            const { scripts, styles } = getScriptsAndStylesAssets(app, basePath);
             return this.loadScriptsAndStyles(scripts, styles, {
                 app: app.name,
                 sandbox: app.sandbox,
@@ -269,14 +314,24 @@ export class AssetsLoader {
         }
     }
 
-    loadManifest(url: string, responseType: 'text' | 'json' = 'json'): Observable<Record<string, string> | string> {
+    loadManifest(url: string, responseType: 'text' | 'json' = 'json'): Observable<Record<string, AssetsTagItem>> {
         return this.http
             .get(url, {
                 responseType: responseType as 'json'
             })
             .pipe(
                 map((response: any) => {
-                    return response;
+                    if (responseType === 'text') {
+                        return this.parseManifestFromHTML(response as string);
+                    } else {
+                        const result: Record<string, AssetsTagItem> = {};
+                        Object.keys(response).forEach(key => {
+                            result[key] = {
+                                src: response[key]
+                            };
+                        });
+                        return result;
+                    }
                 })
             );
     }

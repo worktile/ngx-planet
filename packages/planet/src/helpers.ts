@@ -1,3 +1,4 @@
+import { AssetsTagItem } from './inner-types';
 import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 
 const ELEMENT_NODE_TYPE = 1;
@@ -67,7 +68,7 @@ export function isObject<T extends object>(value: any): value is T {
  * 2. "assets/scripts/main.js" => "main.js"
  * @param path path
  */
-export function getResourceFileName(path: string) {
+export function getResourceFileName(path: string): string {
     const lastSlashIndex = path.lastIndexOf('/');
     if (lastSlashIndex >= 0) {
         return path.slice(lastSlashIndex + 1);
@@ -93,10 +94,10 @@ export function getExtName(name: string) {
  * @param resourceFilePath Resource File Path
  * @param manifestResult manifest
  */
-export function buildResourceFilePath(resourceFilePath: string, manifestResult: { [key: string]: string }) {
+export function buildResourceFilePath(resourceFilePath: string, manifestResult: Record<string, AssetsTagItem>) {
     const fileName = getResourceFileName(resourceFilePath);
     if (manifestResult[fileName]) {
-        return resourceFilePath.replace(fileName, manifestResult[fileName]);
+        return resourceFilePath.replace(fileName, manifestResult[fileName].src);
     } else {
         return resourceFilePath;
     }
@@ -139,52 +140,59 @@ export function getAssetsBasePath(app: PlanetApplication): string {
     return basePath || app.resourcePathPrefix;
 }
 
-/**
- * Get static resource full path
- * @param app PlanetApplication
- * @param manifestResult manifest
- */
-export function getScriptsAndStylesFullPaths(app: PlanetApplication, basePath: string, manifestResult?: { [key: string]: string }) {
+function getAssetsByDefined(definedPaths: string[], manifest: Record<string, AssetsTagItem>, ext: 'js' | 'css'): AssetsTagItem[] {
+    if (definedPaths) {
+        return definedPaths.map(definedPath => {
+            const fileName = getResourceFileName(definedPath);
+            const assetsTagItem = manifest[fileName];
+            return {
+                ...assetsTagItem,
+                src: definedPath.replace(fileName, assetsTagItem.src)
+            };
+        });
+    } else {
+        return Object.keys(manifest)
+            .filter(key => {
+                return getExtName(key) === ext;
+            })
+            .map(key => {
+                return manifest[key];
+            });
+    }
+}
+
+export function toAssetsTagItem(src: string): AssetsTagItem {
+    return {
+        src: src
+    };
+}
+
+export function toAssetsTagItems(src: string[]): AssetsTagItem[] {
+    return src.map(item => toAssetsTagItem(item));
+}
+
+export function getScriptsAndStylesAssets(
+    app: PlanetApplication,
+    basePath: string,
+    manifestResult?: Record<string, AssetsTagItem>
+): { scripts: AssetsTagItem[]; styles: AssetsTagItem[] } {
+    const result: { scripts: AssetsTagItem[]; styles: AssetsTagItem[] } = { scripts: [], styles: [] };
     let { scripts, styles } = getDefinedAssets(app);
     // combine resource path by manifest
     if (manifestResult) {
-        if (scripts) {
-            scripts = scripts.map(script => {
-                return buildResourceFilePath(script, manifestResult);
-            });
-        } else {
-            scripts = Object.keys(manifestResult)
-                .filter(key => {
-                    return getExtName(key) === 'js';
-                })
-                .map(key => {
-                    return manifestResult[key];
-                });
-        }
-        if (styles) {
-            styles = styles.map(style => {
-                return buildResourceFilePath(style, manifestResult);
-            });
-        } else {
-            styles = Object.keys(manifestResult)
-                .filter(key => {
-                    return getExtName(key) === 'css';
-                })
-                .map(key => {
-                    return manifestResult[key];
-                });
-        }
+        result.scripts = getAssetsByDefined(scripts, manifestResult, 'js');
+        result.styles = getAssetsByDefined(styles, manifestResult, 'css');
+    } else {
+        result.scripts = toAssetsTagItems(scripts);
+        result.styles = toAssetsTagItems(styles);
     }
     if (basePath) {
-        scripts = scripts.map(script => {
-            return buildFullPath(script, basePath);
+        result.scripts.forEach(item => {
+            item.src = buildFullPath(item.src, basePath);
         });
-        styles = styles.map(style => {
-            return buildFullPath(style, basePath);
+        result.styles.forEach(item => {
+            item.src = buildFullPath(item.src, basePath);
         });
     }
-    return {
-        scripts: scripts || [],
-        styles: styles || []
-    };
+    return result;
 }
