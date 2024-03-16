@@ -1,4 +1,4 @@
-import { Injectable, NgZone, ApplicationRef, Injector } from '@angular/core';
+import { Injectable, NgZone, ApplicationRef, Injector, computed, signal } from '@angular/core';
 import { of, Observable, Subject, forkJoin, from, throwError } from 'rxjs';
 import { AssetsLoader } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
@@ -54,6 +54,8 @@ export class PlanetApplicationLoader {
 
     private appsLoadingStart$ = new Subject<AppsLoadingStartEvent>();
 
+    private innerLoading = signal(false);
+
     public get appStatusChange(): Observable<AppStatusChangeEvent> {
         return this.appStatusChange$.asObservable();
     }
@@ -62,7 +64,12 @@ export class PlanetApplicationLoader {
         return this.appsLoadingStart$.asObservable();
     }
 
+    /**
+     * @deprecated please use loading signal
+     */
     public loadingDone = false;
+
+    public loading = this.innerLoading.asReadonly();
 
     constructor(
         private assetsLoader: AssetsLoader,
@@ -73,9 +80,7 @@ export class PlanetApplicationLoader {
         applicationRef: ApplicationRef
     ) {
         if (getApplicationLoader()) {
-            throw new Error(
-                'PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed'
-            );
+            throw new Error('PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed');
         }
 
         this.options = {
@@ -97,9 +102,7 @@ export class PlanetApplicationLoader {
         this.ngZone.run(() => {
             const fromStatus = this.appsStatus.get(app);
             debug(
-                `app(${app.name}) status change: ${fromStatus ? ApplicationStatus[fromStatus] : 'empty'} => ${
-                    ApplicationStatus[status]
-                }`
+                `app(${app.name}) status change: ${fromStatus ? ApplicationStatus[fromStatus] : 'empty'} => ${ApplicationStatus[status]}`
             );
             this.appsStatus.set(app, status);
             this.appStatusChange$.next({
@@ -109,10 +112,7 @@ export class PlanetApplicationLoader {
         });
     }
 
-    private getAppStatusChange$(
-        app: PlanetApplication,
-        status = ApplicationStatus.bootstrapped
-    ): Observable<PlanetApplication> {
+    private getAppStatusChange$(app: PlanetApplication, status = ApplicationStatus.bootstrapped): Observable<PlanetApplication> {
         return this.appStatusChange.pipe(
             filter(event => {
                 return event.app === app && event.status === status;
@@ -140,6 +140,7 @@ export class PlanetApplicationLoader {
     private setLoadingDone() {
         this.ngZone.run(() => {
             this.loadingDone = true;
+            this.innerLoading.set(false);
         });
     }
 
@@ -188,9 +189,7 @@ export class PlanetApplicationLoader {
                                     appStatus === ApplicationStatus.loadError
                                 ) {
                                     debug(
-                                        `app(${app.name}) status is ${
-                                            ApplicationStatus[appStatus as ApplicationStatus]
-                                        }, start load assets`
+                                        `app(${app.name}) status is ${ApplicationStatus[appStatus as ApplicationStatus]}, start load assets`
                                     );
                                     hasAppsNeedLoadingAssets = true;
                                     return this.ngZone.runOutsideAngular(() => {
@@ -202,6 +201,7 @@ export class PlanetApplicationLoader {
                             });
                             if (hasAppsNeedLoadingAssets) {
                                 this.loadingDone = false;
+                                this.innerLoading.set(true);
                             }
                             return loadApps$.length > 0 ? forkJoin(loadApps$) : of([] as PlanetApplication[]);
                         }),
@@ -212,9 +212,7 @@ export class PlanetApplicationLoader {
                                     switchMap(app => {
                                         const appStatus = this.appsStatus.get(app);
                                         if (appStatus === ApplicationStatus.bootstrapped) {
-                                            debug(
-                                                `[routeChange] app(${app.name}) status is bootstrapped, show app and active`
-                                            );
+                                            debug(`[routeChange] app(${app.name}) status is bootstrapped, show app and active`);
                                             this.showApp(app);
                                             const appRef = getPlanetApplicationRef(app.name);
                                             appRef?.navigateByUrl(event.url);
@@ -222,9 +220,7 @@ export class PlanetApplicationLoader {
                                             this.setLoadingDone();
                                             return of(app);
                                         } else if (appStatus === ApplicationStatus.assetsLoaded) {
-                                            debug(
-                                                `[routeChange] app(${app.name}) status is assetsLoaded, start bootstrapping`
-                                            );
+                                            debug(`[routeChange] app(${app.name}) status is assetsLoaded, start bootstrapping`);
                                             return this.bootstrapApp(app).pipe(
                                                 map(() => {
                                                     debug(`app(${app.name}) bootstrapped success, active it`);
@@ -237,9 +233,7 @@ export class PlanetApplicationLoader {
                                             debug(`[routeChange] app(${app.name}) is active, do nothings`);
                                             const appRef = getPlanetApplicationRef(app.name);
                                             // Backwards compatibility sub app use old version which has not getCurrentRouterStateUrl
-                                            const currentUrl = appRef?.getCurrentRouterStateUrl
-                                                ? appRef.getCurrentRouterStateUrl()
-                                                : '';
+                                            const currentUrl = appRef?.getCurrentRouterStateUrl ? appRef.getCurrentRouterStateUrl() : '';
                                             if (currentUrl !== event.url) {
                                                 appRef?.navigateByUrl(event.url);
                                             }
@@ -253,9 +247,7 @@ export class PlanetApplicationLoader {
                                             return this.getAppStatusChange$(app).pipe(
                                                 take(1),
                                                 map(() => {
-                                                    debug(
-                                                        `app(${app.name}) status is bootstrapped by subscribe status change, active it`
-                                                    );
+                                                    debug(`app(${app.name}) status is bootstrapped by subscribe status change, active it`);
                                                     this.setAppStatus(app, ApplicationStatus.active);
                                                     this.showApp(app);
                                                     return app;
@@ -355,10 +347,7 @@ export class PlanetApplicationLoader {
         }
     }
 
-    private bootstrapApp(
-        app: PlanetApplication,
-        defaultStatus: 'hidden' | 'display' = 'display'
-    ): Observable<PlanetApplicationRef> {
+    private bootstrapApp(app: PlanetApplication, defaultStatus: 'hidden' | 'display' = 'display'): Observable<PlanetApplicationRef> {
         debug(`app(${app.name}) start bootstrapping`);
         this.setAppStatus(app, ApplicationStatus.bootstrapping);
         const appRef = getPlanetApplicationRef(app.name);
@@ -517,11 +506,7 @@ export class PlanetApplicationLoader {
                     return getPlanetApplicationRef(app.name);
                 })
             );
-        } else if (
-            [ApplicationStatus.assetsLoading, ApplicationStatus.assetsLoaded, ApplicationStatus.bootstrapping].includes(
-                status
-            )
-        ) {
+        } else if ([ApplicationStatus.assetsLoading, ApplicationStatus.assetsLoaded, ApplicationStatus.bootstrapping].includes(status)) {
             debug(`preload app(${app.name}), status is ${ApplicationStatus[status]}, return until bootstrapped`);
             return this.getAppStatusChange$(app).pipe(
                 take(1),

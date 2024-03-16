@@ -19,8 +19,8 @@ export class AppComponent implements OnInit {
 
     activeAppNames: string[] = [];
 
-    get loadingDone() {
-        return this.planet.loadingDone;
+    get loading() {
+        return this.planet.loading;
     }
 
     constructor(

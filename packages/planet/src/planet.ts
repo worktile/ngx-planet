@@ -2,11 +2,7 @@ import { Injectable, Inject, Optional, Injector } from '@angular/core';
 import { NavigationEnd, RouterEvent, Router } from '@angular/router';
 import { PlanetOptions, PlanetApplication, PLANET_APPLICATIONS } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
-import {
-    PlanetApplicationLoader,
-    AppsLoadingStartEvent,
-    AppStatusChangeEvent
-} from './application/planet-application-loader';
+import { PlanetApplicationLoader, AppsLoadingStartEvent, AppStatusChangeEvent } from './application/planet-application-loader';
 import { Observable, Subscription } from 'rxjs';
 import { filter, startWith, distinctUntilChanged, map } from 'rxjs/operators';
 import {
@@ -30,8 +26,15 @@ export class Planet {
         return getApplicationService();
     }
 
+    /**
+     * @deprecated please use loading signal
+     */
     public get loadingDone() {
         return this.planetApplicationLoader.loadingDone;
+    }
+
+    public get loading() {
+        return this.planetApplicationLoader.loading;
     }
 
     public get appStatusChange(): Observable<AppStatusChangeEvent> {

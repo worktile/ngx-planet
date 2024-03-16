@@ -39,11 +39,12 @@
       </thy-nav>
     </thy-sidebar>
   </div>
-  <div id="app-host-container" class="thy-layout" [ngClass]="{ hide: !loadingDone }">
+  <div id="app-host-container" class="thy-layout" [ngClass]="{ hide: loading() }">
     <div class="portal portal-container">
       <router-outlet></router-outlet>
     </div>
   </div>
-
-  <thy-loading class="portal" *ngIf="!loadingDone" [thyDone]="loadingDone"></thy-loading>
+  @if (loading(); as loadingState) {
+    <thy-loading class="portal" [thyDone]="!loadingState"></thy-loading>
+  }
 </thy-layout>

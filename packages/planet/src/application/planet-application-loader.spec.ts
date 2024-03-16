@@ -87,8 +87,11 @@ class AppStatusChangeFaker {
         expect(this.spy).toHaveBeenCalledTimes(fromCalledTimes + 1);
         expect(this.spy).toHaveBeenCalledWith({ app: expectedApp, status: ApplicationStatus.bootstrapping });
         expect(this.planetApplicationLoader.loadingDone).toBe(false);
+        expect(this.planetApplicationLoader.loading()).toBe(true);
         appRefFaker.bootstrap();
         expect(this.planetApplicationLoader.loadingDone).toBe(true);
+        expect(this.planetApplicationLoader.loading()).toBe(false);
+
         expect(this.spy).toHaveBeenCalledTimes(fromCalledTimes + 3);
 
         expect(this.spy).toHaveBeenCalledWith({ app: expectedApp, status: ApplicationStatus.bootstrapped });
