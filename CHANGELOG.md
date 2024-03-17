@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [17.0.0](https://github.com/worktile/ngx-planet/compare/17.0.0-next.3...17.0.0) (2024-03-17)
+
+
+### Features
+
+* add loading signal for planet ([5034351](https://github.com/worktile/ngx-planet/commit/5034351dd39502faeac1c7a0d8910b8b0652cbc8))
+
+
+
 # [17.0.0-next.3](https://github.com/worktile/ngx-planet/compare/17.0.0-next.2...17.0.0-next.3) (2024-03-15)
 
 
