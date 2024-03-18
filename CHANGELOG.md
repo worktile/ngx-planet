@@ -6,9 +6,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 
 ### Features
-
+* support index.html as assets manifest and add entry instead of manifest, scripts, styles and resourcePathPrefix ([#308](https://github.com/worktile/ngx-planet/issues/308)) ([0670411](https://github.com/worktile/ngx-planet/commit/067041162ff7908f6cd950338e197847fa562308))
+* support load standalone app #INFR-11810 ([#305](https://github.com/worktile/ngx-planet/issues/305)) ([9a750ad](https://github.com/worktile/ngx-planet/commit/9a750ad15c4c036640ee44861ca1b8698bec7e3a)), closes [#INFR-11810](https://github.com/worktile/ngx-planet/issues/INFR-11810)
+* upgrade ng to 17 ([#302](https://github.com/worktile/ngx-planet/issues/302)) ([acc1525](https://github.com/worktile/ngx-planet/commit/acc152587860f65551fde5c7b73a056d8b543f47))
 * add loading signal for planet ([5034351](https://github.com/worktile/ngx-planet/commit/5034351dd39502faeac1c7a0d8910b8b0652cbc8))
-
 
 
 # [17.0.0-next.3](https://github.com/worktile/ngx-planet/compare/17.0.0-next.2...17.0.0-next.3) (2024-03-15)
