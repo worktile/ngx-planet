@@ -19,7 +19,7 @@ $ npm i @worktile/planet --save
 $ yarn add @worktile/planet
 ```
 
-### 在主应用中导入 NgxPlanetModule
+### 在主应用中导入模块
 
 目前 Planet 内置了`EmptyComponent`和`PlanetComponentOutlet`组件，如需使用需要导入`NgxPlanetModule`
 
@@ -49,7 +49,7 @@ class AppModule {}
   ...
 })
 class AppComponent {
-  constructor(private planet: Planet) {}
+  private planet = inject(Planet);
   
   ngOnInit() {
     this.planet.registerApps([
@@ -163,4 +163,19 @@ defineApplication('standalone-app', {
 });
 ```
 
-### 修改启动配置
+<alert>注意：template 配置需要和子应用根组件的选择器保持一致，providers 为子应用的根供应商，添加 PlanetPortalApplication 为了方便在子应用中成功注入 PlanetPortalApplication 调用主应用的函数。</alert>
+
+### 修改路由配置
+
+每个子应用的根路由需要和主应用中注册的`routerPathPrefix`保持一致。
+```ts
+{
+  path: 'app1',
+  children: [
+    {
+      path: '',
+      component: HomeComponent
+    }
+ ]
+}
+```

@@ -13,7 +13,7 @@ module.exports = {
         null,
         {
             title: '示例',
-            path: 'http://planet.ngnice.com',
+            path: 'http://planet-examples.ngnice.com',
             isExternal: true
         },
         {
@@ -31,5 +31,6 @@ module.exports = {
                 }
             }
         }
-    ]
+    ],
+    footer: 'Open-source MIT Licensed | Copyright © 2020-present<br />Powered by PingCode'
 };

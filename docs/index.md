@@ -1,7 +1,7 @@
 ---
 hero:
   title: Planet
-  description: Angular 框架下无懈可击的微前端框架
+  description: Angular 框架下无懈可击的微前端框架和一体化解决方案
   banner: https://cdn.worktile.com/open-sources/ngx-tethys/home/banner.png
   actions:
     - text: 快速开始 →
@@ -16,7 +16,7 @@ features:
     description: 符合 Angular 哲学的 APIs，Angular 用户友好且亲切
   - icon: https://cdn.worktile.com/open-sources/ngx-tethys/home/feature2.png
     title: 配置简单
-    description: 简单的配置，快速上手和搭建微前端架构的应用，让开发者聚焦于业务
+    description: 简单的配置，快速搭建微前端架构的前端应用，让开发者聚焦于业务
   - icon: https://cdn.worktile.com/open-sources/ngx-tethys/home/feature6.png
     title: 稳定可用
     description: 采用 Planet 搭建的企业级 SaaS 架构的 PingCode 产品稳定上线多年，满足复杂交互的业务系统
@@ -25,3 +25,11 @@ features:
     description: 支持同时渲染多个应用、并存模式、预加载、样式/沙箱隔离、跨应用通信和组件渲染等高级功能
 footer: Open-source MIT Licensed | Copyright © 2020-present<br />Powered by PingCode
 ---
+
+## 安装
+
+```
+$ npm i @worktile/planet --save
+// or
+$ yarn add @worktile/planet
+```
