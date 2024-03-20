@@ -49,7 +49,7 @@ this.planet.setOptions({
     - `entry.manifest: string` -  可选，manifest.json 或者 index.html 文件路径地址
     - `entry.scripts?: string[]` - 可选，脚本静态资源文件
     - `entry.styles?: string[]` - 可选，样式静态资源文件
-    - `entry.basePath?: string[]`  - 可选，脚本和样式文件路径前缀，多个脚本可以避免重复写同样的前缀
+    - `entry.basePath?: string[]`  - 可选，脚本和样式文件路径前缀，多个脚本可以避免重复写同样的前缀，此配置对于 manifest 不生效，主要是因为 manifest 和脚本样式资源文件在生产环境下一般地址不同，manifest 通常存放在服务器上，脚本样式资源文件存在于 CDN 上
   - [`废弃`]`resourcePathPrefix?: string` - 可选，脚本和样式文件路径前缀，多个脚本可以避免重复写同样的前缀
   - [`废弃`]`styles?: string[]` - 可选，样式静态资源文件
   - [`废弃`]`scripts?: string[]` - 可选，脚本静态资源文件
@@ -102,7 +102,7 @@ this.planet.registerApps([
         routerPathPrefix: '/app2',
         entry: {
             basePath: 'http://127.0.0.1:3002',
-            manifest: 'index.html',
+            manifest: 'http://127.0.0.1:3002/index.html',
             scripts: ['main.js'],
             styles: ['main.css']
         },
