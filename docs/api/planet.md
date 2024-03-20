@@ -60,26 +60,18 @@ this.planet.setOptions({
   - `extra: TExtra` - 可选，附加数据，主要应用于业务，比如图标，子应用的颜色，显示名等个性化配置
 - 示例
 ```ts
-class AppComponent {
-  private planet = inject(Planet);
-  
-  ngOnInit() {
-    this.planet.registerApp(
-        {
-            name: 'app1',
-            hostParent: '#app-host-container',
-            routerPathPrefix: '/app1',
-            entry: "http://127.0.0.1:3001/index.html",
-            switchMode: SwitchModes.coexist,
-            preload: true,
-            extra: {
-                name: '应用1',
-                color: '#ffa415'
-            }
-        }
-    );
-  }
-}
+this.planet.registerApp({
+    name: 'app1',
+    hostParent: '#app-host-container',
+    routerPathPrefix: '/app1',
+    entry: 'http://127.0.0.1:3001/index.html',
+    switchMode: SwitchModes.coexist,
+    preload: true,
+    extra: {
+        name: '应用1',
+        color: '#ffa415'
+    }
+});
 ```
 
 ## registerApps(apps)
@@ -91,43 +83,37 @@ class AppComponent {
 - 示例
 
 ```ts
-class AppComponent {
-  private planet = inject(Planet);
-  
-  ngOnInit() {
-    this.planet.registerApps([
-        {
-            name: 'app1',
-            hostParent: '#app-host-container',
-            routerPathPrefix: '/app1',
-            entry: "http://127.0.0.1:3001/index.html",
-            switchMode: SwitchModes.coexist,
-            preload: true,
-            extra: {
-                name: '应用1',
-                color: '#ffa415'
-            }
-        },
-        {
-            name: 'app2',
-            hostParent: '#app-host-container',
-            routerPathPrefix: '/app2',
-            entry: {
-              basePath: "http://127.0.0.1:3001",
-              manifest: "index.html",
-              scripts: ["main.js"],
-              styles: ["main.css"]
-            },
-            switchMode: SwitchModes.coexist,
-            preload: true,
-            extra: {
-                name: '应用2',
-                color: '#ffa415'
-            }
+this.planet.registerApps([
+    {
+        name: 'app1',
+        hostParent: '#app-host-container',
+        routerPathPrefix: '/app1',
+        entry: 'http://127.0.0.1:3001/index.html',
+        switchMode: SwitchModes.coexist,
+        preload: true,
+        extra: {
+            name: '应用1',
+            color: '#ffa415'
         }
-      ]);
-  }
-}
+    },
+    {
+        name: 'app2',
+        hostParent: '#app-host-container',
+        routerPathPrefix: '/app2',
+        entry: {
+            basePath: 'http://127.0.0.1:3002',
+            manifest: 'index.html',
+            scripts: ['main.js'],
+            styles: ['main.css']
+        },
+        switchMode: SwitchModes.coexist,
+        preload: true,
+        extra: {
+            name: '应用2',
+            color: '#ffa415'
+        }
+    }
+]);
 ```
 
 ## unregisterApp(name)

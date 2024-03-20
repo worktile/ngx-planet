@@ -1,6 +1,7 @@
 ---
 title: PlanetComponentLoader
 order: 30
+toc: menu
 ---
 
 ```ts
@@ -31,7 +32,7 @@ this.planetComponentLoader.register({
 this.planetComponentLoader.register([ProjectsComponent, ProjectDetailComponent]);
 ```
 
-## load(name, componentName, config))
+## load(name, componentName, config)
 渲染其他应用中注册过的组件。
 - 参数
   - `name: string` - 必填，加载组件所在的应用名称，例如："app1"

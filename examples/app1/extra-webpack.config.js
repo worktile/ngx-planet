@@ -3,9 +3,9 @@ const PrefixWrap = require('@worktile/planet-postcss-prefixwrap');
 // const PrefixWrap = require('postcss-prefixwrap');
 
 module.exports = {
-    optimization: {
-        runtimeChunk: false
-    },
+    // optimization: {
+    //     runtimeChunk: false
+    // },
     plugins: [new WebpackAssetsManifest()],
     output: {
         publicPath: '/static/app1/'
