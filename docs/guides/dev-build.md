@@ -36,7 +36,7 @@ this.planet.registerApps([
         routerPathPrefix: '/app2',
         entry: {
             basePath: 'http://127.0.0.1:3002',
-            manifest: 'index.html',
+            manifest: 'http://127.0.0.1:3002/index.html',
             scripts: ['main.js'],
             styles: ['main.css']
         },
@@ -50,6 +50,14 @@ this.planet.registerApps([
 ]);
 ```
 `entry`同时支持字符串和对象配置，了解更多参考：[PlanetApplication.entry](api/planet#registerapp(app))
+```ts
+entry: "http://127.0.0.1:3002/static/app1/index.html"
+// 等价于
+entry: {
+  basePath: "http://127.0.0.1:3002/static/app1/",
+  manifest: "http://127.0.0.1:3002/static/app1/index.html"
+}
+```
 
 如果本地开发采用不同的端口，生产环境部署却是在同一个域名下，那么主应用需要根据环境变量是否为本地开发和生成环境配置不同的`entry`地址：
 
@@ -132,11 +140,11 @@ this.planet.registerApps([
     }
 ]);
 ```
-当使用代理注册为`static/app1/index.html`时推荐生产环境部署也遵循同样的路径规则，这样不管是在本地开发还是生产环境，子产品的资源路径都是`static/app1/*`
+当使用此种模式时推荐生产环境部署也遵循同样的路径规则，这样不管是在本地开发还是生产环境，子产品的资源路径都是`static/app1/*`
 
 ### 子应用启动
 
-使用代理配置了一个固定的路径`static/app1/*`访问某个子应用，子应用本地启动需要设置`serve-path=static/app1/`，否则本地访问失败。
+子应用本地启动需要设置`serve-path=static/app1/`，这样子应用的静态资源访问路都是`static/app1/*`，否则本地访问失败。
 
 ```json
 {
