@@ -1,6 +1,7 @@
 ---
 title: GlobalEventDispatcher
 order: 30
+toc: menu
 ---
 
 ```ts

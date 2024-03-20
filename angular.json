@@ -196,7 +196,7 @@
               "namedChunks": true,
               "aot": false,
               "extractLicenses": true,
-              "vendorChunk": false,
+              "vendorChunk": true,
               "buildOptimizer": false
             }
           },
@@ -270,43 +270,40 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "500kb",
+                  "maximumError": "5mb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "examples/app2/src/environments/environment.ts",
                   "with": "examples/app2/src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
               "sourceMap": true,
-              "aot": false,
+              "namedChunks": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": false,
-              "namedChunks": true
+              "buildOptimizer": false
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "app2:build",
             "port": 3002
           },
           "configurations": {

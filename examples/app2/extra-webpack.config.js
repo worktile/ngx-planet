@@ -2,9 +2,9 @@ const WebpackAssetsManifest = require('webpack-assets-manifest');
 const PrefixWrap = require('@worktile/planet-postcss-prefixwrap');
 
 module.exports = {
-    optimization: {
-        runtimeChunk: false
-    },
+    // optimization: {
+    //     runtimeChunk: false
+    // },
     output: {
         publicPath: '/static/app2/'
     },

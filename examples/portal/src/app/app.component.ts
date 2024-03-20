@@ -76,13 +76,16 @@ export class AppComponent implements OnInit {
                 switchMode: settings.app2.switchMode,
                 // sandbox: true, // 沙箱隔离开启后懒加载报错
                 stylePrefix: 'app2',
-                manifest: '/static/app2/assets-manifest.json',
-                resourcePathPrefix: '/static/app2/',
-                // prettier-ignore
-                scripts: [
-                    'main.js'
-                ],
-                styles: ['styles.css'],
+                entry: {
+                    basePath: '/static/app2/',
+                    // manifest: '/static/app2/index.html',
+                    manifest: '/static/app2/assets-manifest.json',
+                    // prettier-ignore
+                    scripts: [
+                        'runtime.js', 'main.js'
+                    ],
+                    styles: ['styles.css']
+                },
                 extra: {
                     name: '应用2',
                     color: '#66c060'
