@@ -165,9 +165,22 @@ defineApplication('standalone-app', {
 
 <alert>注意：template 配置需要和子应用根组件的选择器保持一致，providers 为子应用的根供应商，添加 PlanetPortalApplication 为了方便在子应用中成功注入 PlanetPortalApplication 调用主应用的函数。</alert>
 
+### 去除 polyfills
+因为主应用已经加载了 `polyfills.ts`中的`Zone.js`了，无特殊情况子应用可以彻底去掉`angular.json`中的
+`polyfills": ["zone.js"]`。
+
 ### 修改路由配置
 
 每个子应用的根路由需要和主应用中注册的`routerPathPrefix`保持一致。
+可以全局提供`APP_BASE_HREF`为`/app1`：
+
+```ts
+{
+  provide: APP_BASE_HREF,
+  useValue: '/app1'
+},
+```
+或者通过设置一个`path`为`app1`的虚拟根路由：
 ```ts
 {
   path: 'app1',
@@ -179,3 +192,4 @@ defineApplication('standalone-app', {
  ]
 }
 ```
+
