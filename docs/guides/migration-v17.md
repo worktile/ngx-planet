@@ -10,25 +10,19 @@ order: 1000
 ## 开始升级
 - 执行`ng update @worktile/planet`命令自动升级
 - 此版本新增了`entry`参数代替之前的`manifest`, `scripts`, `styles`和`resourcePathPrefix`
+
 ```
-// 旧版配置
 {
-  manifest: "static/app1/assets-manifest.json",
-  scripts: ["main.js"],
-  styles: ["styles.css"],
-  resourcePathPrefix: "static/app1"
-}
-```
-=> 
-```
-// 推荐配置
-{
-  entry: {
-    manifest: "static/app1/assets-manifest.json",
-    scripts: ["main.js"],
-    styles: ["styles.css"],
-    bashPath: "static/app1"
-  }
+-  manifest: "static/app1/assets-manifest.json",
+-  scripts: ["main.js"],
+-  styles: ["styles.css"],
+-  resourcePathPrefix: "static/app1"
++  entry: {
++    manifest: "static/app1/assets-manifest.json",
++    scripts: ["main.js"],
++    styles: ["styles.css"],
++    bashPath: "static/app1"
++  }
 }
 ```
 - 在 17 版本中，manifest 除了可以配置`json`文件外还可以配置`index.html`，这样就不用单独使用`webpack-assets-manifest`插件生成 manifest JSON 文件，同时支持字符串简化配置
