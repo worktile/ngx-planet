@@ -172,15 +172,7 @@ defineApplication('standalone-app', {
 ### 修改路由配置
 
 每个子应用的根路由需要和主应用中注册的`routerPathPrefix`保持一致。
-可以全局提供`APP_BASE_HREF`为`/app1`：
-
-```ts
-{
-  provide: APP_BASE_HREF,
-  useValue: '/app1'
-},
-```
-或者通过设置一个`path`为`app1`的虚拟根路由：
+通过设置一个`path`为`app1`的虚拟根路由：
 ```ts
 {
   path: 'app1',
@@ -192,4 +184,14 @@ defineApplication('standalone-app', {
  ]
 }
 ```
+或者全局提供`APP_BASE_HREF`为`/app1`：
+
+```ts
+{
+  provide: APP_BASE_HREF,
+  useValue: '/app1'
+},
+```
+
+<alert>此种方式设置后在子产品内部通过路由可能无法跳转到其他应用。</alert>
 
