@@ -15,7 +15,7 @@ APIs consistent with angular style, currently only supports Angular, other frame
 
 English | [中文文档](https://github.com/worktile/ngx-planet/blob/master/README.zh-CN.md)
 
-## Features
+## ✨ Features
 
 - Rendering multiple applications at the same time
 - Support two mode, coexist and default that switch to another app and destroy active apps
@@ -24,6 +24,14 @@ English | [中文文档](https://github.com/worktile/ngx-planet/blob/master/READ
 - Built-in communication between multiple applications
 - Cross application component rendering
 - Comprehensive examples include routing configuration, lazy loading and all features
+
+## 📖 Documentation
+- [Introduce](http://planet.ngnice.com/guides/intro)
+- [Getting Started](http://planet.ngnice.com/guides/getting-started)
+- [Development and Build](http://planet.ngnice.com/guides/dev-build)
+- [Data shared and Communication](http://planet.ngnice.com/guides/communication)
+- [Cross Application Component rendering](http://planet.ngnice.com/guides/cross-app-comp-rendering)
+- [API References](http://planet.ngnice.com/guides/api)
 
 ## Alternatives
 
@@ -38,13 +46,9 @@ $ npm i @worktile/planet --save
 $ yarn add @worktile/planet
 ```
 
-## Dependencies
-
-- `<= 14.0.0` you should install `@angular/cdk`
-
 ## Demo
 
-[Try out our live demo](http://planet.ngnice.com)
+[Try out our live demo](http://planet-examples.ngnice.com)
 
 ![ngx-planet-micro-front-end.gif](https://cdn.pingcode.com/open-sources/ngx-planet/ngx-planet-micro-front-end.gif)
 

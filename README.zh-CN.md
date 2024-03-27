@@ -14,7 +14,7 @@ Angular 的 API 风格，目前只支持 Angular 框架，不支持其他 MV* �
 
 中文文档 | [English README](https://github.com/worktile/ngx-planet/blob/master/README.md)
 
-## 功能
+## ✨ 功能
 
 - 支持同时渲染多个子应用
 - 支持并存(coexist)和默认(default)两种模式, 默认模式切换其他子应用销毁当前子应用，并存模式不会销毁，而是隐藏
@@ -23,6 +23,15 @@ Angular 的 API 风格，目前只支持 Angular 框架，不支持其他 MV* �
 - 内置多个应用之间的通信
 - 支持跨应用组件的渲染
 - 完善的示例，包含路由配置、懒加载等所有功能
+
+
+## 📖 Documentation
+- [介绍](http://planet.ngnice.com/guides/intro)
+- [快速开始](http://planet.ngnice.com/guides/getting-started)
+- [开发与构建](http://planet.ngnice.com/guides/dev-build)
+- [数据共享与通信](http://planet.ngnice.com/guides/communication)
+- [跨应用渲染](http://planet.ngnice.com/guides/cross-app-comp-rendering)
+- [API 引用](http://planet.ngnice.com/guides/api)
 
 ## 其他方案
 
@@ -37,14 +46,9 @@ $ npm i @worktile/planet --save
 $ yarn add @worktile/planet
 ```
 
-## Dependencies
-
-- 在 `<= 14.0.0`，确保安装了 Angular 官方的 CDK `npm i @angular/cdk --save` 或者 `yarn add @angular/cdk`
-
-
 ## 示例
 
-[Try out our live demo](http://planet.ngnice.com)
+[Try out our live demo](http://planet-examples.ngnice.com)
 
 ![ngx-planet-micro-front-end.gif](https://cdn.pingcode.com/open-sources/ngx-planet/ngx-planet-micro-front-end.gif)
 

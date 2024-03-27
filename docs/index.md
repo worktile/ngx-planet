@@ -8,7 +8,7 @@ hero:
       link: guides/getting-started
       btnShape: round
 features:
-  - icon: https://cdn.pingcode.com/open-sources/docgeni/home/feature4.png
+  - icon: https://cdn.pingcode.com/open-sources/docgeni/home/feature1.png
     title: 开箱即用
     description: 内置 Angular 应用路由同步、应用生命周期管理等微前端架构下的难点解决方案
   - icon: https://cdn.worktile.com/open-sources/ngx-tethys/home/feature5.png
@@ -20,9 +20,12 @@ features:
   - icon: https://cdn.worktile.com/open-sources/ngx-tethys/home/feature6.png
     title: 稳定可用
     description: 采用 Planet 微前端架构搭建的企业级应用的 PingCode 产品稳定上线多年，满足复杂交互的业务系统
-  - icon: https://cdn.worktile.com/open-sources/ngx-tethys/home/feature4.png
+  - icon: https://cdn.pingcode.com/open-sources/docgeni/home/feature4.png
     title: 功能全面
     description: 支持同时渲染多个应用、并存模式、预加载、样式/沙箱隔离、跨应用通信和组件渲染等高级功能
+  - icon: https://cdn.worktile.com/open-sources/ngx-tethys/home/feature4.png
+    title: 示例丰富
+    description: 提供包含完几乎所有功能的整示例，项目配置以及功能实现，同时提供详细的文档介绍所有特性
 footer: Open-source MIT Licensed | Copyright © 2020-present<br />Powered by PingCode
 ---
 
