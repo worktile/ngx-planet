@@ -8,7 +8,7 @@ module.exports = {
     docsDir: 'docs',
     defaultLocale: 'zh-cn',
     repoUrl: 'https://github.com/worktile/ngx-planet',
-    logoUrl: 'https://cdn.worktile.com/open-sources/ngx-tethys/logos/tethys.png',
+    logoUrl: 'assets/images/planet.png',
     navs: [
         null,
         {
