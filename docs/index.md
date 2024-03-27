@@ -2,7 +2,7 @@
 hero:
   title: Planet
   description: Angular 框架下无懈可击的微前端框架和一体化解决方案
-  banner: assets/images/banner.png
+  banner: https://cdn.pingcode.com/open-sources/ngx-planet/banner.png
   actions:
     - text: 快速开始 →
       link: guides/getting-started
@@ -25,7 +25,7 @@ features:
     description: 支持同时渲染多个应用、并存模式、预加载、样式/沙箱隔离、跨应用通信和组件渲染等高级功能
   - icon: https://cdn.worktile.com/open-sources/ngx-tethys/home/feature4.png
     title: 示例丰富
-    description: 提供包含完几乎所有功能的整示例，项目配置以及功能实现，同时提供详细的文档介绍所有特性
+    description: 提供包含几乎所有功能的完整示例，项目配置以及功能实现，同时提供详细的文档介绍所有特性
 footer: Open-source MIT Licensed | Copyright © 2020-present<br />Powered by PingCode
 ---
 
