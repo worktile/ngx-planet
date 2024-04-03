@@ -1,33 +1,34 @@
+import { DOCUMENT } from '@angular/common';
 import {
-    Injectable,
     ApplicationRef,
+    ComponentRef,
+    ElementRef,
+    EmbeddedViewRef,
+    EnvironmentInjector,
+    Inject,
+    Injectable,
+    Injector,
     NgModuleRef,
     NgZone,
-    ElementRef,
-    Inject,
-    Injector,
-    createComponent,
+    TemplateRef,
     Type,
-    ComponentRef,
-    EmbeddedViewRef,
-    reflectComponentType,
-    EnvironmentInjector,
-    TemplateRef
+    createComponent,
+    reflectComponentType
 } from '@angular/core';
+import { Observable, of, timer } from 'rxjs';
+import { delayWhen, map, shareReplay } from 'rxjs/operators';
+import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
 import { PlanetApplicationRef } from '../application/planet-application-ref';
-import { PlanetComponentRef } from './planet-component-ref';
-import { PlantComponentConfig } from './plant-component.config';
-import { coerceArray } from '../helpers';
-import { map, shareReplay, delayWhen } from 'rxjs/operators';
-import { of, Observable, timer } from 'rxjs';
-import { DOCUMENT } from '@angular/common';
+import { PlanetPortalApplication } from '../application/portal-application';
 import {
     getApplicationLoader,
     getApplicationService,
-    getPlanetApplicationRef,
-    getBootstrappedPlanetApplicationRef
+    getBootstrappedPlanetApplicationRef,
+    getPlanetApplicationRef
 } from '../global-planet';
-import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
+import { coerceArray } from '../helpers';
+import { PlanetComponentRef } from './planet-component-ref';
+import { PlantComponentConfig } from './plant-component.config';
 
 const componentWrapperClass = 'planet-component-wrapper';
 
@@ -158,7 +159,15 @@ export class PlanetComponentLoader {
 
     private registerComponentFactory(componentOrComponents: PlanetComponent | PlanetComponent[]) {
         const app = this.ngModuleRef.instance.appName;
-        this.getPlantAppRef(app).subscribe((appRef: NgPlanetApplicationRef) => {
+        let appRef$: Observable<NgPlanetApplicationRef | PlanetPortalApplication>;
+
+        if (app) {
+            appRef$ = this.getPlantAppRef(app) as Observable<NgPlanetApplicationRef>;
+        } else {
+            appRef$ = of(globalPlanet.portalApplication);
+        }
+
+        appRef$.subscribe(appRef => {
             appRef.registerComponentFactory((componentName: string, config: PlantComponentConfig<any>) => {
                 const components = coerceArray(componentOrComponents);
                 const planetComponent = components.find(item => {
@@ -170,7 +179,7 @@ export class PlanetComponentLoader {
                     return this.ngZone.run(() => {
                         const componentRef = this.attachComponent<any>(
                             isComponentType(planetComponent) ? planetComponent : planetComponent.component,
-                            appRef.appModuleRef.injector,
+                            appRef instanceof NgPlanetApplicationRef ? appRef.appModuleRef.injector : this.ngModuleRef.injector,
                             config
                         );
                         return componentRef;
@@ -193,15 +202,22 @@ export class PlanetComponentLoader {
         componentName: string,
         config: PlantComponentConfig<TData>
     ): Observable<PlanetComponentRef<TComp>> {
-        const result = this.getPlantAppRef(app).pipe(
-            delayWhen((appRef: NgPlanetApplicationRef) => {
-                if (appRef.getComponentFactory()) {
-                    return of('');
-                } else {
-                    // Because register use 'setTimeout',so timer 20
-                    return timer(20);
-                }
-            }),
+        let appRef$: Observable<NgPlanetApplicationRef | PlanetPortalApplication>;
+        if (app === 'portal') {
+            appRef$ = of(globalPlanet.portalApplication);
+        } else {
+            appRef$ = this.getPlantAppRef(app).pipe(
+                delayWhen((appRef: NgPlanetApplicationRef) => {
+                    if (appRef.getComponentFactory()) {
+                        return of('');
+                    } else {
+                        // Because register use 'setTimeout',so timer 20
+                        return timer(20);
+                    }
+                })
+            );
+        }
+        const result = appRef$.pipe(
             map(appRef => {
                 const componentFactory = appRef.getComponentFactory();
                 if (componentFactory) {

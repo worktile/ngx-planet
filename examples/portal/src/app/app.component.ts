@@ -1,12 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef, ApplicationRef, NgZone, HostBinding } from '@angular/core';
-import { Planet, SwitchModes, GlobalEventDispatcher, ApplicationStatus, PlanetApplication } from '@worktile/planet';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { ThyDialog } from 'ngx-tethys/dialog';
-import { ADetailComponent } from './a-detail/a-detail.component';
-import { ThyNotifyService } from 'ngx-tethys/notify';
+import { Component, OnInit } from '@angular/core';
 import { AppRootContext } from '@demo/common';
-import { CustomSettingsService } from './custom-settings.service';
+import { GlobalEventDispatcher, Planet, PlanetComponentLoader, SwitchModes } from '@worktile/planet';
 import { debug } from 'debug';
+import { ThyDialog } from 'ngx-tethys/dialog';
+import { ThyNotifyService } from 'ngx-tethys/notify';
+import { ADetailComponent } from './a-detail/a-detail.component';
+import { PortalCustomComponent } from './about/components/portal-custom.component';
+import { CustomSettingsService } from './custom-settings.service';
 
 @Component({
     selector: 'app-root',
@@ -29,7 +29,8 @@ export class AppComponent implements OnInit {
         private globalEventDispatcher: GlobalEventDispatcher,
         private thyDialog: ThyDialog,
         private thyNotify: ThyNotifyService,
-        public appRootContext: AppRootContext
+        public appRootContext: AppRootContext,
+        private planetComponentLoader: PlanetComponentLoader
     ) {}
 
     ngOnInit() {
@@ -117,5 +118,7 @@ export class AppComponent implements OnInit {
             this.activeAppNames = event.shouldLoadApps.map(item => item.name);
             console.log(`active app names: ${this.activeAppNames.join(',')}`);
         });
+
+        this.planetComponentLoader.register([PortalCustomComponent]);
     }
 }
