@@ -1,7 +1,7 @@
 import { ApplicationRef, Injector, NgZone } from '@angular/core';
 import { NavigationExtras, Router, UrlTree } from '@angular/router';
+import { PlantComponentFactory } from '../component/planet-component-ref';
 import { GlobalEventDispatcher } from '../global-event-dispatcher';
-import { PlantComponentFactory } from './ng-planet-application-ref';
 
 export class PlanetPortalApplication<TData = any> {
     applicationRef?: ApplicationRef;
@@ -10,7 +10,8 @@ export class PlanetPortalApplication<TData = any> {
     ngZone?: NgZone;
     globalEventDispatcher?: GlobalEventDispatcher;
     data?: TData;
-    componentFactory?: PlantComponentFactory;
+    name?: string;
+    private componentFactory?: PlantComponentFactory;
 
     navigateByUrl(url: string | UrlTree, extras?: NavigationExtras): Promise<boolean> {
         return this.ngZone!.run(() => {

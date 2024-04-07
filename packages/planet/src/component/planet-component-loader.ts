@@ -203,7 +203,7 @@ export class PlanetComponentLoader {
         config: PlantComponentConfig<TData>
     ): Observable<PlanetComponentRef<TComp>> {
         let appRef$: Observable<NgPlanetApplicationRef | PlanetPortalApplication>;
-        if (app === 'portal') {
+        if (app === globalPlanet.portalApplication.name) {
             appRef$ = of(globalPlanet.portalApplication);
         } else {
             appRef$ = this.getPlantAppRef(app).pipe(

@@ -1,4 +1,5 @@
-import { ComponentRef, ElementRef } from '@angular/core';
+import { ComponentRef } from '@angular/core';
+import { PlantComponentConfig } from './plant-component.config';
 
 export class PlanetComponentRef<TComp = any> {
     wrapperElement: HTMLElement;
@@ -7,3 +8,5 @@ export class PlanetComponentRef<TComp = any> {
     componentRef: ComponentRef<TComp>;
     dispose: () => void;
 }
+
+export type PlantComponentFactory = <TData, TComp>(componentName: string, config: PlantComponentConfig<TData>) => PlanetComponentRef<TComp>;

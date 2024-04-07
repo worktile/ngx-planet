@@ -1,16 +1,16 @@
-import { Injectable, NgZone, ApplicationRef, Injector, computed, signal } from '@angular/core';
-import { of, Observable, Subject, forkJoin, from, throwError } from 'rxjs';
-import { AssetsLoader } from '../assets-loader';
-import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
-import { switchMap, share, map, tap, distinctUntilChanged, take, filter, catchError } from 'rxjs/operators';
-import { getHTMLElement, coerceArray, createElementByTemplate } from '../helpers';
-import { PlanetApplicationRef } from './planet-application-ref';
-import { PlanetPortalApplication } from './portal-application';
-import { PlanetApplicationService } from './planet-application.service';
-import { GlobalEventDispatcher } from '../global-event-dispatcher';
+import { ApplicationRef, Injectable, Injector, NgZone, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { globalPlanet, getPlanetApplicationRef, getApplicationLoader } from '../global-planet';
+import { Observable, Subject, forkJoin, from, of } from 'rxjs';
+import { catchError, distinctUntilChanged, filter, map, share, switchMap, take, tap } from 'rxjs/operators';
+import { AssetsLoader } from '../assets-loader';
 import { createDebug } from '../debug';
+import { GlobalEventDispatcher } from '../global-event-dispatcher';
+import { getApplicationLoader, getPlanetApplicationRef, globalPlanet } from '../global-planet';
+import { coerceArray, createElementByTemplate, getHTMLElement } from '../helpers';
+import { PlanetApplication, PlanetOptions, PlanetRouterEvent, SwitchModes } from '../planet.class';
+import { PlanetApplicationRef } from './planet-application-ref';
+import { PlanetApplicationService } from './planet-application.service';
+import { PlanetPortalApplication } from './portal-application';
 const debug = createDebug('app-loader');
 
 export enum ApplicationStatus {
@@ -93,6 +93,7 @@ export class PlanetApplicationLoader {
         this.portalApp.applicationRef = applicationRef;
         this.portalApp.router = router;
         this.portalApp.injector = injector;
+        this.portalApp.name = 'portal';
         this.portalApp.globalEventDispatcher = injector.get(GlobalEventDispatcher);
         globalPlanet.portalApplication = this.portalApp;
         this.setupRouteChange();
