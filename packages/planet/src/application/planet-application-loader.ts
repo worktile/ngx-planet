@@ -93,7 +93,6 @@ export class PlanetApplicationLoader {
         this.portalApp.applicationRef = applicationRef;
         this.portalApp.router = router;
         this.portalApp.injector = injector;
-        this.portalApp.name = 'portal';
         this.portalApp.globalEventDispatcher = injector.get(GlobalEventDispatcher);
         globalPlanet.portalApplication = this.portalApp;
         this.setupRouteChange();

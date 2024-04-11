@@ -1,20 +1,16 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NgxPlanetModule } from '../module';
 
-import { Component, DebugElement, OnInit } from '@angular/core';
-import { PlanetComponentLoader } from './planet-component-loader';
-import { PlantComponentConfig } from './plant-component.config';
+import { Component, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { PlanetComponentRef } from './planet-component-ref';
 import { tap } from 'rxjs/operators';
+import { PlanetComponentLoader } from './planet-component-loader';
+import { PlanetComponentRef } from './planet-component-types';
+import { PlantComponentConfig } from './plant-component.config';
 
 @Component({
     selector: 'planet-component-outlet-basic-test',
-    template: `
-        <ng-container
-            *planetComponentOutlet="componentName; app: 'app2'; initialState: { term: 'From Test' }"
-        ></ng-container>
-    `
+    template: ` <ng-container *planetComponentOutlet="componentName; app: 'app2'; initialState: { term: 'From Test' }"></ng-container> `
 })
 export class PlanetComponentOutletBasicTestComponent implements OnInit {
     componentName = 'project1';
@@ -32,8 +28,7 @@ export class PlanetComponentOutletBasicTestComponent implements OnInit {
             planetComponentOutlet="project1"
             planetComponentOutletApp="app2"
             planetComponentOutletInitialState="{ term: 'From Test' }"
-            (planetComponentLoaded)="componentLoaded($event)"
-        ></ng-container>
+            (planetComponentLoaded)="componentLoaded($event)"></ng-container>
     `
 })
 export class PlanetComponentOutletGeneralTestComponent {

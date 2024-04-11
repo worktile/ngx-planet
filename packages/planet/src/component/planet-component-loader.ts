@@ -27,7 +27,7 @@ import {
     getPlanetApplicationRef
 } from '../global-planet';
 import { coerceArray } from '../helpers';
-import { PlanetComponentRef } from './planet-component-ref';
+import { PlanetComponentRef } from './planet-component-types';
 import { PlantComponentConfig } from './plant-component.config';
 
 const componentWrapperClass = 'planet-component-wrapper';

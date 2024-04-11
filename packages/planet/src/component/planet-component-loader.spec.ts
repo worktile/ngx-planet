@@ -1,24 +1,24 @@
-import { TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { Compiler, Injector, Type, NgModuleRef, ApplicationRef } from '@angular/core';
-import { app1Name, App1Module, App1ProjectsComponent } from '../testing/app1.module';
-import { app2Name, App2Module } from '../testing/app2.module';
-import { PlanetPortalApplication } from '../application/portal-application';
-import { PlanetComponentLoader } from './planet-component-loader';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Compiler, Injector, NgModuleRef, Type } from '@angular/core';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Planet } from 'ngx-planet/planet';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { PlantComponentConfig } from './plant-component.config';
-import {
-    defineApplication,
-    getPlanetApplicationRef,
-    getApplicationLoader,
-    clearGlobalPlanet,
-    getApplicationService
-} from '../global-planet';
-import { Planet } from 'ngx-planet/planet';
-import { RouterTestingModule } from '@angular/router/testing';
-import { PlanetComponentRef } from './planet-component-ref';
 import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
+import { PlanetPortalApplication } from '../application/portal-application';
+import {
+    clearGlobalPlanet,
+    defineApplication,
+    getApplicationLoader,
+    getApplicationService,
+    getPlanetApplicationRef
+} from '../global-planet';
+import { App1Module, App1ProjectsComponent, app1Name } from '../testing/app1.module';
+import { App2Module, app2Name } from '../testing/app2.module';
+import { PlanetComponentLoader } from './planet-component-loader';
+import { PlanetComponentRef } from './planet-component-types';
+import { PlantComponentConfig } from './plant-component.config';
 
 describe('PlanetComponentLoader', () => {
     let compiler: Compiler;
@@ -226,6 +226,8 @@ describe('PlanetComponentLoader', () => {
             expect(App1ProjectsComponent.state).toEqual('destroyed');
         });
     }));
+
+    it('should child app load portal component success', () => {});
 });
 
 function registerAppComponents(appModuleRef: NgModuleRef<any>) {

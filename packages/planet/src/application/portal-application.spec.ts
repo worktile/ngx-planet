@@ -1,8 +1,8 @@
+import { ApplicationRef, NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { PlanetPortalApplication } from './portal-application';
-import { NgZone, ApplicationRef } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PlanetPortalApplication } from './portal-application';
 
 describe('PlanetPortalApplication', () => {
     let router: Router;
@@ -49,5 +49,14 @@ describe('PlanetPortalApplication', () => {
         planetPortalApplication.navigateByUrl('/app1/dashboard', { skipLocationChange: true });
         expect(navigateByUrlSpy).toHaveBeenCalled();
         expect(navigateByUrlSpy).toHaveBeenCalledWith('/app1/dashboard', { skipLocationChange: true });
+    });
+
+    it(`should run registerComponentFactory & getComponentFactory`, () => {
+        const spy = jasmine.createSpy('spy');
+        expect(spy).not.toHaveBeenCalled();
+        planetPortalApplication.registerComponentFactory(spy);
+        const componentFactory = planetPortalApplication.getComponentFactory();
+        componentFactory('', {} as any);
+        expect(spy).toHaveBeenCalled();
     });
 });

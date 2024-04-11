@@ -2,7 +2,7 @@ import { ApplicationRef, EnvironmentInjector, NgModuleRef, NgZone } from '@angul
 import { NavigationEnd, Router } from '@angular/router';
 import { Observable, from } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { PlantComponentFactory } from '../component/planet-component-ref';
+import { PlantComponentFactory } from '../component/planet-component-types';
 import { getTagNameByTemplate } from '../helpers';
 import { Sandbox, getSandboxInstance } from '../sandbox/';
 import { PlanetApplicationRef } from './planet-application-ref';

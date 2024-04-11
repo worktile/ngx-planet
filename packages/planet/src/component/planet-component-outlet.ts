@@ -1,20 +1,19 @@
 import {
-    Directive,
-    ViewContainerRef,
-    OnDestroy,
-    OnChanges,
-    SimpleChanges,
-    Input,
     AfterViewInit,
+    Directive,
     ElementRef,
+    EventEmitter,
+    Input,
     NgZone,
+    OnChanges,
+    OnDestroy,
     Output,
-    EventEmitter
+    SimpleChanges
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PlanetComponentLoader } from './planet-component-loader';
-import { PlanetComponentRef } from './planet-component-ref';
+import { PlanetComponentRef } from './planet-component-types';
 import { PlantComponentProjectableNode } from './plant-component.config';
 
 @Directive({
