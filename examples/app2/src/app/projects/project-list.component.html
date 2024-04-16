@@ -1,5 +1,6 @@
 <thy-content>
   <input thyInput class="mt-2 mb-2" [(ngModel)]="search" placeholder="搜索项目" [style.width.px]="300" (thyEnter)="getProjects()" />
+  <ng-content></ng-content>
   <thy-table
     thyClassName="table-hover"
     [thyModel]="projects"
@@ -18,6 +19,7 @@
       </ng-template>
     </thy-table-column>
   </thy-table>
+  <ng-content select="[footer]"></ng-content>
 </thy-content>
 
 <!-- <router-outlet></router-outlet> -->
