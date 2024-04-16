@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [17.1.0-next.0](https://github.com/worktile/ngx-planet/compare/17.0.0...17.1.0-next.0) (2024-04-16)
+
+
+### Features
+
+* add projectableNodes for PlantComponentConfig ([2ca3646](https://github.com/worktile/ngx-planet/commit/2ca364684e552bc39f17645225f17c02f62b51a7))
+
+
+
 # [17.0.0](https://github.com/worktile/ngx-planet/compare/17.0.0-next.3...17.0.0) (2024-03-17)
 
 
