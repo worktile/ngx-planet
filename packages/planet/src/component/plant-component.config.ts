@@ -14,4 +14,8 @@ export class PlantComponentConfig<TData = any> {
     hostClass?: string;
     /** Data being injected into the child component. */
     initialState?: TData | null = null;
+    /**
+     * Projectable nodes
+     */
+    projectableNodes?: Node[][];
 }

@@ -127,7 +127,8 @@ export class PlanetComponentLoader {
         const container = this.getContainerElement(config);
         const componentRef = createComponent(component, {
             environmentInjector: environmentInjector,
-            elementInjector: injector
+            elementInjector: injector,
+            projectableNodes: config.projectableNodes
         });
         appRef.attachView(componentRef.hostView);
         const componentRootNode = this.getComponentRootNode(componentRef);
