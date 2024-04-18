@@ -1,4 +1,6 @@
-import { ViewContainerRef, ElementRef } from '@angular/core';
+import { TemplateRef, ElementRef } from '@angular/core';
+
+export type PlantComponentProjectableNode = Node[] | TemplateRef<any>;
 
 export class PlantComponentConfig<TData = any> {
     /** Load target container */
@@ -17,5 +19,5 @@ export class PlantComponentConfig<TData = any> {
     /**
      * Projectable nodes
      */
-    projectableNodes?: Node[][];
+    projectableNodes?: PlantComponentProjectableNode[];
 }

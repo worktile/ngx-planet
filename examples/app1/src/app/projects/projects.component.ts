@@ -1,5 +1,19 @@
 import { Observable, Subject } from 'rxjs';
-import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild,
+    OnDestroy,
+    TemplateRef,
+    EnvironmentInjector,
+    inject,
+    ViewContainerRef,
+    Injector,
+    signal,
+    createEnvironmentInjector,
+    ApplicationRef
+} from '@angular/core';
 import { PlanetComponentLoader, PlanetComponentRef } from '@worktile/planet';
 import { takeUntil } from 'rxjs/operators';
 
@@ -7,10 +21,19 @@ import { takeUntil } from 'rxjs/operators';
     selector: 'app-projects',
     template: `
         <section-card class="mt-2" title="App2's projects component">
+            <ng-template #operation>
+                <button thyButton="primary">New</button> <a *ngIf="hasEditPermission()" href="javascript:;" class="ml-4">Edit</a>
+            </ng-template>
+
             <thy-tabs (thyActiveTabChange)="activeTabChange($event)">
                 <thy-tab id="planet-component-outlet" thyTitle="PlanetComponentOutlet">
                     <ng-container
-                        *planetComponentOutlet="'app-project-list'; app: 'app2'; initialState: { search: 'From PlanetComponentOutlet' }">
+                        *planetComponentOutlet="
+                            'app-project-list';
+                            app: 'app2';
+                            projectableNodes: [operation];
+                            initialState: { search: 'From PlanetComponentOutlet' }
+                        ">
                     </ng-container>
                     <!-- <ng-container
                         planetComponentOutlet="project1"
@@ -30,15 +53,30 @@ import { takeUntil } from 'rxjs/operators';
 export class ProjectsComponent implements OnInit, OnDestroy {
     @ViewChild('container', { static: true }) container: ElementRef<HTMLDivElement>;
 
+    @ViewChild('operation') operationTemplateRef: TemplateRef<unknown>;
+
     loadingDone = false;
 
     destroyed$ = new Subject<void>();
 
     componentRef: PlanetComponentRef;
 
+    injector = inject(EnvironmentInjector);
+
+    viewContainerRef = inject(ViewContainerRef);
+
+    applicationRef = inject(ApplicationRef);
+
+    hasEditPermission = signal(false);
+
     constructor(private planetComponentLoader: PlanetComponentLoader) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        // 模拟异步返回数据，projectableNodes 的模板根据数据触发变更监测
+        setTimeout(() => {
+            this.hasEditPermission.set(true);
+        }, 1000);
+    }
 
     activeTabChange(event: string) {
         if (event === 'planet-component-loader') {
@@ -48,20 +86,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     loadManual() {
         this.componentRef?.dispose();
-        const div = document.createElement('div');
-        div.innerHTML = 'hahaha';
-
-        const div2 = document.createElement('div');
-        div2.setAttribute('header', 'header');
-        div2.innerHTML = 'div2';
-
-        const div3 = document.createElement('div');
-        div3.setAttribute('footer', 'footer');
-        div3.innerHTML = 'div3';
         this.planetComponentLoader
             .load<{ click: Observable<unknown> }>('app2', 'app-project-list', {
                 container: this.container,
-                // projectableNodes: [[div], [div2], [div3]],
+                projectableNodes: [this.operationTemplateRef], // [[div], [div2], [div3]],
                 initialState: {
                     search: 'From PlanetComponentLoader'
                 },
