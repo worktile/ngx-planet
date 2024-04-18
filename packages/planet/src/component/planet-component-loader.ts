@@ -191,10 +191,14 @@ export class PlanetComponentLoader {
         });
     }
 
-    register(components: PlanetComponent | PlanetComponent[]) {
-        setTimeout(() => {
+    register(components: PlanetComponent | PlanetComponent[], immediate?: boolean) {
+        if (immediate) {
             this.registerComponentFactory(components);
-        });
+        } else {
+            setTimeout(() => {
+                this.registerComponentFactory(components);
+            });
+        }
     }
 
     load<TComp = unknown, TData = unknown>(
