@@ -10,21 +10,21 @@ import {
     Injector,
     NgModuleRef,
     NgZone,
-    TemplateRef,
     Type,
     createComponent,
     reflectComponentType
 } from '@angular/core';
+import { PlanetPortalApplication } from 'ngx-planet';
 import { Observable, of, timer } from 'rxjs';
 import { delayWhen, map, shareReplay } from 'rxjs/operators';
 import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
 import { PlanetApplicationRef } from '../application/planet-application-ref';
-import { PlanetPortalApplication } from '../application/portal-application';
 import {
     getApplicationLoader,
     getApplicationService,
     getBootstrappedPlanetApplicationRef,
-    getPlanetApplicationRef
+    getPlanetApplicationRef,
+    globalPlanet
 } from '../global-planet';
 import { coerceArray } from '../helpers';
 import { PlanetComponentRef } from './planet-component-types';

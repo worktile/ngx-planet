@@ -1,12 +1,12 @@
-import { ApplicationRef, EnvironmentInjector, NgModuleRef, NgZone } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { Observable, from } from 'rxjs';
+import { ApplicationRef, NgModuleRef, NgZone, EnvironmentInjector } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { take } from 'rxjs/operators';
+import { Observable, from } from 'rxjs';
+import { PlanetPortalApplication } from './portal-application';
 import { PlantComponentFactory } from '../component/planet-component-types';
 import { getTagNameByTemplate } from '../helpers';
-import { Sandbox, getSandboxInstance } from '../sandbox/';
+import { getSandboxInstance, Sandbox } from '../sandbox/';
 import { PlanetApplicationRef } from './planet-application-ref';
-import { PlanetPortalApplication } from './portal-application';
 
 export type NgBootstrapAppModule = (
     portalApp: PlanetPortalApplication

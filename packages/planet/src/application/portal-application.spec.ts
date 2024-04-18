@@ -1,8 +1,8 @@
-import { ApplicationRef, NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 import { PlanetPortalApplication } from './portal-application';
+import { NgZone, ApplicationRef } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PlanetPortalApplication', () => {
     let router: Router;

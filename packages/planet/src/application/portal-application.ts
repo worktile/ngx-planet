@@ -1,5 +1,5 @@
-import { ApplicationRef, Injector, NgZone } from '@angular/core';
-import { NavigationExtras, Router, UrlTree } from '@angular/router';
+import { Router, UrlTree, NavigationExtras } from '@angular/router';
+import { NgZone, Injector, ApplicationRef } from '@angular/core';
 import { PlantComponentFactory } from '../component/planet-component-types';
 import { GlobalEventDispatcher } from '../global-event-dispatcher';
 

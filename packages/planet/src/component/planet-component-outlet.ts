@@ -1,14 +1,15 @@
 import {
-    AfterViewInit,
     Directive,
-    ElementRef,
-    EventEmitter,
-    Input,
-    NgZone,
-    OnChanges,
+    ViewContainerRef,
     OnDestroy,
+    OnChanges,
+    SimpleChanges,
+    Input,
+    AfterViewInit,
+    ElementRef,
+    NgZone,
     Output,
-    SimpleChanges
+    EventEmitter
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
