@@ -11,7 +11,8 @@ import {
     ComponentRef,
     EmbeddedViewRef,
     reflectComponentType,
-    EnvironmentInjector
+    EnvironmentInjector,
+    TemplateRef
 } from '@angular/core';
 import { PlanetApplicationRef } from '../application/planet-application-ref';
 import { PlanetComponentRef } from './planet-component-ref';
@@ -125,10 +126,11 @@ export class PlanetComponentLoader {
         const appRef = this.applicationRef;
         const injector = this.createInjector<TData>(environmentInjector, plantComponentRef);
         const container = this.getContainerElement(config);
+
         const componentRef = createComponent(component, {
             environmentInjector: environmentInjector,
             elementInjector: injector,
-            projectableNodes: config.projectableNodes
+            projectableNodes: config.projectableNodes as Node[][]
         });
         appRef.attachView(componentRef.hostView);
         const componentRootNode = this.getComponentRootNode(componentRef);
@@ -203,7 +205,28 @@ export class PlanetComponentLoader {
             map(appRef => {
                 const componentFactory = appRef.getComponentFactory();
                 if (componentFactory) {
-                    return componentFactory<TData, TComp>(componentName, config);
+                    const projectableEmbeddedViewRefs: EmbeddedViewRef<any>[] = [];
+                    const projectableNodes: Node[][] = (config.projectableNodes || []).map(node => {
+                        const d = TemplateRef;
+                        if (node instanceof TemplateRef) {
+                            const viewRef = node.createEmbeddedView({});
+                            projectableEmbeddedViewRefs.push(viewRef);
+                            this.applicationRef.attachView(viewRef);
+                            return viewRef.rootNodes;
+                        } else {
+                            return node;
+                        }
+                    });
+                    const compRef = componentFactory<TData, TComp>(componentName, { ...config, projectableNodes: projectableNodes });
+                    const dispose = compRef.dispose.bind(compRef);
+                    compRef.dispose = () => {
+                        projectableEmbeddedViewRefs.forEach(viewRef => {
+                            this.applicationRef.detachView(viewRef);
+                            viewRef.destroy();
+                        });
+                        dispose();
+                    };
+                    return compRef;
                 } else {
                     throw new Error(`${app}'s component(${componentName}) is not registered`);
                 }

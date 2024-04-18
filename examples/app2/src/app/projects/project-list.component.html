@@ -1,6 +1,11 @@
-<thy-content>
-  <input thyInput class="mt-2 mb-2" [(ngModel)]="search" placeholder="搜索项目" [style.width.px]="300" (thyEnter)="getProjects()" />
-  <ng-content></ng-content>
+<thy-content class="p-0">
+  <div class="d-flex">
+    <input thyInput class="mt-2 mb-2" [(ngModel)]="search" placeholder="搜索项目" [style.width.px]="300" (thyEnter)="getProjects()" />
+    <div class="flex-grow-1 d-flex justify-content-end align-items-center">
+      <ng-content></ng-content>
+    </div>
+  </div>
+
   <thy-table
     thyClassName="table-hover"
     [thyModel]="projects"

@@ -8,9 +8,7 @@ export const app1Name = 'app1';
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app1-projects,[app1Projects]',
-    template: `
-        projects is work
-    `
+    template: ` projects is work <ng-content></ng-content> `
 })
 export class App1ProjectsComponent implements OnDestroy {
     static state: 'initialized' | 'destroyed' | '' = '';

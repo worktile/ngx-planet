@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PlanetComponentLoader } from './planet-component-loader';
 import { PlanetComponentRef } from './planet-component-ref';
+import { PlantComponentProjectableNode } from './plant-component.config';
 
 @Directive({
     selector: '[planetComponentOutlet]',
@@ -25,6 +26,8 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
     @Input() planetComponentOutlet: string;
 
     @Input() planetComponentOutletApp: string;
+
+    @Input() planetComponentOutletProjectableNodes: PlantComponentProjectableNode[];
 
     @Input() planetComponentOutletInitialState: any;
 
@@ -56,7 +59,8 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
             this.planetComponentLoader
                 .load(this.planetComponentOutletApp, this.planetComponentOutlet, {
                     container: this.elementRef.nativeElement,
-                    initialState: this.planetComponentOutletInitialState
+                    initialState: this.planetComponentOutletInitialState,
+                    projectableNodes: this.planetComponentOutletProjectableNodes
                 })
                 .pipe(takeUntil(this.destroyed$))
                 .subscribe(componentRef => {

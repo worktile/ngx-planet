@@ -1,5 +1,5 @@
 import { TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { Compiler, Injector, Type, NgModuleRef } from '@angular/core';
+import { Compiler, Injector, Type, NgModuleRef, ApplicationRef } from '@angular/core';
 import { app1Name, App1Module, App1ProjectsComponent } from '../testing/app1.module';
 import { app2Name, App2Module } from '../testing/app2.module';
 import { PlanetPortalApplication } from '../application/portal-application';
@@ -25,7 +25,7 @@ describe('PlanetComponentLoader', () => {
     let injector: Injector;
     let planet: Planet;
 
-    function defineAndBootstrapApplication(name: string, appModule: Type<any>) {
+    function defineAndBootstrapApplication<M extends Type<any>>(name: string, appModule: M): NgModuleRef<InstanceType<M>> {
         const ngModuleFactory = compiler.compileModuleSync(appModule);
         const ngModuleRef = ngModuleFactory.create(injector);
         defineApplication(name, {
@@ -94,6 +94,36 @@ describe('PlanetComponentLoader', () => {
         loadApp1Component(app2ModuleRef, { wrapperClass: 'custom-wrapper' }).subscribe(componentRef => {
             expect(componentRef.hostElement.classList.contains('planet-component-wrapper')).toBeTruthy();
             expect(componentRef.hostElement.classList.contains('custom-wrapper')).toBeTruthy();
+        });
+    }));
+
+    it('should load app1 component with projectableNodes which is array of elements from app2', fakeAsync(() => {
+        const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
+        const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+        tick();
+        registerAppComponents(app1ModuleRef);
+
+        const div = document.createElement('div');
+        div.innerHTML = '<span>from app1 div</span>';
+        const span = document.createElement('span');
+        span.setAttribute('class', 'custom-class');
+        span.innerHTML = 'from app1 span';
+        loadApp1Component(app2ModuleRef, { projectableNodes: [[div, span]] }).subscribe(componentRef => {
+            expect(componentRef.hostElement.innerHTML).toEqual(
+                ` projects is work <div><span>from app1 div</span></div><span class="custom-class">from app1 span</span>`
+            );
+        });
+    }));
+
+    it('should load app1 component with projectableNodes which is templateRef from app2', fakeAsync(() => {
+        const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
+        const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+        tick();
+        registerAppComponents(app1ModuleRef);
+
+        const componentInstance = app2ModuleRef.instance.getComponentRefWithTemplateRef();
+        loadApp1Component(app2ModuleRef, { projectableNodes: [componentInstance.templateRef()] }).subscribe(componentRef => {
+            expect(componentRef.hostElement.innerHTML.includes('This is templateRef from app2')).toBeTruthy();
         });
     }));
 
