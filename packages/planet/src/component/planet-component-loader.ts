@@ -207,7 +207,6 @@ export class PlanetComponentLoader {
                 if (componentFactory) {
                     const projectableEmbeddedViewRefs: EmbeddedViewRef<any>[] = [];
                     const projectableNodes: Node[][] = (config.projectableNodes || []).map(node => {
-                        const d = TemplateRef;
                         if (node instanceof TemplateRef) {
                             const viewRef = node.createEmbeddedView({});
                             projectableEmbeddedViewRefs.push(viewRef);
