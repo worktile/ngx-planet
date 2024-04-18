@@ -1,5 +1,5 @@
 import { TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { Compiler, Injector, Type, NgModuleRef, ApplicationRef } from '@angular/core';
+import { Compiler, Injector, Type, NgModuleRef } from '@angular/core';
 import { app1Name, App1Module, App1ProjectsComponent } from '../testing/app1.module';
 import { app2Name, App2Module } from '../testing/app2.module';
 import { PlanetPortalApplication } from '../application/portal-application';
@@ -17,7 +17,7 @@ import {
 } from '../global-planet';
 import { Planet } from 'ngx-planet/planet';
 import { RouterTestingModule } from '@angular/router/testing';
-import { PlanetComponentRef } from './planet-component-ref';
+import { PlanetComponentRef } from './planet-component-types';
 import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
 
 describe('PlanetComponentLoader', () => {
@@ -226,6 +226,8 @@ describe('PlanetComponentLoader', () => {
             expect(App1ProjectsComponent.state).toEqual('destroyed');
         });
     }));
+
+    it('should child app load portal component success', () => {});
 });
 
 function registerAppComponents(appModuleRef: NgModuleRef<any>) {

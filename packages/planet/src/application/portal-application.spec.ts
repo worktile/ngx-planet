@@ -50,4 +50,13 @@ describe('PlanetPortalApplication', () => {
         expect(navigateByUrlSpy).toHaveBeenCalled();
         expect(navigateByUrlSpy).toHaveBeenCalledWith('/app1/dashboard', { skipLocationChange: true });
     });
+
+    it(`should run registerComponentFactory & getComponentFactory`, () => {
+        const spy = jasmine.createSpy('spy');
+        expect(spy).not.toHaveBeenCalled();
+        planetPortalApplication.registerComponentFactory(spy);
+        const componentFactory = planetPortalApplication.getComponentFactory();
+        componentFactory('', {} as any);
+        expect(spy).toHaveBeenCalled();
+    });
 });

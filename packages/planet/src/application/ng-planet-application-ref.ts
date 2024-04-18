@@ -3,8 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { Observable, from } from 'rxjs';
 import { PlanetPortalApplication } from './portal-application';
-import { PlantComponentConfig } from '../component/plant-component.config';
-import { PlanetComponentRef } from '../component/planet-component-ref';
+import { PlantComponentFactory } from '../component/planet-component-types';
 import { getTagNameByTemplate } from '../helpers';
 import { getSandboxInstance, Sandbox } from '../sandbox/';
 import { PlanetApplicationRef } from './planet-application-ref';
@@ -26,8 +25,6 @@ export type BootstrapAppModule = NgBootstrapAppModule;
  * @deprecated please use NgBootstrapOptions
  */
 export interface BootstrapOptions extends NgBootstrapOptions {}
-
-export type PlantComponentFactory = <TData, TComp>(componentName: string, config: PlantComponentConfig<TData>) => PlanetComponentRef<TComp>;
 
 export class NgPlanetApplicationRef implements PlanetApplicationRef {
     private injector?: EnvironmentInjector;

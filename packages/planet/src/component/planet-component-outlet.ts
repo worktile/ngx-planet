@@ -14,7 +14,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PlanetComponentLoader } from './planet-component-loader';
-import { PlanetComponentRef } from './planet-component-ref';
+import { PlanetComponentRef } from './planet-component-types';
 import { PlantComponentProjectableNode } from './plant-component.config';
 
 @Directive({

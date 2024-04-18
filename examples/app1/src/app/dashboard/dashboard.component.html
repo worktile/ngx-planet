@@ -14,7 +14,7 @@
 <section-card class="mt-4" title="Open app1's detail">
   <form class="mb-2" thyForm thyLayout="inline">
     <thy-form-group thyLabelText="Size:">
-      <thy-custom-select thyPlaceHolder="选择弹框大小" name="size" [(ngModel)]="size" style="width:500px;">
+      <thy-custom-select thyPlaceHolder="选择弹框大小" name="size" [(ngModel)]="size" style="width: 500px">
         <thy-option thyValue="sm" thyLabelText="小" [thyShowOptionCustom]="true">
           <span class="same-name">小 </span>
         </thy-option>
@@ -49,3 +49,5 @@
 <section-card class="mt-4" title="Load app1's assets image">
   <img width="100" src="/static/app1/assets/github.png" />
 </section-card>
+
+<ng-container *planetComponentOutlet="'app-portal-custom'; app: 'portal'"> </ng-container>

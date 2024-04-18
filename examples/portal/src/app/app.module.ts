@@ -1,36 +1,37 @@
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { AboutComponent } from './about/about.component';
+import { Overlay } from '@angular/cdk/overlay';
+import { FormsModule } from '@angular/forms';
+import { NavigationStart, Router } from '@angular/router';
+import { AppRootContext, DemoCommonModule, OVERLAY_PROVIDER } from '@demo/common';
 import { NgxPlanetModule } from '@worktile/planet';
-import { ThyIconModule, ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyButtonModule } from 'ngx-tethys/button';
+import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
 import { ThyDialogModule } from 'ngx-tethys/dialog';
+import { ThyDropdownModule } from 'ngx-tethys/dropdown';
+import { ThyFormModule } from 'ngx-tethys/form';
+import { ThyIconModule, ThyIconRegistry } from 'ngx-tethys/icon';
 import { ThyLayoutModule } from 'ngx-tethys/layout';
-import { ThyTableModule } from 'ngx-tethys/table';
-import { ThyNotifyModule } from 'ngx-tethys/notify';
 import { ThyLoadingModule } from 'ngx-tethys/loading';
 import { ThyNavModule } from 'ngx-tethys/nav';
-import { ThyDropdownModule } from 'ngx-tethys/dropdown';
-import { ThyTooltipModule } from 'ngx-tethys/tooltip';
+import { ThyNotifyModule } from 'ngx-tethys/notify';
 import { ThyPopoverModule } from 'ngx-tethys/popover';
-import { ThyFormModule } from 'ngx-tethys/form';
 import { ThyRadioModule } from 'ngx-tethys/radio';
-import { ThyCheckboxModule } from 'ngx-tethys/checkbox';
+import { ThyTableModule } from 'ngx-tethys/table';
+import { ThyTooltipModule } from 'ngx-tethys/tooltip';
 import { ADetailComponent } from './a-detail/a-detail.component';
-import { SettingsComponent } from './settings/settings.component';
-import { AppRootContext, DemoCommonModule, OVERLAY_PROVIDER } from '@demo/common';
-import { FormsModule } from '@angular/forms';
-import { Overlay } from '@angular/cdk/overlay';
+import { AboutComponent } from './about/about.component';
+import { PortalCustomComponent } from './about/components/portal-custom.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 import { AppOverlay } from './overlay';
-import { NavigationStart, Router } from '@angular/router';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
-    declarations: [AppComponent, AboutComponent, SettingsComponent, ADetailComponent],
+    declarations: [AppComponent, AboutComponent, PortalCustomComponent, SettingsComponent, ADetailComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
