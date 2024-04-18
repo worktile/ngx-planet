@@ -10,6 +10,7 @@ import {
     Injector,
     NgModuleRef,
     NgZone,
+    TemplateRef,
     Type,
     createComponent,
     reflectComponentType
