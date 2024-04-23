@@ -74,3 +74,5 @@ export class OneComponent {
               (planetComponentLoaded)="planetComponentLoaded($event)">
 </ng-container>
 ```
+
+<alert>不管是通过 PlanetComponentLoader 服务还是 planetComponentOutlet 指令，子应用渲染主应用的组件 app 传递固定字符串 portal 即可。</alert>

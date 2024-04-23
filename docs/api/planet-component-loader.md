@@ -42,6 +42,7 @@ this.planetComponentLoader.register([ProjectsComponent, ProjectDetailComponent])
   - `container: HTMLElement | ElementRef<any> | Comment` - 必填，渲染组件的容器
   - `hostClass?: string` - 可选，渲染组件的宿主样式类
   - `initialState: TData` - 可选，渲染组件的初始化状态
+  - `projectableNodes: (Node[] | TemplateRef<any>)[]` - 可选，渲染组件的投影元素，支持 Dom 节点二维数组和 TemplateRef 数组，数组的第一个元素为渲染组件中的第一个 ng-content 
 - 示例
 
 ```ts
