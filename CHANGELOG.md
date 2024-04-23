@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [17.1.0](https://github.com/worktile/ngx-planet/compare/17.1.0-next.1...17.1.0) (2024-04-23)
+### Features
+
+* projectableNodes support templateRef ([#329](https://github.com/worktile/ngx-planet/issues/329)) ([5863249](https://github.com/worktile/ngx-planet/commit/5863249d389f7491ffc7c0a08b06982904256d4d))
+* support render portal component #INFR-12018 ([#326](https://github.com/worktile/ngx-planet/issues/326)) ([0eb2d0a](https://github.com/worktile/ngx-planet/commit/0eb2d0a3768bc04d07bec0c9ea02902755117e95)), closes [#INFR-12018](https://github.com/worktile/ngx-planet/issues/INFR-12018)
+* add projectableNodes for PlantComponentConfig ([2ca3646](https://github.com/worktile/ngx-planet/commit/2ca364684e552bc39f17645225f17c02f62b51a7))
+
+
 # [17.1.0-next.1](https://github.com/worktile/ngx-planet/compare/17.1.0-next.0...17.1.0-next.1) (2024-04-18)
 
 
