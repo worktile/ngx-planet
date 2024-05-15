@@ -356,7 +356,6 @@
         "build": {
           "builder": "@angular-builders/custom-esbuild:application",
           "options": {
-            "plugins": ["./examples/standalone-app/plugin-manifest.js"],
             "outputPath": {
               "base": "dist/standalone-app",
               "browser": ""
