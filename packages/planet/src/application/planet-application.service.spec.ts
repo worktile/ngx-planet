@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { PlanetApplicationService } from './planet-application.service';
 import { SwitchModes } from '../planet.class';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { app1, app2, app2WithPreload } from '../testing/applications';
 import { AssetsLoader } from 'ngx-planet/assets-loader';
 import { Planet } from 'ngx-planet/planet';
@@ -11,8 +11,8 @@ describe('PlanetApplicationService', () => {
     let planetApplicationService: PlanetApplicationService;
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: []
+            imports: [],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
         });
         planetApplicationService = TestBed.inject(PlanetApplicationService);
     });

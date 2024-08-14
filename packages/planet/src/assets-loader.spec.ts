@@ -1,9 +1,9 @@
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AssetsLoader, AssetsLoadResult } from './assets-loader';
 import { hashCode, toAssetsTagItem, toAssetsTagItems } from './helpers';
 import { Subject, of, observable, Observable, BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 import { AssetsTagItem } from './inner-types';
 
@@ -41,8 +41,8 @@ describe('assets-loader', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: []
+            imports: [],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
         });
         assetsLoader = TestBed.inject(AssetsLoader);
     });

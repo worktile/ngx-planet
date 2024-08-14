@@ -1,25 +1,25 @@
 version: 2.1
 orbs:
-    browser-tools: circleci/browser-tools@1.4.3
+  browser-tools: circleci/browser-tools@1.4.3
 jobs:
-    build:
-        working_directory: ~/ngx-planet
-        docker:
-            - image: cimg/node:18.16-browsers
-        steps:
-            - browser-tools/install-chrome
-            - checkout
-            - run: |
-                  node --version
-                  google-chrome --version
-                  which google-chrome
-            - restore_cache:
-                  key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
-            - run: npm install --force
-            - save_cache:
-                  key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
-                  paths:
-                      - 'node_modules'
-            - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
-            - run: npm run lint
-            - run: npm run report-coverage
+  build:
+    working_directory: ~/ngx-planet
+    docker:
+      - image: cimg/node:20.16.0-browsers
+    steps:
+      - browser-tools/install-chrome
+      - checkout
+      - run: |
+          node --version
+          google-chrome --version
+          which google-chrome
+      - restore_cache:
+          key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - run: npm install --force
+      - save_cache:
+          key: ngx-planet-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - 'node_modules'
+      - run: npm run test -- --no-watch --no-progress --browsers=ChromeHeadless
+      - run: npm run lint
+      - run: npm run report-coverage
