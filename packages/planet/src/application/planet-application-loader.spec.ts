@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { PlanetApplicationLoader, ApplicationStatus } from './planet-application-loader';
 import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 import { SwitchModes, PlanetApplication } from '../planet.class';
@@ -14,6 +14,7 @@ import { getApplicationLoader, getApplicationService, clearGlobalPlanet } from '
 import { RouterTestingModule } from '@angular/router/testing';
 import { sample } from '../testing/utils';
 import { NgBootstrapOptions, NgPlanetApplicationRef } from './ng-planet-application-ref';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 class PlanetApplicationRefFaker {
     planetAppRef: PlanetApplicationRef;
@@ -125,7 +126,8 @@ describe('PlanetApplicationLoader', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])]
+            imports: [RouterTestingModule.withRoutes([])],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
         });
         planet = TestBed.inject(Planet);
         planetApplicationLoader = getApplicationLoader();

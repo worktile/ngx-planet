@@ -1,15 +1,15 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { PlanetApplication, PLANET_APPLICATIONS } from './planet.class';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { EmptyComponent } from './empty/empty.component';
 import { PlanetComponentOutlet } from './component/planet-component-outlet';
 import { RedirectToRouteComponent } from './router/route-redirect';
 
 @NgModule({
     declarations: [],
-    imports: [HttpClientModule, PlanetComponentOutlet, EmptyComponent, RedirectToRouteComponent],
-    providers: [],
-    exports: [HttpClientModule, EmptyComponent, PlanetComponentOutlet]
+    exports: [EmptyComponent, PlanetComponentOutlet],
+    imports: [PlanetComponentOutlet, EmptyComponent, RedirectToRouteComponent],
+    providers: [provideHttpClient(withInterceptorsFromDi())]
 })
 export class NgxPlanetModule {
     static forRoot(apps: PlanetApplication[]): ModuleWithProviders<NgxPlanetModule> {

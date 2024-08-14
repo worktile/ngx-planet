@@ -4,7 +4,7 @@ import { app1Name, App1Module, App1ProjectsComponent } from '../testing/app1.mod
 import { app2Name, App2Module } from '../testing/app2.module';
 import { PlanetPortalApplication } from '../application/portal-application';
 import { PlanetComponentLoader } from './planet-component-loader';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PlantComponentConfig } from './plant-component.config';
@@ -19,6 +19,7 @@ import { Planet } from 'ngx-planet/planet';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlanetComponentRef } from './planet-component-types';
 import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PlanetComponentLoader', () => {
     let compiler: Compiler;
@@ -44,7 +45,8 @@ describe('PlanetComponentLoader', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])]
+            imports: [RouterTestingModule.withRoutes([])],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
         });
         compiler = TestBed.inject(Compiler);
         planet = TestBed.inject(Planet);
