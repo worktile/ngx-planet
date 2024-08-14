@@ -209,10 +209,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "app1:build:production"
+              "buildTarget": "app1:build:production"
             },
             "development": {
-              "browserTarget": "app1:build:development"
+              "buildTarget": "app1:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -308,10 +308,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "app2:build:production"
+              "buildTarget": "app2:build:production"
             },
             "development": {
-              "browserTarget": "app2:build:development"
+              "buildTarget": "app2:build:development"
             }
           },
           "defaultConfiguration": "development"

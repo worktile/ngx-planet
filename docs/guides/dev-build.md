@@ -211,7 +211,7 @@ npm i -D @angular-builders/custom-webpack
   "serve": {
     "builder": "@angular-builders/custom-webpack:dev-server",
     "options": {
-      "browserTarget": "my-project:build"
+      "buildTarget": "my-project:build"
     }
   }
 ```

@@ -34,7 +34,7 @@
     "build:portal:prod": "ng build portal --configuration production",
     "build:app1:prod": "ng build app1 --configuration production --base-href=/static/app1/",
     "build:app2:prod": "ng build app2 --configuration production --base-href=/static/app2/",
-    "build:standalone:prod": "ng build standalone-app --configuration production --base-href=/static/standalone/ --deploy-url=/static/standalone/",
+    "build:standalone:prod": "ng build standalone-app --configuration production --base-href=/static/standalone/",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --pkg ./packages/planet/package.json",
     "build": "ng build planet && cpx \"./README.md\" dist/planet && cpx \"./CHANGELOG.md\" dist/planet && cpx \"./LICENSE\" dist/planet",
     "build:demo": "npm run build:app1 && npm run build:app2 && npm run build:portal && npm run build:standalone",
@@ -69,7 +69,7 @@
     "@angular/platform-browser-dynamic": "^17.3.9",
     "@angular/router": "^17.3.9",
     "date-fns": "^2.16.1",
-    "ngx-tethys": "next",
+    "ngx-tethys": "18.0.0-next.1",
     "rxjs": "~7.8.1",
     "tslib": "^2.1.0",
     "zone.js": "~0.14.4"
