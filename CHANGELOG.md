@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [18.0.0-next.0](https://github.com/worktile/ngx-planet/compare/17.1.0...18.0.0-next.0) (2024-08-14)
+
+
+### Features
+
+* upgrade ng to 18 #TINFR-358 ([#335](https://github.com/worktile/ngx-planet/issues/335)) ([d8efa94](https://github.com/worktile/ngx-planet/commit/d8efa94e87ba8e148badaea2085aa59e13efcc06)), closes [#TINFR-358](https://github.com/worktile/ngx-planet/issues/TINFR-358)
+
+
+
 # [17.1.0](https://github.com/worktile/ngx-planet/compare/17.1.0-next.1...17.1.0) (2024-04-23)
 ### Features
 
