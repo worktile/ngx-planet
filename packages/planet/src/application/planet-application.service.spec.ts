@@ -138,6 +138,11 @@ describe('PlanetApplicationService', () => {
             expect(apps).toBeTruthy('app is not found');
             expect(apps.length).toBe(1);
             expect(apps[0]).toBe(app3);
+
+            const appsWithApp1 = planetApplicationService.getAppsByMatchedUrl('/app1');
+            expect(appsWithApp1).toBeTruthy('app is not found');
+            expect(appsWithApp1.length).toBe(1);
+            expect(appsWithApp1[0]).toBe(app1);
         });
     });
 
