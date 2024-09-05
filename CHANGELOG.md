@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [18.0.1](https://github.com/worktile/ngx-planet/compare/18.0.0...18.0.1) (2024-09-05)
+
+
+### Bug Fixes
+
+* should filter app for getAppsByMatchedUrl when routerPathPrefix is prefix of other app ([#341](https://github.com/worktile/ngx-planet/issues/341)) ([50e090a](https://github.com/worktile/ngx-planet/commit/50e090a31ae6a5386cbf3429a90fa06bccc0bbe1))
+* sync router of portal support browserUrl ([#340](https://github.com/worktile/ngx-planet/issues/340)) ([ebfa6c3](https://github.com/worktile/ngx-planet/commit/ebfa6c358c34a7b075ef208534e06f56235b141d))
+
+
+
 # [18.0.0](https://github.com/worktile/ngx-planet/compare/18.0.0-next.0...18.0.0) (2024-08-19)
 
 

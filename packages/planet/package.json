@@ -1,6 +1,6 @@
 {
   "name": "@worktile/planet",
-  "version": "18.0.0",
+  "version": "18.0.1",
   "private": false,
   "peerDependencies": {
     "@angular/common": "^18.0.0",
