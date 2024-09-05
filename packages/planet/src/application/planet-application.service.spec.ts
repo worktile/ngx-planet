@@ -143,6 +143,19 @@ describe('PlanetApplicationService', () => {
             expect(appsWithApp1).toBeTruthy('app is not found');
             expect(appsWithApp1.length).toBe(1);
             expect(appsWithApp1[0]).toBe(app1);
+
+            const appsWithApp1Query = planetApplicationService.getAppsByMatchedUrl('/app1?q=1');
+            expect(appsWithApp1Query).toBeTruthy('app is not found');
+            expect(appsWithApp1Query.length).toBe(1);
+            expect(appsWithApp1Query[0]).toBe(app1);
+
+            const appsWithApp1Children = planetApplicationService.getAppsByMatchedUrl('/app1/sub');
+            expect(appsWithApp1Children).toBeTruthy('app is not found');
+            expect(appsWithApp1Children.length).toBe(1);
+            expect(appsWithApp1Children[0]).toBe(app1);
+
+            const appsWithNotFound = planetApplicationService.getAppsByMatchedUrl('/app1-d');
+            expect(appsWithNotFound.length).toBe(0);
         });
     });
 
