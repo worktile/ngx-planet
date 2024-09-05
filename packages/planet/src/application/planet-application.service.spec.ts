@@ -125,6 +125,20 @@ describe('PlanetApplicationService', () => {
             expect(apps).toBeTruthy('app is not found');
             expect(apps[0]).toBe(app3);
         });
+
+        it('should get matched apps which rule is /app1 and /app1-dashboard by url /app1-dashboard', () => {
+            const app3 = {
+                ...app1,
+                name: 'app1-dashboard',
+                routerPathPrefix: '/app1-dashboard'
+            };
+            planetApplicationService.register(app3);
+            planetApplicationService.register(app1);
+            const apps = planetApplicationService.getAppsByMatchedUrl('/app1-dashboard');
+            expect(apps).toBeTruthy('app is not found');
+            expect(apps.length).toBe(1);
+            expect(apps[0]).toBe(app3);
+        });
     });
 
     describe('getAppsToPreload', () => {

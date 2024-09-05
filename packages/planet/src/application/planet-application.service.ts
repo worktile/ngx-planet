@@ -15,11 +15,12 @@ export class PlanetApplicationService {
 
     private appsMap: { [key: string]: PlanetApplication } = {};
 
-    constructor(private http: HttpClient, private assetsLoader: AssetsLoader) {
+    constructor(
+        private http: HttpClient,
+        private assetsLoader: AssetsLoader
+    ) {
         if (getApplicationService()) {
-            throw new Error(
-                'PlanetApplicationService has been injected in the portal, repeated injection is not allowed'
-            );
+            throw new Error('PlanetApplicationService has been injected in the portal, repeated injection is not allowed');
         }
     }
 
@@ -63,7 +64,10 @@ export class PlanetApplicationService {
             if (app.routerPathPrefix instanceof RegExp) {
                 return app.routerPathPrefix.test(url);
             } else {
-                return url.startsWith(app.routerPathPrefix);
+                return (
+                    url === app.routerPathPrefix ||
+                    (url.startsWith(app.routerPathPrefix) && ['/', '?'].includes(url[app.routerPathPrefix.length]))
+                );
             }
         });
     }
