@@ -9,7 +9,8 @@ export class TasksComponent implements OnInit {
     @HostBinding('class') class = 'thy-layout';
 
     constructor(router: Router, route: ActivatedRoute) {
-        router.navigate(['./view-1'], { relativeTo: route });
+        // router.navigate(['./view-1'], { relativeTo: route });
+        router.navigate(['./view-1'], { relativeTo: route, browserUrl: '/app2/t/xxx' });
     }
 
     ngOnInit(): void {}
