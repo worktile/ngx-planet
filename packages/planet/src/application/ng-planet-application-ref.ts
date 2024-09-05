@@ -1,5 +1,5 @@
 import { ApplicationRef, NgModuleRef, NgZone, EnvironmentInjector } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, NavigationStart, NavigationBehaviorOptions } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { Observable, from } from 'rxjs';
 import { PlanetPortalApplication } from './portal-application';
@@ -74,12 +74,19 @@ export class NgPlanetApplicationRef implements PlanetApplicationRef {
         if (router) {
             router.events.subscribe(event => {
                 if (event instanceof NavigationEnd) {
+                    const currentNavigation = router.getCurrentNavigation();
                     this.ngZone?.onStable
                         .asObservable()
                         .pipe(take(1))
                         .subscribe(() => {
                             this.portalApp.ngZone.run(() => {
-                                this.portalApp.router!.navigateByUrl(event.url);
+                                if (currentNavigation?.extras?.browserUrl) {
+                                    this.portalApp.router!.navigateByUrl(event.url, {
+                                        browserUrl: currentNavigation.extras.browserUrl
+                                    });
+                                } else {
+                                    this.portalApp.router!.navigateByUrl(event.url);
+                                }
                             });
                         });
                 }
@@ -118,10 +125,10 @@ export class NgPlanetApplicationRef implements PlanetApplicationRef {
         return this.getRouter()?.routerState.snapshot.url;
     }
 
-    navigateByUrl(url: string): void {
+    navigateByUrl(url: string, extras?: NavigationBehaviorOptions): void {
         const router = this.getRouter();
         this.ngZone?.run(() => {
-            router?.navigateByUrl(url);
+            router?.navigateByUrl(url, extras);
         });
     }
 

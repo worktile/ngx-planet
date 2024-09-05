@@ -282,7 +282,38 @@ describe('PlanetApplicationRef', () => {
             appRef.navigateByUrl('app2/to-url');
 
             expect(routerSpy.navigateByUrl).toHaveBeenCalled();
-            expect(routerSpy.navigateByUrl).toHaveBeenCalledWith(toUrl);
+            expect(routerSpy.navigateByUrl).toHaveBeenCalledWith(toUrl, undefined);
+        }));
+
+        it(`should navigate to url success with browserUrl `, fakeAsync(() => {
+            const routerSpy = {
+                navigateByUrl: jasmine.createSpy('navigateByUrl syp'),
+                events: new Subject()
+            };
+            @NgModule({
+                declarations: [],
+                imports: [],
+                providers: [
+                    {
+                        provide: Router,
+                        useValue: routerSpy
+                    }
+                ]
+            })
+            class AppModuleWithSpyRouter {}
+            const { appRef } = bootstrapApp1(AppModuleWithSpyRouter);
+
+            expect(routerSpy.navigateByUrl).not.toHaveBeenCalled();
+
+            const toUrl = 'app2/to-url';
+            appRef.navigateByUrl('app2/to-url', {
+                browserUrl: '/app2/browser-url'
+            });
+
+            expect(routerSpy.navigateByUrl).toHaveBeenCalled();
+            expect(routerSpy.navigateByUrl).toHaveBeenCalledWith(toUrl, {
+                browserUrl: '/app2/browser-url'
+            });
         }));
 
         it(`should throw error when app is not defined`, () => {
