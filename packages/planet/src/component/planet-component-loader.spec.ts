@@ -1,11 +1,11 @@
-import { TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { Compiler, Injector, Type, NgModuleRef } from '@angular/core';
+import { TestBed, tick, fakeAsync, flush } from '@angular/core/testing';
+import { Compiler, Injector, Type, NgModuleRef, ApplicationRef } from '@angular/core';
 import { app1Name, App1Module, App1ProjectsComponent } from '../testing/app1.module';
 import { app2Name, App2Module } from '../testing/app2.module';
 import { PlanetPortalApplication } from '../application/portal-application';
 import { PlanetComponentLoader } from './planet-component-loader';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PlantComponentConfig } from './plant-component.config';
 import {
@@ -40,6 +40,7 @@ describe('PlanetComponentLoader', () => {
         const appRef = getPlanetApplicationRef(name);
         const portalApplication = new PlanetPortalApplication();
         appRef.bootstrap(portalApplication);
+        flush();
         return ngModuleRef;
     }
 
@@ -85,6 +86,37 @@ describe('PlanetComponentLoader', () => {
 
         loadApp1ComponentAndExpectHtml(app2ModuleRef);
         tick();
+    }));
+
+    it('should app2 load app1 component success  when app stabled ', fakeAsync(() => {
+        const app1ModuleRef = defineAndBootstrapApplication(app1Name, App1Module);
+        const app2ModuleRef = defineAndBootstrapApplication(app2Name, App2Module);
+
+        const app1RefStableState$ = new BehaviorSubject<boolean>(false);
+        Object.defineProperty(app1ModuleRef.injector.get(ApplicationRef), 'isStable', {
+            get: () => app1RefStableState$.asObservable(),
+            enumerable: true,
+            configurable: true
+        });
+
+        tick();
+
+        registerAppComponents(app1ModuleRef);
+
+        expect(() => {
+            loadApp1Component(app2ModuleRef);
+        }).toThrowError(`${app1Name}'s component(app1-projects) is not registered`);
+
+        app1RefStableState$.next(true);
+
+        const loadCallback = jasmine.createSpy('load callback');
+
+        loadApp1Component(app2ModuleRef).subscribe(componentRef => {
+            expect(!!componentRef.hostElement).toBeTruthy();
+            loadCallback();
+        });
+
+        expect(loadCallback).toHaveBeenCalled();
     }));
 
     it('should app2 load app1 component with wrapperClass', fakeAsync(() => {
@@ -228,8 +260,6 @@ describe('PlanetComponentLoader', () => {
             expect(App1ProjectsComponent.state).toEqual('destroyed');
         });
     }));
-
-    it('should child app load portal component success', () => {});
 });
 
 function registerAppComponents(appModuleRef: NgModuleRef<any>) {

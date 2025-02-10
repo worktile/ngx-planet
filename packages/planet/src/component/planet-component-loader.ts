@@ -15,9 +15,8 @@ import {
     createComponent,
     reflectComponentType
 } from '@angular/core';
-import { PlanetPortalApplication } from 'ngx-planet';
 import { Observable, of, timer } from 'rxjs';
-import { delayWhen, map, shareReplay } from 'rxjs/operators';
+import { delayWhen, filter, map, shareReplay, take, takeWhile } from 'rxjs/operators';
 import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
 import { PlanetApplicationRef } from '../application/planet-application-ref';
 import {
@@ -30,6 +29,7 @@ import {
 import { coerceArray } from '../helpers';
 import { PlanetComponentRef } from './planet-component-types';
 import { PlantComponentConfig } from './plant-component.config';
+import { PlanetPortalApplication } from '../application/portal-application';
 
 const componentWrapperClass = 'planet-component-wrapper';
 
@@ -193,13 +193,20 @@ export class PlanetComponentLoader {
     }
 
     register(components: PlanetComponent | PlanetComponent[], immediate?: boolean) {
-        if (immediate) {
-            this.registerComponentFactory(components);
-        } else {
-            setTimeout(() => {
-                this.registerComponentFactory(components);
+        this.applicationRef.isStable
+            .pipe(
+                filter(stable => stable),
+                take(1)
+            )
+            .subscribe(stable => {
+                if (stable) {
+                    if (immediate) {
+                        this.registerComponentFactory(components);
+                    } else {
+                        this.registerComponentFactory(components);
+                    }
+                }
             });
-        }
     }
 
     load<TComp = unknown, TData = unknown>(
