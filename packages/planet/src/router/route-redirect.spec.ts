@@ -6,7 +6,10 @@ import { routeRedirect, redirectToRoute } from './route-redirect';
 
 describe('route-redirect', () => {
     it('should redirect to success use redirectToRoute', async () => {
-        @Component({ standalone: true, template: '<router-outlet></router-outlet>', imports: [RouterOutlet] })
+        @Component({
+            template: '<router-outlet></router-outlet>',
+            imports: [RouterOutlet]
+        })
         class TestComponent {}
 
         @Component({ standalone: true, template: 'hello world' })

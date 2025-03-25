@@ -4,6 +4,7 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
+    "esModuleInterop": true,
     "declaration": false,
     "module": "esnext",
     "moduleResolution": "node",
@@ -12,7 +13,7 @@
     "importHelpers": true,
     "target": "ES2022",
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018", "dom"],
+    "lib": ["es2020", "dom"],
     "paths": {
       "@demo/common": ["examples/common"],
       "ngx-planet": ["packages/planet/src/public-api.ts"],

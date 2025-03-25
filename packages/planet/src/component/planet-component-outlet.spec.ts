@@ -10,7 +10,8 @@ import { tap } from 'rxjs/operators';
 
 @Component({
     selector: 'planet-component-outlet-basic-test',
-    template: ` <ng-container *planetComponentOutlet="componentName; app: 'app2'; initialState: { term: 'From Test' }"></ng-container> `
+    template: ` <ng-container *planetComponentOutlet="componentName; app: 'app2'; initialState: { term: 'From Test' }"></ng-container> `,
+    standalone: false
 })
 export class PlanetComponentOutletBasicTestComponent implements OnInit {
     componentName = 'project1';
@@ -29,7 +30,8 @@ export class PlanetComponentOutletBasicTestComponent implements OnInit {
             planetComponentOutletApp="app2"
             planetComponentOutletInitialState="{ term: 'From Test' }"
             (planetComponentLoaded)="componentLoaded($event)"></ng-container>
-    `
+    `,
+    standalone: false
 })
 export class PlanetComponentOutletGeneralTestComponent {
     planetComponentRef: PlanetComponentRef;

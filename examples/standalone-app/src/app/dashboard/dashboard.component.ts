@@ -9,7 +9,6 @@ import { DemoCommonModule } from '../../../../common/module';
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
-    standalone: true,
     hostDirectives: [ThyLayoutDirective],
     imports: [ThyContent, DemoCommonModule, RouterLink]
 })

@@ -48,7 +48,8 @@ import { takeUntil } from 'rxjs/operators';
             </thy-tabs>
             <!-- <thy-loading [thyDone]="loadingDone"></thy-loading> -->
         </section-card>
-    `
+    `,
+    standalone: false
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
     @ViewChild('container', { static: true }) container: ElementRef<HTMLDivElement>;

@@ -3,7 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app2-tasks',
-    templateUrl: './tasks.component.html'
+    templateUrl: './tasks.component.html',
+    standalone: false
 })
 export class TasksComponent implements OnInit {
     @HostBinding('class') class = 'thy-layout';

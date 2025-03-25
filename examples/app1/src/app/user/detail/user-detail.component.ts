@@ -4,7 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-user-detail',
-    templateUrl: './user-detail.component.html'
+    templateUrl: './user-detail.component.html',
+    standalone: false
 })
 export class UserDetailComponent implements OnInit {
     userId: string;
