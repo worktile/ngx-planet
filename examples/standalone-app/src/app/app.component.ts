@@ -5,7 +5,6 @@ import { ThyMenu, ThyMenuItem } from 'ngx-tethys/menu';
 
 @Component({
     selector: 'standalone-app-root',
-    standalone: true,
     imports: [RouterOutlet],
     template: '<router-outlet />'
 })
@@ -15,7 +14,6 @@ export class AppRootComponent {
 
 @Component({
     selector: 'standalone-app-root-actual',
-    standalone: true,
     imports: [RouterOutlet, RouterLink, RouterLinkActive, ThyLayout, ThySidebar, ThyMenu, ThyMenuItem],
     templateUrl: './app.component.html',
     host: {

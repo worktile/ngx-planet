@@ -5,7 +5,8 @@ import { ProjectListComponent } from '../projects/project-list.component';
 @Component({
     selector: 'app2-root-actual',
     templateUrl: './root.component.html',
-    styleUrls: ['./root.component.scss']
+    styleUrls: ['./root.component.scss'],
+    standalone: false
 })
 export class AppActualRootComponent {
     @HostBinding(`class.thy-layout`) isThyLayout = true;
@@ -16,7 +17,8 @@ export class AppActualRootComponent {
 
 @Component({
     selector: 'app2-root',
-    template: '<router-outlet></router-outlet>'
+    template: '<router-outlet></router-outlet>',
+    standalone: false
 })
 export class AppRootComponent implements OnInit {
     @HostBinding(`class.thy-layout`) isThyLayout = true;

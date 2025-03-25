@@ -3,7 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app2-view',
-    templateUrl: './view.component.html'
+    templateUrl: './view.component.html',
+    standalone: false
 })
 export class ViewComponent implements OnInit {
     @HostBinding('class') class = 'thy-layout-content';

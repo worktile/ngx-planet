@@ -8,7 +8,8 @@ import { ThyTableRowEvent } from 'ngx-tethys/table';
 
 @Component({
     selector: 'app-project-list',
-    templateUrl: './project-list.component.html'
+    templateUrl: './project-list.component.html',
+    standalone: false
 })
 export class ProjectListComponent implements OnInit, DoCheck {
     @HostBinding('class') class = 'thy-layout';

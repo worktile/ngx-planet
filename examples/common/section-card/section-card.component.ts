@@ -4,7 +4,6 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'section-card',
     templateUrl: './section-card.component.html',
-    standalone: true,
     imports: [NgIf]
 })
 export class SectionCardComponent {

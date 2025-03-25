@@ -4,7 +4,8 @@ import { PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet
 
 @Component({
     selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html'
+    templateUrl: './dashboard.component.html',
+    standalone: false
 })
 export class DashboardComponent {
     @HostBinding('class') class = 'thy-layout';

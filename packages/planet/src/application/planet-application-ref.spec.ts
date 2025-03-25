@@ -15,7 +15,6 @@ import { createElementByTemplate } from '../helpers';
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-root',
     template: ` <router-outlet></router-outlet>`,
-    standalone: true,
     imports: [RouterOutlet]
 })
 class EmptyComponent {}
@@ -42,8 +41,7 @@ class AppModule {}
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-standalone-root',
     template: ` <router-outlet></router-outlet>`,
-    imports: [RouterOutlet],
-    standalone: true
+    imports: [RouterOutlet]
 })
 class AppComponent {}
 
