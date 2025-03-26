@@ -7,12 +7,17 @@ import { AppRootContext } from '@demo/common';
 @Component({
     selector: 'app-about',
     templateUrl: './about.component.html',
-    styleUrls: ['./about.component.scss']
+    styleUrls: ['./about.component.scss'],
+    standalone: false
 })
 export class AboutComponent implements OnInit {
     @HostBinding(`class.thy-layout-content`) isThyLayoutContent = true;
 
-    constructor(private router: Router, private thyDialog: ThyDialog, public appRootContext: AppRootContext) {}
+    constructor(
+        private router: Router,
+        private thyDialog: ThyDialog,
+        public appRootContext: AppRootContext
+    ) {}
 
     ngOnInit() {}
 

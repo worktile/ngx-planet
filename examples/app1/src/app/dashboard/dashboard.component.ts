@@ -9,7 +9,8 @@ import { ProjectsDialogComponent } from '../projects/dialog/projects-dialog.comp
 
 @Component({
     selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html'
+    templateUrl: './dashboard.component.html',
+    standalone: false
 })
 export class DashboardComponent {
     @ViewChild('container', { static: true }) containerElementRef: ElementRef<HTMLDivElement>;

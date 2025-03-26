@@ -7,7 +7,8 @@ import { EmptyComponent } from './empty.component';
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'empty-component-basic',
-    template: '<empty-component></empty-component>'
+    template: '<empty-component></empty-component>',
+    standalone: false
 })
 class EmptyComponentBasicComponent {}
 

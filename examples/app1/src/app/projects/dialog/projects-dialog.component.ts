@@ -4,7 +4,8 @@ import { ThyDialogRef } from 'ngx-tethys/dialog';
 
 @Component({
     selector: 'app-projects-dialog',
-    templateUrl: `./projects-dialog.component.html`
+    templateUrl: `./projects-dialog.component.html`,
+    standalone: false
 })
 export class ProjectsDialogComponent implements OnInit {
     @HostBinding('class.thy-dialog-content') container = true;

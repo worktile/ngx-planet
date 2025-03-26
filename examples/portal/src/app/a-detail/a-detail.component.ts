@@ -3,7 +3,8 @@ import { ThyDialogRef } from 'ngx-tethys/dialog';
 
 @Component({
     selector: 'app-a-detail',
-    templateUrl: './a-detail.component.html'
+    templateUrl: './a-detail.component.html',
+    standalone: false
 })
 export class ADetailComponent {
     constructor(private dialogRef: ThyDialogRef<ADetailComponent>) {}

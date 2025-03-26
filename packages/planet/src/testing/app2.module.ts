@@ -18,7 +18,8 @@ export const app2Name = 'app2';
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app2-comp-with-template-ref',
-    template: `<ng-template #ref>This is templateRef from app2</ng-template>`
+    template: `<ng-template #ref>This is templateRef from app2</ng-template>`,
+    standalone: false
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 class ComponentWithTemplateRef {
