@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [19.0.0-next.0](https://github.com/worktile/ngx-planet/compare/18.0.1...19.0.0-next.0) (2025-03-26)
+
+
+### Bug Fixes
+
+* fix lint error ([862007e](https://github.com/worktile/ngx-planet/commit/862007eab216d9b2868c2667c4439fb0c9f43619))
+
+
+### Features
+
+* upgrade ng to 19 #TINFR-1631 ([a76cb7f](https://github.com/worktile/ngx-planet/commit/a76cb7f8a2b6ddb54178e28f1b06eacac21facf8)), closes [#TINFR-1631](https://github.com/worktile/ngx-planet/issues/TINFR-1631)
+* upgrade ng to 19 #TINFR-1631 ([73d5996](https://github.com/worktile/ngx-planet/commit/73d5996765d8db83a1e5c942582ccd59519ea01e)), closes [#TINFR-1631](https://github.com/worktile/ngx-planet/issues/TINFR-1631)
+
+
+
 ## [18.0.1](https://github.com/worktile/ngx-planet/compare/18.0.0...18.0.1) (2024-09-05)
 
 
