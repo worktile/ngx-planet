@@ -5,11 +5,11 @@ import { map, switchMap, concatAll } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 import { createSandbox } from './sandbox';
-import { AssetsTagItem, ScriptTagAttributes } from './inner-types';
+import { AssetsTagItem, LinkTagAttributes, ScriptTagAttributes } from './inner-types';
 
 const STYLE_LINK_OR_SCRIPT_REG = /<[script|link].*?>/gi;
 const LINK_OR_SRC_REG = /(src|href)=["'](.*?[\.js|\.css])["']/i;
-const TAG_ATTRS_REG = /(type|defer|async)((=["'].*?["'])|\s|\>)/gi;
+const TAG_ATTRS_REG = /(type|defer|async|rel)((=["'].*?["'])|\s|\>)/gi;
 
 export interface AssetsLoadResult {
     src: string;
@@ -26,7 +26,8 @@ export class AssetsLoader {
 
     constructor(private http: HttpClient) {}
 
-    loadScript(src: string, tagAttributes?: ScriptTagAttributes): Observable<AssetsLoadResult> {
+    loadScript(scriptAsset: AssetsTagItem) {
+        const { src, tagName, attributes: tagAttributes } = scriptAsset;
         const id = hashCode(src);
         if (this.loadedSources.includes(id)) {
             return of({
@@ -37,20 +38,34 @@ export class AssetsLoader {
             });
         }
         return new Observable((observer: Observer<AssetsLoadResult>) => {
-            const script: HTMLScriptElement = document.createElement('script');
-            script.type = tagAttributes?.type || 'text/javascript';
-            script.src = src;
-            if (!tagAttributes?.defer || tagAttributes?.defer !== 'false') {
-                script.defer = true;
+            let scriptOrLink: HTMLScriptElement | HTMLLinkElement;
+            if (tagName === 'link') {
+                const LinkAttributes = tagAttributes as LinkTagAttributes;
+                const link = document.createElement('link');
+                link.href = src;
+                if (LinkAttributes.rel) {
+                    link.rel = LinkAttributes.rel;
+                }
+                scriptOrLink = link;
+            } else {
+                const scriptAttributes = tagAttributes as ScriptTagAttributes;
+                const script: HTMLScriptElement = document.createElement('script');
+                script.type = scriptAttributes?.type || 'text/javascript';
+                script.src = src;
+                if (!scriptAttributes?.defer || scriptAttributes?.defer !== 'false') {
+                    script.defer = true;
+                }
+                if (!scriptAttributes?.async && scriptAttributes?.async !== 'false') {
+                    script.async = true;
+                }
+                scriptOrLink = script;
             }
-            if (!tagAttributes?.async && tagAttributes?.async === 'false') {
-                script.async = true;
-            }
-            if (script['readyState']) {
+
+            if (scriptOrLink['readyState']) {
                 // IE
-                script['onreadystatechange'] = () => {
-                    if (script['readyState'] === 'loaded' || script['readyState'] === 'complete') {
-                        script['onreadystatechange'] = null;
+                scriptOrLink['onreadystatechange'] = () => {
+                    if (scriptOrLink['readyState'] === 'loaded' || scriptOrLink['readyState'] === 'complete') {
+                        scriptOrLink['onreadystatechange'] = null;
                         observer.next({
                             src: src,
                             hashCode: id,
@@ -63,7 +78,7 @@ export class AssetsLoader {
                 };
             } else {
                 // Others
-                script.onload = () => {
+                scriptOrLink.onload = () => {
                     observer.next({
                         src: src,
                         hashCode: id,
@@ -74,7 +89,7 @@ export class AssetsLoader {
                     this.loadedSources.push(id);
                 };
             }
-            script.onerror = error => {
+            scriptOrLink.onerror = error => {
                 observer.error({
                     src: src,
                     hashCode: id,
@@ -84,7 +99,12 @@ export class AssetsLoader {
                 });
                 observer.complete();
             };
-            document.body.appendChild(script);
+            if (tagName === 'link') {
+                const head = document.getElementsByTagName('head')[0];
+                head.appendChild(scriptOrLink);
+            } else {
+                document.body.appendChild(scriptOrLink);
+            }
         });
     }
 
@@ -157,7 +177,7 @@ export class AssetsLoader {
                 observer.error({
                     src: src,
                     hashCode: id,
-                    loaded: true,
+                    loaded: false,
                     status: 'Loaded',
                     error: error
                 });
@@ -186,7 +206,7 @@ export class AssetsLoader {
             if (options.sandbox && window.Proxy) {
                 return this.loadScriptWithSandbox(options.app, source.src);
             } else {
-                return this.loadScript(source.src, source.attributes as ScriptTagAttributes);
+                return this.loadScript(source);
             }
         });
         if (options.serial) {
@@ -256,6 +276,7 @@ export class AssetsLoader {
         const result: Record<string, AssetsTagItem> = {};
         const matchResult = html.match(STYLE_LINK_OR_SCRIPT_REG);
         matchResult.forEach(item => {
+            const isLinkTag = item.trim().toLowerCase().slice(1, item.indexOf(' ')) === 'link';
             const linkOrSrcResult = item.match(LINK_OR_SRC_REG);
             if (linkOrSrcResult && linkOrSrcResult[2]) {
                 const src = linkOrSrcResult[2];
@@ -267,7 +288,8 @@ export class AssetsLoader {
                     const name = hashName.slice(0, splitIndex);
                     const ext = getExtName(hashName);
                     const assetsTag: AssetsTagItem = {
-                        src: src
+                        src: src,
+                        tagName: isLinkTag ? 'link' : 'script'
                     };
                     result[ext ? `${name}.${ext}` : name] = assetsTag;
 
