@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [19.0.0-next.1](https://github.com/worktile/ngx-planet/compare/19.0.0-next.0...19.0.0-next.1) (2025-03-28)
+
+
+### Bug Fixes
+
+* fix sub application module preload scripts execute error: unexpected token 'export' #TINFR-1732  [#350](https://github.com/worktile/ngx-planet/issues/350)  ([96bed2c](https://github.com/worktile/ngx-planet/commit/96bed2c553f637fcc4773301ff224aa2e0142eba)), closes [#TINFR-1732](https://github.com/worktile/ngx-planet/issues/TINFR-1732)
+* missing chunk files when loading chunk.js #TINFR-1731 ([#353](https://github.com/worktile/ngx-planet/issues/353)) ([c91c923](https://github.com/worktile/ngx-planet/commit/c91c9234e27a49f4fa80cece7f87a15ab2efe042)), closes [#TINFR-1731](https://github.com/worktile/ngx-planet/issues/TINFR-1731)
+
+
+
 # [19.0.0-next.0](https://github.com/worktile/ngx-planet/compare/18.0.1...19.0.0-next.0) (2025-03-26)
 
 
