@@ -37,35 +37,40 @@ export class AssetsLoader {
                 status: 'Loaded'
             });
         }
+
+        if (tagName === 'link') {
+            const LinkAttributes = tagAttributes as LinkTagAttributes;
+            const link = document.createElement('link');
+            link.href = src;
+            if (LinkAttributes.rel) {
+                link.rel = LinkAttributes.rel;
+            }
+            const head = document.getElementsByTagName('head')[0];
+            head.appendChild(link);
+            return of({
+                src: src,
+                hashCode: id,
+                loaded: false,
+                status: 'Preload'
+            });
+        }
         return new Observable((observer: Observer<AssetsLoadResult>) => {
-            let scriptOrLink: HTMLScriptElement | HTMLLinkElement;
-            if (tagName === 'link') {
-                const LinkAttributes = tagAttributes as LinkTagAttributes;
-                const link = document.createElement('link');
-                link.href = src;
-                if (LinkAttributes.rel) {
-                    link.rel = LinkAttributes.rel;
-                }
-                scriptOrLink = link;
-            } else {
-                const scriptAttributes = tagAttributes as ScriptTagAttributes;
-                const script: HTMLScriptElement = document.createElement('script');
-                script.type = scriptAttributes?.type || 'text/javascript';
-                script.src = src;
-                if (!scriptAttributes?.defer || scriptAttributes?.defer !== 'false') {
-                    script.defer = true;
-                }
-                if (!scriptAttributes?.async && scriptAttributes?.async !== 'false') {
-                    script.async = true;
-                }
-                scriptOrLink = script;
+            const scriptAttributes = tagAttributes as ScriptTagAttributes;
+            const script: HTMLScriptElement = document.createElement('script');
+            script.type = scriptAttributes?.type || 'text/javascript';
+            script.src = src;
+            if (!scriptAttributes?.defer || scriptAttributes?.defer !== 'false') {
+                script.defer = true;
+            }
+            if (!scriptAttributes?.async && scriptAttributes?.async !== 'false') {
+                script.async = true;
             }
 
-            if (scriptOrLink['readyState']) {
+            if (script['readyState']) {
                 // IE
-                scriptOrLink['onreadystatechange'] = () => {
-                    if (scriptOrLink['readyState'] === 'loaded' || scriptOrLink['readyState'] === 'complete') {
-                        scriptOrLink['onreadystatechange'] = null;
+                script['onreadystatechange'] = () => {
+                    if (script['readyState'] === 'loaded' || script['readyState'] === 'complete') {
+                        script['onreadystatechange'] = null;
                         observer.next({
                             src: src,
                             hashCode: id,
@@ -78,7 +83,7 @@ export class AssetsLoader {
                 };
             } else {
                 // Others
-                scriptOrLink.onload = () => {
+                script.onload = () => {
                     observer.next({
                         src: src,
                         hashCode: id,
@@ -89,7 +94,7 @@ export class AssetsLoader {
                     this.loadedSources.push(id);
                 };
             }
-            scriptOrLink.onerror = error => {
+            script.onerror = error => {
                 observer.error({
                     src: src,
                     hashCode: id,
@@ -99,12 +104,7 @@ export class AssetsLoader {
                 });
                 observer.complete();
             };
-            if (tagName === 'link') {
-                const head = document.getElementsByTagName('head')[0];
-                head.appendChild(scriptOrLink);
-            } else {
-                document.body.appendChild(scriptOrLink);
-            }
+            document.body.appendChild(script);
         });
     }
 
@@ -293,7 +293,7 @@ export class AssetsLoader {
                     };
                     const assetName = ext ? `${name}.${ext}` : name;
                     if (!result[assetName]) {
-                        result[assetName] = [assetsTag]
+                        result[assetName] = [assetsTag];
                     } else {
                         result[assetName] = result[assetName].concat(assetsTag);
                     }
@@ -353,9 +353,11 @@ export class AssetsLoader {
                     } else {
                         const result: Record<string, AssetsTagItem[]> = {};
                         Object.keys(response).forEach(key => {
-                            result[key] = [{
-                                src: response[key]
-                            }];
+                            result[key] = [
+                                {
+                                    src: response[key]
+                                }
+                            ];
                         });
                         return result;
                     }
