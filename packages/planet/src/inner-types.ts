@@ -1,12 +1,17 @@
 export interface ScriptTagAttributes {
-    type: 'module' | 'text/script' | undefined;
+    type?: 'module' | 'text/script' | undefined;
     async?: string;
     defer?: string;
 }
 
-export interface StyleTagAttributes {}
+export interface LinkTagAttributes {
+    rel?: string;
+}
+
+export type ScriptOrLinkTagAttributes = ScriptTagAttributes | LinkTagAttributes;
 
 export interface AssetsTagItem {
     src: string;
-    attributes?: ScriptTagAttributes | StyleTagAttributes;
+    tagName?: 'link' | 'script';
+    attributes?: ScriptOrLinkTagAttributes;
 }

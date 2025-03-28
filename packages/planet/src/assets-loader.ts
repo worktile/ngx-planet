@@ -5,11 +5,11 @@ import { map, switchMap, concatAll } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 import { createSandbox } from './sandbox';
-import { AssetsTagItem, ScriptTagAttributes } from './inner-types';
+import { AssetsTagItem, LinkTagAttributes, ScriptTagAttributes } from './inner-types';
 
 const STYLE_LINK_OR_SCRIPT_REG = /<[script|link].*?>/gi;
 const LINK_OR_SRC_REG = /(src|href)=["'](.*?[\.js|\.css])["']/i;
-const TAG_ATTRS_REG = /(type|defer|async)((=["'].*?["'])|\s|\>)/gi;
+const TAG_ATTRS_REG = /(type|defer|async|rel)((=["'].*?["'])|\s|\>)/gi;
 
 export interface AssetsLoadResult {
     src: string;
@@ -26,7 +26,8 @@ export class AssetsLoader {
 
     constructor(private http: HttpClient) {}
 
-    loadScript(src: string, tagAttributes?: ScriptTagAttributes): Observable<AssetsLoadResult> {
+    loadScript(scriptAsset: AssetsTagItem) {
+        const { src, tagName, attributes: tagAttributes } = scriptAsset;
         const id = hashCode(src);
         if (this.loadedSources.includes(id)) {
             return of({
@@ -36,16 +37,35 @@ export class AssetsLoader {
                 status: 'Loaded'
             });
         }
+
+        if (tagName === 'link') {
+            const LinkAttributes = tagAttributes as LinkTagAttributes;
+            const link = document.createElement('link');
+            link.href = src;
+            if (LinkAttributes.rel) {
+                link.rel = LinkAttributes.rel;
+            }
+            const head = document.getElementsByTagName('head')[0];
+            head.appendChild(link);
+            return of({
+                src: src,
+                hashCode: id,
+                loaded: false,
+                status: 'Preload'
+            });
+        }
         return new Observable((observer: Observer<AssetsLoadResult>) => {
+            const scriptAttributes = tagAttributes as ScriptTagAttributes;
             const script: HTMLScriptElement = document.createElement('script');
-            script.type = tagAttributes?.type || 'text/javascript';
+            script.type = scriptAttributes?.type || 'text/javascript';
             script.src = src;
-            if (!tagAttributes?.defer || tagAttributes?.defer !== 'false') {
+            if (!scriptAttributes?.defer || scriptAttributes?.defer !== 'false') {
                 script.defer = true;
             }
-            if (!tagAttributes?.async && tagAttributes?.async === 'false') {
+            if (!scriptAttributes?.async && scriptAttributes?.async !== 'false') {
                 script.async = true;
             }
+
             if (script['readyState']) {
                 // IE
                 script['onreadystatechange'] = () => {
@@ -186,7 +206,7 @@ export class AssetsLoader {
             if (options.sandbox && window.Proxy) {
                 return this.loadScriptWithSandbox(options.app, source.src);
             } else {
-                return this.loadScript(source.src, source.attributes as ScriptTagAttributes);
+                return this.loadScript(source);
             }
         });
         if (options.serial) {
@@ -252,10 +272,11 @@ export class AssetsLoader {
         return undefined;
     }
 
-    parseManifestFromHTML(html: string): Record<string, AssetsTagItem> {
-        const result: Record<string, AssetsTagItem> = {};
+    parseManifestFromHTML(html: string): Record<string, AssetsTagItem[]> {
+        const result: Record<string, AssetsTagItem[]> = {};
         const matchResult = html.match(STYLE_LINK_OR_SCRIPT_REG);
         matchResult.forEach(item => {
+            const isLinkTag = item.trim().toLowerCase().slice(1, item.indexOf(' ')) === 'link';
             const linkOrSrcResult = item.match(LINK_OR_SRC_REG);
             if (linkOrSrcResult && linkOrSrcResult[2]) {
                 const src = linkOrSrcResult[2];
@@ -267,9 +288,15 @@ export class AssetsLoader {
                     const name = hashName.slice(0, splitIndex);
                     const ext = getExtName(hashName);
                     const assetsTag: AssetsTagItem = {
-                        src: src
+                        src: src,
+                        tagName: isLinkTag ? 'link' : 'script'
                     };
-                    result[ext ? `${name}.${ext}` : name] = assetsTag;
+                    const assetName = ext ? `${name}.${ext}` : name;
+                    if (!result[assetName]) {
+                        result[assetName] = [assetsTag];
+                    } else {
+                        result[assetName] = result[assetName].concat(assetsTag);
+                    }
 
                     const attributes = this.parseTagAttributes(item);
                     if (attributes) {
@@ -314,7 +341,7 @@ export class AssetsLoader {
         }
     }
 
-    loadManifest(url: string, responseType: 'text' | 'json' = 'json'): Observable<Record<string, AssetsTagItem>> {
+    loadManifest(url: string, responseType: 'text' | 'json' = 'json'): Observable<Record<string, AssetsTagItem[]>> {
         return this.http
             .get(url, {
                 responseType: responseType as 'json'
@@ -324,11 +351,13 @@ export class AssetsLoader {
                     if (responseType === 'text') {
                         return this.parseManifestFromHTML(response as string);
                     } else {
-                        const result: Record<string, AssetsTagItem> = {};
+                        const result: Record<string, AssetsTagItem[]> = {};
                         Object.keys(response).forEach(key => {
-                            result[key] = {
-                                src: response[key]
-                            };
+                            result[key] = [
+                                {
+                                    src: response[key]
+                                }
+                            ];
                         });
                         return result;
                     }

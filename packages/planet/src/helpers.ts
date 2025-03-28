@@ -140,25 +140,29 @@ export function getAssetsBasePath(app: PlanetApplication): string {
     return basePath || app.resourcePathPrefix;
 }
 
-function getAssetsByDefined(definedPaths: string[], manifest: Record<string, AssetsTagItem>, ext: 'js' | 'css'): AssetsTagItem[] {
+function getAssetsByDefined(definedPaths: string[], manifest: Record<string, AssetsTagItem[]>, ext: 'js' | 'css'): AssetsTagItem[] {
+    let assets: AssetsTagItem[] = [];
     if (definedPaths) {
-        return definedPaths.map(definedPath => {
+        definedPaths.forEach(definedPath => {
             const fileName = getResourceFileName(definedPath);
             const assetsTagItem = manifest[fileName];
-            return {
-                ...assetsTagItem,
-                src: definedPath.replace(fileName, assetsTagItem.src)
-            };
+            assets = assets.concat(
+                assetsTagItem.map(item => ({
+                    ...item,
+                    src: definedPath.replace(fileName, item.src)
+                }))
+            );
         });
     } else {
-        return Object.keys(manifest)
+        Object.keys(manifest)
             .filter(key => {
                 return getExtName(key) === ext;
             })
-            .map(key => {
-                return manifest[key];
+            .forEach(key => {
+                assets = assets.concat(manifest[key]);
             });
     }
+    return assets;
 }
 
 export function toAssetsTagItem(src: string): AssetsTagItem {
@@ -174,7 +178,7 @@ export function toAssetsTagItems(src: string[]): AssetsTagItem[] {
 export function getScriptsAndStylesAssets(
     app: PlanetApplication,
     basePath: string,
-    manifestResult?: Record<string, AssetsTagItem>
+    manifestResult?: Record<string, AssetsTagItem[]>
 ): { scripts: AssetsTagItem[]; styles: AssetsTagItem[] } {
     const result: { scripts: AssetsTagItem[]; styles: AssetsTagItem[] } = { scripts: [], styles: [] };
     let { scripts, styles } = getDefinedAssets(app);
