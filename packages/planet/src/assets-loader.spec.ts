@@ -32,7 +32,11 @@ describe('assets-loader', () => {
         <base href="/"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-      <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="main.1234.css"></head>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="main.1234.css">
+        <link rel="modulepreload" href="chunk-1234.js">
+        <link rel="modulepreload" href="chunk-5678.js">
+      </head>
       <body>
         <standalone-app-root></standalone-app-root>
       <script src="main.js"></script> <script src="polyfills-VNHXLSD3.js"><script src="vendor.2344ee.js" type="module"></body>
@@ -60,7 +64,7 @@ describe('assets-loader', () => {
             expect(createElementSpy).not.toHaveBeenCalled();
 
             const scriptLoaded = jasmine.createSpy('load script');
-            assetsLoader.loadScript(src).subscribe(scriptLoaded, error => {
+            assetsLoader.loadScript({ src }).subscribe(scriptLoaded, error => {
                 console.error(error);
             });
             // 已经被调用
@@ -101,7 +105,7 @@ describe('assets-loader', () => {
             expect(createElementSpy).not.toHaveBeenCalled();
 
             const scriptLoaded = jasmine.createSpy('load script');
-            assetsLoader.loadScript(src).subscribe(scriptLoaded, error => {
+            assetsLoader.loadScript({ src }).subscribe(scriptLoaded, error => {
                 console.error(error);
             });
             // 已经被调用
@@ -144,7 +148,7 @@ describe('assets-loader', () => {
             expect(createElementSpy).not.toHaveBeenCalled();
 
             const scriptLoaded = jasmine.createSpy('load script');
-            assetsLoader.loadScript(src).subscribe(scriptLoaded, error => {
+            assetsLoader.loadScript({ src }).subscribe(scriptLoaded, error => {
                 console.error(error);
             });
             // 已经被调用
@@ -187,7 +191,7 @@ describe('assets-loader', () => {
             expect(createElementSpy).not.toHaveBeenCalled();
 
             const scriptLoaded = jasmine.createSpy('load script');
-            assetsLoader.loadScript(src).subscribe(scriptLoaded, error => {
+            assetsLoader.loadScript({ src }).subscribe(scriptLoaded, error => {
                 console.error(error);
             });
             // 已经被调用
@@ -214,13 +218,13 @@ describe('assets-loader', () => {
             createElementSpy.and.returnValue(mockScript);
 
             const scriptLoaded = jasmine.createSpy('load script');
-            assetsLoader.loadScript(src).subscribe(scriptLoaded, error => {
+            assetsLoader.loadScript({ src }).subscribe(scriptLoaded, error => {
                 console.error(error);
             });
             mockScript.onload();
 
             const scriptLoaded2 = jasmine.createSpy('load script');
-            assetsLoader.loadScript(src).subscribe(scriptLoaded2, error => {
+            assetsLoader.loadScript({ src }).subscribe(scriptLoaded2, error => {
                 console.error(error);
             });
             expect(appendChildSpy).toHaveBeenCalledTimes(1);
@@ -247,7 +251,7 @@ describe('assets-loader', () => {
 
             const scriptLoaded = jasmine.createSpy('load script');
             const scriptLoadedError = jasmine.createSpy('load script error');
-            assetsLoader.loadScript(src).subscribe(scriptLoaded, scriptLoadedError);
+            assetsLoader.loadScript({ src }).subscribe(scriptLoaded, scriptLoadedError);
 
             // 已经被调用
             expect(appendChildSpy).toHaveBeenCalledTimes(1);
@@ -524,11 +528,16 @@ describe('assets-loader', () => {
                 new AssetsLoader(undefined).parseManifestFromHTML(html),
                 {
                     scripts: [
-                        { src: '/static/app1/main.js' },
-                        { src: '/static/app1/polyfills-VNHXLSD3.js' },
-                        { src: '/static/app1/vendor.2344ee.js', attributes: { type: 'module' } }
+                        { src: '/static/app1/chunk-1234.js', tagName: 'link', attributes: { rel: 'modulepreload' } },
+                        { src: '/static/app1/chunk-5678.js', tagName: 'link', attributes: { rel: 'modulepreload' } },
+                        { src: '/static/app1/main.js', tagName: 'script' },
+                        { src: '/static/app1/polyfills-VNHXLSD3.js', tagName: 'script' },
+                        { src: '/static/app1/vendor.2344ee.js', tagName: 'script', attributes: { type: 'module' } }
                     ],
-                    styles: toAssetsTagItems(['/static/app1/styles.css', '/static/app1/main.1234.css'])
+                    styles: [
+                        { src: '/static/app1/styles.css', tagName: 'link', attributes: { rel: 'stylesheet' } },
+                        { src: '/static/app1/main.1234.css', tagName: 'link', attributes: { rel: 'stylesheet' } }
+                    ]
                 }
             );
         });
@@ -545,11 +554,16 @@ describe('assets-loader', () => {
                 new AssetsLoader(undefined).parseManifestFromHTML(html),
                 {
                     scripts: [
-                        { src: '/static/app1/main.js' },
-                        { src: '/static/app1/polyfills-VNHXLSD3.js' },
-                        { src: '/static/app1/vendor.2344ee.js', attributes: { type: 'module' } }
+                        { src: '/static/app1/chunk-1234.js', tagName: 'link', attributes: { rel: 'modulepreload' } },
+                        { src: '/static/app1/chunk-5678.js', tagName: 'link', attributes: { rel: 'modulepreload' } },
+                        { src: '/static/app1/main.js', tagName: 'script' },
+                        { src: '/static/app1/polyfills-VNHXLSD3.js', tagName: 'script' },
+                        { src: '/static/app1/vendor.2344ee.js', tagName: 'script', attributes: { type: 'module' } }
                     ],
-                    styles: toAssetsTagItems(['/static/app1/styles.css', '/static/app1/main.1234.css'])
+                    styles: [
+                        { src: '/static/app1/styles.css', tagName: 'link', attributes: { rel: 'stylesheet' } },
+                        { src: '/static/app1/main.1234.css', tagName: 'link', attributes: { rel: 'stylesheet' } }
+                    ]
                 }
             );
         });
@@ -572,8 +586,11 @@ describe('assets-loader', () => {
                 new AssetsLoader(undefined).parseManifestFromHTML(html),
                 {
                     url: '/static/app1/index.html',
-                    scripts: [{ src: '/static/app1/main.js' }, { src: '/static/app1/vendor.2344ee.js', attributes: { type: 'module' } }],
-                    styles: toAssetsTagItems(['/static/app1/main.1234.css'])
+                    scripts: [
+                        { src: '/static/app1/main.js', tagName: 'script' },
+                        { src: '/static/app1/vendor.2344ee.js', tagName: 'script', attributes: { type: 'module' } }
+                    ],
+                    styles: [{ src: '/static/app1/main.1234.css', tagName: 'link', attributes: { rel: 'stylesheet' } }]
                 }
             );
         });
@@ -594,11 +611,16 @@ describe('assets-loader', () => {
                 {
                     url: '/static/app1/index.html',
                     scripts: [
-                        { src: 'main.js' },
-                        { src: 'polyfills-VNHXLSD3.js' },
-                        { src: 'vendor.2344ee.js', attributes: { type: 'module' } }
+                        { src: 'chunk-1234.js', tagName: 'link', attributes: { rel: 'modulepreload' } },
+                        { src: 'chunk-5678.js', tagName: 'link', attributes: { rel: 'modulepreload' } },
+                        { src: 'main.js', tagName: 'script' },
+                        { src: 'polyfills-VNHXLSD3.js', tagName: 'script' },
+                        { src: 'vendor.2344ee.js', tagName: 'script', attributes: { type: 'module' } }
                     ],
-                    styles: toAssetsTagItems(['styles.css', 'main.1234.css'])
+                    styles: [
+                        { src: 'styles.css', tagName: 'link', attributes: { rel: 'stylesheet' } },
+                        { src: 'main.1234.css', tagName: 'link', attributes: { rel: 'stylesheet' } }
+                    ]
                 }
             );
         });
@@ -679,19 +701,17 @@ describe('assets-loader', () => {
     describe('parseManifestFromHTML', () => {
         it('should parse manifest from HTML', () => {
             const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
-            const expected = toAssetsTagItemRecord({
-                'styles.css': 'styles.css',
-                'main.css': 'main.1234.css',
-                'main.js': 'main.js',
-                'polyfills.js': 'polyfills-VNHXLSD3.js'
+            expect(result).toEqual({
+                'styles.css': [{ src: 'styles.css', tagName: 'link', attributes: { rel: 'stylesheet' } }],
+                'main.css': [{ src: 'main.1234.css', tagName: 'link', attributes: { rel: 'stylesheet' } }],
+                'chunk.js': [
+                    { src: 'chunk-1234.js', tagName: 'link', attributes: { rel: 'modulepreload' } },
+                    { src: 'chunk-5678.js', tagName: 'link', attributes: { rel: 'modulepreload' } }
+                ],
+                'main.js': [{ src: 'main.js', tagName: 'script' }],
+                'polyfills.js': [{ src: 'polyfills-VNHXLSD3.js', tagName: 'script' }],
+                'vendor.js': [{ src: 'vendor.2344ee.js', tagName: 'script', attributes: { type: 'module' } }]
             });
-            expected['vendor.js'] = [
-                {
-                    src: 'vendor.2344ee.js',
-                    attributes: { type: 'module' }
-                }
-            ];
-            expect(result).toEqual(expected);
         });
 
         it('should parse script from html after <script src="styles.js" defer>', () => {
@@ -704,7 +724,8 @@ describe('assets-loader', () => {
 
                     <meta name="viewport" content="width=device-width, initial-scale=1"/>
                     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-                <link rel="stylesheet" href="styles.css"></head>
+                    <link rel="stylesheet" href="styles.css">
+                </head>
                 <body>
                     <app-agile-root></app-agile-root>
                 <script src="styles.js" defer></script><script src="main.js" type="module"></script></body>
@@ -714,12 +735,15 @@ describe('assets-loader', () => {
             expect(result).toEqual({
                 'styles.css': [
                     {
-                        src: 'styles.css'
+                        src: 'styles.css',
+                        tagName: 'link',
+                        attributes: { rel: 'stylesheet' }
                     }
                 ],
                 'styles.js': [
                     {
                         src: 'styles.js',
+                        tagName: 'script',
                         attributes: {
                             defer: 'defer'
                         }
@@ -728,6 +752,7 @@ describe('assets-loader', () => {
                 'main.js': [
                     {
                         src: 'main.js',
+                        tagName: 'script',
                         attributes: { type: 'module' }
                     }
                 ]
@@ -744,7 +769,10 @@ describe('assets-loader', () => {
 
                     <meta name="viewport" content="width=device-width, initial-scale=1"/>
                     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-                <link rel="stylesheet" href="styles.css"></head>
+                    <link rel="stylesheet" href="styles.css">
+                    <link rel="modulepreload" href="chunk-1234.js">
+                    <link rel="modulepreload" href="chunk-5678.js">
+                </head>
                 <body>
                     <app-agile-root></app-agile-root>
                 <script src="styles.js" async></script><script src="main.js" async type="module" ></script></body>
@@ -754,12 +782,17 @@ describe('assets-loader', () => {
             expect(result).toEqual({
                 'styles.css': [
                     {
-                        src: 'styles.css'
+                        src: 'styles.css',
+                        tagName: 'link',
+                        attributes: {
+                            rel: 'stylesheet'
+                        }
                     }
                 ],
                 'styles.js': [
                     {
                         src: 'styles.js',
+                        tagName: 'script',
                         attributes: {
                             async: 'async'
                         }
@@ -768,7 +801,20 @@ describe('assets-loader', () => {
                 'main.js': [
                     {
                         src: 'main.js',
+                        tagName: 'script',
                         attributes: { type: 'module', async: 'async' }
+                    }
+                ],
+                'chunk.js': [
+                    {
+                        src: 'chunk-1234.js',
+                        tagName: 'link',
+                        attributes: { rel: 'modulepreload' }
+                    },
+                    {
+                        src: 'chunk-5678.js',
+                        tagName: 'link',
+                        attributes: { rel: 'modulepreload' }
                     }
                 ]
             });

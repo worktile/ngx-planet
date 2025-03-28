@@ -177,7 +177,7 @@ export class AssetsLoader {
                 observer.error({
                     src: src,
                     hashCode: id,
-                    loaded: false,
+                    loaded: true,
                     status: 'Loaded',
                     error: error
                 });
