@@ -253,29 +253,35 @@ describe('helpers', () => {
 
         it('should get correct full path with manifest', () => {
             const manifest = {
-                'vendor.js': {
-                    src: `vendor.${randomString()}.js`
-                },
-                'main.js': {
-                    src: `main.${randomString()}.js`
-                },
-                'main.css': {
-                    src: `main.${randomString()}.css`
-                }
+                'vendor.js': [
+                    {
+                        src: `vendor.${randomString()}.js`
+                    }
+                ],
+                'main.js': [
+                    {
+                        src: `main.${randomString()}.js`
+                    }
+                ],
+                'main.css': [
+                    {
+                        src: `main.${randomString()}.css`
+                    }
+                ]
             };
             const result = getScriptsAndStylesAssets({ ...app, resourcePathPrefix: '/static/app1/' }, '/static/app1/', manifest);
             expect(result).toEqual({
                 scripts: [
                     {
-                        src: `/static/app1/${manifest['vendor.js'].src}`
+                        src: `/static/app1/${manifest['vendor.js'][0].src}`
                     },
                     {
-                        src: `/static/app1/${manifest['main.js'].src}`
+                        src: `/static/app1/${manifest['main.js'][0].src}`
                     }
                 ],
                 styles: [
                     {
-                        src: `/static/app1/styles/${manifest['main.css'].src}`
+                        src: `/static/app1/styles/${manifest['main.css'][0].src}`
                     }
                 ]
             });
