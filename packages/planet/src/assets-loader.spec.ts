@@ -7,10 +7,10 @@ import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/
 import { PlanetApplication, PlanetApplicationEntry } from './planet.class';
 import { AssetsTagItem } from './inner-types';
 
-function toAssetsTagItemRecord(input: Record<string, string>): Record<string, AssetsTagItem> {
-    const result: Record<string, AssetsTagItem> = {};
+function toAssetsTagItemRecord(input: Record<string, string>): Record<string, AssetsTagItem[]> {
+    const result: Record<string, AssetsTagItem[]> = {};
     Object.keys(input).forEach(key => {
-        result[key] = toAssetsTagItem(input[key]);
+        result[key] = [toAssetsTagItem(input[key])];
     });
     return result;
 }
@@ -405,9 +405,11 @@ describe('assets-loader', () => {
 
             expect(loadManifestSpy).toHaveBeenCalled();
             expect(loadManifestSpy).toHaveBeenCalledWith({
-                'main.js': {
-                    src: 'main1.js'
-                }
+                'main.js': [
+                    {
+                        src: 'main1.js'
+                    }
+                ]
             });
         }));
     });
@@ -433,7 +435,7 @@ describe('assets-loader', () => {
 
         function assertAndLoadAppAssets(
             app: Partial<PlanetApplication>,
-            manifestContent: Record<string, AssetsTagItem>,
+            manifestContent: Record<string, AssetsTagItem[]>,
             expected: {
                 url?: string;
                 scripts: AssetsTagItem[];
@@ -683,10 +685,12 @@ describe('assets-loader', () => {
                 'main.js': 'main.js',
                 'polyfills.js': 'polyfills-VNHXLSD3.js'
             });
-            expected['vendor.js'] = {
-                src: 'vendor.2344ee.js',
-                attributes: { type: 'module' }
-            };
+            expected['vendor.js'] = [
+                {
+                    src: 'vendor.2344ee.js',
+                    attributes: { type: 'module' }
+                }
+            ];
             expect(result).toEqual(expected);
         });
 
@@ -708,19 +712,25 @@ describe('assets-loader', () => {
             "`;
             const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
             expect(result).toEqual({
-                'styles.css': {
-                    src: 'styles.css'
-                },
-                'styles.js': {
-                    src: 'styles.js',
-                    attributes: {
-                        defer: 'defer'
+                'styles.css': [
+                    {
+                        src: 'styles.css'
                     }
-                },
-                'main.js': {
-                    src: 'main.js',
-                    attributes: { type: 'module' }
-                }
+                ],
+                'styles.js': [
+                    {
+                        src: 'styles.js',
+                        attributes: {
+                            defer: 'defer'
+                        }
+                    }
+                ],
+                'main.js': [
+                    {
+                        src: 'main.js',
+                        attributes: { type: 'module' }
+                    }
+                ]
             });
         });
 
@@ -742,19 +752,25 @@ describe('assets-loader', () => {
             "`;
             const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
             expect(result).toEqual({
-                'styles.css': {
-                    src: 'styles.css'
-                },
-                'styles.js': {
-                    src: 'styles.js',
-                    attributes: {
-                        async: 'async'
+                'styles.css': [
+                    {
+                        src: 'styles.css'
                     }
-                },
-                'main.js': {
-                    src: 'main.js',
-                    attributes: { type: 'module', async: 'async' }
-                }
+                ],
+                'styles.js': [
+                    {
+                        src: 'styles.js',
+                        attributes: {
+                            async: 'async'
+                        }
+                    }
+                ],
+                'main.js': [
+                    {
+                        src: 'main.js',
+                        attributes: { type: 'module', async: 'async' }
+                    }
+                ]
             });
         });
     });

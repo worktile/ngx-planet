@@ -272,8 +272,8 @@ export class AssetsLoader {
         return undefined;
     }
 
-    parseManifestFromHTML(html: string): Record<string, AssetsTagItem> {
-        const result: Record<string, AssetsTagItem> = {};
+    parseManifestFromHTML(html: string): Record<string, AssetsTagItem[]> {
+        const result: Record<string, AssetsTagItem[]> = {};
         const matchResult = html.match(STYLE_LINK_OR_SCRIPT_REG);
         matchResult.forEach(item => {
             const isLinkTag = item.trim().toLowerCase().slice(1, item.indexOf(' ')) === 'link';
@@ -291,7 +291,12 @@ export class AssetsLoader {
                         src: src,
                         tagName: isLinkTag ? 'link' : 'script'
                     };
-                    result[ext ? `${name}.${ext}` : name] = assetsTag;
+                    const assetName = ext ? `${name}.${ext}` : name;
+                    if (!result[assetName]) {
+                        result[assetName] = [assetsTag]
+                    } else {
+                        result[assetName] = result[assetName].concat(assetsTag);
+                    }
 
                     const attributes = this.parseTagAttributes(item);
                     if (attributes) {
@@ -336,7 +341,7 @@ export class AssetsLoader {
         }
     }
 
-    loadManifest(url: string, responseType: 'text' | 'json' = 'json'): Observable<Record<string, AssetsTagItem>> {
+    loadManifest(url: string, responseType: 'text' | 'json' = 'json'): Observable<Record<string, AssetsTagItem[]>> {
         return this.http
             .get(url, {
                 responseType: responseType as 'json'
@@ -346,11 +351,11 @@ export class AssetsLoader {
                     if (responseType === 'text') {
                         return this.parseManifestFromHTML(response as string);
                     } else {
-                        const result: Record<string, AssetsTagItem> = {};
+                        const result: Record<string, AssetsTagItem[]> = {};
                         Object.keys(response).forEach(key => {
-                            result[key] = {
+                            result[key] = [{
                                 src: response[key]
-                            };
+                            }];
                         });
                         return result;
                     }
