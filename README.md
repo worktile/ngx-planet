@@ -369,11 +369,6 @@ npm run serve:app2 // 3002
 npm run test
 ```
 
-## Roadmap
-
--   [ ] Ivy render engine
--   [ ] Supports Other frameworks as React and Vue
-
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
