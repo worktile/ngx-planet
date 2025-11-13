@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ThyDialogRef } from 'ngx-tethys/dialog';
 
 @Component({
@@ -7,7 +7,9 @@ import { ThyDialogRef } from 'ngx-tethys/dialog';
     standalone: false
 })
 export class App1DetailComponent {
-    constructor(private dialogRef: ThyDialogRef<App1DetailComponent>) {}
+    private dialogRef = inject<ThyDialogRef<App1DetailComponent>>(ThyDialogRef);
+
+    constructor() {}
 
     ok() {
         this.dialogRef.close();

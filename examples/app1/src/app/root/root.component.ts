@@ -1,5 +1,5 @@
-import { Component, HostBinding, NgZone, inject, ChangeDetectorRef, Injectable, OnInit, ViewRef } from '@angular/core';
-import { GlobalEventDispatcher, routeRedirect } from '@worktile/planet';
+import { Component, HostBinding, inject } from '@angular/core';
+import { GlobalEventDispatcher } from '@worktile/planet';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { UserDetailComponent } from '../user/detail/user-detail.component';
 
@@ -21,13 +21,14 @@ export class AppActualRootComponent {
     standalone: false
 })
 export class AppRootComponent {
+    private globalEventDispatcher = inject(GlobalEventDispatcher);
+    private thyDialog = inject(ThyDialog);
+
     @HostBinding(`class.thy-layout`) isLayout = true;
 
-    constructor(
-        private globalEventDispatcher: GlobalEventDispatcher,
-        private thyDialog: ThyDialog,
-        private ngZone: NgZone
-    ) {
+    constructor() {
+        const thyDialog = this.thyDialog;
+
         this.globalEventDispatcher.register('openUserDetail').subscribe((payload: number) => {
             thyDialog.open(UserDetailComponent, {
                 initialState: {

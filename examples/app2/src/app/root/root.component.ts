@@ -1,5 +1,5 @@
 import { PlanetComponentLoader, routeRedirect } from '@worktile/planet';
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit, inject } from '@angular/core';
 import { ProjectListComponent } from '../projects/project-list.component';
 
 @Component({
@@ -21,9 +21,11 @@ export class AppActualRootComponent {
     standalone: false
 })
 export class AppRootComponent implements OnInit {
+    private planetComponentLoader = inject(PlanetComponentLoader);
+
     @HostBinding(`class.thy-layout`) isThyLayout = true;
 
-    constructor(private planetComponentLoader: PlanetComponentLoader) {}
+    constructor() {}
 
     ngOnInit() {
         this.planetComponentLoader.register(ProjectListComponent);

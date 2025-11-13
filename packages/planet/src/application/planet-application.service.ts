@@ -1,24 +1,22 @@
 import { PlanetApplication } from '../planet.class';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { shareReplay, map } from 'rxjs/operators';
 import { coerceArray } from '../helpers';
 import { Observable } from 'rxjs';
-import { AssetsLoader } from '../assets-loader';
 import { getApplicationService } from '../global-planet';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PlanetApplicationService {
+    private http = inject(HttpClient);
+
     private apps: PlanetApplication[] = [];
 
     private appsMap: { [key: string]: PlanetApplication } = {};
 
-    constructor(
-        private http: HttpClient,
-        private assetsLoader: AssetsLoader
-    ) {
+    constructor() {
         if (getApplicationService()) {
             throw new Error('PlanetApplicationService has been injected in the portal, repeated injection is not allowed');
         }

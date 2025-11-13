@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -59,11 +59,12 @@ import { SettingsComponent } from './settings/settings.component';
     bootstrap: [AppComponent]
 })
 export class AppModule {
-    constructor(
-        iconRegistry: ThyIconRegistry,
-        domSanitizer: DomSanitizer,
-        private router: Router
-    ) {
+    private router = inject(Router);
+
+    constructor() {
+        const iconRegistry = inject(ThyIconRegistry);
+        const domSanitizer = inject(DomSanitizer);
+
         iconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/sprite.defs.svg'));
 
         this.router.events.subscribe(event => {

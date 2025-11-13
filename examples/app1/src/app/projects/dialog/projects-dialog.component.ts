@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostBinding, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, OnInit, ViewChild, inject } from '@angular/core';
 import { PlanetComponentLoader } from '@worktile/planet';
 import { ThyDialogRef } from 'ngx-tethys/dialog';
 
@@ -8,16 +8,16 @@ import { ThyDialogRef } from 'ngx-tethys/dialog';
     standalone: false
 })
 export class ProjectsDialogComponent implements OnInit {
+    private planetComponentLoader = inject(PlanetComponentLoader);
+    private dialogRef = inject<ThyDialogRef<ProjectsDialogComponent>>(ThyDialogRef);
+
     @HostBinding('class.thy-dialog-content') container = true;
 
     @ViewChild('container', { static: true }) elementRef: ElementRef<HTMLDivElement>;
 
     loadingDone = false;
 
-    constructor(
-        private planetComponentLoader: PlanetComponentLoader,
-        private dialogRef: ThyDialogRef<ProjectsDialogComponent>
-    ) {}
+    constructor() {}
 
     ngOnInit() {
         this.planetComponentLoader

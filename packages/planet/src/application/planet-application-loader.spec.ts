@@ -6,7 +6,7 @@ import { PlanetApplicationLoader, ApplicationStatus } from './planet-application
 import { AssetsLoader, AssetsLoadResult } from '../assets-loader';
 import { SwitchModes, PlanetApplication } from '../planet.class';
 import { PlanetApplicationService } from './planet-application.service';
-import { NgZone, Injector, ApplicationRef } from '@angular/core';
+import { NgZone, Injector, ApplicationRef, inject, runInInjectionContext } from '@angular/core';
 import { PlanetApplicationRef } from './planet-application-ref';
 import { app1, app2 } from '../testing/applications';
 import { Planet } from 'ngx-planet/planet';
@@ -151,16 +151,12 @@ describe('PlanetApplicationLoader', () => {
     });
 
     it(`should throw error for PlanetApplicationLoader guard when has multiple instances`, () => {
-        expect(() => {
-            return new PlanetApplicationLoader(
-                TestBed.inject(AssetsLoader),
-                TestBed.inject(PlanetApplicationService),
-                TestBed.inject(NgZone),
-                TestBed.inject(Router),
-                TestBed.inject(Injector),
-                TestBed.inject(ApplicationRef)
-            );
-        }).toThrowError('PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed');
+        const injector = TestBed.inject(Injector);
+        runInInjectionContext(injector, () => {
+            expect(() => {
+                return new PlanetApplicationLoader();
+            }).toThrowError('PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed');
+        });
     });
 
     it(`should load (load assets and bootstrap) app1 success for legacy selector`, fakeAsync(() => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AppRootContext } from '@demo/common';
 import { GlobalEventDispatcher, Planet, PlanetComponentLoader, SwitchModes } from '@worktile/planet';
 import { debug } from 'debug';
@@ -14,6 +14,14 @@ import { CustomSettingsService } from './custom-settings.service';
     standalone: false
 })
 export class AppComponent implements OnInit {
+    private customSettingsService = inject(CustomSettingsService);
+    private planet = inject(Planet);
+    private globalEventDispatcher = inject(GlobalEventDispatcher);
+    private thyDialog = inject(ThyDialog);
+    private thyNotify = inject(ThyNotifyService);
+    appRootContext = inject(AppRootContext);
+    private planetComponentLoader = inject(PlanetComponentLoader);
+
     // @HostBinding('class.portal') class = true;
 
     title = '@worktile/planet';
@@ -24,15 +32,7 @@ export class AppComponent implements OnInit {
         return this.planet.loading;
     }
 
-    constructor(
-        private customSettingsService: CustomSettingsService,
-        private planet: Planet,
-        private globalEventDispatcher: GlobalEventDispatcher,
-        private thyDialog: ThyDialog,
-        private thyNotify: ThyNotifyService,
-        public appRootContext: AppRootContext,
-        private planetComponentLoader: PlanetComponentLoader
-    ) {}
+    constructor() {}
 
     ngOnInit() {
         this.planet.setOptions({

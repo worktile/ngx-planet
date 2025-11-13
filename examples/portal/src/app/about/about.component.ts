@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from '../a-detail/a-detail.component';
@@ -11,13 +11,13 @@ import { AppRootContext } from '@demo/common';
     standalone: false
 })
 export class AboutComponent implements OnInit {
+    private router = inject(Router);
+    private thyDialog = inject(ThyDialog);
+    appRootContext = inject(AppRootContext);
+
     @HostBinding(`class.thy-layout-content`) isThyLayoutContent = true;
 
-    constructor(
-        private router: Router,
-        private thyDialog: ThyDialog,
-        public appRootContext: AppRootContext
-    ) {}
+    constructor() {}
 
     ngOnInit() {}
 

@@ -52,6 +52,8 @@ import { takeUntil } from 'rxjs/operators';
     standalone: false
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
+    private planetComponentLoader = inject(PlanetComponentLoader);
+
     @ViewChild('container', { static: true }) container: ElementRef<HTMLDivElement>;
 
     @ViewChild('operation') operationTemplateRef: TemplateRef<unknown>;
@@ -70,7 +72,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     hasEditPermission = signal(false);
 
-    constructor(private planetComponentLoader: PlanetComponentLoader) {}
+    constructor() {}
 
     ngOnInit() {
         // 模拟异步返回数据，projectableNodes 的模板根据数据触发变更监测

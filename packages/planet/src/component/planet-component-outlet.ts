@@ -1,6 +1,5 @@
 import {
     Directive,
-    ViewContainerRef,
     OnDestroy,
     OnChanges,
     SimpleChanges,
@@ -9,7 +8,8 @@ import {
     ElementRef,
     NgZone,
     Output,
-    EventEmitter
+    EventEmitter,
+    inject
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,6 +23,10 @@ import { PlantComponentProjectableNode } from './plant-component.config';
 })
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewInit {
+    private elementRef = inject(ElementRef);
+    private planetComponentLoader = inject(PlanetComponentLoader);
+    private ngZone = inject(NgZone);
+
     @Input() planetComponentOutlet: string;
 
     @Input() planetComponentOutletApp: string;
@@ -37,11 +41,7 @@ export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewIni
 
     private destroyed$ = new Subject<void>();
 
-    constructor(
-        private elementRef: ElementRef,
-        private planetComponentLoader: PlanetComponentLoader,
-        private ngZone: NgZone
-    ) {}
+    constructor() {}
 
     ngOnChanges(changes: SimpleChanges) {
         if (this.planetComponentOutlet && !changes['planetComponentOutlet'].isFirstChange()) {

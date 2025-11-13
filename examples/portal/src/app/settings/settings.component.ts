@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { ADetailComponent } from '../a-detail/a-detail.component';
@@ -12,15 +12,15 @@ import { CustomSettingsService, CustomSettingsInfo } from '../custom-settings.se
     standalone: false
 })
 export class SettingsComponent implements OnInit {
+    appRootContext = inject(AppRootContext);
+    private customSettingsService = inject(CustomSettingsService);
+    private thyNotifyService = inject(ThyNotifyService);
+
     @HostBinding(`class.thy-layout-content`) isThyLayoutContent = true;
 
     settings: CustomSettingsInfo;
 
-    constructor(
-        public appRootContext: AppRootContext,
-        private customSettingsService: CustomSettingsService,
-        private thyNotifyService: ThyNotifyService
-    ) {}
+    constructor() {}
 
     ngOnInit() {
         this.reset();

@@ -8,8 +8,8 @@ import {
     OverlayRef,
     ScrollStrategyOptions
 } from '@angular/cdk/overlay';
-import { DOCUMENT, Location } from '@angular/common';
-import { ComponentFactoryResolver, Inject, Injectable, Injector, NgZone } from '@angular/core';
+import { Location } from '@angular/common';
+import { ComponentFactoryResolver, Inject, Injectable, Injector, NgZone, DOCUMENT } from '@angular/core';
 import { isArray, concatArray } from 'ngx-tethys/util';
 
 @Injectable({ providedIn: 'root' })

@@ -1,8 +1,5 @@
-import { Component, EventEmitter, OnInit, DoCheck, ApplicationRef, HostBinding } from '@angular/core';
-import { GlobalEventDispatcher, routeRedirect } from '@worktile/planet';
+import { Component, EventEmitter, OnInit, DoCheck, HostBinding, inject } from '@angular/core';
 import { ProjectService } from './projects.service';
-import { ThyDialog } from 'ngx-tethys/dialog';
-import { ProjectDetailComponent } from './detail/detail.component';
 import { Router } from '@angular/router';
 import { ThyTableRowEvent } from 'ngx-tethys/table';
 
@@ -12,15 +9,13 @@ import { ThyTableRowEvent } from 'ngx-tethys/table';
     standalone: false
 })
 export class ProjectListComponent implements OnInit, DoCheck {
+    private router = inject(Router);
+
+    private projectService = inject(ProjectService);
+
     @HostBinding('class') class = 'thy-layout';
 
-    constructor(
-        private router: Router,
-        private globalEventDispatcher: GlobalEventDispatcher,
-        private projectService: ProjectService,
-        private dialog: ThyDialog,
-        private applicationRef: ApplicationRef
-    ) {}
+    constructor() {}
 
     click = new EventEmitter<any>();
 

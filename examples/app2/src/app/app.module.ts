@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
+import { NgModule, inject } from '@angular/core';
 import { RouterModule, Route, Router, NavigationStart } from '@angular/router';
 import { ProjectListComponent } from './projects/project-list.component';
 import { AppRootComponent, AppActualRootComponent } from './root/root.component';
@@ -90,7 +89,9 @@ const routers: Route[] = [
     bootstrap: [AppRootComponent]
 })
 export class AppModule {
-    constructor(private router: Router) {
+    private router = inject(Router);
+
+    constructor() {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationStart) {
                 console.log(`[App2] url: ${event.url}, id: ${event.id}, navigationTrigger: ${event.navigationTrigger}`);

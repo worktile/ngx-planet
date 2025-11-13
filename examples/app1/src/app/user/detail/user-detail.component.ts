@@ -1,6 +1,4 @@
-import { Component, inject, InjectionToken, OnInit } from '@angular/core';
-import { GlobalEventDispatcher } from '@worktile/planet';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-user-detail',
@@ -10,10 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 export class UserDetailComponent implements OnInit {
     userId: string;
 
-    constructor(
-        private route: ActivatedRoute,
-        private globalEventDispatcher: GlobalEventDispatcher
-    ) {}
+    constructor() {}
 
     ngOnInit() {
         // this.route.paramMap.subscribe(params => {

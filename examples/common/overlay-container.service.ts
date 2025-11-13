@@ -1,12 +1,19 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+
+import { Injectable, DOCUMENT, inject } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class PlanetOverlayContainer extends OverlayContainer {
-    constructor(@Inject(DOCUMENT) document: any, protected _platform: Platform) {
+    protected _platform: Platform;
+
+    constructor() {
+        const document = inject(DOCUMENT);
+        const _platform = inject(Platform);
+
         super(document, _platform);
+
+        this._platform = _platform;
     }
 
     private _getContainerElement(): HTMLElement {
