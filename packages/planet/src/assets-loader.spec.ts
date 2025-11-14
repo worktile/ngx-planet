@@ -525,7 +525,7 @@ describe('assets-loader', () => {
                     ...app1,
                     entry: '/static/app1/index.html'
                 },
-                new AssetsLoader(undefined).parseManifestFromHTML(html),
+                TestBed.inject(AssetsLoader).parseManifestFromHTML(html),
                 {
                     scripts: [
                         { src: '/static/app1/chunk-1234.js', tagName: 'link', attributes: { rel: 'modulepreload' } },
@@ -551,7 +551,7 @@ describe('assets-loader', () => {
                         manifest: 'index.html'
                     }
                 },
-                new AssetsLoader(undefined).parseManifestFromHTML(html),
+                TestBed.inject(AssetsLoader).parseManifestFromHTML(html),
                 {
                     scripts: [
                         { src: '/static/app1/chunk-1234.js', tagName: 'link', attributes: { rel: 'modulepreload' } },
@@ -583,7 +583,7 @@ describe('assets-loader', () => {
                         manifest: '/static/app1/index.html'
                     }
                 },
-                new AssetsLoader(undefined).parseManifestFromHTML(html),
+                TestBed.inject(AssetsLoader).parseManifestFromHTML(html),
                 {
                     url: '/static/app1/index.html',
                     scripts: [
@@ -607,7 +607,7 @@ describe('assets-loader', () => {
                         manifest: '/static/app1/index.html'
                     }
                 },
-                new AssetsLoader(undefined).parseManifestFromHTML(html),
+                TestBed.inject(AssetsLoader).parseManifestFromHTML(html),
                 {
                     url: '/static/app1/index.html',
                     scripts: [
@@ -700,7 +700,7 @@ describe('assets-loader', () => {
 
     describe('parseManifestFromHTML', () => {
         it('should parse manifest from HTML', () => {
-            const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
+            const result = TestBed.inject(AssetsLoader).parseManifestFromHTML(html);
             expect(result).toEqual({
                 'styles.css': [{ src: 'styles.css', tagName: 'link', attributes: { rel: 'stylesheet' } }],
                 'main.css': [{ src: 'main.1234.css', tagName: 'link', attributes: { rel: 'stylesheet' } }],
@@ -731,7 +731,7 @@ describe('assets-loader', () => {
                 <script src="styles.js" defer></script><script src="main.js" type="module"></script></body>
             </html>
             "`;
-            const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
+            const result = TestBed.inject(AssetsLoader).parseManifestFromHTML(html);
             expect(result).toEqual({
                 'styles.css': [
                     {
@@ -778,7 +778,7 @@ describe('assets-loader', () => {
                 <script src="styles.js" async></script><script src="main.js" async type="module" ></script></body>
             </html>
             "`;
-            const result = new AssetsLoader(undefined).parseManifestFromHTML(html);
+            const result = TestBed.inject(AssetsLoader).parseManifestFromHTML(html);
             expect(result).toEqual({
                 'styles.css': [
                     {

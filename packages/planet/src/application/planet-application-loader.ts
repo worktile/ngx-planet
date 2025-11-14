@@ -1,5 +1,5 @@
-import { Injectable, NgZone, ApplicationRef, Injector, computed, signal } from '@angular/core';
-import { of, Observable, Subject, forkJoin, from, throwError } from 'rxjs';
+import { Injectable, NgZone, ApplicationRef, Injector, signal, inject } from '@angular/core';
+import { of, Observable, Subject, forkJoin, from } from 'rxjs';
 import { AssetsLoader } from '../assets-loader';
 import { PlanetApplication, PlanetRouterEvent, SwitchModes, PlanetOptions } from '../planet.class';
 import { switchMap, share, map, tap, distinctUntilChanged, take, filter, catchError } from 'rxjs/operators';
@@ -36,6 +36,10 @@ export interface AppStatusChangeEvent {
     providedIn: 'root'
 })
 export class PlanetApplicationLoader {
+    private assetsLoader = inject(AssetsLoader);
+    private planetApplicationService = inject(PlanetApplicationService);
+    private ngZone = inject(NgZone);
+
     private firstLoad = true;
 
     private startRouteChangeEvent!: PlanetRouterEvent;
@@ -71,14 +75,12 @@ export class PlanetApplicationLoader {
 
     public loading = this.innerLoading.asReadonly();
 
-    constructor(
-        private assetsLoader: AssetsLoader,
-        private planetApplicationService: PlanetApplicationService,
-        private ngZone: NgZone,
-        router: Router,
-        injector: Injector,
-        applicationRef: ApplicationRef
-    ) {
+    constructor() {
+        const ngZone = this.ngZone;
+        const router = inject(Router);
+        const injector = inject(Injector);
+        const applicationRef = inject(ApplicationRef);
+
         if (getApplicationLoader()) {
             throw new Error('PlanetApplicationLoader has been injected in the portal, repeated injection is not allowed');
         }

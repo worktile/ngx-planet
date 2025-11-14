@@ -1,5 +1,4 @@
-import { Component, Inject, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ViewChild, ElementRef, inject } from '@angular/core';
 import { CounterService } from '../counter.service';
 import { AppRootContext } from '@demo/common';
 import { PlanetComponentRef, PlanetComponentLoader, PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet';
@@ -13,21 +12,20 @@ import { ProjectsDialogComponent } from '../projects/dialog/projects-dialog.comp
     standalone: false
 })
 export class DashboardComponent {
+    private planetPortal = inject(PlanetPortalApplication);
+    counter = inject(CounterService);
+    private globalEventDispatcher = inject(GlobalEventDispatcher);
+    appRootContext = inject(AppRootContext);
+    private dialog = inject(ThyDialog);
+    private planetComponentLoader = inject(PlanetComponentLoader);
+
     @ViewChild('container', { static: true }) containerElementRef: ElementRef<HTMLDivElement>;
 
     public size: ThyDialogSizes = ThyDialogSizes.md;
 
     private componentRef: PlanetComponentRef;
 
-    constructor(
-        private planetPortal: PlanetPortalApplication,
-        private router: Router,
-        public counter: CounterService,
-        private globalEventDispatcher: GlobalEventDispatcher,
-        public appRootContext: AppRootContext,
-        private dialog: ThyDialog,
-        private planetComponentLoader: PlanetComponentLoader
-    ) {}
+    constructor() {}
 
     openADetail() {
         this.globalEventDispatcher.dispatch('openADetail');

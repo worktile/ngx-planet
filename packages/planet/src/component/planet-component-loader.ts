@@ -1,11 +1,9 @@
-import { DOCUMENT } from '@angular/common';
 import {
     ApplicationRef,
     ComponentRef,
     ElementRef,
     EmbeddedViewRef,
     EnvironmentInjector,
-    Inject,
     Injectable,
     Injector,
     NgModuleRef,
@@ -13,7 +11,8 @@ import {
     TemplateRef,
     Type,
     createComponent,
-    reflectComponentType
+    reflectComponentType,
+    inject
 } from '@angular/core';
 import { PlanetPortalApplication } from 'ngx-planet';
 import { Observable, of, timer } from 'rxjs';
@@ -48,6 +47,10 @@ export type PlanetComponent<T = unknown> =
     providedIn: 'root'
 })
 export class PlanetComponentLoader {
+    private applicationRef = inject(ApplicationRef);
+    private ngModuleRef = inject<NgModuleRef<any>>(NgModuleRef);
+    private ngZone = inject(NgZone);
+
     private get applicationLoader() {
         return getApplicationLoader();
     }
@@ -56,12 +59,7 @@ export class PlanetComponentLoader {
         return getApplicationService();
     }
 
-    constructor(
-        private applicationRef: ApplicationRef,
-        private ngModuleRef: NgModuleRef<any>,
-        private ngZone: NgZone,
-        @Inject(DOCUMENT) private document: any
-    ) {}
+    constructor() {}
 
     private getPlantAppRef(name: string): Observable<PlanetApplicationRef> {
         const plantAppRef = getBootstrappedPlanetApplicationRef(name);

@@ -1,5 +1,4 @@
-import { Component, inject, InjectionToken } from '@angular/core';
-import { GlobalEventDispatcher } from '@worktile/planet';
+import { Component, inject } from '@angular/core';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { UserDetailComponent } from './detail/user-detail.component';
 
@@ -9,10 +8,9 @@ import { UserDetailComponent } from './detail/user-detail.component';
     standalone: false
 })
 export class UserListComponent {
-    constructor(
-        private globalEventDispatcher: GlobalEventDispatcher,
-        private thyDialog: ThyDialog
-    ) {}
+    private thyDialog = inject(ThyDialog);
+
+    constructor() {}
 
     openUserDetail(id: number) {
         this.thyDialog.open(UserDetailComponent, {

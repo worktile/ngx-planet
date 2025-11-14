@@ -1,4 +1,4 @@
-import { Component, Inject, HostBinding } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet';
 
@@ -8,16 +8,16 @@ import { PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet
     standalone: false
 })
 export class DashboardComponent {
+    private portalApp = inject(PlanetPortalApplication);
+    private globalEventDispatcher = inject(GlobalEventDispatcher);
+
     @HostBinding('class') class = 'thy-layout';
 
     portalLodashVersion = (0, eval)('window')['lodash'].version;
 
     app2LodashVersion = window['lodash'].version;
 
-    constructor(
-        private portalApp: PlanetPortalApplication,
-        private globalEventDispatcher: GlobalEventDispatcher
-    ) {
+    constructor() {
         // console.log(window);
     }
 

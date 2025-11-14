@@ -1,11 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { PlanetApplicationService } from './planet-application.service';
-import { SwitchModes } from '../planet.class';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { app1, app2, app2WithPreload } from '../testing/applications';
-import { AssetsLoader } from 'ngx-planet/assets-loader';
-import { Planet } from 'ngx-planet/planet';
+import { runInInjectionContext, Injector } from '@angular/core';
 
 describe('PlanetApplicationService', () => {
     let planetApplicationService: PlanetApplicationService;
@@ -19,9 +17,13 @@ describe('PlanetApplicationService', () => {
 
     it(`should throw error when repeat PlanetApplicationService injection`, () => {
         window['planet'].applicationService = TestBed.inject(PlanetApplicationService);
-        expect(() => {
-            return new PlanetApplicationService(TestBed.inject(HttpClient), TestBed.inject(AssetsLoader));
-        }).toThrowError('PlanetApplicationService has been injected in the portal, repeated injection is not allowed');
+        const injector = TestBed.inject(Injector);
+        runInInjectionContext(injector, () => {
+            expect(() => {
+                return new PlanetApplicationService();
+            }).toThrowError('PlanetApplicationService has been injected in the portal, repeated injection is not allowed');
+        });
+
         window['planet'].applicationService = null;
     });
 

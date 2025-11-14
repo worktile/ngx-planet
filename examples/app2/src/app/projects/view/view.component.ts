@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -7,11 +7,15 @@ import { ActivatedRoute } from '@angular/router';
     standalone: false
 })
 export class ViewComponent implements OnInit {
+    private route = inject(ActivatedRoute);
+
     @HostBinding('class') class = 'thy-layout-content';
 
     viewId: string;
 
-    constructor(private route: ActivatedRoute) {
+    constructor() {
+        const route = this.route;
+
         route.paramMap.subscribe(param => {
             this.viewId = param.get('viewId');
         });

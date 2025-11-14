@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -7,14 +7,15 @@ import { ActivatedRoute, Router } from '@angular/router';
     standalone: false
 })
 export class ProjectDetailComponent implements OnInit {
+    private route = inject(ActivatedRoute);
+
     @HostBinding('class') class = 'thy-layout';
 
     projectId: string;
 
-    constructor(
-        private route: ActivatedRoute,
-        router: Router
-    ) {
+    constructor() {
+        const router = inject(Router);
+
         this.route.paramMap.subscribe(params => {
             this.projectId = params.get('id');
             router.navigateByUrl(`/app2/projects/${this.projectId}/tasks`);

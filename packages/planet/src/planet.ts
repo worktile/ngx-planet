@@ -1,4 +1,4 @@
-import { Injectable, Inject, Optional, Injector } from '@angular/core';
+import { Injectable, Injector, inject } from '@angular/core';
 import { NavigationEnd, RouterEvent, Router } from '@angular/router';
 import { PlanetOptions, PlanetApplication, PLANET_APPLICATIONS } from './planet.class';
 import { PlanetApplicationService } from './application/planet-application.service';
@@ -18,6 +18,9 @@ import { setDebugFactory } from './debug';
     providedIn: 'root'
 })
 export class Planet {
+    private injector = inject(Injector);
+    private router = inject(Router);
+
     private get planetApplicationLoader(): PlanetApplicationLoader {
         return getApplicationLoader();
     }
@@ -47,11 +50,9 @@ export class Planet {
 
     private subscription?: Subscription;
 
-    constructor(
-        private injector: Injector,
-        private router: Router,
-        @Inject(PLANET_APPLICATIONS) @Optional() planetApplications: PlanetApplication[]
-    ) {
+    constructor() {
+        const planetApplications = inject<PlanetApplication[]>(PLANET_APPLICATIONS, { optional: true })!;
+
         if (!this.planetApplicationLoader) {
             setApplicationLoader(this.injector.get(PlanetApplicationLoader));
         }

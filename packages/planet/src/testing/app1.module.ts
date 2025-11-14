@@ -37,7 +37,7 @@ export class App1ProjectsComponent implements OnDestroy {
     ]
 })
 export class App1Module {
-    constructor(private componentLoader: PlanetComponentLoader) {
+    constructor() {
         // componentLoader.register([{ name: 'app1-projects', component: App1ProjectsComponent }]);
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { hashCode, isEmpty, getResourceFileName, getExtName, isObject, getAssetsBasePath, getScriptsAndStylesAssets } from './helpers';
 import { of, Observable, Observer, forkJoin, concat } from 'rxjs';
 import { map, switchMap, concatAll } from 'rxjs/operators';
@@ -22,9 +22,11 @@ export interface AssetsLoadResult {
     providedIn: 'root'
 })
 export class AssetsLoader {
+    private http = inject(HttpClient);
+
     private loadedSources: number[] = [];
 
-    constructor(private http: HttpClient) {}
+    constructor() {}
 
     loadScript(scriptAsset: AssetsTagItem) {
         const { src, tagName, attributes: tagAttributes } = scriptAsset;

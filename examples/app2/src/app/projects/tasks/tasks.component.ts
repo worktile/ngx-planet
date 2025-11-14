@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -9,7 +9,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class TasksComponent implements OnInit {
     @HostBinding('class') class = 'thy-layout';
 
-    constructor(router: Router, route: ActivatedRoute) {
+    constructor() {
+        const router = inject(Router);
+        const route = inject(ActivatedRoute);
+
         // router.navigate(['./view-1'], { relativeTo: route });
         router.navigate(['./view-1'], { relativeTo: route, browserUrl: '/app2/t/xxx' });
     }

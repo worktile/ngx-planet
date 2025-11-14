@@ -1,6 +1,6 @@
 import { Subject, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, inject } from '@angular/core';
 
 export interface GlobalDispatcherEvent {
     name: string;
@@ -13,6 +13,8 @@ const CUSTOM_EVENT_NAME = 'PLANET_GLOBAL_EVENT_DISPATCHER';
     providedIn: 'root'
 })
 export class GlobalEventDispatcher {
+    private ngZone = inject(NgZone);
+
     private subject$: Subject<GlobalDispatcherEvent> = new Subject();
 
     private hasAddGlobalEventListener = false;
@@ -33,7 +35,7 @@ export class GlobalEventDispatcher {
         window.removeEventListener(CUSTOM_EVENT_NAME, this.globalEventListener);
     }
 
-    constructor(private ngZone: NgZone) {}
+    constructor() {}
 
     dispatch<TPayload>(name: string, payload?: TPayload) {
         window.dispatchEvent(
