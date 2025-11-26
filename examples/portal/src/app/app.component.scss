@@ -8,7 +8,7 @@ $app-nav-bg-color: #48525c;
     height: 100%ß;
 }
 .app-nav {
-    width: $app-nav-width;
+    width: $app-nav-width !important;
     background: $app-nav-bg-color;
     height: 100%;
 
