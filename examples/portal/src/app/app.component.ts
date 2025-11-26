@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.planet.setOptions({
-            switchMode: SwitchModes.coexist,
+            switchMode: SwitchModes.default,
             errorHandler: error => {
                 this.thyNotify.error(`错误`, '加载资源失败');
                 console.error(error);

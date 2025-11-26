@@ -21,7 +21,8 @@
       "@worktile/planet": ["packages/planet/src/public-api.ts"],
       "@worktile/planet/*": ["packages/planet/src/*"]
     },
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "skipLibCheck": true
   },
   "angularCompilerOptions": {}
 }

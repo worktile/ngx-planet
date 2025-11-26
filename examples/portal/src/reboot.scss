@@ -1,7 +1,8 @@
 @use 'ngx-tethys/styles/variables.scss' with (
-    $layout-content-background: #fff,
+    $layout-content-background: #fff
 );
 @use 'ngx-tethys/styles/index.scss';
+@import '@worktile/theia/styles/index.scss';
 // @import 'ngx-tethys/styles/modules/reboot.scss';
 // @import 'ngx-tethys/styles/modules/cdk/index';
 // @import 'ngx-tethys/layout/styles/layout.scss';

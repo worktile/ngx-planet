@@ -1,30 +1,4 @@
-<thy-content class="p-0">
-  <div class="d-flex">
-    <input thyInput class="mt-2 mb-2" [(ngModel)]="search" placeholder="搜索项目" [style.width.px]="300" (thyEnter)="getProjects()" />
-    <div class="flex-grow-1 d-flex justify-content-end align-items-center">
-      <ng-content></ng-content>
-    </div>
-  </div>
-
-  <thy-table
-    thyClassName="table-hover"
-    [thyModel]="projects"
-    [thyLoadingDone]="loadingDone"
-    (thyOnRowClick)="openDetail($event)"
-    thyTheme="bordered"
-    thyRowKey="id">
-    <thy-table-column thyTitle="名称" thyModelKey="name" thyClassName="same-name"></thy-table-column>
-    <thy-table-column thyTitle="描述" thyModelKey="desc"></thy-table-column>
-    <thy-table-column thyTitle="操作" thyClassName="thy-operation-links text-center">
-      <ng-template #cell let-row>
-        <a href="javascript:;">设置</a>
-        <a class="link-secondary" href="javascript:;">
-          <i class="wtf wtf-trash-o"></i>
-        </a>
-      </ng-template>
-    </thy-table-column>
-  </thy-table>
-  <ng-content select="[footer]"></ng-content>
-</thy-content>
-
-<!-- <router-outlet></router-outlet> -->
+<div class="demo-rich-editor-wrapper single">
+  <slate-editable class="demo-slate-angular-editor" [editor]="editor" [(ngModel)]="value" [renderElement]="renderElement()">
+  </slate-editable>
+</div>

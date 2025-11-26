@@ -1,19 +1,40 @@
-import { Component, Inject, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, HostBinding } from '@angular/core';
+import { Router } from '@angular/router';
+import { ThyDialog } from 'ngx-tethys/dialog';
+import { ADetailComponent } from '../a-detail/a-detail.component';
+import { AppRootContext } from '@demo/common';
 import { faker } from '@faker-js/faker';
 import { createEditor, Element } from 'slate';
-import { AngularEditor, BaseElementFlavour, SlateModule, withAngular } from 'slate-angular';
+import { AngularEditor, BaseElementFlavour, withAngular } from 'slate-angular';
+import { TheDataMode, TheOptions } from '@worktile/theia';
 
 @Component({
-    selector: 'app-about',
-    templateUrl: './about.component.html',
-    standalone: true,
-    imports: [SlateModule, FormsModule]
+    selector: 'app-theia',
+    templateUrl: './theia.component.html',
+    standalone: false
 })
-export class AboutComponent implements OnInit {
-    ngOnInit(): void {}
+export class AppTheiaComponent implements OnInit {
+    @HostBinding(`class.thy-layout-content`) isThyLayoutContent = true;
 
-    editor = withAngular(createEditor());
+    options: TheOptions = {
+        readonly: true,
+        disabled: false,
+        mode: TheDataMode.json,
+        placeholder: '输入/快速插入内容',
+        inlineToolbarVisible: true,
+        scrollContainer: '.thy-layout-content',
+        autoFocus: true,
+        autoNormalize: true,
+        richMedia: true
+    };
+
+    constructor(
+        private router: Router,
+        private thyDialog: ThyDialog,
+        public appRootContext: AppRootContext
+    ) {}
+
+    ngOnInit() {}
 
     value = buildInitialValue();
 

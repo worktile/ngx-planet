@@ -29,9 +29,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppOverlay } from './overlay';
 import { SettingsComponent } from './settings/settings.component';
+import { SlateModule } from 'slate-angular';
+import { TheEditorModule } from '@worktile/theia';
+import { AppTheiaComponent } from './theia/theia.component';
 
 @NgModule({
-    declarations: [AppComponent, AboutComponent, PortalCustomComponent, SettingsComponent, ADetailComponent],
+    declarations: [AppComponent, AboutComponent, AppTheiaComponent, PortalCustomComponent, SettingsComponent, ADetailComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -53,7 +56,9 @@ import { SettingsComponent } from './settings/settings.component';
         ThyCheckboxModule,
         AppRoutingModule,
         NgxPlanetModule,
-        DemoCommonModule
+        DemoCommonModule,
+        SlateModule,
+        TheEditorModule
     ],
     providers: [AppRootContext, OVERLAY_PROVIDER, { provide: Overlay, useClass: AppOverlay }],
     bootstrap: [AppComponent]

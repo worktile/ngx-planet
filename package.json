@@ -69,10 +69,17 @@
     "@angular/platform-browser-dynamic": "^20.3.10",
     "@angular/router": "^20.3.10",
     "date-fns": "^4.1.0",
-    "ngx-tethys": "20.0.0",
+    "ngx-tethys": "^20.0.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.1.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.15.0",
+    "slate": "^0.117.2",
+    "slate-dom": "^0.116.0",
+    "slate-history": "^0.115.0",
+    "slate-angular": "^20.0.0",
+    "@faker-js/faker": "^8.3.1",
+    "@worktile/theia": "^20.0.0",
+    "@atinc/selene": "~2.3.25"
   },
   "devDependencies": {
     "@angular-builders/custom-esbuild": "^20.0.0",

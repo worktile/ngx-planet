@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { ThyLayout, ThyLayoutDirective, ThySidebar } from 'ngx-tethys/layout';
 import { ThyMenu, ThyMenuItem } from 'ngx-tethys/menu';
+import { SlateModule } from 'slate-angular';
 
 @Component({
     selector: 'standalone-app-root',

@@ -12,7 +12,10 @@
         <a thyNavItem [routerLink]="['/standalone-app']" routerLinkActive="active" thyTooltip="Standalone App" thyTooltipPlacement="right">
           <thy-icon thyIconName="app-leave"></thy-icon>
         </a>
-        <a thyNavItem [routerLink]="['/about']" routerLinkActive="active" thyTooltip="About" thyTooltipPlacement="right">
+        <a thyNavItem [routerLink]="['/about']" routerLinkActive="active" thyTooltip="SlateAngular" thyTooltipPlacement="right">
+          <thy-icon thyIconName="smile"></thy-icon>
+        </a>
+        <a thyNavItem [routerLink]="['/theia']" routerLinkActive="active" thyTooltip="Theia" thyTooltipPlacement="right">
           <thy-icon thyIconName="smile"></thy-icon>
         </a>
         <a thyNavItem [routerLink]="['/settings']" routerLinkActive="active" thyTooltip="Settings" thyTooltipPlacement="right"
@@ -39,12 +42,9 @@
       </thy-nav>
     </thy-sidebar>
   </div>
-  <div id="app-host-container" class="thy-layout" [ngClass]="{ hide: loading() }">
+  <div id="app-host-container" class="thy-layout">
     <div class="portal portal-container">
       <router-outlet></router-outlet>
     </div>
   </div>
-  @if (loading(); as loadingState) {
-    <thy-loading class="portal" [thyDone]="!loadingState"></thy-loading>
-  }
 </thy-layout>

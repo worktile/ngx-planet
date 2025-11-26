@@ -16,6 +16,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { AppOverlay } from './overlay';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared.module';
+import { SlateModule } from 'slate-angular';
 
 const routers: Route[] = [
     {
@@ -78,6 +79,7 @@ const routers: Route[] = [
     imports: [
         CommonModule,
         BrowserAnimationsModule,
+        SlateModule,
         FormsModule,
         BrowserModule,
         RouterModule.forRoot(routers, {}),

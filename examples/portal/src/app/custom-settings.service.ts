@@ -20,16 +20,16 @@ export interface CustomSettingsInfo {
 
 const DEFAULT_SETTINGS: CustomSettingsInfo = {
     app1: {
-        preload: true,
-        switchMode: SwitchModes.coexist
+        preload: false,
+        switchMode: SwitchModes.default
     },
     app2: {
-        preload: true,
-        switchMode: SwitchModes.coexist
+        preload: false,
+        switchMode: SwitchModes.default
     },
     standaloneApp: {
-        preload: true,
-        switchMode: SwitchModes.coexist
+        preload: false,
+        switchMode: SwitchModes.default
     }
 };
 
