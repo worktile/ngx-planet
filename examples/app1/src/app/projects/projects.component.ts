@@ -22,7 +22,10 @@ import { takeUntil } from 'rxjs/operators';
     template: `
         <section-card class="mt-2" title="App2's projects component">
             <ng-template #operation>
-                <button thyButton="primary">New</button> <a *ngIf="hasEditPermission()" href="javascript:;" class="ml-4">Edit</a>
+                <button thyButton="primary">New</button>
+                @if (hasEditPermission()) {
+                    <a href="javascript:;" class="ml-4">Edit</a>
+                }
             </ng-template>
 
             <thy-tabs (thyActiveTabChange)="activeTabChange($event)">
@@ -36,11 +39,11 @@ import { takeUntil } from 'rxjs/operators';
                         ">
                     </ng-container>
                     <!-- <ng-container
-                        planetComponentOutlet="project1"
-                        planetComponentOutletApp="app2"
-                        [planetComponentOutletInitialState]="{ search: 'From PlanetComponentOutlet' }"
-                        (planetComponentLoaded)="planetComponentLoaded($event)"
-                    ></ng-container> -->
+            planetComponentOutlet="project1"
+            planetComponentOutletApp="app2"
+            [planetComponentOutletInitialState]="{ search: 'From PlanetComponentOutlet' }"
+            (planetComponentLoaded)="planetComponentLoaded($event)"
+          ></ng-container> -->
                 </thy-tab>
                 <thy-tab id="planet-component-loader" thyTitle="PlanetComponentLoader">
                     <div #container></div>
