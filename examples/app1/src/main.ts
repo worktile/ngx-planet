@@ -1,4 +1,4 @@
-import { enableProdMode, NgModuleRef, Type, NgZone } from '@angular/core';
+import { enableProdMode, NgModuleRef, Type, NgZone, provideZoneChangeDetection } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
@@ -23,7 +23,7 @@ defineApplication('app1', {
                 useValue: portalApp.data.appRootContext
             }
         ])
-            .bootstrapModule(AppModule)
+            .bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()] })
             .then(appModule => {
                 return appModule;
             })

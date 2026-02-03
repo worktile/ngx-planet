@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
-import { RouterOutlet, provideRouter } from '@angular/router';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { provideRouter, RouterOutlet } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { routeRedirect, redirectToRoute } from './route-redirect';
+import { redirectToRoute, routeRedirect } from './route-redirect';
 
 describe('route-redirect', () => {
-    it('should redirect to success use redirectToRoute', async () => {
+    it('should redirect to success use redirectToRoute', fakeAsync(async () => {
         @Component({
             template: '<router-outlet></router-outlet>',
             imports: [RouterOutlet]
@@ -30,8 +30,9 @@ describe('route-redirect', () => {
         const harness = await RouterTestingHarness.create();
         const activatedComponent = await harness.navigateByUrl('/app1');
         expect(activatedComponent).toBeInstanceOf(TestComponent);
+        tick();
         expect(harness.routeNativeElement?.innerHTML).toContain('hello world');
-    });
+    }));
 
     it('should redirect to success use routeRedirect', async () => {
         @Component({ standalone: true, template: '' })

@@ -1,15 +1,23 @@
-import { PlanetPortalApplication } from './portal-application';
-import { NgModule, Compiler, Injector, Component, NgZone, Type, ApplicationConfig, ApplicationRef } from '@angular/core';
+import {
+    ApplicationConfig,
+    ApplicationRef,
+    Compiler,
+    Component,
+    Injector,
+    NgModule,
+    NgZone,
+    Type,
+    provideZoneChangeDetection
+} from '@angular/core';
+import { TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { Router, RouterOutlet, provideRouter } from '@angular/router';
-import { RouterTestingHarness } from '@angular/router/testing';
-import { TestBed, inject, tick, fakeAsync, flush } from '@angular/core/testing';
-import { defineApplication, getPlanetApplicationRef, clearGlobalPlanet } from '../global-planet';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { RouterTestingHarness, RouterTestingModule } from '@angular/router/testing';
 import { Subject } from 'rxjs';
-import { PlanetApplicationRef } from './planet-application-ref';
-import { RouterTestingModule } from '@angular/router/testing';
-import { NgPlanetApplicationRef } from './ng-planet-application-ref';
+import { clearGlobalPlanet, defineApplication, getPlanetApplicationRef } from '../global-planet';
 import { createElementByTemplate } from '../helpers';
+import { NgPlanetApplicationRef } from './ng-planet-application-ref';
+import { PlanetPortalApplication } from './portal-application';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -61,7 +69,7 @@ export const appConfig: ApplicationConfig = {
 };
 
 export function bootstrapStandaloneApplication() {
-    return bootstrapApplication(AppComponent, appConfig);
+    return bootstrapApplication(AppComponent, { ...appConfig, providers: [provideZoneChangeDetection(), ...appConfig.providers] });
 }
 
 describe('PlanetApplicationRef', () => {
@@ -339,14 +347,23 @@ describe('PlanetApplicationRef', () => {
             });
             const appRef = getPlanetApplicationRef('app1');
             expect(appRef).toBeTruthy();
-            appRef.bootstrap(portalApplication);
-
+            appRef.bootstrap(portalApplication).subscribe();
+            tick();
             const router = ngModuleRef.injector.get(Router);
             const ngZone = ngModuleRef.injector.get(NgZone);
+            expect(navigateByUrlSpy).not.toHaveBeenCalled();
+            let navigationEndFired = false;
+            router.events.subscribe(event => {
+                if (event instanceof NavigationEnd) {
+                    navigationEndFired = true;
+                }
+            });
+
             ngZone.run(() => {
                 router.navigateByUrl('/app1');
             });
-            expect(navigateByUrlSpy).not.toHaveBeenCalled();
+            tick();
+            expect(navigationEndFired).toBe(true);
             ngZone.onStable.next(null);
             tick();
             expect(navigateByUrlSpy).toHaveBeenCalled();

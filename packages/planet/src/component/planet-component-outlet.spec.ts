@@ -1,12 +1,12 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NgxPlanetModule } from '../module';
 
-import { Component, DebugElement, OnInit } from '@angular/core';
-import { PlanetComponentLoader } from './planet-component-loader';
-import { PlantComponentConfig } from './plant-component.config';
+import { Component, OnInit, provideZoneChangeDetection } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { PlanetComponentRef } from './planet-component-types';
 import { tap } from 'rxjs/operators';
+import { PlanetComponentLoader } from './planet-component-loader';
+import { PlanetComponentRef } from './planet-component-types';
+import { PlantComponentConfig } from './plant-component.config';
 
 @Component({
     selector: 'planet-component-outlet-basic-test',
@@ -88,7 +88,8 @@ describe('planet-component-outlet', () => {
                 {
                     provide: PlanetComponentLoader,
                     useValue: mockComponentLoader
-                }
+                },
+                provideZoneChangeDetection()
             ]
         }).compileComponents();
     });

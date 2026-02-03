@@ -1,10 +1,9 @@
 import { Component, HostBinding, Input } from '@angular/core';
-import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'section-card',
     templateUrl: './section-card.component.html',
-    imports: [NgIf]
+    imports: []
 })
 export class SectionCardComponent {
     @HostBinding('class.section-card') addSectionCard = true;
