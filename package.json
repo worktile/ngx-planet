@@ -121,7 +121,7 @@
     "standard-version": "^9.5.0",
     "ts-node": "~7.0.0",
     "typescript": "~5.9.3",
-    "webpack": "5.94.0",
+    "webpack": "5.105.0",
     "webpack-assets-manifest": "^5.1.0"
   },
   "husky": {
