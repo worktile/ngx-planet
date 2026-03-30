@@ -23,8 +23,8 @@ export interface Debug {
     enabled: (namespaces: string) => boolean;
     log: (...args: any[]) => any;
 
-    names: RegExp[];
-    skips: RegExp[];
+    names: string[];
+    skips: string[];
 
     formatters: Formatters;
 }
@@ -37,7 +37,7 @@ let _debuggerMap: Record<string, Debugger> = {};
 
 export function createDebug(namespace: string): Debugger {
     const key = `planet:${namespace}`;
-    return function(formatter: any, ...args: any[]) {
+    return function (formatter: any, ...args: any[]) {
         if (_debugFactory) {
             let debugDebugger = _debuggerMap[key];
             if (!debugDebugger) {
