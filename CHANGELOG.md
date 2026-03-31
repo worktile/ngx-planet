@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [21.0.0-next.0](https://github.com/worktile/ngx-planet/compare/20.0.0...21.0.0-next.0) (2026-03-31)
+
+
+### Bug Fixes
+
+* **planet:** fix debug type ([4b7f2dc](https://github.com/worktile/ngx-planet/commit/4b7f2dc3b40a6199653397dbea465d23885368bf))
+
+
+### Features
+
+* upgrade angular 21 ([d6818d9](https://github.com/worktile/ngx-planet/commit/d6818d9621597ee004c5224c6574992b31d81f81))
+
+
+
 # [20.0.0](https://github.com/worktile/ngx-planet/compare/20.0.0-next.0...20.0.0) (2025-11-26)
 
 
