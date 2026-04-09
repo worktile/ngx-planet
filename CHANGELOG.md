@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [21.0.0](https://github.com/worktile/ngx-planet/compare/21.0.0-next.0...21.0.0) (2026-04-09)
+
+
+
 # [21.0.0-next.0](https://github.com/worktile/ngx-planet/compare/20.0.0...21.0.0-next.0) (2026-03-31)
 
 
