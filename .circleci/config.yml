@@ -5,9 +5,9 @@ jobs:
   build:
     working_directory: ~/ngx-planet
     docker:
-      - image: cimg/node:20.19.0-browsers
+      - image: cimg/node:24.19.0-browsers
     steps:
-      - browser-tools/install-chrome
+      - browser-tools/install_browser_tools
       - checkout
       - run: |
           node --version
