@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NgxPlanetModule } from '../module';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { EmptyComponent } from './empty.component';
 
@@ -8,6 +8,7 @@ import { EmptyComponent } from './empty.component';
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'empty-component-basic',
     template: '<empty-component></empty-component>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class EmptyComponentBasicComponent {}

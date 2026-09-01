@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { ThyLayout, ThyLayoutDirective, ThySidebar } from 'ngx-tethys/layout';
 import { ThyMenu, ThyMenuItem } from 'ngx-tethys/menu';
@@ -6,6 +6,7 @@ import { ThyMenu, ThyMenuItem } from 'ngx-tethys/menu';
 @Component({
     selector: 'standalone-app-root',
     imports: [RouterOutlet],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: '<router-outlet />'
 })
 export class AppRootComponent {
@@ -19,6 +20,7 @@ export class AppRootComponent {
     host: {
         class: 'thy-layout'
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     hostDirectives: [ThyLayoutDirective]
 })
 export class AppRootActualComponent {}

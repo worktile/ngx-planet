@@ -1,10 +1,11 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class DashboardComponent {

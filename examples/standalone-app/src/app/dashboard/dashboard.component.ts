@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, inject } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet';
 import { ThyContent, ThyLayoutDirective } from 'ngx-tethys/layout';
@@ -8,6 +8,7 @@ import { DemoCommonModule } from '../../../../common/module';
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     hostDirectives: [ThyLayoutDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ThyContent, DemoCommonModule, RouterLink]
 })
 export class DashboardComponent implements OnInit {

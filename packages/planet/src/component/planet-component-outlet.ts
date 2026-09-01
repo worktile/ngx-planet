@@ -21,7 +21,6 @@ import { PlantComponentProjectableNode } from './plant-component.config';
     selector: '[planetComponentOutlet]',
     standalone: true
 })
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class PlanetComponentOutlet implements OnChanges, OnDestroy, AfterViewInit {
     private elementRef = inject(ElementRef);
     private planetComponentLoader = inject(PlanetComponentLoader);

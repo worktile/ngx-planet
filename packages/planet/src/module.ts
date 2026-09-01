@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { PlanetApplication, PLANET_APPLICATIONS } from './planet.class';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { EmptyComponent } from './empty/empty.component';
 import { PlanetComponentOutlet } from './component/planet-component-outlet';
 import { RedirectToRouteComponent } from './router/route-redirect';
@@ -9,7 +9,7 @@ import { RedirectToRouteComponent } from './router/route-redirect';
     declarations: [],
     exports: [EmptyComponent, PlanetComponentOutlet],
     imports: [PlanetComponentOutlet, EmptyComponent, RedirectToRouteComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi())]
+    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi())]
 })
 export class NgxPlanetModule {
     static forRoot(apps: PlanetApplication[]): ModuleWithProviders<NgxPlanetModule> {

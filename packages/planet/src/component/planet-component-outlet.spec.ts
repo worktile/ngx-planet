@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NgxPlanetModule } from '../module';
 
-import { Component, OnInit, provideZoneChangeDetection } from '@angular/core';
+import { Component, OnInit, provideZoneChangeDetection, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PlanetComponentLoader } from './planet-component-loader';
@@ -11,6 +11,7 @@ import { PlantComponentConfig } from './plant-component.config';
 @Component({
     selector: 'planet-component-outlet-basic-test',
     template: ` <ng-container *planetComponentOutlet="componentName; app: 'app2'; initialState: { term: 'From Test' }"></ng-container> `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PlanetComponentOutletBasicTestComponent implements OnInit {
@@ -31,6 +32,7 @@ export class PlanetComponentOutletBasicTestComponent implements OnInit {
             planetComponentOutletInitialState="{ term: 'From Test' }"
             (planetComponentLoaded)="componentLoaded($event)"></ng-container>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PlanetComponentOutletGeneralTestComponent {

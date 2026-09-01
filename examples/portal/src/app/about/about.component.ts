@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, inject } from '@angular/core';
+import { Component, OnInit, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { ADetailComponent } from '../a-detail/a-detail.component';
@@ -8,6 +8,7 @@ import { AppRootContext } from '@demo/common';
     selector: 'app-about',
     templateUrl: './about.component.html',
     styleUrls: ['./about.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AboutComponent implements OnInit {

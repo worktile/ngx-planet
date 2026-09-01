@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, DoCheck, HostBinding, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, DoCheck, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ProjectService } from './projects.service';
 import { Router } from '@angular/router';
 import { ThyTableRowEvent } from 'ngx-tethys/table';
@@ -6,6 +6,7 @@ import { ThyTableRowEvent } from 'ngx-tethys/table';
 @Component({
     selector: 'app-project-list',
     templateUrl: './project-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectListComponent implements OnInit, DoCheck {

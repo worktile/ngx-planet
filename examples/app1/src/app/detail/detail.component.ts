@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ThyDialogRef } from 'ngx-tethys/dialog';
 
 @Component({
     selector: 'app-detail',
     templateUrl: './detail.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class App1DetailComponent {

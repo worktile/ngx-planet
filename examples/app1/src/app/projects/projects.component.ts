@@ -12,7 +12,8 @@ import {
     Injector,
     signal,
     createEnvironmentInjector,
-    ApplicationRef
+    ApplicationRef,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { PlanetComponentLoader, PlanetComponentRef } from '@worktile/planet';
 import { takeUntil } from 'rxjs/operators';
@@ -28,7 +29,7 @@ import { takeUntil } from 'rxjs/operators';
                 }
             </ng-template>
 
-            <thy-tabs (thyActiveTabChange)="activeTabChange($event)">
+            <thy-tabs thyActiveTab="planet-component-outlet" (thyActiveTabChange)="activeTabChange($event)">
                 <thy-tab id="planet-component-outlet" thyTitle="PlanetComponentOutlet">
                     <ng-container
                         *planetComponentOutlet="
@@ -52,6 +53,7 @@ import { takeUntil } from 'rxjs/operators';
             <!-- <thy-loading [thyDone]="loadingDone"></thy-loading> -->
         </section-card>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectsComponent implements OnInit, OnDestroy {

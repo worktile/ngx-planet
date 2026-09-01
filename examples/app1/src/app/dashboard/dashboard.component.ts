@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CounterService } from '../counter.service';
 import { AppRootContext } from '@demo/common';
 import { PlanetComponentRef, PlanetComponentLoader, PlanetPortalApplication, GlobalEventDispatcher } from '@worktile/planet';
@@ -9,6 +9,7 @@ import { ProjectsDialogComponent } from '../projects/dialog/projects-dialog.comp
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class DashboardComponent {

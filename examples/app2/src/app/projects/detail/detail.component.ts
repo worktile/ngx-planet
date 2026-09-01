@@ -1,9 +1,10 @@
-import { Component, OnInit, HostBinding, inject } from '@angular/core';
+import { Component, OnInit, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app2-project-detail',
     templateUrl: './detail.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectDetailComponent implements OnInit {

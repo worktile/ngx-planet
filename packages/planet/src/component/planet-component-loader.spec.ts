@@ -19,7 +19,7 @@ import { Planet } from 'ngx-planet/planet';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PlanetComponentRef } from './planet-component-types';
 import { NgPlanetApplicationRef } from '../application/ng-planet-application-ref';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('PlanetComponentLoader', () => {
     let compiler: Compiler;
@@ -46,7 +46,7 @@ describe('PlanetComponentLoader', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule.withRoutes([])],
-            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+            providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
         });
         compiler = TestBed.inject(Compiler);
         planet = TestBed.inject(Planet);

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { AppRootContext } from '@demo/common';
 import { GlobalEventDispatcher, Planet, PlanetComponentLoader, SwitchModes } from '@worktile/planet';
 import { debug } from 'debug';
@@ -11,6 +11,7 @@ import { CustomSettingsService } from './custom-settings.service';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppComponent implements OnInit {

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { PlanetApplicationService } from './planet-application.service';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { app1, app2, app2WithPreload } from '../testing/applications';
 import { runInInjectionContext, Injector } from '@angular/core';
 
@@ -10,7 +10,7 @@ describe('PlanetApplicationService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [],
-            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+            providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
         });
         planetApplicationService = TestBed.inject(PlanetApplicationService);
     });

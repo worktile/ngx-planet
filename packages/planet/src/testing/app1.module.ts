@@ -1,4 +1,4 @@
-import { Component, NgModule, OnDestroy } from '@angular/core';
+import { Component, NgModule, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { PlanetComponentLoader } from '../component/planet-component-loader';
 import { PlanetApplicationLoader } from '../application/planet-application-loader';
@@ -9,6 +9,7 @@ export const app1Name = 'app1';
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app1-projects,[app1Projects]',
     template: ` projects is work <ng-content></ng-content> `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class App1ProjectsComponent implements OnDestroy {

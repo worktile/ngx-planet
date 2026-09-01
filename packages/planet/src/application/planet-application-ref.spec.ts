@@ -7,7 +7,8 @@ import {
     NgModule,
     NgZone,
     Type,
-    provideZoneChangeDetection
+    provideZoneChangeDetection,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -23,6 +24,7 @@ import { PlanetPortalApplication } from './portal-application';
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-root',
     template: ` <router-outlet></router-outlet>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RouterOutlet]
 })
 class EmptyComponent {}
@@ -49,6 +51,7 @@ class AppModule {}
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app-standalone-root',
     template: ` <router-outlet></router-outlet>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RouterOutlet]
 })
 class AppComponent {}
