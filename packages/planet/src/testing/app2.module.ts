@@ -7,7 +7,8 @@ import {
     createComponent,
     inject,
     TemplateRef,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { PlanetApplicationLoader } from '../application/planet-application-loader';
@@ -19,9 +20,9 @@ export const app2Name = 'app2';
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'app2-comp-with-template-ref',
     template: `<ng-template #ref>This is templateRef from app2</ng-template>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-// eslint-disable-next-line @angular-eslint/component-class-suffix
 class ComponentWithTemplateRef {
     templateRef = viewChild<TemplateRef<unknown>>('ref');
 

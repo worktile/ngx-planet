@@ -1,10 +1,11 @@
-import { Component, ElementRef, EventEmitter, HostBinding, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { PlanetComponentLoader } from '@worktile/planet';
 import { ThyDialogRef } from 'ngx-tethys/dialog';
 
 @Component({
     selector: 'app-projects-dialog',
     templateUrl: `./projects-dialog.component.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectsDialogComponent implements OnInit {

@@ -6,5 +6,8 @@
   },
   "files": ["main.ts", "polyfills.ts"],
   "include": ["**/*.d.ts"],
-  "exclude": ["test.ts", "**/*.spec.ts"]
+  "exclude": ["test.ts", "**/*.spec.ts"],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  }
 }

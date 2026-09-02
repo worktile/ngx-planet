@@ -3,7 +3,7 @@
   "version": "21.0.0",
   "private": false,
   "peerDependencies": {
-    "@angular/common": "^21.1.2",
-    "@angular/core": "^21.1.2"
+    "@angular/common": "^22.0.0",
+    "@angular/core": "^22.0.0"
   }
 }

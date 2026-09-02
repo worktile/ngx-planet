@@ -12,9 +12,14 @@
 </section-card>
 
 <section-card class="mt-4" title="Open app1's detail">
-  <form class="mb-2" thyForm thyLayout="inline">
+  <div class="mb-2">
     <thy-form-group thyLabelText="Size:">
-      <thy-custom-select thyPlaceHolder="选择弹框大小" name="size" [(ngModel)]="size" style="width: 500px">
+      <thy-custom-select
+        thyPlaceHolder="选择弹框大小"
+        name="size"
+        [(ngModel)]="size"
+        [ngModelOptions]="{ standalone: true }"
+        style="width: 500px">
         <thy-option thyValue="sm" thyLabelText="小" [thyShowOptionCustom]="true">
           <span class="same-name">小 </span>
         </thy-option>
@@ -26,7 +31,7 @@
         </thy-option>
       </thy-custom-select>
     </thy-form-group>
-  </form>
+  </div>
   <button thyButton="primary-square" (click)="openApp1Dialog()">Open app1's detail</button>
 </section-card>
 

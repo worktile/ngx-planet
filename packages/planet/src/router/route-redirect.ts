@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Route, Router, UrlTree } from '@angular/router';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
 class RouteRedirect {
     activatedRoute = inject(ActivatedRoute);
@@ -46,6 +46,7 @@ export function routeRedirect(redirectTo?: string) {
 @Component({
     selector: 'planet-redirect-to-route',
     template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class RedirectToRouteComponent {

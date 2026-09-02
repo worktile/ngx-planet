@@ -1,11 +1,12 @@
 import { PlanetComponentLoader, routeRedirect } from '@worktile/planet';
-import { Component, HostBinding, OnInit, inject } from '@angular/core';
+import { Component, HostBinding, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ProjectListComponent } from '../projects/project-list.component';
 
 @Component({
     selector: 'app2-root-actual',
     templateUrl: './root.component.html',
     styleUrls: ['./root.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppActualRootComponent {
@@ -18,6 +19,7 @@ export class AppActualRootComponent {
 @Component({
     selector: 'app2-root',
     template: '<router-outlet></router-outlet>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppRootComponent implements OnInit {

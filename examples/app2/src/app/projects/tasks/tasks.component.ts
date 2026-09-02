@@ -1,9 +1,10 @@
-import { Component, OnInit, HostBinding, inject } from '@angular/core';
+import { Component, OnInit, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app2-tasks',
     templateUrl: './tasks.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TasksComponent implements OnInit {

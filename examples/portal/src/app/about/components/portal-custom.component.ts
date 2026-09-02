@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'app-portal-custom',
     templateUrl: './portal-custom.component.html',
     styleUrls: ['./portal-custom.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PortalCustomComponent implements OnInit {

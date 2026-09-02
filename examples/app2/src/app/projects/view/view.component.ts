@@ -1,9 +1,10 @@
-import { Component, OnInit, HostBinding, inject } from '@angular/core';
+import { Component, OnInit, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app2-view',
     templateUrl: './view.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ViewComponent implements OnInit {

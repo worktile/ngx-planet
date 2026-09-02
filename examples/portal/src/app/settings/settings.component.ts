@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, inject } from '@angular/core';
+import { Component, OnInit, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThyNotifyService } from 'ngx-tethys/notify';
 import { ADetailComponent } from '../a-detail/a-detail.component';
@@ -9,6 +9,7 @@ import { CustomSettingsService, CustomSettingsInfo } from '../custom-settings.se
     selector: 'app-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SettingsComponent implements OnInit {

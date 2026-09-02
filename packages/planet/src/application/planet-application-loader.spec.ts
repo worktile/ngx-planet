@@ -14,7 +14,7 @@ import { getApplicationLoader, getApplicationService, clearGlobalPlanet } from '
 import { RouterTestingModule } from '@angular/router/testing';
 import { sample } from '../testing/utils';
 import { NgBootstrapOptions, NgPlanetApplicationRef } from './ng-planet-application-ref';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 class PlanetApplicationRefFaker {
     planetAppRef: PlanetApplicationRef;
@@ -127,7 +127,7 @@ describe('PlanetApplicationLoader', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [RouterTestingModule.withRoutes([])],
-            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+            providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
         });
         planet = TestBed.inject(Planet);
         planetApplicationLoader = getApplicationLoader();

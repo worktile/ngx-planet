@@ -1,4 +1,4 @@
-import { Component, HostBinding, inject } from '@angular/core';
+import { Component, HostBinding, inject, ChangeDetectionStrategy } from '@angular/core';
 import { GlobalEventDispatcher } from '@worktile/planet';
 import { ThyDialog } from 'ngx-tethys/dialog';
 import { UserDetailComponent } from '../user/detail/user-detail.component';
@@ -7,6 +7,7 @@ import { UserDetailComponent } from '../user/detail/user-detail.component';
     selector: 'app1-root-actual',
     templateUrl: './root.component.html',
     styleUrls: ['./root.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppActualRootComponent {
@@ -18,6 +19,7 @@ export class AppActualRootComponent {
 @Component({
     selector: 'app1-root',
     template: '<router-outlet></router-outlet>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppRootComponent {

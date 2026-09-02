@@ -1,16 +1,6 @@
-import { Directionality } from '@angular/cdk/bidi';
-import {
-    Overlay,
-    OverlayConfig,
-    OverlayContainer,
-    OverlayKeyboardDispatcher,
-    OverlayPositionBuilder,
-    OverlayRef,
-    ScrollStrategyOptions
-} from '@angular/cdk/overlay';
-import { Location } from '@angular/common';
-import { ComponentFactoryResolver, Inject, Injectable, Injector, NgZone, DOCUMENT } from '@angular/core';
-import { isArray, concatArray } from 'ngx-tethys/util';
+import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Injectable } from '@angular/core';
+import { concatArray } from 'ngx-tethys/util';
 
 @Injectable({ providedIn: 'root' })
 export class AppOverlay extends Overlay {
