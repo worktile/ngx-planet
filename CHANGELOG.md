@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [22.0.0-next.0](https://github.com/worktile/ngx-planet/compare/21.0.0...22.0.0-next.0) (2026-09-02)
+
+
+### Features
+
+* upgrade ng to 22 #TINFR-3767 ([eeff5e0](https://github.com/worktile/ngx-planet/commit/eeff5e07bedea83f59cc0ddc578a4ef2faa577eb)), closes [#TINFR-3767](https://github.com/worktile/ngx-planet/issues/TINFR-3767)
+
+
+
 # [21.0.0](https://github.com/worktile/ngx-planet/compare/21.0.0-next.0...21.0.0) (2026-04-09)
 
 
