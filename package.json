@@ -71,8 +71,8 @@
     "date-fns": "^4.1.0",
     "@date-fns/tz": "1.2.0",
     "@tethys/icons": "^1.4.23",
-    "ngx-tethys": "22.0.0-next.0",
-    "@tethys/cdk": "22.0.0-next.0",
+    "ngx-tethys": "22.0.0",
+    "@tethys/cdk": "22.0.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.1.0",
     "zone.js": "~0.15.0"
